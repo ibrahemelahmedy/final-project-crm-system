@@ -1,0 +1,31 @@
+# Managed by squad-kit — do not edit this block
+.squad/secrets.yaml
+.squad/stories/**/attachments/
+.squad/.trash/
+.squad/.last-run.json
+.squad/.last-copy-prompt.md
+.squad/runs/
+# End squad-kit block
+.next
+.turbo
+node_modules
+docs
+STATUS.md
+
+# Claude Code — أدوات العمل الداخلية (hooks، skills، commands)
+.claude/
+
+# تعليمات AI المدمجة مع Laravel — لا تفيد المطوّرين وتأمر بتثبيت packages غير مرغوبة
+api/CLAUDE.md
+api/AGENTS.md
+
+# Application
+api/vendor/
+api/.env
+api/storage/*.key
+api/public/storage
+api/database/database.sqlite
+web/node_modules/
+web/dist/
+web/.env.local
+

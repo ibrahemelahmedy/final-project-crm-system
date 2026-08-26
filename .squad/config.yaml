@@ -1,0 +1,14 @@
+version: 1
+project:
+  name: Wisal
+  primaryLanguage: typescript
+  projectRoots:
+    - .
+tracker:
+  type: jira
+  workspace: https://ibrahemelahmedy.atlassian.net/
+naming:
+  includeTrackerId: false
+  globalSequence: true
+agents:
+  - claude-code
