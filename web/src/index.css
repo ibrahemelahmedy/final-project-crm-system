@@ -9,3 +9,490 @@ body, html, #root {
   height: 100%;
   font-family: Inter, system-ui, -apple-system, sans-serif;
 }
+
+/* ==========================================================================
+   Design tokens — shared across the login screen and the app shell.
+   Light values on bare :root; dark values in BOTH the prefers-color-scheme
+   block (guarded so an explicit "light" choice wins) and the
+   [data-theme="dark"] block (so an explicit "dark" choice wins the other
+   direction). See app/providers/UiPreferencesContext.tsx.
+   ========================================================================== */
+:root {
+  --bg-page: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --border-card: #E2E8F0;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --input-bg: #FFFFFF;
+  --input-border: #CBD5E1;
+  --btn-bg: #4F46E5;
+  --btn-text: #FFFFFF;
+  --btn-disabled: #C7D2FE;
+  --btn-disabled-text: #4338CA;
+  --icon-btn-border: #E2E8F0;
+  --icon-btn-color: #64748B;
+
+  /* Shell tokens — WisalAppShell-LightLTR.dc.html */
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #E2E8F0;
+  --sidebar-width: 260px;
+  --header-bg: #FFFFFF;
+  --header-border: #E2E8F0;
+  --header-height: 68px;
+  --nav-active-bg: #EEF2FF;
+  --nav-active-fg: #4F46E5;
+  --nav-idle-fg: #475569;
+  --nav-group-label: #94A3B8;
+  --shell-breakpoint: 1024px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-page: #121317;
+    --bg-card: #1C1D24;
+    --border-card: #2A2C33;
+    --text-main: #F1F5F9;
+    --text-muted: #94A3B8;
+    --input-bg: #121317;
+    --input-border: #2A2C33;
+    --btn-bg: #818CF8;
+    --btn-text: #1C1D24;
+    --btn-disabled: #3730A3;
+    --btn-disabled-text: #818CF8;
+    --icon-btn-border: #2A2C33;
+    --icon-btn-color: #94A3B8;
+
+    /* WisalAppShell-DarkLTR.dc.html */
+    --sidebar-bg: #1C1D24;
+    --sidebar-border: #2A2C33;
+    --header-bg: #1C1D24;
+    --header-border: #2A2C33;
+    --nav-active-bg: rgba(129, 140, 248, 0.14);
+    --nav-active-fg: #A5B4FC;
+    --nav-idle-fg: #94A3B8;
+    --nav-group-label: #94A3B8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg-page: #121317;
+  --bg-card: #1C1D24;
+  --border-card: #2A2C33;
+  --text-main: #F1F5F9;
+  --text-muted: #94A3B8;
+  --input-bg: #121317;
+  --input-border: #2A2C33;
+  --btn-bg: #818CF8;
+  --btn-text: #1C1D24;
+  --btn-disabled: #3730A3;
+  --btn-disabled-text: #818CF8;
+  --icon-btn-border: #2A2C33;
+  --icon-btn-color: #94A3B8;
+
+  --sidebar-bg: #1C1D24;
+  --sidebar-border: #2A2C33;
+  --header-bg: #1C1D24;
+  --header-border: #2A2C33;
+  --nav-active-bg: rgba(129, 140, 248, 0.14);
+  --nav-active-fg: #A5B4FC;
+  --nav-idle-fg: #94A3B8;
+  --nav-group-label: #94A3B8;
+}
+
+:root[data-theme="light"] {
+  --bg-page: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --border-card: #E2E8F0;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --input-bg: #FFFFFF;
+  --input-border: #CBD5E1;
+  --btn-bg: #4F46E5;
+  --btn-text: #FFFFFF;
+  --btn-disabled: #C7D2FE;
+  --btn-disabled-text: #4338CA;
+  --icon-btn-border: #E2E8F0;
+  --icon-btn-color: #64748B;
+
+  --sidebar-bg: #FFFFFF;
+  --sidebar-border: #E2E8F0;
+  --header-bg: #FFFFFF;
+  --header-border: #E2E8F0;
+  --nav-active-bg: #EEF2FF;
+  --nav-active-fg: #4F46E5;
+  --nav-idle-fg: #475569;
+  --nav-group-label: #94A3B8;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   App shell — sidebar + header, see app/layouts/AppLayout.tsx
+   ========================================================================== */
+
+.skip-link {
+  position: fixed;
+  inset-inline-start: 8px;
+  inset-block-start: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--text-main);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: Inter, 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+}
+
+.shell-sidebar {
+  inline-size: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--sidebar-bg);
+  border-inline-end: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  padding-block: 20px;
+  padding-inline: 14px;
+}
+
+.shell-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 8px 20px;
+  padding-inline: 10px;
+  color: var(--nav-active-fg);
+}
+.shell-brand-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.shell-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.shell-nav-group-label {
+  margin-block-start: 18px;
+  margin-block-end: 6px;
+  padding-inline: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--nav-group-label);
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 9px;
+  padding-inline: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nav-idle-fg);
+  text-decoration: none;
+  min-height: 40px;
+}
+.nav-item--active {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+  font-weight: 600;
+}
+.nav-item:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+
+.shell-sidebar-user {
+  margin-block-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--bg-page);
+}
+.shell-avatar {
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 999px;
+  background: var(--nav-active-fg);
+  color: var(--btn-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.shell-sidebar-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.shell-sidebar-user-role {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.shell-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.shell-header {
+  block-size: var(--header-height);
+  flex-shrink: 0;
+  background-color: var(--header-bg);
+  border-block-end: 1px solid var(--header-border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-inline: 24px;
+}
+
+.shell-drawer-toggle {
+  display: none;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--header-border);
+  background: var(--bg-card);
+  color: var(--nav-idle-fg);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.shell-drawer-toggle:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+
+.shell-search {
+  flex: 1;
+  max-inline-size: 420px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-page);
+  border: 1px solid var(--header-border);
+  border-radius: 8px;
+  padding-block: 8px;
+  padding-inline: 12px;
+  color: var(--text-muted);
+}
+.shell-search-text {
+  font-size: 13px;
+  flex: 1;
+}
+.shell-search-kbd {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--header-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  direction: ltr; /* a keyboard shortcut never mirrors under RTL */
+}
+
+.shell-header-spacer { flex: 1; }
+
+.shell-new-ticket-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-active-fg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 8px;
+  padding-block: 9px;
+  padding-inline: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.shell-new-ticket-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+
+.shell-header-divider {
+  inline-size: 1px;
+  block-size: 24px;
+  background: var(--header-border);
+}
+
+.shell-icon-btn {
+  position: relative;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--header-border);
+  background: var(--bg-card);
+  color: var(--nav-idle-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.shell-icon-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.shell-icon-btn:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+.shell-notification-dot {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 999px;
+  background: #DC2626;
+  border: 1.5px solid var(--header-bg);
+}
+
+.shell-header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-inline-start: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-main);
+}
+.shell-header-user:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.shell-header-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.shell-header-user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.shell-header-user-role {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--nav-active-fg);
+  background: var(--nav-active-bg);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.shell-main {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-x: auto;
+  padding-block: 24px;
+  padding-inline: 28px;
+}
+/* Suppress the browser's default focus ring only when focus was triggered by
+   a pointer (skip-link click) — keyboard users keep a visible ring. */
+.shell-main:focus:not(:focus-visible) { outline: none; }
+
+/* Header-user skeleton — reserves the exact slot dimensions so the name
+   arriving does not shift layout. */
+.shell-user-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shell-skeleton-circle {
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 999px;
+  background: var(--border-card);
+}
+.shell-skeleton-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.shell-skeleton-bar {
+  block-size: 8px;
+  border-radius: 4px;
+  background: var(--border-card);
+}
+.shell-skeleton-bar--name { inline-size: 72px; }
+.shell-skeleton-bar--role { inline-size: 48px; }
+.shell-skeleton-circle,
+.shell-skeleton-bar {
+  animation: shell-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shell-skeleton-shimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell-skeleton-circle,
+  .shell-skeleton-bar { animation: none; }
+}
+
+/* Responsive: below the breakpoint the sidebar becomes a drawer. */
+.shell-drawer-backdrop {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .shell-drawer-toggle { display: flex; }
+
+  .shell-sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  [dir='rtl'] .shell-sidebar {
+    transform: translateX(100%);
+  }
+  .shell-sidebar[data-open='true'] {
+    transform: none;
+  }
+
+  .shell-drawer-backdrop[data-open='true'] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 30;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-sidebar { transition: none; }
+}

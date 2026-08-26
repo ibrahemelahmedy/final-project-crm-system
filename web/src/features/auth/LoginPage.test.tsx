@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './LoginPage';
 import { AuthProvider } from './AuthContext';
+import { UiPreferencesProvider } from '../../app/providers/UiPreferencesContext';
 import { api } from '../../lib/api';
 
 vi.mock('../../lib/api', async () => {
@@ -31,11 +32,13 @@ describe('LoginPage', () => {
     });
     return render(
       <QueryClientProvider client={testQueryClient}>
-        <MemoryRouter>
-          <AuthProvider>
-            <LoginPage />
-          </AuthProvider>
-        </MemoryRouter>
+        <UiPreferencesProvider>
+          <MemoryRouter>
+            <AuthProvider>
+              <LoginPage />
+            </AuthProvider>
+          </MemoryRouter>
+        </UiPreferencesProvider>
       </QueryClientProvider>
     );
   };
@@ -256,14 +259,16 @@ describe('LoginPage', () => {
     });
     render(
       <QueryClientProvider client={testQueryClient}>
-        <MemoryRouter initialEntries={['/login']}>
-          <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/dashboard" element={<div>landed:/dashboard</div>} />
-            </Routes>
-          </AuthProvider>
-        </MemoryRouter>
+        <UiPreferencesProvider>
+          <MemoryRouter initialEntries={['/login']}>
+            <AuthProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<div>landed:/dashboard</div>} />
+              </Routes>
+            </AuthProvider>
+          </MemoryRouter>
+        </UiPreferencesProvider>
       </QueryClientProvider>
     );
 
@@ -301,14 +306,16 @@ describe('LoginPage', () => {
     });
     render(
       <QueryClientProvider client={testQueryClient}>
-        <MemoryRouter initialEntries={['/login']}>
-          <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/dashboard/admin" element={<div>landed:/dashboard/admin</div>} />
-            </Routes>
-          </AuthProvider>
-        </MemoryRouter>
+        <UiPreferencesProvider>
+          <MemoryRouter initialEntries={['/login']}>
+            <AuthProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard/admin" element={<div>landed:/dashboard/admin</div>} />
+              </Routes>
+            </AuthProvider>
+          </MemoryRouter>
+        </UiPreferencesProvider>
       </QueryClientProvider>
     );
 

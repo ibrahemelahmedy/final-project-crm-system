@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { loginSchema, type LoginValues } from './loginSchema';
 import { useLogin } from './useLogin';
+import { useUiPreferences } from '../../app/providers/UiPreferencesContext';
 
-type Theme = 'system' | 'light' | 'dark';
 type Lang = 'en' | 'ar';
 
 const translations = {
@@ -43,48 +43,17 @@ const translations = {
   },
 } as const;
 
-function getInitialTheme(): Theme {
-  try {
-    const saved = localStorage.getItem('wisal-theme') as Theme | null;
-    if (saved === 'light' || saved === 'dark' || saved === 'system') return saved;
-  } catch {}
-  return 'system';
-}
-
-function getInitialLang(): Lang {
-  try {
-    const saved = localStorage.getItem('wisal-lang') as Lang | null;
-    if (saved === 'en' || saved === 'ar') return saved;
-  } catch {}
-  return 'en';
-}
-
 export const LoginPage: React.FC = () => {
   const mutation = useLogin();
   const [retrySeconds, setRetrySeconds] = useState<number | null>(null);
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [lang, setLang] = useState<Lang>(getInitialLang);
+  const { resolvedTheme, toggleTheme, direction, setDirection } = useUiPreferences();
 
+  const lang: Lang = direction === 'rtl' ? 'ar' : 'en';
   const t = translations[lang];
-  const dir = lang === 'ar' ? 'rtl' : 'ltr';
-
-  const resolvedTheme: 'light' | 'dark' =
-    theme === 'system'
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      : theme;
-
-  const toggleTheme = () => {
-    const next: Theme = resolvedTheme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    try { localStorage.setItem('wisal-theme', next); } catch {}
-  };
+  const dir = direction;
 
   const toggleLang = () => {
-    const next: Lang = lang === 'en' ? 'ar' : 'en';
-    setLang(next);
-    try { localStorage.setItem('wisal-lang', next); } catch {}
+    setDirection(direction === 'rtl' ? 'ltr' : 'rtl');
   };
 
   const {
@@ -154,68 +123,6 @@ export const LoginPage: React.FC = () => {
           padding-inline: 16px;
           box-sizing: border-box;
           font-family: Inter, 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
-
-          /* Light theme tokens */
-          --bg-page: #F8FAFC;
-          --bg-card: #FFFFFF;
-          --border-card: #E2E8F0;
-          --text-main: #0F172A;
-          --text-muted: #64748B;
-          --input-bg: #FFFFFF;
-          --input-border: #CBD5E1;
-          --btn-bg: #4F46E5;
-          --btn-text: #FFFFFF;
-          --btn-disabled: #C7D2FE;
-          --btn-disabled-text: #4338CA;
-          --icon-btn-border: #E2E8F0;
-          --icon-btn-color: #64748B;
-        }
-        @media (prefers-color-scheme: dark) {
-          .login-root:not([data-theme="light"]) {
-            --bg-page: #121317;
-            --bg-card: #1C1D24;
-            --border-card: #2A2C33;
-            --text-main: #F1F5F9;
-            --text-muted: #94A3B8;
-            --input-bg: #121317;
-            --input-border: #2A2C33;
-            --btn-bg: #818CF8;
-            --btn-text: #1C1D24;
-            --btn-disabled: #3730A3;
-            --btn-disabled-text: #818CF8;
-            --icon-btn-border: #2A2C33;
-            --icon-btn-color: #94A3B8;
-          }
-        }
-        .login-root[data-theme="dark"] {
-          --bg-page: #121317;
-          --bg-card: #1C1D24;
-          --border-card: #2A2C33;
-          --text-main: #F1F5F9;
-          --text-muted: #94A3B8;
-          --input-bg: #121317;
-          --input-border: #2A2C33;
-          --btn-bg: #818CF8;
-          --btn-text: #1C1D24;
-          --btn-disabled: #3730A3;
-          --btn-disabled-text: #818CF8;
-          --icon-btn-border: #2A2C33;
-          --icon-btn-color: #94A3B8;
-        }
-        .login-root[data-theme="light"] {
-          --bg-page: #F8FAFC;
-          --bg-card: #FFFFFF;
-          --border-card: #E2E8F0;
-          --text-main: #0F172A;
-          --text-muted: #64748B;
-          --input-bg: #FFFFFF;
-          --input-border: #CBD5E1;
-          --btn-bg: #4F46E5;
-          --btn-text: #FFFFFF;
-          --btn-disabled: #C7D2FE;
-          --btn-disabled-text: #4338CA;
-          --icon-btn-border: #E2E8F0;
-          --icon-btn-color: #64748B;
         }
 
         /* Outer wrapper: 400px column, everything stacked */

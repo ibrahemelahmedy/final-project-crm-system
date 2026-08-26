@@ -5,3 +5,4 @@ One row per feature folder under `.squad/plans/`. `NN` continues as a global exe
 | Feature | Overview | NN range |
 |---------|----------|----------|
 | authentication | [authentication/00-overview.md](authentication/00-overview.md) | 01 |
+| app-shell | [app-shell/00-overview.md](app-shell/00-overview.md) | 02 |
