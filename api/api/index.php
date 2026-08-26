@@ -16,15 +16,32 @@ foreach ([
     }
 }
 
-require __DIR__ . '/../vendor/autoload.php';
+// The function lives at /api/index.php, so Symfony would treat "/api" as the script
+// base and strip it from the path — hiding every /api/* route. Pin the script to root.
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['SCRIPT_FILENAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
 
-$app = require_once __DIR__ . '/../bootstrap/app.php';
-$app->useStoragePath($storageDir);
+try {
+    require __DIR__ . '/../vendor/autoload.php';
 
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+    $app = require_once __DIR__ . '/../bootstrap/app.php';
+    $app->useStoragePath($storageDir);
 
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-)->send();
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-$kernel->terminate($request, $response);
+    $response = $kernel->handle(
+        $request = Illuminate\Http\Request::capture()
+    )->send();
+
+    $kernel->terminate($request, $response);
+} catch (\Throwable $e) {
+    // Boot-time failures happen before Laravel's handler exists — surface them.
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'boot_error' => $e->getMessage(),
+        'file' => $e->getFile() . ':' . $e->getLine(),
+        'trace' => array_slice(explode("\n", $e->getTraceAsString()), 0, 12),
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+}

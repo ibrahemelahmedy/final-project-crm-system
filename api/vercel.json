@@ -4,6 +4,9 @@
   "buildCommand": "echo 'PHP project'",
   "installCommand": "echo 'skip'",
   "outputDirectory": "public",
+  "env": {
+    "APP_DEBUG": "true"
+  },
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.8.0"
