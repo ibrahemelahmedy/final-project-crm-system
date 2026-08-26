@@ -1,8 +1,9 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "echo 'PHP project - vendor included'",
+  "buildCommand": "echo 'PHP project'",
   "installCommand": "echo 'skip'",
+  "outputDirectory": "public",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
