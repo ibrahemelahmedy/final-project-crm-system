@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -47,5 +48,29 @@ class User extends Authenticatable
     public function canSeeTeamQueue(): bool
     {
         return in_array($this->role, [UserRole::TeamLead, UserRole::Administrator], true);
+    }
+
+    /**
+     * First letter of the first and last whitespace-separated word of name,
+     * upper-cased; a single-word name yields one letter. Used by
+     * TicketResource's assignee shape — not stored.
+     */
+    public function initials(): string
+    {
+        $words = Str::of($this->name)->squish()->explode(' ')->filter()->values();
+
+        if ($words->isEmpty()) {
+            return '';
+        }
+
+        $first = Str::upper(Str::substr($words->first(), 0, 1));
+
+        if ($words->count() === 1) {
+            return $first;
+        }
+
+        $last = Str::upper(Str::substr($words->last(), 0, 1));
+
+        return $first.$last;
     }
 }

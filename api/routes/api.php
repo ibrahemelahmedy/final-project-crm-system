@@ -18,7 +18,15 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
     Route::get('/user', fn (Request $r) => new UserResource($r->user()));
+    // /tickets/meta and /tickets/bulk must be declared before the
+    // /tickets/{ticket} routes, or {ticket} swallows them as a model-binding id.
     Route::get('/tickets', [TicketController::class, 'index']);
+    Route::get('/tickets/meta', [TicketController::class, 'meta']);
+    Route::post('/tickets', [TicketController::class, 'store']);
+    Route::post('/tickets/bulk', [TicketController::class, 'bulk']);
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show']);
+    Route::patch('/tickets/{ticket}', [TicketController::class, 'update']);
+    Route::get('/tickets/{ticket}/events', [TicketController::class, 'events']);
 
     // /customers/facets and /customers/bulk must be declared before the
     // /customers/{customer} resource routes, or {customer} swallows them.

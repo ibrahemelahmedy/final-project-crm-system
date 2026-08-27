@@ -1560,9 +1560,9 @@ Indexes: `assigned_to` (scaffold) · `(assigned_to, status, created_at)` · `(st
 
 ## Done Criteria
 
-- [ ] `api/database/migrations/2026_08_25_200001_create_tickets_table.php` is **byte-for-byte unchanged**; every new column arrived through a new migration.
-- [ ] The `tickets` table matches the shared-contract table exactly, `customer_id` is **NOT NULL** with a `restrictOnDelete` FK to `customers`, and all five indexes exist.
-- [ ] `Priority`, `TicketStatus` and `Channel` exist in `api/app/Enums/` with exactly the cases and labels pinned above, and `Ticket::casts()` casts all three.
+- [x] `api/database/migrations/2026_08_25_200001_create_tickets_table.php` is **byte-for-byte unchanged**; every new column arrived through a new migration.
+- [x] The `tickets` table matches the shared-contract table exactly, `customer_id` is **NOT NULL** with a `restrictOnDelete` FK to `customers`, and all five indexes exist.
+- [x] `Priority`, `TicketStatus` and `Channel` exist in `api/app/Enums/` with exactly the cases and labels pinned above, and `Ticket::casts()` casts all three.
 - [ ] `ticket_events` exists, is append-only, and records `created`, `status_changed`, `priority_changed`, `category_changed`, `assigned`, `unassigned` and `reopened` with the actor's id and timestamp — **asserted by a test**, not by inspection. No ticket lifecycle change is written to `audit_logs`.
 - [ ] `GET /api/tickets` applies `visibleTo()` **before** any facet, and a test proves an Agent cannot widen their own scope with `?assigned_to[]=` — including the `unassigned` sentinel.
 - [ ] Sorting by priority orders urgent → high → normal → low, driven by `Priority::sortExpression()`; an unknown `sort` key falls back to newest-first rather than erroring.
@@ -1570,19 +1570,19 @@ Indexes: `assigned_to` (scaffold) · `(assigned_to, status, created_at)` · `(st
 - [ ] `POST /api/tickets` requires customer, category and priority; **leaves `assigned_to` null when none is given**; records `created_by`; and forces `status` to `open`.
 - [ ] `PATCH /api/tickets/{ticket}` rejects an illegal transition with 422, sets `resolved_at` / `closed_at`, and **clears `resolved_at` when a ticket leaves `resolved`**.
 - [ ] `POST /api/tickets/bulk` authorises **per row**, returns **200** with `{applied, skipped}` even when every row is skipped, caps at 100 ids, and runs inside a transaction with `lockForUpdate()`.
-- [ ] `TicketResource` matches the pinned JSON shape, including the fixed four-key `sla` object, and **never** exposes an assignee email — `tests/Feature/TicketScopeTest.php`'s two tests pass with their assertions unchanged.
-- [ ] `/tickets` renders the real queue; `PagePlaceholder` no longer appears at that route; `web/src/App.tsx` is otherwise unchanged.
-- [ ] The queue row shows channel icon, `#id`, subject, last-updated, customer, priority, status, assignee and SLA — **nine columns**, with priority and status as **two separate labelled badges**.
-- [ ] All four states ship, each from its own component, with **two** distinct empty-state copies (filtered vs. genuinely empty) and an error state containing no stack trace and no API URL.
-- [ ] Filter, sort, page and page-size state round-trips through the URL: a copied URL reproduces the view in a new tab, survives a reload, and the back button walks the filter history. A malformed URL falls back to defaults instead of crashing.
-- [ ] Selecting rows raises the bulk bar; the confirmation names the count and the action; a partial result reports the skipped count to the user rather than claiming success.
-- [ ] The header's **New Ticket** button is no longer `disabled`; it links to `/tickets?new=1` and the modal's open state lives in the URL.
+- [x] `TicketResource` matches the pinned JSON shape, including the fixed four-key `sla` object, and **never** exposes an assignee email — `tests/Feature/TicketScopeTest.php`'s two tests pass with their assertions unchanged.
+- [x] `/tickets` renders the real queue; `PagePlaceholder` no longer appears at that route; `web/src/App.tsx` is otherwise unchanged.
+- [x] The queue row shows channel icon, `#id`, subject, last-updated, customer, priority, status, assignee and SLA — **nine columns**, with priority and status as **two separate labelled badges**.
+- [x] All four states ship, each from its own component, with **two** distinct empty-state copies (filtered vs. genuinely empty) and an error state containing no stack trace and no API URL.
+- [x] Filter, sort, page and page-size state round-trips through the URL: a copied URL reproduces the view in a new tab, survives a reload, and the back button walks the filter history. A malformed URL falls back to defaults instead of crashing.
+- [x] Selecting rows raises the bulk bar; the confirmation names the count and the action; a partial result reports the skipped count to the user rather than claiming success.
+- [x] The header's **New Ticket** button is no longer `disabled`; it links to `/tickets?new=1` and the modal's open state lives in the URL.
 - [ ] Every new token is declared in **all four** blocks of `web/src/index.css`, and a `CLOSED` status badge is visibly distinct from a `LOW` priority badge in both themes.
 - [ ] Below **900px** the table becomes cards on which priority, status and SLA-risk stay visible, and the page body never scrolls horizontally from 375px up.
 - [ ] Under RTL the column order mirrors, `#4821` still reads `#4821`, and the pagination chevrons mirror — the export's own omission is corrected, not copied.
-- [ ] No `outline: none` without a replacement anywhere in this story; the skeleton and the modal both respect `prefers-reduced-motion`; every interactive element has a visible focus ring.
+- [x] No `outline: none` without a replacement anywhere in this story; the skeleton and the modal both respect `prefers-reduced-motion`; every interactive element has a visible focus ring.
 - [ ] `npx vitest run` and `php artisan test` are both fully green, `npm run build` and `npm run lint` are clean, and `ReactQueryDevtools` is absent from the production bundle.
-- [ ] `.squad/plans/ticket-management/00-overview.md` records the Story 04 row and re-points the carried-forward `teams` debt at Story 08.
+- [x] `.squad/plans/ticket-management/00-overview.md` records the Story 04 row and re-points the carried-forward `teams` debt at Story 08.
 
 ---
 

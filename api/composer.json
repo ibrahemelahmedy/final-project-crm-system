@@ -44,6 +44,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
+            "@php artisan migrate --graceful --force --ansi",
             "@php artisan dev"
         ],
         "test": [

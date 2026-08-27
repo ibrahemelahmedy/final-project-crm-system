@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CustomerTier;
+use App\Enums\TicketStatus;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class Customer extends Model
@@ -92,18 +92,13 @@ class Customer extends Model
         return $first.$last;
     }
 
-    /**
-     * Open = a ticket whose status is not in ['resolved', 'closed'].
-     * Story 04 replaces the literal with TicketStatus::openStates() without
-     * renaming the JSON key or this scope. See contract C5.
-     */
+    /** Open = a ticket whose status is not resolved or closed. */
     public function scopeWithOpenTicketCount(Builder $query): Builder
     {
-        if (! Schema::hasColumn('tickets', 'customer_id')) {
-            return $query->selectRaw('0 as open_tickets_count');
-        }
-
-        return $query->withCount(['tickets as open_tickets_count' => fn ($q) => $q->whereNotIn('status', ['resolved', 'closed'])]);
+        return $query->withCount(['tickets as open_tickets_count' => fn ($q) => $q->whereNotIn(
+            'status',
+            [TicketStatus::Resolved->value, TicketStatus::Closed->value]
+        )]);
     }
 
     public function scopeSearch(Builder $query, ?string $term): Builder
@@ -137,6 +132,8 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // No tickets() relation — tickets.customer_id does not exist yet.
-    // Contract C3 assigns that relation to Story 04 (Ticket Management).
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

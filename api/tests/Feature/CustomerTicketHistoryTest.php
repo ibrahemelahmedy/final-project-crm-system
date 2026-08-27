@@ -2,6 +2,7 @@
 
 use App\Enums\UserRole;
 use App\Models\Customer;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,16 +13,32 @@ beforeEach(function () {
     $this->agentToken = $this->agent->createToken('spa')->plainTextToken;
 });
 
-// The Ticket Management story (WIS-2) adds tickets.customer_id. This test is
-// expected to be updated (or replaced) by that story once the column exists —
-// it locks in the "pending" seam, not the eventual live-data behaviour.
-it('returns an empty page flagged with the pending story while tickets has no customer_id', function () {
+it('returns the tickets belonging to a customer, newest first', function () {
+    $customer = Customer::factory()->create();
+    $other = Customer::factory()->create();
+
+    Ticket::factory()->create(['customer_id' => $other->id, 'subject' => 'Not this customer']);
+
+    $older = Ticket::factory()->create(['customer_id' => $customer->id, 'subject' => 'Older ticket']);
+    $older->forceFill(['created_at' => now()->subDay()])->saveQuietly();
+
+    $newer = Ticket::factory()->create(['customer_id' => $customer->id, 'subject' => 'Newer ticket']);
+    $newer->forceFill(['created_at' => now()])->saveQuietly();
+
+    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+        ->getJson("/api/customers/{$customer->id}/tickets");
+
+    $response->assertOk()->assertJsonCount(2, 'data');
+
+    $subjects = $response->json('data.*.subject');
+    expect($subjects)->toBe(['Newer ticket', 'Older ticket']);
+});
+
+it('returns an empty page for a customer with no tickets', function () {
     $customer = Customer::factory()->create();
 
     $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
         ->getJson("/api/customers/{$customer->id}/tickets");
 
-    $response->assertOk()
-        ->assertJsonPath('meta.pending_story', 'WIS-2')
-        ->assertJsonCount(0, 'data');
+    $response->assertOk()->assertJsonCount(0, 'data');
 });

@@ -29,15 +29,15 @@ beforeEach(function () {
         'is_active' => true,
     ]);
 
-    Ticket::create([
+    Ticket::factory()->create([
         'subject' => 'Ticket Agent One 1',
         'assigned_to' => $this->agent1->id,
     ]);
-    Ticket::create([
+    Ticket::factory()->create([
         'subject' => 'Ticket Agent One 2',
         'assigned_to' => $this->agent1->id,
     ]);
-    Ticket::create([
+    Ticket::factory()->create([
         'subject' => 'Ticket Agent Two 1',
         'assigned_to' => $this->agent2->id,
     ]);

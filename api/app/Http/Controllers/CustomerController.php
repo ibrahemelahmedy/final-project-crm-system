@@ -15,7 +15,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CustomerController extends Controller
@@ -138,26 +137,20 @@ class CustomerController extends Controller
 
     /**
      * Interaction history — derived LIVE from the Ticket entity, never a
-     * denormalized copy on the customers table. The Ticket Management story
-     * (WIS-2) adds tickets.customer_id; until then this returns an empty
-     * page and says so via meta.pending_story.
+     * denormalized copy on the customers table.
      *
      * Deliberately not scoped by Ticket::visibleTo() — a customer profile
-     * shows that customer's whole history. Flagged for Story 04 to revisit.
+     * shows that customer's whole history.
      */
-    public function tickets(Request $request, Customer $customer): JsonResponse|AnonymousResourceCollection
+    public function tickets(Request $request, Customer $customer): AnonymousResourceCollection
     {
         $this->authorize('view', $customer);
 
-        if (! Schema::hasColumn('tickets', 'customer_id')) {
-            return response()->json([
-                'data' => [],
-                'meta' => ['total' => 0, 'current_page' => 1, 'last_page' => 1, 'per_page' => 20, 'pending_story' => 'WIS-2'],
-            ]);
-        }
-
         return TicketResource::collection(
-            Ticket::where('customer_id', $customer->id)->latest()->paginate(20)
+            Ticket::where('customer_id', $customer->id)
+                ->with(['assignee:id,name', 'customer:id,name'])
+                ->latest()
+                ->paginate(20)
         );
     }
 
