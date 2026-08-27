@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
 import { useUiPreferences } from '../providers/UiPreferencesContext';
 import { NavItem } from '../components/NavItem';
@@ -148,12 +148,15 @@ export const AppLayout: React.FC = () => {
 
           <div className="shell-header-spacer" />
 
-          <button type="button" className="shell-new-ticket-btn" disabled title="Coming soon">
+          {/* The shell must not hold feature state: ?new=1 makes "open the
+              create modal" a routable, shareable, back-button-correct fact
+              that TicketQueuePage reads. */}
+          <Link className="shell-new-ticket-btn" to="/tickets?new=1">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14 M5 12h14" />
             </svg>
             New Ticket
-          </button>
+          </Link>
 
           <div className="shell-header-divider" />
 

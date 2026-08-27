@@ -49,7 +49,11 @@ body, html, #root {
   --table-header-fg: #94A3B8;        /* LightLTR line 72 */
   --table-row-border: #F1F5F9;       /* LightLTR line 82 */
   --table-row-alt: #F8FAFC;          /* LightLTR line 87 — zebra */
-  --table-row-selected: #F8FAFC;     /* LightLTR line 87 — selected */
+  /* Story 04 adopted the ticket-queue export's selected fill
+     (WisalTicketQueue-LightLTR line 129). It also fixes the light-theme case
+     Story 03 left where selected and zebra resolved to the same #F8FAFC and a
+     selected row was visually indistinguishable. */
+  --table-row-selected: #EEF2FF;
   --table-sort-idle: #CBD5E1;        /* LightLTR line 74 */
   --table-checkbox-border: #CBD5E1;  /* LightLTR line 83 */
   --bulk-bar-bg: #EEF2FF;            /* LightRTL line 66 */
@@ -59,6 +63,33 @@ body, html, #root {
   --tier-premium-bg: #FFFBEB;    --tier-premium-fg: #B45309;     /* LightLTR line 105 — badge_text_on_tint */
   --tier-enterprise-bg: #EEF2FF; --tier-enterprise-fg: #4F46E5;  /* LightLTR line 85 */
   --skeleton-bg: #E2E8F0;            /* LoadingState line 16 */
+
+  /* Ticket queue — WisalTicketQueue-*.dc.html (docs/design/references/2.ticket-queue).
+     Priority and status are deliberately two separate token sets:
+     docs/design/brief.md line 217 forbids conflating them. */
+  --prio-urgent-fg: #B91C1C;  --prio-urgent-bg: #FEF2F2;   /* L127 — badge_text_on_tint */
+  --prio-high-fg: #B45309;    --prio-high-bg: #FFFBEB;     /* L132 — badge_text_on_tint */
+  --prio-normal-fg: #2563EB;  --prio-normal-bg: #EFF6FF;   /* L142 */
+  --prio-low-fg: #64748B;     --prio-low-bg: #F1F5F9;      /* L157 */
+  --status-open-fg: #4F46E5;     --status-open-bg: #EEF2FF;      /* L127 */
+  --status-pending-fg: #0E7490;  --status-pending-bg: #ECFEFF;   /* L132 */
+  --status-resolved-fg: #059669; --status-resolved-bg: #ECFDF5;  /* L157 */
+  /* No export depicts a CLOSED badge; decided in the Story 04 plan. A darker
+     slate than --prio-low-* so the two never read as the same grey chip in
+     adjacent columns. */
+  --status-closed-fg: #334155;   --status-closed-bg: #E2E8F0;
+  /* --sla-none is deliberately lighter than --sla-ok here and darker in dark
+     mode. The swap is what keeps the "no SLA" dash quieter in each theme. */
+  --sla-breached: #B91C1C;           /* L127 */
+  --sla-at-risk: #B45309;            /* L132 */
+  --sla-ok: #64748B;                 /* L142 */
+  --sla-none: #94A3B8;               /* L157 */
+  --danger-fg: #B91C1C;              /* L90 */
+  --skeleton-base: #EEF0F3;          /* LoadingState line 15 */
+  --skeleton-sheen: #F5F6F8;
+  /* Not --shell-breakpoint (1024px): the sidebar collapses there, but a
+     nine-column table survives past it in the widened content area. */
+  --queue-table-breakpoint: 900px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -101,6 +132,24 @@ body, html, #root {
     --tier-premium-bg: rgba(251, 191, 36, 0.14);    --tier-premium-fg: #FBBF24;
     --tier-enterprise-bg: rgba(129, 140, 248, 0.14); --tier-enterprise-fg: #A5B4FC;
     --skeleton-bg: #2A2C33;
+
+    /* WisalTicketQueue-DarkLTR.dc.html */
+    --prio-urgent-fg: #F87171;  --prio-urgent-bg: rgba(248, 113, 113, 0.14);   /* D125 */
+    --prio-high-fg: #FBBF24;    --prio-high-bg: rgba(251, 191, 36, 0.14);      /* D130 */
+    --prio-normal-fg: #60A5FA;  --prio-normal-bg: rgba(96, 165, 250, 0.14);    /* D140 */
+    --prio-low-fg: #94A3B8;     --prio-low-bg: rgba(148, 163, 184, 0.14);      /* D155 */
+    --status-open-fg: #A5B4FC;     --status-open-bg: rgba(129, 140, 248, 0.14);    /* D125 */
+    --status-pending-fg: #22D3EE;  --status-pending-bg: rgba(34, 211, 238, 0.14);  /* D130 */
+    --status-resolved-fg: #34D399; --status-resolved-bg: rgba(52, 211, 153, 0.14); /* D155 */
+    --status-closed-fg: #CBD5E1;   --status-closed-bg: rgba(203, 213, 225, 0.14);
+    --sla-breached: #F87171;           /* D125 */
+    --sla-at-risk: #FBBF24;            /* D130 */
+    --sla-ok: #94A3B8;                 /* D140 */
+    --sla-none: #64748B;               /* D155 — quieter than --sla-ok, mirroring light */
+    --danger-fg: #F87171;              /* D89 */
+    --skeleton-base: #202128;
+    --skeleton-sheen: #2A2C33;
+    --queue-table-breakpoint: 900px;
   }
 }
 
@@ -141,6 +190,23 @@ body, html, #root {
   --tier-premium-bg: rgba(251, 191, 36, 0.14);     --tier-premium-fg: #FBBF24;
   --tier-enterprise-bg: rgba(129, 140, 248, 0.14); --tier-enterprise-fg: #A5B4FC;
   --skeleton-bg: #2A2C33;
+
+  --prio-urgent-fg: #F87171;  --prio-urgent-bg: rgba(248, 113, 113, 0.14);
+  --prio-high-fg: #FBBF24;    --prio-high-bg: rgba(251, 191, 36, 0.14);
+  --prio-normal-fg: #60A5FA;  --prio-normal-bg: rgba(96, 165, 250, 0.14);
+  --prio-low-fg: #94A3B8;     --prio-low-bg: rgba(148, 163, 184, 0.14);
+  --status-open-fg: #A5B4FC;     --status-open-bg: rgba(129, 140, 248, 0.14);
+  --status-pending-fg: #22D3EE;  --status-pending-bg: rgba(34, 211, 238, 0.14);
+  --status-resolved-fg: #34D399; --status-resolved-bg: rgba(52, 211, 153, 0.14);
+  --status-closed-fg: #CBD5E1;   --status-closed-bg: rgba(203, 213, 225, 0.14);
+  --sla-breached: #F87171;
+  --sla-at-risk: #FBBF24;
+  --sla-ok: #94A3B8;
+  --sla-none: #64748B;
+  --danger-fg: #F87171;
+  --skeleton-base: #202128;
+  --skeleton-sheen: #2A2C33;
+  --queue-table-breakpoint: 900px;
 }
 
 :root[data-theme="light"] {
@@ -170,7 +236,8 @@ body, html, #root {
   --table-header-fg: #94A3B8;
   --table-row-border: #F1F5F9;
   --table-row-alt: #F8FAFC;
-  --table-row-selected: #F8FAFC;
+  /* See the bare :root block — Story 04 adopted the queue export's value. */
+  --table-row-selected: #EEF2FF;
   --table-sort-idle: #CBD5E1;
   --table-checkbox-border: #CBD5E1;
   --bulk-bar-bg: #EEF2FF;
@@ -180,6 +247,23 @@ body, html, #root {
   --tier-premium-bg: #FFFBEB;    --tier-premium-fg: #B45309;
   --tier-enterprise-bg: #EEF2FF; --tier-enterprise-fg: #4F46E5;
   --skeleton-bg: #E2E8F0;
+
+  --prio-urgent-fg: #B91C1C;  --prio-urgent-bg: #FEF2F2;
+  --prio-high-fg: #B45309;    --prio-high-bg: #FFFBEB;
+  --prio-normal-fg: #2563EB;  --prio-normal-bg: #EFF6FF;
+  --prio-low-fg: #64748B;     --prio-low-bg: #F1F5F9;
+  --status-open-fg: #4F46E5;     --status-open-bg: #EEF2FF;
+  --status-pending-fg: #0E7490;  --status-pending-bg: #ECFEFF;
+  --status-resolved-fg: #059669; --status-resolved-bg: #ECFDF5;
+  --status-closed-fg: #334155;   --status-closed-bg: #E2E8F0;
+  --sla-breached: #B91C1C;
+  --sla-at-risk: #B45309;
+  --sla-ok: #64748B;
+  --sla-none: #94A3B8;
+  --danger-fg: #B91C1C;
+  --skeleton-base: #EEF0F3;
+  --skeleton-sheen: #F5F6F8;
+  --queue-table-breakpoint: 900px;
 }
 
 body {
@@ -398,7 +482,14 @@ body {
   font-size: 13px;
   font-weight: 600;
 }
+/* Now a <Link>. :disabled is kept because nothing else uses the class and a
+   later story may render it as a button again. */
 .shell-new-ticket-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.shell-new-ticket-btn { text-decoration: none; }
+.shell-new-ticket-btn:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
 
 .shell-header-divider {
   inline-size: 1px;
@@ -1042,3 +1133,654 @@ body {
 .attachment-row { display: flex; align-items: center; gap: 10px; font-size: 13px; flex-wrap: wrap; }
 .attachment-name { font-weight: 600; }
 .attachment-meta { color: var(--text-muted); font-size: 12px; margin-inline-end: auto; }
+
+/* ==========================================================================
+   Ticket queue — Story 04 (WIS-2)
+   Built from docs/design/references/2.ticket-queue/WisalTicketQueue-*.dc.html.
+   Logical properties throughout, so RTL needs no second stylesheet: a CSS
+   grid-template-columns mirrors automatically under dir="rtl".
+   ========================================================================== */
+
+.tq-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Numerals inside sentences, and the ticket reference, must not reverse. */
+.tq-ltr { display: inline-block; }
+
+/* .shell-main already supplies the outer padding — the page adds none. */
+.tq-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-inline-size: 0;
+}
+
+.tq-page-head { display: flex; flex-direction: column; gap: 2px; }
+.tq-page-title { font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; }
+.tq-page-subtitle { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+.tq-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+/* The horizontal overflow lives here, so a wide table scrolls INSIDE its
+   container and the page body never scrolls sideways. */
+.tq-table-scroll { overflow-x: auto; min-inline-size: 0; }
+
+.tq-table { inline-size: 100%; display: block; border-collapse: collapse; }
+.tq-table[data-dimmed="true"] { opacity: 0.6; transition: opacity 120ms ease; }
+.tq-thead { display: block; }
+.tq-table tbody { display: block; }
+
+/* THE nine-column grid. One definition — it mirrors under RTL by itself. */
+.tq-row {
+  display: grid;
+  grid-template-columns: 32px 28px 70px 1.5fr 1fr 100px 110px 120px 100px;
+  align-items: center;
+  gap: 8px;
+  padding-block: 10px;
+  padding-inline: 14px;
+  min-inline-size: 780px;
+}
+
+.tq-head-row {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--table-header-fg);
+  border-block-end: 1px solid var(--border-card);
+  text-transform: uppercase;
+}
+
+.tq-body-row {
+  font-size: 12.5px;
+  color: var(--text-main);
+  border-block-end: 1px solid var(--table-row-border);
+}
+.tq-body-row:last-child { border-block-end: none; }
+.tq-body-row[data-zebra="true"] { background: var(--table-row-alt); }
+/* Source order: selected wins over zebra. */
+.tq-body-row[data-selected="true"] { background: var(--table-row-selected); }
+
+.tq-cell { display: flex; align-items: center; min-inline-size: 0; text-align: start; }
+.tq-head-row .tq-cell { font-weight: 700; }
+
+/* A grid item defaults to min-width:auto and refuses to shrink below its
+   content, so the subject ellipsis would never trigger without this. */
+.tq-cell-subject { flex-direction: column; align-items: flex-start; gap: 2px; min-inline-size: 0; }
+.tq-subject {
+  inline-size: 100%;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tq-updated { font-size: 11px; color: var(--text-muted); }
+
+.tq-reference { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.tq-customer, .tq-assignee-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tq-unassigned { color: var(--text-muted); font-size: 12px; }
+.tq-channel-icon { color: var(--table-header-fg); flex: none; }
+
+.tq-assignee { display: flex; align-items: center; gap: 6px; min-inline-size: 0; }
+.tq-avatar {
+  flex: none;
+  inline-size: 22px;
+  block-size: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.tq-checkbox {
+  inline-size: 16px;
+  block-size: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--table-checkbox-border);
+  accent-color: var(--nav-active-fg);
+  cursor: pointer;
+  flex: none;
+}
+.tq-checkbox:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; }
+
+.tq-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--table-header-fg);
+  cursor: pointer;
+}
+.tq-sort-btn svg { color: var(--table-sort-idle); }
+.tq-sort-btn[data-active="true"] { color: var(--text-main); }
+.tq-sort-btn[data-active="true"] svg { color: var(--nav-active-fg); }
+.tq-sort-btn:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; border-radius: 4px; }
+
+/* Priority and status: two token sets, never merged (brief.md line 217). */
+.tq-prio, .tq-status, .tq-sla {
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding-block: 3px;
+  padding-inline: 7px;
+  inline-size: fit-content;
+  text-transform: uppercase;
+}
+.tq-prio-urgent { background: var(--prio-urgent-bg); color: var(--prio-urgent-fg); }
+.tq-prio-high   { background: var(--prio-high-bg);   color: var(--prio-high-fg); }
+.tq-prio-normal { background: var(--prio-normal-bg); color: var(--prio-normal-fg); }
+.tq-prio-low    { background: var(--prio-low-bg);    color: var(--prio-low-fg); }
+.tq-status-open     { background: var(--status-open-bg);     color: var(--status-open-fg); }
+.tq-status-pending  { background: var(--status-pending-bg);  color: var(--status-pending-fg); }
+.tq-status-resolved { background: var(--status-resolved-bg); color: var(--status-resolved-fg); }
+.tq-status-closed   { background: var(--status-closed-bg);   color: var(--status-closed-fg); }
+
+.tq-sla { background: none; padding-inline: 0; font-weight: 600; text-transform: none; }
+.tq-sla-none     { color: var(--sla-none); }
+.tq-sla-ok       { color: var(--sla-ok); }
+.tq-sla-at_risk  { color: var(--sla-at-risk); }
+.tq-sla-breached { color: var(--sla-breached); }
+
+/* --- Filters ------------------------------------------------------------ */
+
+.tq-filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tq-chip-wrap { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+
+.tq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-block: 6px;
+  padding-inline: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.tq-chip[data-active="true"] {
+  background: var(--nav-active-bg);
+  border-color: var(--bulk-bar-border);
+  color: var(--nav-active-fg);
+}
+.tq-chip:focus-visible, .tq-chip-clear:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+.tq-chip-dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--nav-active-fg);
+}
+.tq-chip-clear {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 20px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--nav-active-fg);
+  cursor: pointer;
+}
+
+.tq-popover {
+  position: absolute;
+  inset-block-start: calc(100% + 6px);
+  inset-inline-start: 0;
+  z-index: 30;
+  min-inline-size: 180px;
+  max-block-size: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  box-shadow: 0 12px 32px rgb(15 23 42 / 0.16);
+}
+.tq-popover-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 7px;
+  padding-inline: 8px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--text-main);
+  cursor: pointer;
+  text-align: start;
+}
+.tq-popover-option:hover { background: var(--table-row-alt); }
+.tq-popover-option:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: -2px; }
+.tq-popover-empty { font-size: 12.5px; color: var(--text-muted); padding: 8px; margin: 0; }
+
+.tq-search {
+  flex: 1 1 180px;
+  min-inline-size: 140px;
+  padding-block: 7px;
+  padding-inline: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 12.5px;
+}
+.tq-search:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 1px; }
+
+.tq-clear-all {
+  border: none;
+  background: none;
+  color: var(--nav-active-fg);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding-inline: 4px;
+}
+.tq-clear-all:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; border-radius: 4px; }
+
+/* --- Bulk bar ----------------------------------------------------------- */
+
+.tq-bulk {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 10px;
+  padding-inline: 14px;
+  border-radius: 10px;
+  background: var(--bulk-bar-bg);
+  border: 1px solid var(--bulk-bar-border);
+  flex-wrap: wrap;
+}
+.tq-bulk-count { font-size: 13px; font-weight: 700; color: var(--bulk-bar-fg); }
+.tq-bulk-menu-wrap { position: relative; }
+.tq-bulk-btn {
+  padding-block: 7px;
+  padding-inline: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--bulk-bar-border);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+}
+.tq-bulk-btn-danger { color: var(--danger-fg); }
+.tq-bulk-btn:focus-visible, .tq-bulk-dismiss:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+.tq-bulk-spacer { flex: 1; }
+.tq-bulk-dismiss {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 26px;
+  block-size: 26px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--bulk-bar-fg);
+  cursor: pointer;
+}
+
+/* --- States ------------------------------------------------------------- */
+
+.tq-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-block: 48px;
+  padding-inline: 24px;
+  text-align: center;
+}
+.tq-empty-icon {
+  inline-size: 64px;
+  block-size: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--table-row-alt);
+  color: var(--table-header-fg);
+}
+.tq-empty-icon-danger { background: var(--prio-urgent-bg); color: var(--danger-fg); }
+.tq-empty-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0; }
+.tq-empty-body {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  max-inline-size: 42ch;
+}
+
+.tq-btn-primary, .tq-btn-outline, .tq-btn-danger {
+  padding-block: 10px;
+  padding-inline: 18px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.tq-btn-primary { background: var(--nav-active-fg); color: var(--btn-text); }
+.tq-btn-outline { background: var(--bg-card); color: var(--text-main); border-color: var(--border-card); }
+.tq-btn-danger { background: var(--danger-fg); color: var(--btn-text); }
+.tq-btn-primary:focus-visible, .tq-btn-outline:focus-visible, .tq-btn-danger:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+.tq-btn-primary:disabled, .tq-btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* --- Skeleton ----------------------------------------------------------- */
+
+.tq-skeleton { display: flex; flex-direction: column; gap: 16px; padding: 14px; }
+.tq-sk-head { display: flex; flex-direction: column; gap: 8px; }
+.tq-sk-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.tq-sk-card { display: flex; flex-direction: column; }
+.tq-sk-row { padding: 14px; gap: 8px; }
+
+.tq-sk {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-sheen) 37%,
+    var(--skeleton-base) 63%
+  );
+  background-size: 400% 100%;
+  animation: tq-shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+.tq-sk-title { inline-size: 100px; block-size: 26px; }
+.tq-sk-subtitle { inline-size: 160px; block-size: 14px; }
+.tq-sk-chip { block-size: 30px; border-radius: 8px; }
+.tq-sk-bar { block-size: 14px; }
+.tq-sk-pill { block-size: 20px; border-radius: 6px; }
+
+@keyframes tq-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tq-sk { animation: none; }
+  .tq-modal, .tq-confirm { animation: none; }
+}
+
+/* --- Pagination --------------------------------------------------------- */
+
+.tq-card-foot { border-block-start: 1px solid var(--border-card); }
+.tq-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 10px;
+  padding-inline: 14px;
+  flex-wrap: wrap;
+}
+.tq-pagination-summary { font-size: 12px; color: var(--text-muted); margin: 0; }
+.tq-pagination-controls { display: flex; align-items: center; gap: 6px; }
+.tq-page-btn {
+  inline-size: 28px;
+  block-size: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tq-page-btn[data-current="true"] {
+  background: var(--nav-active-fg);
+  color: var(--btn-text);
+  border-color: var(--nav-active-fg);
+}
+.tq-page-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.tq-page-btn:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; }
+.tq-page-ellipsis { color: var(--table-header-fg); padding-inline: 2px; }
+
+/* --- Modal + confirm ---------------------------------------------------- */
+
+.tq-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(15 23 42 / 0.45);
+  overflow-y: auto;
+}
+
+.tq-modal {
+  inline-size: min(620px, 100%);
+  border-radius: 16px;
+  background: var(--bg-card);
+  box-shadow: 0 25px 60px rgb(15 23 42 / 0.3);
+  display: flex;
+  flex-direction: column;
+  max-block-size: 90vh;
+}
+.tq-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 18px;
+  padding-inline: 22px;
+  border-block-end: 1px solid var(--border-card);
+}
+.tq-modal-title { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); }
+.tq-modal-close {
+  inline-size: 30px;
+  block-size: 30px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.tq-modal-close:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; }
+.tq-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-block: 20px;
+  padding-inline: 22px;
+  overflow-y: auto;
+}
+.tq-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--border-card);
+}
+
+.tq-field { display: flex; flex-direction: column; }
+.tq-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-block-end: 6px;
+}
+.tq-input {
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  padding-block: 9px;
+  padding-inline: 12px;
+  font-size: 13px;
+  background: var(--input-bg);
+  color: var(--text-main);
+  inline-size: 100%;
+}
+.tq-input:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 1px; }
+.tq-textarea { resize: vertical; font-family: inherit; }
+.tq-field-error { font-size: 12px; color: var(--danger-fg); margin-block: 6px 0; }
+
+.tq-segmented { display: flex; gap: 8px; flex-wrap: wrap; }
+.tq-segment {
+  padding-block: 8px;
+  padding-inline: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.tq-segment[data-checked="true"] { border-width: 2px; font-weight: 700; }
+.tq-segment.tq-prio-urgent[data-checked="true"] { border-color: var(--prio-urgent-fg); background: var(--prio-urgent-bg); color: var(--prio-urgent-fg); }
+.tq-segment.tq-prio-high[data-checked="true"]   { border-color: var(--prio-high-fg);   background: var(--prio-high-bg);   color: var(--prio-high-fg); }
+.tq-segment.tq-prio-normal[data-checked="true"] { border-color: var(--prio-normal-fg); background: var(--prio-normal-bg); color: var(--prio-normal-fg); }
+.tq-segment.tq-prio-low[data-checked="true"]    { border-color: var(--prio-low-fg);    background: var(--prio-low-bg);    color: var(--prio-low-fg); }
+.tq-segment:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; }
+
+.tq-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 2px dashed var(--input-border);
+  border-radius: 8px;
+  padding: 18px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  opacity: 0.7;
+}
+
+.tq-combobox { position: relative; }
+.tq-combobox-list {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  inset-inline: 0;
+  z-index: 40;
+  max-block-size: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  box-shadow: 0 12px 32px rgb(15 23 42 / 0.16);
+}
+.tq-combobox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 7px;
+  padding-inline: 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.tq-combobox-option[data-active="true"], .tq-combobox-option:hover { background: var(--table-row-alt); }
+.tq-combobox-company { color: var(--text-muted); font-size: 11.5px; margin-inline-start: auto; }
+.tq-combobox-empty { padding: 8px; font-size: 12.5px; color: var(--text-muted); }
+
+.tq-confirm {
+  inline-size: min(380px, 100%);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg-card);
+  box-shadow: 0 25px 60px rgb(15 23 42 / 0.3);
+}
+.tq-confirm-icon {
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+}
+.tq-confirm-icon-danger { background: var(--prio-urgent-bg); color: var(--danger-fg); }
+.tq-confirm-title { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main); }
+.tq-confirm-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+.tq-confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* --- Narrow viewport: cards ---------------------------------------------
+   The nine-column grid becomes a stack of cards. Priority, status and SLA
+   risk stay visible per card — never behind a disclosure (brief.md line 143).
+   ------------------------------------------------------------------------ */
+
+@media (max-width: 899px) {
+  /* Visually hidden, NOT display:none — display:none removes the header from
+     the accessibility tree and takes the column names with it. */
+  .tq-thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .tq-table-scroll { overflow-x: visible; }
+
+  .tq-body-row {
+    grid-template-columns: 32px 1fr auto;
+    grid-template-areas:
+      "select subject sla"
+      "select meta    meta"
+      "select badges  badges";
+    row-gap: 6px;
+    min-inline-size: 0;
+    padding-block: 12px;
+  }
+
+  .tq-cell-select { grid-area: select; align-self: start; }
+  .tq-cell-subject { grid-area: subject; }
+  .tq-cell-sla { grid-area: sla; justify-content: flex-end; }
+  .tq-cell-channel, .tq-cell-id, .tq-cell-customer, .tq-cell-assignee {
+    grid-area: meta;
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+  .tq-cell-id { justify-content: flex-start; margin-inline-start: 26px; }
+  .tq-cell-customer { justify-content: flex-start; margin-inline-start: 96px; }
+  .tq-cell-assignee { justify-content: flex-end; }
+  .tq-cell-priority { grid-area: badges; }
+  .tq-cell-status { grid-area: badges; justify-content: flex-start; margin-inline-start: 86px; }
+}
