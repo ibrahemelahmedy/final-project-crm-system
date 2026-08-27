@@ -6,8 +6,54 @@ Entry point for the **users-roles-admin** feature. Stories execute in order by t
 
 | NN | File | Title | Tracker id | Depends on |
 |----|------|-------|------------|------------|
-| _add rows as stories are planned_ |
+| 08 | [08-story-users-roles-administration.md](08-story-users-roles-administration.md) | Users & Roles Administration | WIS-8 | Stories 01, 02, 03 |
 
 ## Dependency notes
 
-_Describe sequencing, shared contracts, or cross-feature dependencies here._
+**This story is the management layer on top of Story 01's authentication, not a redesign of it.**
+Story 08 is planned at **contract level**: scope, endpoints, and acceptance criteria are final;
+task-level file paths are regenerated immediately before implementation.
+
+- **Depends on** [`../authentication/01-story-authentication-access-control.md`](../authentication/01-story-authentication-access-control.md):
+  `UserRole`'s three cases (`agent` · `team_lead` · `administrator`) are the whole role model —
+  this story adds no fourth role and renames no value. It also inherits `users.is_active`,
+  `users.last_login_at`, the `AuditLog` model with its `record()` helper, and the login-time
+  `is_active` check.
+- **Depends on** [`../app-shell/02-story-application-shell-navigation.md`](../app-shell/02-story-application-shell-navigation.md):
+  the `/users` placeholder route this story replaces is already wrapped in
+  `RequireAuth roles={['administrator']}`, and the `Users` nav entry is already administrator-gated,
+  so **`navItems.tsx` is not edited by this story.**
+- **Depends on** [`../customer-management/03-story-customer-management.md`](../customer-management/03-story-customer-management.md)
+  for the shared DataTable and the server-side pagination / faceted-filter / URL-filter-state
+  pattern. The Users list reuses it; a second table pattern would fail an explicit acceptance
+  criterion.
+- **Consumed by** [`../sla-rules-automation/06-story-sla-rules-automation.md`](../sla-rules-automation/06-story-sla-rules-automation.md)
+  and every later admin action, which write through this story's shared `AuditTrail` service rather
+  than logging per-feature.
+- **Consumed by** [`../agent-dashboard/07-story-agent-dashboard.md`](../agent-dashboard/07-story-agent-dashboard.md):
+  the Admin dashboard's three entry-point cards link to `/users`, `/sla-rules`, and this story's
+  audit-log route, and Story 07's inline role checks on `/api/dashboard/team/*` and
+  `/api/dashboard/admin/*` are consolidated onto this story's centralized gate.
+
+**Shared contracts this story establishes**, which later stories consume rather than redefine:
+
+- **`App\Services\AuditTrail`** and the audit event-name constants (`user.created`,
+  `user.updated`, `user.role_changed`, `user.deactivated`, `user.activated`, `setting.changed`).
+  **Every story logging a sensitive action calls this one service.** Story 01's existing
+  `login.*` / `logout` events are unchanged.
+- **`App\Services\UserAdminService`** — the only place deactivation happens. It flips `is_active`
+  and runs `$user->tokens()->delete()` (all tokens, unlike Story 01's logout, which deletes only
+  `currentAccessToken()`) **inside one transaction**.
+- **`UserPolicy` + the `EnsureAdministrator` gate** — the centralized RBAC check every admin
+  endpoint in the app uses. Stories 02–09 depend on this being correct and in one place.
+- **`ActiveUserOnly` middleware** on the `auth:sanctum` group — every authenticated endpoint in the
+  app inherits it, which is what makes deactivation and role changes bite on the **next request**
+  rather than the next login.
+- **`/api/admin/*` endpoint group** — users CRUD, deactivate/activate, audit logs, settings.
+- **New migrations owned here:** `users.department` (nullable) and a `settings` table. The Story 01
+  users migration is **never edited**.
+- **`AuditLog` is append-only** — enforced at the model level and by exposing no update or delete
+  route. The database-role grant is applied only if the deployment target is confirmed as
+  PostgreSQL (local development runs SQLite per `STATUS.md`).
+- **Frontend `web/src/features/users-roles-admin/index.ts`** exporting `UsersPage`, `AuditLogPage`,
+  `SystemSettingsPage`, at `/users`, `/users/audit-log`, `/users/settings`.

@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\CustomerTier;
 use App\Enums\UserRole;
+use App\Models\Customer;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -86,5 +88,42 @@ class DatabaseSeeder extends Seeder
             'priority' => 'low',
             'assigned_to' => $agent2->id,
         ]);
+
+        // Seed customers — the eight named rows match the design export
+        // (WisalCustomers-LightLTR.dc.html lines 84-120) so a running app
+        // matches the reference screenshot.
+        $customers = [
+            ['name' => 'Amelia Chen', 'email' => 'amelia.chen@northwind.io', 'company' => 'Northwind Retail', 'tier' => CustomerTier::Enterprise, 'last_contact_at' => '2026-08-22'],
+            ['name' => 'Marcus Webb', 'email' => 'marcus.webb@vertex.com', 'company' => 'Vertex Solutions', 'tier' => CustomerTier::Standard, 'last_contact_at' => '2026-08-22'],
+            ['name' => 'Priya Nair', 'email' => 'priya.nair@cloudscape.dev', 'company' => 'Cloudscape Inc.', 'tier' => CustomerTier::Enterprise, 'last_contact_at' => '2026-08-21'],
+            ['name' => 'Daniel Osei', 'email' => 'd.osei@brightpath.org', 'company' => 'BrightPath Foundation', 'tier' => CustomerTier::Standard, 'last_contact_at' => '2026-08-20'],
+            ['name' => 'Laura Kim', 'email' => 'laura.kim@stackforge.io', 'company' => 'StackForge', 'tier' => CustomerTier::Premium, 'last_contact_at' => '2026-08-18'],
+            ['name' => 'Nina Fischer', 'email' => 'nina.fischer@globex.eu', 'company' => 'Globex Europe', 'tier' => CustomerTier::Enterprise, 'last_contact_at' => '2026-08-15'],
+            ['name' => 'Omar Haddad', 'email' => 'omar.h@medisync.sa', 'company' => 'MediSync', 'tier' => CustomerTier::Standard, 'last_contact_at' => '2026-08-14'],
+            ['name' => 'Grace Lin', 'email' => 'grace.lin@paperlane.co', 'company' => 'Paperlane Co.', 'tier' => CustomerTier::Premium, 'last_contact_at' => '2026-08-12'],
+        ];
+
+        foreach ($customers as $data) {
+            Customer::create($data);
+        }
+
+        // One phone-only and one email-only customer, proving the "at least
+        // one contact method" path both ways.
+        Customer::create([
+            'name' => 'Yusuf Al-Rashid',
+            'phone' => '+971 50 123 4567',
+            'company' => 'Falcon Logistics',
+            'tier' => CustomerTier::Standard,
+        ]);
+
+        Customer::create([
+            'name' => 'Hana Suzuki',
+            'email' => 'hana.suzuki@keystone.jp',
+            'company' => 'Keystone Partners',
+            'tier' => CustomerTier::Premium,
+        ]);
+
+        // Enough rows to genuinely exercise pagination (three pages at 25/page).
+        Customer::factory()->count(40)->create();
     }
 }

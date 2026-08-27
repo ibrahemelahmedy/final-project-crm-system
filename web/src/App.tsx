@@ -8,6 +8,7 @@ import { LoginPage } from './features/auth/LoginPage';
 import { UiPreferencesProvider } from './app/providers/UiPreferencesContext';
 import { AppLayout } from './app/layouts/AppLayout';
 import { PagePlaceholder } from './app/components/PagePlaceholder';
+import { CustomersPage, CustomerProfilePage } from './features/customers';
 
 export default function App() {
   return (
@@ -43,7 +44,8 @@ export default function App() {
                   }
                 />
                 <Route path="/tickets" element={<PagePlaceholder title="Tickets" />} />
-                <Route path="/customers" element={<PagePlaceholder title="Customers" />} />
+                <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/customers/:customerId" element={<CustomerProfilePage />} />
                 <Route path="/knowledge-base" element={<PagePlaceholder title="Knowledge Base" />} />
                 <Route path="/channels" element={<PagePlaceholder title="Channels" />} />
                 <Route path="/reports" element={<PagePlaceholder title="Reports" />} />
