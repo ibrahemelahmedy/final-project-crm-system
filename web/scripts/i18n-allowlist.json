@@ -1,0 +1,19 @@
+{
+  "_comment": "Story 15 (WIS-11). Deliberate exceptions to the no-hard-coded-strings rule. Every entry needs a reason. `literals` are exact JSX text / attribute values that never need translating; `patterns` are regexes for the same.",
+  "roots": [
+    "src/app",
+    "src/i18n",
+    "src/features/auth"
+  ],
+  "_rootsNote": "Directories the check ENFORCES today. The retrofit pass (Story 15 implementation outline: 'String extraction across features/*') adds one feature dir here as its literals move to its namespace. Pending: src/features/{customers,tickets,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat}, src/components.",
+  "literals": [
+    { "value": "⌘K", "reason": "Keyboard shortcut badge — must not mirror or translate (brief.md, Story 02)." },
+    { "value": "Wisal", "reason": "Product name — rendered from the `brand` key where localized; the bare token is exempt." },
+    { "value": "EN", "reason": "ISO language pill in the header switcher — shows the language code, not prose." },
+    { "value": "AR", "reason": "ISO language pill in the header switcher — shows the language code, not prose." },
+    { "value": "ع", "reason": "Language toggle glyph on the login screen (Arabic letter ain)." }
+  ],
+  "patterns": [
+    { "value": "^[0-9\\s.,:/#%+()-]+$", "reason": "Pure numbers / punctuation / ISO-like tokens carry no translatable prose." }
+  ]
+}

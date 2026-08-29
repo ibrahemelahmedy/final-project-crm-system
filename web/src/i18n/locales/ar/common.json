@@ -1,0 +1,65 @@
+{
+  "brand": "وِصال",
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "tickets": "التذاكر",
+    "customers": "العملاء",
+    "knowledgeBase": "قاعدة المعرفة",
+    "channels": "القنوات",
+    "reports": "التقارير",
+    "quickReplies": "الردود السريعة",
+    "slaRules": "قواعد اتفاقية مستوى الخدمة",
+    "users": "المستخدمون",
+    "admin": "الإدارة",
+    "main": "الرئيسية"
+  },
+  "shell": {
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "openNavigation": "فتح التنقّل",
+    "searchPlaceholder": "ابحث في التذاكر والعملاء…",
+    "newTicket": "تذكرة جديدة",
+    "switchToDark": "التبديل إلى الوضع الداكن",
+    "switchToLight": "التبديل إلى الوضع الفاتح",
+    "language": "اللغة",
+    "switchToArabic": "التبديل إلى العربية",
+    "switchToEnglish": "التبديل إلى الإنجليزية",
+    "signOut": "تسجيل الخروج",
+    "sessionEnded": "انتهت جلستك. سجّل الدخول مرة أخرى.",
+    "languageSaveFailed": "تعذّر حفظ تفضيل اللغة. ما زال مطبّقاً على هذا الجهاز."
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "close": "إغلاق",
+    "retry": "إعادة المحاولة",
+    "search": "بحث",
+    "clear": "مسح",
+    "apply": "تطبيق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق"
+  },
+  "state": {
+    "loading": "جارٍ التحميل…",
+    "empty": "لا يوجد شيء هنا بعد",
+    "errorTitle": "حدث خطأ ما",
+    "errorBody": "تعذّر تحميل هذا. حاول مرة أخرى.",
+    "offline": "يبدو أنك غير متصل بالإنترنت",
+    "featureComingSoon": "هذه الشاشة تُبنى في قصة الميزة الخاصة بها."
+  },
+  "format": {
+    "dateLabel": "التاريخ",
+    "timeLabel": "الوقت",
+    "countLabel": "العدد"
+  },
+  "items_zero": "لا عناصر",
+  "items_one": "عنصر واحد",
+  "items_two": "عنصران",
+  "items_few": "{{count}} عناصر",
+  "items_many": "{{count}} عنصراً",
+  "items_other": "{{count}} عنصر"
+}
