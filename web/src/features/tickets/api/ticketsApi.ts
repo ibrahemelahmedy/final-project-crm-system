@@ -50,6 +50,11 @@ export async function fetchTickets(filters: TicketFilters): Promise<Paginated<Ti
   return data;
 }
 
+export async function fetchTicket(id: number): Promise<Ticket> {
+  const { data } = await api.get(`/tickets/${id}`);
+  return data.data;
+}
+
 export async function fetchTicketMeta(): Promise<TicketMeta> {
   const { data } = await api.get('/tickets/meta');
   return data;

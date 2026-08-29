@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
 import { TicketTable } from './TicketTable';
 import { useRowSelection } from '../hooks/useRowSelection';
@@ -37,15 +38,17 @@ const noop = () => {};
 function renderTable(props: Partial<React.ComponentProps<typeof TicketTable>> = {}) {
   const tickets = props.tickets ?? [makeTicket()];
   return render(
-    <TicketTable
-      tickets={tickets}
-      sort="-created_at"
-      onSortChange={noop}
-      selected={[]}
-      onToggle={noop}
-      onToggleAll={noop}
-      {...props}
-    />
+    <MemoryRouter>
+      <TicketTable
+        tickets={tickets}
+        sort="-created_at"
+        onSortChange={noop}
+        selected={[]}
+        onToggle={noop}
+        onToggleAll={noop}
+        {...props}
+      />
+    </MemoryRouter>
   );
 }
 

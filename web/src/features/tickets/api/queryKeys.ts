@@ -12,5 +12,6 @@ export const ticketKeys = {
   list: (filters: TicketFilters) => [...ticketKeys.all, 'list', filters] as const,
   detail: (id: number) => [...ticketKeys.all, 'detail', id] as const,
   events: (id: number) => [...ticketKeys.all, 'events', id] as const,
+  messages: (id: number) => [...ticketKeys.all, 'messages', id] as const,
   meta: () => [...ticketKeys.all, 'meta'] as const,
 };

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { Ticket } from '../model/ticket';
 import { formatAbsoluteTime, formatRelativeTime } from '../model/display';
 import { ChannelIcon } from './ChannelIcon';
@@ -44,9 +45,9 @@ export function TicketRow({ ticket, zebra, selected, onToggle }: Props) {
 
       {/* min-inline-size:0 in CSS, or the ellipsis never triggers in a grid track. */}
       <td className="tq-cell tq-cell-subject">
-        <span className="tq-subject" title={ticket.subject}>
+        <Link to={`/tickets/${ticket.id}`} className="tq-subject tq-subject-link" title={ticket.subject}>
           {ticket.subject}
-        </span>
+        </Link>
         <span className="tq-updated" title={formatAbsoluteTime(ticket.updated_at)}>
           {formatRelativeTime(ticket.updated_at)}
         </span>

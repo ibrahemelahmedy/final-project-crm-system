@@ -1,20 +1,20 @@
 import type { TicketChannel } from '../model/ticket';
 import { CHANNEL_FALLBACK_LABELS, CHANNEL_ICON_PATHS } from '../model/display';
 
-type Props = { channel: TicketChannel; label?: string };
+type Props = { channel: TicketChannel; label?: string; size?: number };
 
 /**
  * The glyph carries `role="img"` and the channel's label as its accessible
  * name. Colour is not the only signal (brief.md 196) — the icon shape plus its
  * label is what identifies the channel.
  */
-export function ChannelIcon({ channel, label }: Props) {
+export function ChannelIcon({ channel, label, size = 15 }: Props) {
   const name = label ?? CHANNEL_FALLBACK_LABELS[channel];
   return (
     <svg
       className="tq-channel-icon"
-      width="15"
-      height="15"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

@@ -85,6 +85,8 @@ export type TicketMeta = {
   channels: Option[];
   categories: Option[];
   agents: Option[];
+  /** Story 05 additive key — a static map from TicketStatus::allowedTransitions(). */
+  transitions?: Record<TicketStatus, TicketStatus[]>;
 };
 
 export type BulkResult = {
