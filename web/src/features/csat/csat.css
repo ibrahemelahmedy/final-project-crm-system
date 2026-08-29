@@ -1,0 +1,213 @@
+/* Story 13 — CSAT Collection.
+   Public feedback page (docs/design/references/13.WisalCsatResponse/*) plus
+   the agent-side ticket-detail panel and the Reports CSAT card. Uses the
+   shared palette tokens from index.css, so dark mode and the explicit theme
+   toggle work with no extra rules; RTL is handled with logical properties. */
+
+.csat-page {
+  min-height: 100vh;
+  background: var(--bg-page);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.csat-locale-toggle { position: absolute; inset-block-start: 16px; inset-inline-end: 16px; }
+
+.csat-toggle-btn,
+.csat-btn { font: inherit; cursor: pointer; border-radius: 8px; }
+
+.csat-toggle-btn {
+  background: var(--bg-card);
+  color: var(--text-muted);
+  border: 1px solid var(--border-card);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.csat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.csat-card-centered { align-items: center; text-align: center; gap: 20px; }
+
+.csat-header { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.csat-mark { color: var(--btn-bg); }
+.csat-brand { font-size: 15px; font-weight: 700; color: var(--text-muted); letter-spacing: .02em; }
+
+.csat-head-block { display: flex; flex-direction: column; gap: 6px; text-align: center; }
+.csat-title { font-size: 26px; font-weight: 800; margin: 0; }
+.csat-title-sm { font-size: 20px; font-weight: 700; }
+.csat-sub { font-size: 13.5px; color: var(--text-muted); margin: 0; }
+
+.csat-form { display: flex; flex-direction: column; gap: 20px; }
+.csat-fieldset { border: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.csat-legend { font-size: 13px; font-weight: 700; color: var(--text-main); }
+.csat-req { color: #DC2626; }
+.csat-optional { font-weight: 400; color: var(--text-muted); }
+.csat-hint { font-size: 12px; color: var(--text-muted); }
+
+.csat-rating-group {
+  display: flex;
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.csat-rating-group[data-readonly] { opacity: .75; pointer-events: none; }
+.csat-rating-option { flex: 1; position: relative; }
+.csat-rating-option input[type='radio'] { position: absolute; opacity: 0; width: 0; height: 0; }
+.csat-rating-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 8px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-inline-end: 1px solid var(--border-card);
+  background: var(--bg-card);
+  transition: background .1s;
+  text-align: center;
+}
+.csat-rating-option:last-child .csat-rating-label { border-inline-end: none; }
+.csat-rating-label:hover { background: var(--bg-page); }
+.csat-rating-option input:checked + .csat-rating-label,
+.csat-rating-option[data-selected] .csat-rating-label {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px var(--btn-bg);
+}
+.csat-rating-option input:focus-visible + .csat-rating-label {
+  outline: 2px solid var(--btn-bg);
+  outline-offset: -2px;
+  z-index: 1;
+}
+.csat-rating-emoji { font-size: 20px; line-height: 1; }
+.csat-rating-confirm { font-size: 12px; color: var(--nav-active-fg); font-weight: 600; }
+
+.csat-comment-block { display: flex; flex-direction: column; gap: 6px; }
+.csat-textarea {
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text-main);
+  background: var(--input-bg);
+  resize: vertical;
+}
+
+.csat-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  padding: 13px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.csat-btn:disabled { background: var(--btn-disabled); color: var(--btn-disabled-text); cursor: not-allowed; }
+
+.csat-inline-error { color: #DC2626; font-size: 13px; }
+
+.csat-status-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+.csat-status-icon-ok { background: #ECFDF5; color: #059669; }
+.csat-status-icon-error { background: #FEF2F2; color: #DC2626; font-size: 28px; }
+.csat-status-icon-muted { background: var(--bg-page); color: var(--text-muted); }
+
+.csat-body-text { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin: 0; }
+.csat-center { text-align: center; }
+
+.csat-recap {
+  background: var(--bg-page);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.csat-recap-label { font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: .04em; }
+.csat-recap-comment { display: flex; flex-direction: column; gap: 4px; }
+.csat-recap-comment-text { font-size: 14px; color: var(--text-main); line-height: 1.65; }
+.csat-recap-date { font-size: 12px; color: var(--text-muted); }
+
+.csat-skeleton { background: var(--skeleton-bg); border-radius: 8px; animation: csat-pulse 1.4s ease-in-out infinite; }
+.csat-skeleton-title { height: 28px; width: 60%; }
+.csat-skeleton-block { height: 140px; width: 100%; }
+.csat-skeleton-btn { height: 44px; width: 100%; }
+@keyframes csat-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+.csat-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.csat-panel { display: flex; flex-direction: column; gap: 10px; }
+.csat-panel-skeleton { height: 60px; border-radius: 8px; background: var(--skeleton-bg); animation: csat-pulse 1.4s ease-in-out infinite; }
+.csat-panel-error { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-muted); }
+.csat-panel-empty { font-size: 13px; color: var(--text-muted); margin: 0; }
+.csat-panel-hint { font-size: 12px; color: var(--text-muted); margin: 0; }
+.csat-panel-link-row { display: flex; gap: 6px; align-items: center; }
+.csat-panel-link {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  background: var(--input-bg);
+  color: var(--text-main);
+}
+.csat-panel-comment { font-size: 13px; color: var(--text-main); line-height: 1.6; margin: 6px 0 0; }
+.csat-panel-comment-muted { color: var(--text-muted); }
+
+.rp-csat { display: flex; flex-direction: column; gap: 6px; }
+.rp-csat-scale { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+.rp-csat-count { font-size: 13px; color: var(--text-muted); margin: 0; }
+.rp-csat-agents { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rp-csat-agent-row { display: flex; justify-content: space-between; font-size: 13px; }
+.rp-csat-agent-score { color: var(--text-muted); }
+
+@media (max-width: 520px) {
+  .csat-card { padding: 28px 20px; }
+  .csat-rating-group { flex-direction: column; }
+  .csat-rating-label {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    border-inline-end: none;
+    border-block-end: 1px solid var(--border-card);
+  }
+  .csat-rating-option:last-child .csat-rating-label { border-block-end: none; }
+}
