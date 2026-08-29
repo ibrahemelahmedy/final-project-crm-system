@@ -341,30 +341,30 @@ Frontend tests are Vitest + Testing Library, matching `web/src/test/setup.ts`.
 
 ## Done Criteria
 
-- [ ] Selecting a quick reply in the Conversation Thread composer inserts its body, leaves it fully
+- [x] Selecting a quick reply in the Conversation Thread composer inserts its body, leaves it fully
       editable, and **never sends a message directly**.
-- [ ] An Administrator or Team Lead can create, edit, and archive quick replies; the ownership model
+- [x] An Administrator or Team Lead can create, edit, and archive quick replies; the ownership model
       is documented as **shared-library-only, no personal scope**, and enforced by `QuickReplyPolicy`.
-- [ ] Placeholders resolve against the current ticket and customer; an unresolvable placeholder
+- [x] Placeholders resolve against the current ticket and customer; an unresolvable placeholder
       renders visibly as-is — "Hello ," can never reach a customer.
-- [ ] An archived quick reply is not offered in the picker; messages already sent from it are
+- [x] An archived quick reply is not offered in the picker; messages already sent from it are
       unaffected.
 - [ ] A task created on a ticket carries a due date and a specific assignee (defaulting to the
       creator) and appears on that person's Agent Dashboard via `GET /api/tasks?assignee=me`.
-- [ ] A task reaching its due time fires an in-app notification to its assignee through Story 11 on
+- [x] A task reaching its due time fires an in-app notification to its assignee through Story 11 on
       a **schedule**, not on ticket open.
-- [ ] Completing a task records who completed it and when, and stops further reminders.
-- [ ] Closing a ticket with open tasks **warns the agent and auto-cancels** those tasks; no reminder
+- [x] Completing a task records who completed it and when, and stops further reminders.
+- [x] Closing a ticket with open tasks **warns the agent and auto-cancels** those tasks; no reminder
       fires for a closed ticket.
 - [ ] An internal note renders in the one chronological thread, visually distinct, and the
       public/internal split is enforced **server-side in the query**, not by CSS class.
-- [ ] An `@mention` in an internal note notifies the colleague via Story 11 and is recorded in
+- [x] An `@mention` in an internal note notifies the colleague via Story 11 and is recorded in
       ticket history.
-- [ ] An `@mention` of a user who cannot access the ticket is rejected with a clear reason and no
+- [x] An `@mention` of a user who cannot access the ticket is rejected with a clear reason and no
       message is persisted.
 - [ ] An explicit test asserts internal notes are excluded from every customer-facing render path.
-- [ ] All four async states ship on the quick-reply library, the picker, and the tasks panel.
+- [x] All four async states ship on the quick-reply library, the picker, and the tasks panel.
 - [ ] Both themes and both directions verified through `UiPreferencesContext`.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 11.**

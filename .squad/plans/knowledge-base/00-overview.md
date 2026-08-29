@@ -4,9 +4,39 @@ Entry point for the **knowledge-base** feature. Stories execute in order by thei
 
 ## Stories
 
-| NN | File | Title | Tracker id | Depends on |
-|----|------|-------|------------|------------|
-| 09 | [09-story-knowledge-base.md](09-story-knowledge-base.md) | Knowledge Base | WIS-5 | Stories 01, 02, 03, 08 |
+| NN | File | Title | Tracker id | Depends on | Status |
+|----|------|-------|------------|------------|--------|
+| 09 | [09-story-knowledge-base.md](09-story-knowledge-base.md) | Knowledge Base | WIS-5 | Stories 01, 02, 03, 08 | **implemented** |
+
+## Implemented — what shipped
+
+Every Done Criterion in the story is met. See that file's **Implementation decisions** section for
+the choices the contract plan left open (the omitted "Was this helpful?" control, the frozen slug,
+and the one endpoint added beyond the table).
+
+**Backend.** `ArticleStatus` enum; `KbCategory` / `KbArticle` / `KbArticleVersion` models with
+factories; four migrations (three tables plus a driver-guarded `tsvector` + GIN + trigger migration
+that is a no-op on SQLite); `MarkdownRenderer` (Markdown → HTML → allow-list sanitize, plus TOC,
+excerpt, read-time, and content-direction detection); `ArticleSearch` with its Postgres and SQLite
+implementations bound by driver in `AppServiceProvider`; `ArticleWriter` (the single write path,
+holding the version row and the update in one transaction); `KbArticlePolicy`; the article,
+category, search, and preview controllers; and `KnowledgeBaseSeeder`, which seeds the artboard's
+five categories and articles plus a draft, an Arabic article, and one carrying a script payload so
+the visibility, RTL, and sanitization behaviours are all reachable by hand.
+
+**Frontend.** `web/src/features/knowledge-base/` — the index (Story 03's DataTable, category rail,
+most-viewed, URL-param filter state, bulk-action bar, all four async states), the reader (breadcrumb,
+meta line, sanitized body, `ON THIS PAGE` TOC, content-derived RTL), the Markdown editor with a
+server-rendered preview, and `ArticlePickerPanel`, mounted into Story 05's reply composer through
+the `onInsertAtCaret` / `toolbarSlot` extension points it already exposed. `App.tsx` now routes
+`/knowledge-base` and its three siblings; `navItems.tsx` was not edited, as planned.
+
+**Tests.** 51 backend (`api/tests/Feature/Kb/*` plus the KB shapes appended to `ApiContractTest`)
+and 54 frontend (`vitest`) — all green, `tsc` clean, no new lint findings.
+
+**Search on both drivers.** The suite proves the ordering property on SQLite; the PostgreSQL
+`ts_rank` path was additionally verified against the live database, where a title match outranks a
+body-only match as the contract promises.
 
 ## Dependency notes
 

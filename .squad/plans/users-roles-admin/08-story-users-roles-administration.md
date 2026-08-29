@@ -316,26 +316,26 @@ Everything below is **owned by this story** unless the bullet names another owne
 
 Mapped 1:1 to `.squad/stories/users-roles-admin/WIS-8/intake.md`.
 
-- [ ] Creating an internal user requires exactly one role (Agent, Team Lead, Administrator); a
+- [x] Creating an internal user requires exactly one role (Agent, Team Lead, Administrator); a
       role-less user cannot be created.
-- [ ] A deactivated user can no longer log in, and their historical ticket and audit records remain
+- [x] A deactivated user can no longer log in, and their historical ticket and audit records remain
       intact and attributed to them.
-- [ ] Deactivating a signed-in user revokes **all** of their `personal_access_tokens` rows in the
+- [x] Deactivating a signed-in user revokes **all** of their `personal_access_tokens` rows in the
       same transaction; their next request returns 401, not just their next login attempt.
-- [ ] A role change takes effect on the user's next request, not their next login; no stale elevated
+- [x] A role change takes effect on the user's next request, not their next login; no stale elevated
       permission survives.
 - [ ] User created / deactivated / role changed / SLA rule changed / setting changed each write an
       audit entry with actor, action, target, and timestamp — and the audit log is never editable or
       deletable through the UI or the API.
-- [ ] The audit-log viewer filters by actor, action type, and date range, and is paginated
+- [x] The audit-log viewer filters by actor, action type, and date range, and is paginated
       server-side.
-- [ ] A non-Administrator reaching any Users/Admin screen or hitting its API endpoints directly is
+- [x] A non-Administrator reaching any Users/Admin screen or hitting its API endpoints directly is
       denied server-side, regardless of what the frontend nav shows.
-- [ ] System configuration values are validated before saving (a password minimum length cannot be
+- [x] System configuration values are validated before saving (a password minimum length cannot be
       set to `0`).
-- [ ] The Users list uses the same server-side pagination and filter pattern as Customers
+- [x] The Users list uses the same server-side pagination and filter pattern as Customers
       (Story 03), with filter state in the URL.
-- [ ] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/users`.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/users`.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 09.**

@@ -1599,7 +1599,7 @@ It calls `App\Services\NotificationDispatcher::dispatch($recipient, Notification
 ## Done Criteria
 
 - [ ] `sla_rules` exists with `priority` **unique**, and `php artisan migrate:fresh --seed` produces exactly four rules matching the design's minute values (15/240 · 60/480 · 240/1440 · 1440/7200).
-- [ ] All eleven SLA columns and all four indexes exist on `tickets`, added by a **new** migration. `2026_08_25_200001_create_tickets_table.php` and every Story 04 migration are **byte-for-byte unchanged**.
+- [x] All eleven SLA columns and all four indexes exist on `tickets`, added by a **new** migration. `2026_08_25_200001_create_tickets_table.php` and every Story 04 migration are **byte-for-byte unchanged**.
 - [ ] `php artisan migrate:rollback --step=2` succeeds **against PostgreSQL**, not only under the SQLite test suite.
 - [ ] `TicketResource.sla` returns **exactly** `due_at`, `minutes_left`, `risk` — same three names, same order — with `risk` one of `"breached" | "at_risk" | "ok" | null`. Asserted by a key-list test, not by inspection.
 - [ ] A page of 25 tickets issues **no additional query** for the `sla` block, asserted by a query-count test.
@@ -1613,7 +1613,7 @@ It calls `App\Services\NotificationDispatcher::dispatch($recipient, Notification
 - [ ] Escalation fires only on a ticket with a **null `first_response_at`**, stamps `escalated_at` even when no target exists, and never reassigns a ticket to its current assignee.
 - [ ] `php artisan schedule:list` shows `sla:evaluate` at `*/5 * * * *` with `withoutOverlapping`. **No `app/Console/Kernel.php` was created**, and **no queued job is dispatched anywhere in this story**.
 - [ ] `/sla-rules` renders the real screen; `PagePlaceholder` no longer appears at that route; **`web/src/App.tsx` changes by exactly one `element` value** and the `RequireAuth roles={['administrator']}` wrapper is untouched.
-- [ ] **`navItems.tsx` is not edited**, and `navItems.test.ts` and `navRoutes.test.tsx` pass **unchanged**.
+- [x] **`navItems.tsx` is not edited**, and `navItems.test.ts` and `navRoutes.test.tsx` pass **unchanged**.
 - [ ] The four cards match the artboard: tier badge, `RESPOND WITHIN` / `RESOLVE WITHIN` / `ON BREACH`, the pencil glyph, the 4px accent edge — and the Low card reads **`1 day` / `5 days`**, the deliberate deviation recorded in the Product-rules table.
 - [ ] All four async states ship, each from its own component; the error state contains **no** stack trace and **no** API URL; the empty state names the consequence of having no rules.
 - [ ] The subtitle's active-rule count is computed from the response and pluralises correctly. **Add Rule** is disabled with a stated, accessible reason when all four tiers are occupied.

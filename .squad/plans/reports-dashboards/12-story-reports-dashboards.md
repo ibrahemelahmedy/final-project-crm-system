@@ -346,27 +346,27 @@ for response-shape assertions. Frontend tests are Vitest + Testing Library again
 
 ## Done Criteria
 
-- [ ] A Team Lead/Supervisor or Administrator opening Reports sees ticket-volume, SLA-performance
+- [x] A Team Lead/Supervisor or Administrator opening Reports sees ticket-volume, SLA-performance
       (breach rate, average resolution time), and agent-performance (tickets resolved, average
       handle time) figures for a **selectable date range**.
-- [ ] An Agent attempting to open Reports is **denied server-side** (403), per the Story 01 role
+- [x] An Agent attempting to open Reports is **denied server-side** (403), per the Story 01 role
       model.
-- [ ] Applying a date range recomputes **all** figures consistently — no widget shows a different,
+- [x] Applying a date range recomputes **all** figures consistently — no widget shows a different,
       stale range, guaranteed by the single-endpoint/single-query design.
-- [ ] SLA-performance figures read from **Story 06's SLA source of truth**, not a reimplemented
+- [x] SLA-performance figures read from **Story 06's SLA source of truth**, not a reimplemented
       calculation, asserted by `ReportSlaSourceTest`.
-- [ ] The CSAT widget shows an explicit **"no CSAT data collected yet"** Empty state, not a
+- [x] The CSAT widget shows an explicit **"no CSAT data collected yet"** Empty state, not a
       fabricated or zeroed chart.
-- [ ] The dashboard follows the brief's **calm-layout** rule — five named cards, no metric sprawl,
+- [x] The dashboard follows the brief's **calm-layout** rule — five named cards, no metric sprawl,
       no figure whose meaning depends on a tooltip.
-- [ ] A figure based on zero underlying data shows an **Empty state**, not a misleading `0%`/`0.0`.
-- [ ] RTL directionality is a **deliberate decision recorded in code**: plot areas stay LTR via
+- [x] A figure based on zero underlying data shows an **Empty state**, not a misleading `0%`/`0.0`.
+- [x] RTL directionality is a **deliberate decision recorded in code**: plot areas stay LTR via
       `ChartFrame`; legends, tables, and card chrome mirror.
-- [ ] All four async states ship on the Reports page.
-- [ ] The `/reports` `PagePlaceholder` from Story 02 is replaced and the `nav.reports` entry carries
+- [x] All four async states ship on the Reports page.
+- [x] The `/reports` `PagePlaceholder` from Story 02 is replaced and the `nav.reports` entry carries
       its role restriction.
 - [ ] The charting-library choice (**Recharts**) and its rationale are recorded in the plan and in a
       code comment, with the resolved version noted.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 13.**

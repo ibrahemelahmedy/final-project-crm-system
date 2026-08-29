@@ -2,6 +2,11 @@
 
 Entry point for the **notifications** feature. Stories execute in order by their `NN` prefix.
 
+**Status: implemented.** Story 11 has landed against Story 06's SLA producer and Story 04's
+`TicketPolicy`; Story 10's `mention`/`task_due` calls drop into the existing
+`NotificationDispatcher` contract with no schema change, per the "buildable with Story 06 alone"
+note below.
+
 ## Stories
 
 | NN | File | Title | Tracker id | Depends on |

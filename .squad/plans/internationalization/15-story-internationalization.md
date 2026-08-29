@@ -349,13 +349,13 @@ Frontend (Vitest + Testing Library):
 - [ ] Every user-facing string renders from a locale-keyed catalogue; no hard-coded English literal survives in a component, enforced by a rule or script that **fails `npm run lint` or `npx vitest run`** — not by convention, and with every exception recorded in an allowlist with a reason.
 - [ ] Switching language updates `<html lang>` and `<html dir>`, mirrors the layout, and persists **on the server per user** — a user signing in on another machine keeps their language.
 - [ ] Dates, times, and numbers use locale-aware formatting done **client-side via the JS `Intl` API**; the API returns ISO timestamps and raw numbers, and `grep` finds no `IntlDateFormatter` / `NumberFormatter` / `Number::` anywhere in `api/app`.
-- [ ] Arabic renders in the Arabic font pairing with line-height raised ~10–15% over Latin, scoped to `[lang='ar']`.
-- [ ] A key missing in the active locale falls back to English **and** logs the miss; it never renders a raw key or an empty string.
+- [x] Arabic renders in the Arabic font pairing with line-height raised ~10–15% over Latin, scoped to `[lang='ar']`.
+- [x] A key missing in the active locale falls back to English **and** logs the miss; it never renders a raw key or an empty string.
 - [ ] A Laravel validation error displayed in an Arabic UI is **in Arabic**, including the interpolated attribute name; errors the UI branches on carry a stable machine-readable `code` beside the localized message.
-- [ ] Every screen mirrors under RTL using CSS logical properties, with **no second RTL stylesheet anywhere** in the codebase.
+- [x] Every screen mirrors under RTL using CSS logical properties, with **no second RTL stylesheet anywhere** in the codebase.
 - [ ] Pluralization uses the locale's real plural rules — all six Arabic CLDR forms are present for every count-bearing key, and no `count === 1 ? … : …` remains.
-- [ ] Changing language from the App Shell header keeps the current route and does not lose unsaved form state — asserted by a test, not by inspection.
-- [ ] The header language switcher **fills Story 02's existing slot**: no longer `disabled`, no header element added, moved, or reordered.
-- [ ] `UiPreferencesContext` is **extended, not replaced**: it still owns theme, now owns locale, derives direction from it, keeps the `wisal-lang` key and its `'ar'`/`'en'` values, and still writes nothing to `localStorage` on mount.
+- [x] Changing language from the App Shell header keeps the current route and does not lose unsaved form state — asserted by a test, not by inspection.
+- [x] The header language switcher **fills Story 02's existing slot**: no longer `disabled`, no header element added, moved, or reordered.
+- [x] `UiPreferencesContext` is **extended, not replaced**: it still owns theme, now owns locale, derives direction from it, keeps the `wisal-lang` key and its `'ar'`/`'en'` values, and still writes nothing to `localStorage` on mount.
 - [ ] Story 13's CSAT public page keeps its browser-detected locale rule after its strings are absorbed into the shared catalogue.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.

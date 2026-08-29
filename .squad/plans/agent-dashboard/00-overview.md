@@ -4,9 +4,17 @@ Entry point for the **agent-dashboard** feature. Stories execute in order by the
 
 ## Stories
 
-| NN | File | Title | Tracker id | Depends on |
-|----|------|-------|------------|------------|
-| 07 | [07-story-agent-dashboard.md](07-story-agent-dashboard.md) | Agent Dashboard (Role-Based Home) | WIS-9 | Stories 01, 02, 03, 04, 06 |
+| NN | File | Title | Tracker id | Depends on | Status |
+|----|------|-------|------------|------------|--------|
+| 07 | [07-story-agent-dashboard.md](07-story-agent-dashboard.md) | Agent Dashboard (Role-Based Home) | WIS-9 | Stories 01, 02, 03, 04, 06 | ✅ Implemented 2026-08-28 |
+
+## Implementation notes (2026-08-28)
+
+- **Backend:** `App\Http\Controllers\DashboardController` (7 actions, one per widget) + `App\Services\DashboardMetrics` (all aggregation) + `App\Services\SlaCalculator` (the single SLA-risk threshold authority until Story 06's engine consolidates it — prefers Story 06's stored `resolution_due_at` / `sla_at_risk_at` / `escalated_at` columns when populated, otherwise computes from the seeded `sla_rules` row for the ticket's priority). `App\Http\Resources\DashboardTicketResource` wraps `TicketResource` (fills the `sla` block, adds `escalated_by_name` / `escalated_at`) — `TicketResource` is **not** widened. Routes under the `/dashboard` prefix inside the existing `auth:sanctum` group; team/admin groups gated by an explicit `UserRole` check in the controller (Story 08 is the consolidation point). Four SLA rules seeded in `DatabaseSeeder`.
+- **`admin/summary` shape:** returns `{ user_count, active_sla_rule_count, audit_log_count }` — `audit_log_count` replaces the contract's `department_count` because no departments table exists yet (Story 08). The three Admin cards' live-count subtitles read these.
+- **Audit Log card** links to `/users` until Story 08 ships the audit-viewer route.
+- **Frontend:** `web/src/features/agent-dashboard/` standard shape. `AgentDashboardPage` / `TeamDashboardPage` / `AdminDashboardPage` (three siblings), `DashboardWidget` four-state shell + `widgetState` helper, `StatTile`, and the six widgets (`MyQueueWidget`, `SlaRiskWidget`, `QuickRepliesWidget`, `WorkloadBalanceWidget`, `EscalationsWidget`, `AdminEntryCard`). Each widget owns its own `useQuery`. `App.tsx` swaps the three `PagePlaceholder` elements; `RequireAuth roles` props untouched. `PriorityBadge` / `SlaCell` re-exported from `features/tickets` — no second SLA visual. Dashboard CSS appended to `index.css` (logical properties, no new tokens).
+- **Tests:** `api/tests/Feature/Dashboard/{AgentDashboardTest,TeamDashboardTest,AdminDashboardTest,SlaRiskSourceTest}.php` + dashboard shapes added to `ApiContractTest`. `web/src/features/agent-dashboard/` — `DashboardWidget.test.tsx`, `AgentDashboardPage.test.tsx`, `TeamDashboardPage.test.tsx`, `AdminDashboardPage.test.tsx`, `pages/dashboardRoutes.test.tsx`.
 
 ## Dependency notes
 

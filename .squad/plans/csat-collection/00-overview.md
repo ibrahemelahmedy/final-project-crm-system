@@ -2,6 +2,17 @@
 
 Entry point for the **csat-collection** feature. Stories execute in order by their `NN` prefix.
 
+**Status: implemented.** Story 13 has landed. A `TicketResolutionObserver` creates one
+`csat_surveys` row per resolution cycle when Story 04's inline Resolved transition fires (no domain
+event exists, so it is a model observer). Public `csat.show` / `csat.store` are the first routes
+outside `auth:sanctum` — `signed` + `throttle:csat`, and an `InvalidSignatureException` render hook
+collapses tampered / unknown / expired links into one non-enumerable invalid state. The public page
+lives at `/feedback/:uuid` (outside `RequireAuth`/`AppLayout`) with a credential-free Axios client,
+browser-detected locale, and an on-page EN/AR toggle. `ReportAggregator::csat()` now computes a real
+average over rated rows, keeping Story 12's block shape (a zero-response period still returns
+`available: false`). The agent panel mounts into Story 05's ticket-detail side panel via a new
+`extraSlot` prop, without restructuring that screen.
+
 ## Stories
 
 | NN | File | Title | Tracker id | Depends on |

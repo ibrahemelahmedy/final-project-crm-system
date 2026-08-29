@@ -324,27 +324,27 @@ Testing Library against `web/src/test/setup.ts`.
 - [ ] Every notification-generating event (SLA at-risk/breached from Story 06; mention and task-due
       from Story 10) **persists a row** for the target user; a user offline at the moment of an SLA
       breach sees it on next login.
-- [ ] The header bell shows an unread count that is correct after a **full page refresh** and is
+- [x] The header bell shows an unread count that is correct after a **full page refresh** and is
       **server-derived**, never client-only state.
 - [ ] Activating a notification navigates to the source record and marks it read as a result of that
       navigation.
-- [ ] The notification list is **paginated server-side** and filterable by read/unread; the table is
+- [x] The notification list is **paginated server-side** and filterable by read/unread; the table is
       never fetched in full.
-- [ ] "Mark all as read" affects only the caller's notifications, and running it twice produces the
+- [x] "Mark all as read" affects only the caller's notifications, and running it twice produces the
       same result as running it once.
-- [ ] A user with zero notifications sees the Empty state ("You're all caught up"), not a blank
+- [x] A user with zero notifications sees the Empty state ("You're all caught up"), not a blank
       panel.
 - [ ] A notification whose source was deleted or is no longer visible under the role model renders a
       clear "no longer available" state — never a raw 404, never a leak.
-- [ ] Nothing is delivered to a deactivated account (Story 08).
+- [x] Nothing is delivered to a deactivated account (Story 08).
 - [ ] The bell and panel mirror correctly in RTL and theme correctly in both themes, consistently
       with the rest of the shell.
-- [ ] **The Story 02 header is not restructured** — only the notification button and its dot are
+- [x] **The Story 02 header is not restructured** — only the notification button and its dot are
       replaced, proven by the extended `AppLayout` test.
-- [ ] The `type` contract exposes product domain events only; no framework class name appears in any
+- [x] The `type` contract exposes product domain events only; no framework class name appears in any
       API response.
-- [ ] Polling (not WebSocket push) is stated in the plan and in a code comment as a deliberate MVP
+- [x] Polling (not WebSocket push) is stated in the plan and in a code comment as a deliberate MVP
       decision.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 12.**

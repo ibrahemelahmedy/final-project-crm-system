@@ -306,27 +306,53 @@ role-scoped assertions and `ApiContractTest.php` for shape assertions.**
 
 ---
 
+## Implementation decisions
+
+Recorded at implementation time. Each resolves a choice this plan deliberately left open.
+
+- **"Was this helpful?" — OMITTED, not shipped inert.** The reader artboard renders the control, but
+  ratings are out of scope. Depicting a control the product cannot honour is worse than leaving it
+  out, which is the same call Story 05 made for the AI-suggested-reply slot. No ratings table exists.
+  `ArticleReaderPage.test.tsx` asserts its absence so it cannot reappear by accident.
+- **Slug collision on rename — the slug is FROZEN at creation.** `KbArticle::freshSlug()` derives it
+  once and appends a numeric suffix on collision; a later title change never repoints it. No redirect
+  table and no 301 are needed, and an existing published slug can never be silently reused for
+  different content — a `[title](/knowledge-base/<slug>)` reference pasted into a ticket reply months
+  ago still resolves. The reader shows the current title regardless.
+- **One endpoint added beyond the table above: `POST /api/kb/preview`.** The plan requires that "the
+  editor preview runs the same pipeline, so a payload cannot survive by being previewed instead of
+  saved", and that client-side sanitization alone is insufficient. Together those rule out rendering
+  Markdown in the browser, so the preview is a server render through the same `MarkdownRenderer`.
+  It writes nothing and touches no row, but carries the authoring policy rather than the read policy.
+- **The picker IS wired into the composer.** Story 05 shipped `onInsertAtCaret` and `toolbarSlot` on
+  `ReplyComposer` for exactly this. `TicketDetailPage` passes `ArticlePickerPanel` through those two
+  existing extension points; **no composer internals were modified**, so the plan's re-planning
+  condition was not triggered.
+- **Search relevance is asserted as an ordering property, never a score.** Verified on both engines:
+  the suite runs `LikeArticleSearch` on SQLite, and `PostgresArticleSearch` was exercised against the
+  live PostgreSQL, where `ts_rank` returns the title match ahead of the body-only matches.
+
 ## Done Criteria
 
 Mapped 1:1 to `.squad/stories/knowledge-base/WIS-5/intake.md`.
 
-- [ ] An Administrator or authorized editor creating an article must supply a title, body, and
+- [x] An Administrator or authorized editor creating an article must supply a title, body, and
       category before it can be published.
-- [ ] An article saved as Draft is not visible in agent-facing search or to a non-editor until
+- [x] An article saved as Draft is not visible in agent-facing search or to a non-editor until
       explicitly Published.
 - [ ] The article list uses the same server-side pagination, faceted filter, and bulk-action pattern
       as Customers (Story 03), with filter state reflected in the URL.
-- [ ] Search ranks results by relevance against title and body; an empty result set shows an Empty
+- [x] Search ranks results by relevance against title and body; an empty result set shows an Empty
       state suggesting a broader search, not a blank list.
 - [ ] An agent inside a ticket's Conversation Thread can search the Knowledge Base and insert an
       article reference into their reply without leaving the ticket.
-- [ ] The reader view renders Markdown safely — no raw HTML from an article body reaches the DOM
+- [x] The reader view renders Markdown safely — no raw HTML from an article body reaches the DOM
       unsanitized, and sanitization happens server-side.
-- [ ] An Arabic-authored article renders RTL in the reader with the Arabic line-height rule from
+- [x] An Arabic-authored article renders RTL in the reader with the Arabic line-height rule from
       `docs/design/brief.md`.
-- [ ] Editing a published article records a version and updates a visible last-updated timestamp so
+- [x] Editing a published article records a version and updates a visible last-updated timestamp so
       agents can tell if guidance is stale.
-- [ ] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/knowledge-base`.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/knowledge-base`.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 10.**

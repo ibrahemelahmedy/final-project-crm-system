@@ -4,9 +4,9 @@ Entry point for the **channels-overview** feature. Stories execute in order by t
 
 ## Stories
 
-| NN | File | Title | Tracker id | Depends on |
-|----|------|-------|------------|------------|
-| 14 | [14-story-channels-overview.md](14-story-channels-overview.md) | Channels Overview (read-only) | WIS-15 | Stories 01, 02, 04 |
+| NN | File | Title | Tracker id | Depends on | Status |
+|----|------|-------|------------|------------|--------|
+| 14 | [14-story-channels-overview.md](14-story-channels-overview.md) | Channels Overview (read-only) | WIS-15 | Stories 01, 02, 04 | ✅ Implemented |
 
 ## Dependency notes
 
@@ -51,3 +51,29 @@ before implementing.**
 - **Out of scope and owned elsewhere:** connecting any provider (category 11 — Integrations); inbound
   ingestion, webhook receivers, or channel-specific composer behaviour; an embeddable live-chat widget;
   any credential entry or OAuth flow.
+
+## Implementation notes (Story 14, shipped 2026-08-28)
+
+- **Backend:** `ChannelOverviewController` (`__invoke`), `ChannelOverviewRequest`
+  (period `7d|30d|90d`, nullable, default `30d`, unrecognised → 422), `ChannelOverviewResource`.
+  Route `GET /api/channels/overview` inside the `auth:sanctum` + `active` group — no write verb.
+  Counts come from **one** `GROUP BY channel` aggregate run through `Ticket::visibleTo()`, so an
+  Agent's counts inherit the queue's visibility scope. `total_tickets` is counted separately from
+  the grouped query so a (currently impossible) NULL-channel row would land in the total and in no
+  card. **No migration, model, or policy** — zero schema added; `tickets.channel` already has an
+  index from Story 04's `expand_tickets_table` migration.
+- **Frontend:** `web/src/features/channels/` — `index.ts` exports `ChannelsPage` only. Period lives
+  in `?period=` (`useChannelPeriod`, clamps unknown values to `30d` without a request). Channel list
+  always comes from the API (`Channel::cases()`); `model/channel.ts` holds only decorative help-line
+  + icon copy keyed by enum value, with a generic never-`undefined` fallback for an unknown value.
+  `ChannelCard`'s status pill has no connected variant and no uptime element. Error state keeps the
+  five cards rendered with `Count unavailable` + a `Retry`; empty/zero renders `No tickets this
+  period`, never a literal `0`. Admin-only static release notice from `AuthContext` role — no
+  button/link/form. `App.tsx` `/channels` route swapped from `PagePlaceholder` to `ChannelsPage`;
+  `navItems.tsx` untouched.
+- **Tests:** `api/tests/Feature/Channels/{ChannelOverviewTest,ChannelOverviewEmptyTest,ChannelOverviewAuthTest}.php`
+  (incl. enum-drift guard) + `ApiContractTest` extension; `web/src/features/channels/**` — page states,
+  role branching, `PeriodSelector` URL behaviour. All green.
+- **Known unrelated red in the tree at ship time:** concurrent in-flight stories left
+  `navItems.test.ts` (a 9th `/quick-replies` nav entry), `CustomerResource`, and CSAT route tests
+  failing, plus `tsc` errors under `agent-productivity`/`tickets/thread`. None touch channels code.

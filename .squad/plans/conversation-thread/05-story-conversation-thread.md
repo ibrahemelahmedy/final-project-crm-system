@@ -115,7 +115,9 @@ Every path in this section is relative to `api/`.
 
 ### 1 — Migration: the `ticket_messages` table
 
-**Create file: `database/migrations/2026_08_27_100000_create_ticket_messages_table.php`**
+**Create file: `database/migrations/2026_08_27_120300_create_ticket_messages_table.php`**
+
+> Implementation note: the timestamp is `2026_08_27_120300` (not the plan's original `100000`) so the migration runs **after** `create_customers_table` (`111743`) and `create_ticket_events_table` (`120200`). PostgreSQL rejects a foreign key to a table that does not yet exist; SQLite tolerates the forward reference, which is why the earlier ordering passed the test suite but failed `php artisan migrate` on pgsql.
 
 ```php
 Schema::create('ticket_messages', function (Blueprint $table) {
@@ -756,7 +758,7 @@ Each from its own component, per `brief.md` lines 181–187.
 
 ## Migration / Rollback
 
-- **One new table, no column added to any existing table.** `2026_08_27_100000_create_ticket_messages_table.php` is additive and `down()` drops it cleanly.
+- **One new table, no column added to any existing table.** `2026_08_27_120300_create_ticket_messages_table.php` is additive and `down()` drops it cleanly.
 - **Half-applied state:** if the migration runs but the code deploy fails, nothing reads or writes `ticket_messages` — the queue, the customers screen and the auth flow are untouched. If the code deploys before the migration, `GET /api/tickets/{id}/messages` 500s and **the detail route is the only broken surface**; the queue keeps working. **Run the migration first.**
 - **Rollback:** `php artisan migrate:rollback --step=1` drops `ticket_messages`. The two `TicketController` edits (Backend Task 6) are then **inert but harmful** — `store()` would reference a missing table. **Revert the code with the migration, not separately.**
 - **`customers.last_contact_at` is written but never *created* by this story.** Rolling back Story 05 leaves the values in place; they are simply no longer maintained. **No data loss and no backfill needed.**
@@ -839,7 +841,7 @@ Copy the mocking pattern from `web/src/app/navigation/navRoutes.test.tsx` lines 
 
 ### `ticket_messages` — the message timeline
 
-Table created by `api/database/migrations/2026_08_27_100000_create_ticket_messages_table.php`. Model **`App\Models\TicketMessage`**. Resource **`App\Http\Resources\TicketMessageResource`**. Controller **`App\Http\Controllers\TicketMessageController`**.
+Table created by `api/database/migrations/2026_08_27_120300_create_ticket_messages_table.php`. Model **`App\Models\TicketMessage`**. Resource **`App\Http\Resources\TicketMessageResource`**. Controller **`App\Http\Controllers\TicketMessageController`**.
 
 | Column | Type | Nullable | Notes |
 |---|---|---|---|
@@ -912,31 +914,58 @@ Indexes: `(ticket_id, id)` · `(ticket_id, created_at)`. **Valid on PostgreSQL a
 ## Done Criteria
 
 - [ ] `/tickets/{id}` renders the real conversation thread; a queue row's **subject** links to it and the `<tr>` still has no click handler.
-- [ ] `ticket_messages` exists with exactly the columns pinned above, both indexes, and **no `visibility` column**; the migration applies unmodified on **PostgreSQL and SQLite** with no driver guard.
-- [ ] Messages from every channel render in **one chronological list**, oldest at the top, with **no channel grouping, tab, or filter anywhere on the screen** — asserted by a test, not by inspection.
-- [ ] `TicketMessageResource` matches the pinned JSON shape exactly, and **never** exposes an author's email, phone or role — locked by a structure test and a `assertJsonMissing` test.
-- [ ] `GET /api/tickets/{ticket}/messages` is **cursor**-paginated at a fixed 30, rejects nothing but is not widenable by `per_page`, and a two-page fetch returns **disjoint** id sets.
+      <!-- plan-review 2026-08-28: ⚠️ code present (TicketRow.tsx:48 <Link to=/tickets/{id}>,
+           App.tsx:53 route) but Test Plan #16 is missing: no components/TicketRow.test.tsx and no
+           href assertion anywhere in TicketTable.test.tsx. -->
+- [x] `ticket_messages` exists with exactly the columns pinned above, both indexes, and **no `visibility` column**; the migration applies unmodified on **PostgreSQL and SQLite** with no driver guard.
+- [x] Messages from every channel render in **one chronological list**, oldest at the top, with **no channel grouping, tab, or filter anywhere on the screen** — asserted by a test, not by inspection.
+- [x] `TicketMessageResource` matches the pinned JSON shape exactly, and **never** exposes an author's email, phone or role — locked by a structure test and a `assertJsonMissing` test.
+- [x] `GET /api/tickets/{ticket}/messages` is **cursor**-paginated at a fixed 30, rejects nothing but is not widenable by `per_page`, and a two-page fetch returns **disjoint** id sets.
 - [ ] "Load earlier messages" prepends older messages and **the reading position does not move**; it is absent when `hasNextPage` is false.
-- [ ] An empty or whitespace-only reply is refused **client- and server-side with the same wording**, and `ticket_messages` gains no row.
-- [ ] A failed send **preserves the drafted text**, keeps focus, shows a `role="alert"` error, and **Retry** re-sends the same string. No optimistic bubble is ever rendered.
-- [ ] A successful reply is stored with the **ticket's** channel (a client-supplied `channel` is ignored), bumps `tickets.updated_at`, writes **one** `ticket_events` row with `event = 'replied'`, and writes **nothing** to `audit_logs`.
-- [ ] `customers.last_contact_at` is set from the reply's timestamp and **never moves backwards** — both directions asserted by tests.
-- [ ] `POST /api/tickets` with a description creates the **opening customer message**; without one it creates no message.
-- [ ] `GET /api/tickets/meta` returns `transitions`, and **every pre-existing key in that response is byte-for-byte what Story 04 shipped**.
-- [ ] The side panel shows priority, status, the SLA card, the assigned agent, customer contact detail, and the classification chips, and **stays fixed while the message list scrolls independently** — two scroll regions, one page that does not scroll.
-- [ ] The SLA card renders **all four** `sla.risk` branches and shows **"Not configured"** today; **no countdown is derived from `created_at`.**
-- [ ] Changing status, priority or assignee from the panel goes through Story 04's `PATCH /api/tickets/{ticket}`; the change appears in **ACTIVITY** without a reload; an illegal transition surfaces the server's 422 inline.
-- [ ] `TicketPolicy` is **unedited**; a 403 renders `ThreadForbidden` with a **specific** reason and no status code, and a nonexistent id renders the same screen rather than confirming the id does not exist.
-- [ ] All four states ship from their own components, plus the Forbidden state; the skeleton's geometry matches the real layout and respects `prefers-reduced-motion`.
-- [ ] A message body containing HTML renders as **text** — no `dangerouslySetInnerHTML` anywhere in this story.
-- [ ] The AI-suggested-reply affordance **is not rendered**: `thread-assist-slot` returns `null`, and the screen contains no "Suggested", no "Use", no "Dismiss" and no "Coming soon".
-- [ ] The composer's channel control is a **read-only indicator with no chevron**, and `POST` accepts no `channel`.
-- [ ] Under RTL the panel is on the visual left, bubble tails mirror via **logical** radius properties, the Send arrow and back chevron **swap paths** (no `scaleX(-1)`), and the message order is **unchanged** — asserted by a test.
-- [ ] Every new token is declared in **all four** blocks of `web/src/index.css`; no Story 04 token is redefined.
+      <!-- plan-review 2026-08-28: ⚠️ absent/present + fetchNextPage-once is implemented
+           (MessageList.tsx:51,59) AND tested (MessageList.test.tsx:30-52). The
+           "reading position does not move" half is implemented (useThreadScrollAnchor.ts:43-57,
+           useLayoutEffect) but unverified — the plan itself (line 108) notes jsdom cannot test
+           it, and Verification Step 6's manual check was not run. -->
+- [x] An empty or whitespace-only reply is refused **client- and server-side with the same wording**, and `ticket_messages` gains no row.
+- [x] A failed send **preserves the drafted text**, keeps focus, shows a `role="alert"` error, and **Retry** re-sends the same string. No optimistic bubble is ever rendered.
+- [x] A successful reply is stored with the **ticket's** channel (a client-supplied `channel` is ignored), bumps `tickets.updated_at`, writes **one** `ticket_events` row with `event = 'replied'`, and writes **nothing** to `audit_logs`.
+- [x] `customers.last_contact_at` is set from the reply's timestamp and **never moves backwards** — both directions asserted by tests.
+- [x] `POST /api/tickets` with a description creates the **opening customer message**; without one it creates no message.
+- [x] `GET /api/tickets/meta` returns `transitions`, and **every pre-existing key in that response is byte-for-byte what Story 04 shipped**.
+- [x] The side panel shows priority, status, the SLA card, the assigned agent, customer contact detail, and the classification chips, and **stays fixed while the message list scrolls independently** — two scroll regions, one page that does not scroll.
+- [x] The SLA card renders **all four** `sla.risk` branches and shows **"Not configured"** today; **no countdown is derived from `created_at`.**
+- [x] Changing status, priority or assignee from the panel goes through Story 04's `PATCH /api/tickets/{ticket}`; the change appears in **ACTIVITY** without a reload; an illegal transition surfaces the server's 422 inline.
+- [x] `TicketPolicy` is **unedited**; a 403 renders `ThreadForbidden` with a **specific** reason and no status code, and a nonexistent id renders the same screen rather than confirming the id does not exist.
+- [x] All four states ship from their own components, plus the Forbidden state; the skeleton's geometry matches the real layout and respects `prefers-reduced-motion`.
+      <!-- plan-review 2026-08-28: ✅ four named components — ThreadStates.tsx:3 (Skeleton), :30
+           (Empty), :46 (Error), :58 (Forbidden); reduced motion via index.css:727
+           (.sk { animation: none }). Layout deviation, not a criterion failure: the four live in
+           one ThreadStates.tsx rather than the four separate files the file tree (line 418)
+           lists. -->
+- [x] A message body containing HTML renders as **text** — no `dangerouslySetInnerHTML` anywhere in this story.
+- [x] The AI-suggested-reply affordance **is not rendered**: `thread-assist-slot` returns `null`, and the screen contains no "Suggested", no "Use", no "Dismiss" and no "Coming soon".
+- [x] The composer's channel control is a **read-only indicator with no chevron**, and `POST` accepts no `channel`.
+- [x] Under RTL the panel is on the visual left, bubble tails mirror via **logical** radius properties, the Send arrow and back chevron **swap paths** (no `scaleX(-1)`), and the message order is **unchanged** — asserted by a test.
+- [x] Every new token is declared in **all four** blocks of `web/src/index.css`; no Story 04 token is redefined.
 - [ ] Below 1024px the panel stacks **above** the thread and the page never scrolls horizontally from 375px up.
+      <!-- plan-review 2026-08-28: ⚠️ stacking implemented (index.css:2303-2308 —
+           .thread-split{flex-direction:column} + .meta-panel{order:-1}) and long-token overflow
+           guarded (index.css:2091 overflow-wrap:anywhere). The "never scrolls horizontally from
+           375px" half has no test and Verification Step 9's manual check was not run. -->
 - [ ] `web/src/features/tickets/index.ts` exports exactly `TicketQueuePage` and `TicketDetailPage`; **no `features/conversation-thread/` folder exists**; `navItems.tsx` is unchanged and `navRoutes.test.tsx` passes untouched.
+      <!-- plan-review 2026-08-28: 🔀 BROKEN BY STORY 07, not by Story 05. index.ts:7-9 now also
+           exports PriorityBadge, SlaCell and four types, against the contract at line 901
+           ("and nothing else"). The rest of the criterion holds: no features/conversation-thread/
+           folder, navItems.tsx unchanged (empty git diff), navRoutes.test.tsx passes. -->
 - [ ] `npx vitest run` and `php artisan test` are both fully green; `npm run build` and `npm run lint` are clean.
-- [ ] `.squad/plans/conversation-thread/00-overview.md` records the Story 05 row and its dependency notes.
+      <!-- plan-review 2026-08-28: ❌ pest = 153 tests / 143 passed / 10 FAILED. All ten are
+           Customer* (CustomerResource.php:20 "Attempt to read property value on null"):
+           CustomerCrudTest x3, CustomerDuplicateTest x4, CustomerAttachmentTest, CustomerListTest,
+           CustomerPolicyTest — Story 03's surface, not Story 05's. Story 05's own suites are
+           green: TicketMessageTest + ApiContractTest + TicketScopeTest = 27/27.
+           vitest 155/155 pass, build succeeds, lint clean. -->
+- [x] `.squad/plans/conversation-thread/00-overview.md` records the Story 05 row and its dependency notes.
 
 ---
 

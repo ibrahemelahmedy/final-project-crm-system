@@ -8,6 +8,43 @@ Entry point for the **internationalization** feature. Stories execute in order b
 |----|------|-------|------------|------------|
 | 15 | [15-story-internationalization.md](15-story-internationalization.md) | Internationalization (Arabic & English) | WIS-11 | Stories 01, 02, and every feature story 03–14 |
 
+## Implementation status (2026-08-28)
+
+**Infrastructure landed; per-feature string extraction in progress.**
+
+- **Backend — done.** `users.locale` migration, `UserResource.locale`, `PATCH /api/user/preferences`
+  (`UserPreferencesController` + `UpdatePreferencesRequest`, `in:en,ar`), `SetLocale` middleware
+  registered globally in `bootstrap/app.php`, and `api/lang/{en,ar}/{validation,auth,passwords}.php`
+  including the Arabic `attributes` map. `grep` for `IntlDateFormatter` / `NumberFormatter` / `Number::`
+  / `translatedFormat` in `api/app` → **none found**. Pest suites: `I18n/LocalePreferenceTest`,
+  `I18n/LocalizedValidationTest`, `I18n/CatalogueParityTest`. *(PHP is not on PATH in this environment —
+  the Pest suites are written but were not executed here; run `php artisan test` under Herd.)*
+- **Frontend infra — done.** `i18next@26` + `react-i18next@17` installed (JSON v4 plurals, ≥ 23).
+  `web/src/i18n/` exports the instance, `useT`, and `formatDate/formatDateTime/formatRelative/formatNumber`
+  (all `Intl`, `numberingSystem: 'latn'`). `UiPreferencesContext` extended — `locale` is the source,
+  `direction` derived, `setDirection` removed, `setLocale` persists + PATCHes, `syncLocaleFromServer`
+  reconciles server-wins without re-PATCHing, `<html lang>` set alongside `dir`, nothing written to
+  `localStorage` on mount. `LocaleSync` reconciles from the login response. `Accept-Language` interceptor
+  in `lib/api.ts`. Header slot **filled** (no longer `disabled`, no element added/moved). `index.css`
+  `--font-arabic` + `:root[lang='ar']` line-height +12%, scoped, no second stylesheet. Google Fonts
+  `IBM Plex Sans Arabic` in `index.html`.
+- **Enforcement — done.** `web/scripts/check-no-literals.mjs` (TS-compiler AST scan) + allowlist
+  `scripts/i18n-allowlist.json` + `npm run i18n:check` (wired into `npm run lint`) + asserted from
+  `src/i18n/noHardcodedStrings.test.ts` so `npx vitest run` fails on a violation.
+- **Catalogues.** `common` (nav, shell chrome, actions, states, plurals) and `auth` fully populated in
+  `en` + `ar`; the 12 feature namespaces exist as empty `{}` files pending extraction.
+- **String extraction — DONE:** app shell (`AppLayout`, `NavItem`, `PagePlaceholder`), `navItems.tsx`
+  (`t(labelKey)`), and the whole `auth` feature (`LoginPage`, `RequireAuth`). The check enforces
+  `src/app`, `src/i18n`, `src/features/auth` today.
+- **String extraction — PENDING** (tracked in `scripts/i18n-allowlist.json` `_rootsNote`): the remaining
+  feature folders — `customers`, `tickets` (incl. conversation thread), `knowledge-base`,
+  `notifications`, `reports`, `users-roles-admin`, `agent-dashboard`, `agent-productivity`, `channels`,
+  `csat` — plus `src/components`. Each moves its literals to its namespace and is then added to the
+  check's enforced roots. `csat` keeps its browser-detected locale rule when absorbed.
+- Frontend tests added: `src/i18n/{catalogueParity,formatters,missingKey,noHardcodedStrings}.test.ts`,
+  locale cases in `UiPreferencesContext.test.tsx`, and `AppLayout.i18n.test.tsx`. Full suite: **401
+  passing**. `npm run build` + `npm run lint` clean.
+
 ## Dependency notes
 
 **This story is client-requirement category 12 (Arabic & English)** — the translation infrastructure

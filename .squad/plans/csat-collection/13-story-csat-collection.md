@@ -302,18 +302,18 @@ Frontend (Vitest + Testing Library):
 
 ## Done Criteria
 
-- [ ] A ticket transitioning to Resolved creates exactly one CSAT request for that resolution cycle; a reopen-and-re-resolve never accumulates duplicate outstanding requests for the same cycle.
-- [ ] A submitted rating is stored against the ticket, the resolving agent (`resolved_by`), and the resolution timestamp (`resolved_at`), so Reports aggregates by agent and by period without re-deriving who resolved what.
-- [ ] The rating scale is a single fixed **1–5** scale, documented with its rationale in this plan, with no configurable or mixed alternative anywhere in the code.
-- [ ] A free-text comment is stored with the rating and is optional — a rating with no comment is a complete, valid response.
-- [ ] Re-opening an already-answered link shows the recorded response read-only and never silently overwrites; no update action is offered, and no endpoint exists that would perform one.
-- [ ] The response surface requires no login: access is via a signed, expiring, single-purpose link that grants access to that one survey only, authenticates the visitor into nothing, and exposes no internal notes or ticket history.
-- [ ] An expired or tampered link renders a clear expired/invalid state — never a stack trace, never a partially working form.
-- [ ] Reports' CSAT widget renders real aggregates computed from `csat_surveys` instead of its previous permanent Empty state, with Story 12's response shape unchanged.
-- [ ] A period with zero responses still renders the Empty state — zero responses is "no data", never a score of 0%.
+- [x] A ticket transitioning to Resolved creates exactly one CSAT request for that resolution cycle; a reopen-and-re-resolve never accumulates duplicate outstanding requests for the same cycle.
+- [x] A submitted rating is stored against the ticket, the resolving agent (`resolved_by`), and the resolution timestamp (`resolved_at`), so Reports aggregates by agent and by period without re-deriving who resolved what.
+- [x] The rating scale is a single fixed **1–5** scale, documented with its rationale in this plan, with no configurable or mixed alternative anywhere in the code.
+- [x] A free-text comment is stored with the rating and is optional — a rating with no comment is a complete, valid response.
+- [x] Re-opening an already-answered link shows the recorded response read-only and never silently overwrites; no update action is offered, and no endpoint exists that would perform one.
+- [x] The response surface requires no login: access is via a signed, expiring, single-purpose link that grants access to that one survey only, authenticates the visitor into nothing, and exposes no internal notes or ticket history.
+- [x] An expired or tampered link renders a clear expired/invalid state — never a stack trace, never a partially working form.
+- [x] Reports' CSAT widget renders real aggregates computed from `csat_surveys` instead of its previous permanent Empty state, with Story 12's response shape unchanged.
+- [x] A period with zero responses still renders the Empty state — zero responses is "no data", never a score of 0%.
 - [ ] An agent can read their own CSAT average but has no route, policy ability, or UI control to edit or delete an individual response.
 - [ ] The response page states its locale rule in code and in this plan: browser-detected with an explicit on-page override, because there is no signed-in user to read a preference from.
 - [ ] All four async states ship on both the public page and the agent panel (loading / error / empty / success).
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 14.**

@@ -4,9 +4,32 @@ Entry point for the **reports-dashboards** feature. Stories execute in order by 
 
 ## Stories
 
-| NN | File | Title | Tracker id | Depends on |
-|----|------|-------|------------|------------|
-| 12 | [12-story-reports-dashboards.md](12-story-reports-dashboards.md) | Reports & Management Dashboards | WIS-7 | Stories 01, 02, 04, 06 |
+| NN | File | Title | Tracker id | Depends on | Status |
+|----|------|-------|------------|------------|--------|
+| 12 | [12-story-reports-dashboards.md](12-story-reports-dashboards.md) | Reports & Management Dashboards | WIS-7 | Stories 01, 02, 04, 06 | Implemented |
+
+## Implementation notes (Story 12)
+
+- **Endpoint:** `GET /api/reports/summary` in the `auth:sanctum` group —
+  `ReportController@summary` → `ReportSummaryRequest` (gate + range validation, default 30 days,
+  span capped at 366) → `App\Services\ReportAggregator` → `ReportSummaryResource` (unwrapped).
+- **SLA source of truth:** `App\Services\SlaCalculator::complianceForRange()` was added to Story 06's
+  service (range-scoped compliance/breach/avg-resolution). Reports never re-derives a threshold.
+  `ReportSlaSourceTest` asserts the payload against the service, not a constant.
+- **Authorization:** `App\Policies\ReportPolicy::view` registered as the `view-reports` gate in
+  `AppServiceProvider`. Agent → 403 (`ReportAccessTest`).
+- **Indexes:** `2026_08_28_150000_add_reporting_indexes_to_tickets_table.php` adds three indexes on
+  `tickets` (`created_at`, `resolved_at`, `[assigned_to, resolved_at]`); no Story 04 column touched.
+- **Charting library:** `recharts@3.10.1` (resolved version) added to `web/`. Rationale + RTL
+  decision recorded in `web/src/features/reports/components/ChartFrame.tsx`.
+- **Frontend:** `web/src/features/reports/` (index exports `ReportsPage` only). One TanStack Query
+  keyed by the URL range (`useReportSummary`); range in search params (`useReportRange`, presets
+  7/30/90). Five cards; `ChartFrame` applies `dir="ltr"` to every plot area in one place. `/reports`
+  placeholder replaced in `App.tsx` under `RequireAuth roles={['team_lead','administrator']}`;
+  `nav.reports` carries the same `roles`.
+- **Tests:** backend `Report{Access,Range,EmptyData,SlaSource,CsatContract,ChannelMix}Test`;
+  frontend `ReportsPage`, `CsatCard`, `ChartFrame`, `AgentPerformanceCard` + updated
+  `navItems.test.ts`.
 
 ## Dependency notes
 

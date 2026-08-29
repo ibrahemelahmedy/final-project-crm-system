@@ -280,16 +280,16 @@ Frontend (Vitest + Testing Library):
 
 ## Done Criteria
 
-- [ ] Activating the **Channels** nav item navigates to a real, rendered screen — no nav item in the shipped product leads to a placeholder or nowhere; Story 02's `it.each(navItems)` route test passes unchanged.
-- [ ] The screen lists the five channels of client requirement category 3 — Email, WhatsApp, Live chat, SMS, Web forms — each with an explicit connection status, derived from Story 04's `Channel` enum.
-- [ ] Every channel reads unambiguously as **Not connected**. No fabricated "Connected" value, no uptime figure, and no mocked health indicator exists in the markup, the API, or the component's variant set.
-- [ ] Per-channel ticket counts for a selectable period are computed from real ticket rows by a single `GROUP BY` aggregate — never by fetching tickets and counting client-side.
-- [ ] With zero tickets in the selected period, the screen renders an Empty state rather than zeros presented as a measurement.
-- [ ] An Agent sees an entirely read-only screen with no configuration affordance of any kind.
-- [ ] An Administrator sees a plain statement that integration is not available in this release — a sentence, not a form that cannot work.
-- [ ] The screen mirrors under RTL using logical properties and themes consistently with the rest of the shell in both light and dark, with no second stylesheet.
-- [ ] While loading, the screen shows a skeleton; on failure it shows a retryable error that still renders the channel list with `Count unavailable`.
-- [ ] No migration, no table, and no write endpoint were added by this story.
-- [ ] Overview `00-overview.md` updated with this story.
+- [ ] Activating the **Channels** nav item navigates to a real, rendered screen — no nav item in the shipped product leads to a placeholder or nowhere; Story 02's `it.each(navItems)` route test passes unchanged. *(⚠️ Channels itself: `App.tsx:105` → `ChannelsPage`, and `navRoutes.test.tsx` passes unchanged. But `/sla-rules` still renders `PagePlaceholder` at `App.tsx:119`, so the "no nav item leads to a placeholder" clause is false in the shipped product — and the plan's own outline says to leave those five placeholders untouched.)*
+- [x] The screen lists the five channels of client requirement category 3 — Email, WhatsApp, Live chat, SMS, Web forms — each with an explicit connection status, derived from Story 04's `Channel` enum. *(controller iterates `Channel::cases()`; enum-drift guard test.)*
+- [x] Every channel reads unambiguously as **Not connected**. No fabricated "Connected" value, no uptime figure, and no mocked health indicator exists in the markup, the API, or the component's variant set. *(`status` is the literal `not_connected`; `STATUS_LABELS`/`ChannelCard` have no connected variant.)*
+- [x] Per-channel ticket counts for a selectable period are computed from real ticket rows by a single `GROUP BY` aggregate — never by fetching tickets and counting client-side. *(`ChannelOverviewController` — one `groupBy('channel')->selectRaw('channel, count(*)')`.)*
+- [ ] With zero tickets in the selected period, the screen renders an Empty state rather than zeros presented as a measurement. *(⚠️ Rendering is correct — `ChannelCard.tsx:44-45` shows `No tickets this period`, and `ChannelsPage.test.tsx` asserts no literal `0`. But the contract names `meta.has_tickets` as the whole-screen empty signal and `ChannelsPage.tsx` never reads it — emptiness is derived per-card from `ticket_count === 0`.)*
+- [x] An Agent sees an entirely read-only screen with no configuration affordance of any kind. *(`ChannelsPage.roles.test.tsx` — no link/textbox/checkbox/combobox/connect-button for an agent.)*
+- [x] An Administrator sees a plain statement that integration is not available in this release — a sentence, not a form that cannot work. *(static `role="note"` text from `AuthContext` role.)*
+- [ ] The screen mirrors under RTL using logical properties and themes consistently with the rest of the shell in both light and dark, with no second stylesheet. *(⚠️ Code is right: `index.css:3392-3487`, zero physical direction properties, shared tokens only, no second stylesheet. But the plan makes this manual-only (Test Plan 10) and Verification Step 6 — the RTL/dark browser check — was never performed, so nothing confirms it renders.)*
+- [x] While loading, the screen shows a skeleton; on failure it shows a retryable error that still renders the channel list with `Count unavailable`. *(`ChannelsPage` skeleton list + `role="alert"` banner with `Retry`.)*
+- [x] No migration, no table, and no write endpoint were added by this story. *(route audit: one `GET` under `auth:sanctum`; `ChannelOverviewAuthTest` asserts no write verb on any `channels` route.)*
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 15.**

@@ -1577,9 +1577,9 @@ Indexes: `assigned_to` (scaffold) · `(assigned_to, status, created_at)` · `(st
 - [x] Filter, sort, page and page-size state round-trips through the URL: a copied URL reproduces the view in a new tab, survives a reload, and the back button walks the filter history. A malformed URL falls back to defaults instead of crashing.
 - [x] Selecting rows raises the bulk bar; the confirmation names the count and the action; a partial result reports the skipped count to the user rather than claiming success.
 - [x] The header's **New Ticket** button is no longer `disabled`; it links to `/tickets?new=1` and the modal's open state lives in the URL.
-- [ ] Every new token is declared in **all four** blocks of `web/src/index.css`, and a `CLOSED` status badge is visibly distinct from a `LOW` priority badge in both themes.
+- [x] Every new token is declared in **all four** blocks of `web/src/index.css`, and a `CLOSED` status badge is visibly distinct from a `LOW` priority badge in both themes.
 - [ ] Below **900px** the table becomes cards on which priority, status and SLA-risk stay visible, and the page body never scrolls horizontally from 375px up.
-- [ ] Under RTL the column order mirrors, `#4821` still reads `#4821`, and the pagination chevrons mirror — the export's own omission is corrected, not copied.
+- [x] Under RTL the column order mirrors, `#4821` still reads `#4821`, and the pagination chevrons mirror — the export's own omission is corrected, not copied.
 - [x] No `outline: none` without a replacement anywhere in this story; the skeleton and the modal both respect `prefers-reduced-motion`; every interactive element has a visible focus ring.
 - [ ] `npx vitest run` and `php artisan test` are both fully green, `npm run build` and `npm run lint` are clean, and `ReactQueryDevtools` is absent from the production bundle.
 - [x] `.squad/plans/ticket-management/00-overview.md` records the Story 04 row and re-points the carried-forward `teams` debt at Story 08.

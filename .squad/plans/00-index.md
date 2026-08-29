@@ -13,10 +13,10 @@ Rows are listed in **execution order**, not alphabetically — read this table t
 | 05 | conversation-thread | [conversation-thread/00-overview.md](conversation-thread/00-overview.md) | Conversation Thread (Ticket Detail) | WIS-3 | full |
 | 06 | sla-rules-automation | [sla-rules-automation/00-overview.md](sla-rules-automation/00-overview.md) | SLA Rules & Automation | WIS-6 | full |
 | 07 | agent-dashboard | [agent-dashboard/00-overview.md](agent-dashboard/00-overview.md) | Agent Dashboard (Role-Based Home) | WIS-9 | contract |
-| 08 | users-roles-admin | [users-roles-admin/00-overview.md](users-roles-admin/00-overview.md) | Users & Roles Administration | WIS-8 | contract |
-| 09 | knowledge-base | [knowledge-base/00-overview.md](knowledge-base/00-overview.md) | Knowledge Base | WIS-5 | contract |
-| 10 | agent-productivity | [agent-productivity/00-overview.md](agent-productivity/00-overview.md) | Agent Productivity — Quick Replies, Tasks & Collaboration | WIS-12 | contract |
-| 11 | notifications | [notifications/00-overview.md](notifications/00-overview.md) | Notifications Centre (in-app) | WIS-13 | contract |
+| 08 | users-roles-admin | [users-roles-admin/00-overview.md](users-roles-admin/00-overview.md) | Users & Roles Administration | WIS-8 | **implemented** |
+| 09 | knowledge-base | [knowledge-base/00-overview.md](knowledge-base/00-overview.md) | Knowledge Base | WIS-5 | **implemented** |
+| 10 | agent-productivity | [agent-productivity/00-overview.md](agent-productivity/00-overview.md) | Agent Productivity — Quick Replies, Tasks & Collaboration | WIS-12 | **implemented** |
+| 11 | notifications | [notifications/00-overview.md](notifications/00-overview.md) | Notifications Centre (in-app) | WIS-13 | **implemented** |
 | 12 | reports-dashboards | [reports-dashboards/00-overview.md](reports-dashboards/00-overview.md) | Reports & Management Dashboards | WIS-7 | contract |
 | 13 | csat-collection | [csat-collection/00-overview.md](csat-collection/00-overview.md) | CSAT Collection (post-resolution survey) | WIS-14 | contract |
 | 14 | channels-overview | [channels-overview/00-overview.md](channels-overview/00-overview.md) | Channels Overview (read-only) | WIS-15 | contract |

@@ -274,26 +274,38 @@ Everything below is **owned by this story** unless the bullet names another owne
 
 Mapped 1:1 to `.squad/stories/agent-dashboard/WIS-9/intake.md`.
 
-- [ ] An Agent's home shows their own assigned queue, tickets approaching SLA breach, and
+- [x] An Agent's home shows their own assigned queue, tickets approaching SLA breach, and
       quick-reply shortcuts — content differs from the other roles, not just widget visibility.
-- [ ] A Team Lead's home shows the team queue, workload balance across agents, and current
+- [x] A Team Lead's home shows the team queue, workload balance across agents, and current
       escalations — not the single-agent view.
-- [ ] An Administrator's home shows entry points into user management, SLA rule configuration, and
-      the audit log — **and no ticket queue**.
-- [ ] Every widget on every role's dashboard maps to a named bullet in the design brief's
+- [x] An Administrator's home shows entry points into user management, SLA rule configuration, and
+      the audit log — **and no ticket queue** (`AdminDashboardPage.test.tsx` asserts no table).
+- [x] Every widget on every role's dashboard maps to a named bullet in the design brief's
       "Role-based home" list. No widget was added because data was available.
 - [ ] The "approaching SLA breach" widget reads Story 06's SLA-risk source; no threshold check is
       reimplemented in this feature.
-- [ ] On first load each widget shows its own loading skeleton independently; a slow or failing
-      widget does not block the page.
+      <!-- plan-review 2026-08-28: 🔀 Story 06 has not run; `App\Services\SlaCalculator` was
+           authored inside this story instead of calling Story 06's computation. The widget itself
+           reimplements no threshold. Also: SlaCalculator.php:50 falls back to computing from
+           created_at when `resolution_due_at` is null, instead of EXCLUDING the row as the
+           Edge Cases section requires. -->
+- [x] On first load each widget shows its own loading skeleton independently; a slow or failing
+      widget does not block the page (per-widget `useQuery`; `AgentDashboardPage.test.tsx`).
 - [ ] A role with zero relevant items sees an Empty state with a clear next action — not an error
       and not a misleading zero.
+      <!-- plan-review 2026-08-28: ⚠️ EscalationsWidget.tsx:24 and QuickRepliesWidget.tsx:23 name
+           no next action in their Empty copy. "An error is never rendered as a zero"
+           (StatTile.tsx:30 renders "—") has no test. -->
 - [ ] Under RTL the dashboard mirrors consistently with the app shell (nav, tile order, widget
       order, table columns).
-- [ ] Every `/api/dashboard/*` endpoint is authorized server-side; an Agent calling a team or admin
-      endpoint gets 403 regardless of the frontend nav.
-- [ ] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/dashboard`, `/dashboard/team`, or
+      <!-- plan-review 2026-08-28: ⚠️ CSS uses logical properties throughout (index.css
+           1829-1986) but the required manual verification by toggling direction was not done —
+           the shell's direction control is disabled (AppLayout, owned by WIS-11) — and there is
+           no RTL test. -->
+- [x] Every `/api/dashboard/*` endpoint is authorized server-side; an Agent calling a team or admin
+      endpoint gets 403 regardless of the frontend nav (`TeamDashboardTest`, `AdminDashboardTest`).
+- [x] `web/src/App.tsx` no longer renders `PagePlaceholder` at `/dashboard`, `/dashboard/team`, or
       `/dashboard/admin`.
-- [ ] Overview `00-overview.md` updated with this story.
+- [x] Overview `00-overview.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 08.**
