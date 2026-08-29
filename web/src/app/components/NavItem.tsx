@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useMatch, useResolvedPath } from 'react-router-dom';
 import type { NavItemDef } from '../navigation/navItems';
+import { useT } from '../../i18n';
 
 export const NavItem: React.FC<{ item: NavItemDef; onNavigate?: () => void }> = ({
   item,
@@ -9,6 +10,7 @@ export const NavItem: React.FC<{ item: NavItemDef; onNavigate?: () => void }> = 
   // Any of /dashboard, /dashboard/team, /dashboard/admin — the item's `to`
   // is resolved to the signed-in user's own home route by resolveNavItems,
   // so an exact match here is correct rather than a prefix match.
+  const { t } = useT('common');
   const isDashboard = item.to.startsWith('/dashboard');
   const resolved = useResolvedPath(item.to);
   // Same isActive flag drives both the visual highlight and aria-current —
@@ -25,7 +27,7 @@ export const NavItem: React.FC<{ item: NavItemDef; onNavigate?: () => void }> = 
       aria-current={isActive ? 'page' : undefined}
     >
       {item.icon}
-      <span>{item.label}</span>
+      <span>{t(item.labelKey, { defaultValue: item.label })}</span>
     </NavLink>
   );
 };

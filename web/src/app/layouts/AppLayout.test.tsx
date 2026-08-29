@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth, type User } from '../../features/auth/AuthContext';
 import { UiPreferencesProvider } from '../providers/UiPreferencesContext';
 import { AppLayout } from './AppLayout';
@@ -14,6 +15,21 @@ vi.mock('../../lib/api', async () => {
     api: { post: vi.fn() },
   };
 });
+
+// Story 11's NotificationBell polls /notifications/unread-count through the
+// feature's own api module — mocked here so the shell renders without a
+// real network call. A resolved 0 keeps the badge hidden, which is exactly
+// the "inert" starting point these tests already assume for the header.
+vi.mock('../../features/notifications/api/notificationsApi', () => ({
+  fetchUnreadCount: vi.fn().mockResolvedValue(0),
+  fetchNotifications: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { current_page: 1, last_page: 1, per_page: 20, from: null, to: 0, total: 0 },
+    links: { first: null, last: null, prev: null, next: null },
+  }),
+  markNotificationRead: vi.fn(),
+  markAllNotificationsRead: vi.fn(),
+}));
 
 const makeUser = (overrides: Partial<User> = {}): User => ({
   id: 1,
@@ -41,21 +57,27 @@ const SignedInAs: React.FC<{ user: User; children: React.ReactNode }> = ({ user,
 };
 
 function renderShell(user: User, initialPath = '/dashboard') {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, refetchInterval: false, refetchOnWindowFocus: false } },
+  });
+
   return render(
-    <UiPreferencesProvider>
-      <MemoryRouter initialEntries={[initialPath]}>
-        <AuthProvider>
-          <SignedInAs user={user}>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
-                <Route path="/dashboard/admin" element={<div data-testid="page-placeholder">Admin</div>} />
-              </Route>
-            </Routes>
-          </SignedInAs>
-        </AuthProvider>
-      </MemoryRouter>
-    </UiPreferencesProvider>
+    <QueryClientProvider client={queryClient}>
+      <UiPreferencesProvider>
+        <MemoryRouter initialEntries={[initialPath]}>
+          <AuthProvider>
+            <SignedInAs user={user}>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
+                  <Route path="/dashboard/admin" element={<div data-testid="page-placeholder">Admin</div>} />
+                </Route>
+              </Routes>
+            </SignedInAs>
+          </AuthProvider>
+        </MemoryRouter>
+      </UiPreferencesProvider>
+    </QueryClientProvider>
   );
 }
 
@@ -118,18 +140,24 @@ describe('AppLayout', () => {
   });
 
   it('renders the skeleton when user is null', () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, refetchInterval: false, refetchOnWindowFocus: false } },
+    });
+
     render(
-      <UiPreferencesProvider>
-        <MemoryRouter initialEntries={['/dashboard']}>
-          <AuthProvider>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
-              </Route>
-            </Routes>
-          </AuthProvider>
-        </MemoryRouter>
-      </UiPreferencesProvider>
+      <QueryClientProvider client={queryClient}>
+        <UiPreferencesProvider>
+          <MemoryRouter initialEntries={['/dashboard']}>
+            <AuthProvider>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
+                </Route>
+              </Routes>
+            </AuthProvider>
+          </MemoryRouter>
+        </UiPreferencesProvider>
+      </QueryClientProvider>
     );
 
     expect(screen.getByTestId('page-placeholder')).toBeInTheDocument();
@@ -155,5 +183,36 @@ describe('AppLayout', () => {
     await screen.findByTestId('page-placeholder');
     expect(screen.queryByText('SLA Rules')).not.toBeInTheDocument();
     expect(screen.queryByText('Users')).not.toBeInTheDocument();
+  });
+
+  // Story 11 + Story 15 regression guard: the header must not be restructured.
+  // Story 15 (WIS-11) FILLS the Language slot in place — no longer disabled,
+  // but no header element is added, moved, or reordered.
+  it('keeps the header control set and order, with the Language slot now filled', async () => {
+    renderShell(makeUser());
+    await screen.findByTestId('page-placeholder');
+
+    const header = document.querySelector('.shell-header') as HTMLElement;
+    const controls = Array.from(header.querySelectorAll('button, a')) as HTMLElement[];
+
+    const themeIndex = controls.findIndex((el) =>
+      /Switch to (dark|light) mode/i.test(el.getAttribute('aria-label') ?? '')
+    );
+    const languageIndex = controls.findIndex((el) => el.classList.contains('shell-lang-btn'));
+    const notifIndex = controls.findIndex((el) =>
+      /^Notifications/.test(el.getAttribute('aria-label') ?? '')
+    );
+
+    // Theme toggle, then Language, then Notifications — unchanged order.
+    expect(themeIndex).toBeGreaterThan(-1);
+    expect(languageIndex).toBe(themeIndex + 1);
+    expect(notifIndex).toBe(languageIndex + 1);
+
+    const languageBtn = controls[languageIndex];
+    expect(languageBtn).not.toBeDisabled();
+    expect(languageBtn).not.toHaveAttribute('title', 'Coming soon');
+
+    const notifBtn = screen.getByRole('button', { name: /^Notifications/ });
+    expect(notifBtn).not.toBeDisabled();
   });
 });

@@ -1,16 +1,17 @@
-*.log
-.DS_Store
+# Laravel's package manifest is generated locally, where require-dev packages
+# (Pail, Collision, Pest) ARE installed. Vercel installs vendor with --no-dev,
+# so shipping this cache makes the app fatal on boot:
+#   Class "Laravel\Pail\PailServiceProvider" not found
+# Leaving it out lets Laravel rebuild the list at runtime from the real vendor.
+bootstrap/cache/packages.php
+bootstrap/cache/services.php
+bootstrap/cache/config.php
+bootstrap/cache/routes-*.php
+
+# Never ship local env or dev artefacts
 .env
-.env.backup
-.env.production
-.phpunit.result.cache
-/.idea
-/.vscode
-/.phpunit.cache
-/node_modules
-/public/hot
-/storage/*.key
-/storage/pail
-_ide_helper.php
-Thumbs.db
+storage/logs/*
+storage/pail
+tests
+node_modules
 .vercel

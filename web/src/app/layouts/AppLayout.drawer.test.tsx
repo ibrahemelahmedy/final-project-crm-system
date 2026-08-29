@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth, type User } from '../../features/auth/AuthContext';
 import { UiPreferencesProvider } from '../providers/UiPreferencesContext';
 import { AppLayout } from './AppLayout';
@@ -14,6 +15,19 @@ vi.mock('../../lib/api', async () => {
     api: { post: vi.fn() },
   };
 });
+
+// AppLayout now renders Story 11's NotificationBell, which polls through
+// this module — mocked so the drawer tests render without a real network call.
+vi.mock('../../features/notifications/api/notificationsApi', () => ({
+  fetchUnreadCount: vi.fn().mockResolvedValue(0),
+  fetchNotifications: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { current_page: 1, last_page: 1, per_page: 20, from: null, to: 0, total: 0 },
+    links: { first: null, last: null, prev: null, next: null },
+  }),
+  markNotificationRead: vi.fn(),
+  markAllNotificationsRead: vi.fn(),
+}));
 
 const user: User = {
   id: 1,
@@ -37,21 +51,27 @@ const SignedIn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 function renderShell() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, refetchInterval: false, refetchOnWindowFocus: false } },
+  });
+
   return render(
-    <UiPreferencesProvider>
-      <MemoryRouter initialEntries={['/dashboard']}>
-        <AuthProvider>
-          <SignedIn>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
-                <Route path="/tickets" element={<div data-testid="page-placeholder">Tickets</div>} />
-              </Route>
-            </Routes>
-          </SignedIn>
-        </AuthProvider>
-      </MemoryRouter>
-    </UiPreferencesProvider>
+    <QueryClientProvider client={queryClient}>
+      <UiPreferencesProvider>
+        <MemoryRouter initialEntries={['/dashboard']}>
+          <AuthProvider>
+            <SignedIn>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<div data-testid="page-placeholder">Dashboard</div>} />
+                  <Route path="/tickets" element={<div data-testid="page-placeholder">Tickets</div>} />
+                </Route>
+              </Routes>
+            </SignedIn>
+          </AuthProvider>
+        </MemoryRouter>
+      </UiPreferencesProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth, type User } from './AuthContext';
+import { useT } from '../../i18n';
 
 interface RequireAuthProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface RequireAuthProps {
 export const RequireAuth: React.FC<RequireAuthProps> = ({ children, roles }) => {
   const { user, status } = useAuth();
   const location = useLocation();
+  const { t } = useT('auth');
 
   if (status === 'anonymous' || !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -53,8 +55,8 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, roles }) => 
           }
         `}</style>
         <div className="access-denied">
-          <h2>403 — Access Denied</h2>
-          <p>Your role ({user.role_label}) does not have permission to view this page.</p>
+          <h2>{t('accessDenied.title')}</h2>
+          <p>{t('accessDenied.body', { role: user.role_label })}</p>
         </div>
       </>
     );

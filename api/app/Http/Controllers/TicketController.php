@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Channel;
 use App\Enums\Priority;
+use App\Enums\TaskStatus;
 use App\Enums\TicketStatus;
 use App\Enums\UserRole;
 use App\Http\Requests\BulkTicketActionRequest;
@@ -71,6 +72,17 @@ class TicketController extends Controller
 
         $ticket = Ticket::create($data);
 
+        // Story 05: the customer's original request IS the first message in the thread.
+        if (filled($ticket->description)) {
+            $ticket->messages()->create([
+                'author_type' => \App\Models\TicketMessage::AUTHOR_CUSTOMER,
+                'user_id' => null,
+                'customer_id' => $ticket->customer_id,
+                'channel' => $ticket->channel,
+                'body' => $ticket->description,
+            ]);
+        }
+
         return (new TicketResource($ticket->load(['assignee:id,name', 'customer:id,name'])))
             ->response()->setStatusCode(201);
     }
@@ -107,13 +119,31 @@ class TicketController extends Controller
             $this->authorize('assign', $ticket);
         }
 
-        $ticket->update($data);
+        $cancelledTaskCount = DB::transaction(function () use ($ticket, $data, $next) {
+            $ticket->update($data);
+
+            // Story 10: "warn, then auto-cancel." Closing a ticket cancels
+            // its open tasks — no reminder can ever fire for a closed ticket.
+            return $next === TicketStatus::Closed ? $this->cancelOpenTasks($ticket) : 0;
+        });
 
         if ($wasFinished && $next === TicketStatus::Open) {
             $ticket->recordReopened();
         }
 
-        return new TicketResource($ticket->load(['assignee:id,name', 'customer:id,name']));
+        return (new TicketResource($ticket->load(['assignee:id,name', 'customer:id,name'])))
+            ->additional(['cancelled_tasks_count' => $cancelledTaskCount]);
+    }
+
+    /** Story 10's ticket-close hook. Returns the count so the UI can confirm what was cancelled. */
+    private function cancelOpenTasks(Ticket $ticket): int
+    {
+        return $ticket->tasks()
+            ->where('status', TaskStatus::Open->value)
+            ->update([
+                'status' => TaskStatus::Cancelled->value,
+                'cancel_reason' => 'ticket_closed',
+            ]);
     }
 
     public function bulk(BulkTicketActionRequest $request): JsonResponse
@@ -156,6 +186,10 @@ class TicketController extends Controller
                         'closed_at' => $next === TicketStatus::Closed ? now() : null,
                     ]);
 
+                    if ($next === TicketStatus::Closed) {
+                        $this->cancelOpenTasks($ticket);
+                    }
+
                     if ($wasFinished && $next === TicketStatus::Open) {
                         $ticket->recordReopened();
                     }
@@ -188,6 +222,11 @@ class TicketController extends Controller
                 fn (string $c) => ['value' => $c, 'label' => Ticket::categoryLabel($c)],
                 Ticket::CATEGORIES
             ),
+            'transitions' => collect(TicketStatus::cases())
+                ->mapWithKeys(fn (TicketStatus $s) => [
+                    $s->value => array_map(fn (TicketStatus $t) => $t->value, $s->allowedTransitions()),
+                ])
+                ->all(),
             'agents' => User::query()
                 ->where('is_active', true)
                 ->whereIn('role', [UserRole::Agent, UserRole::TeamLead])

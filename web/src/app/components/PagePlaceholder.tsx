@@ -1,8 +1,16 @@
 import React from 'react';
+import { useT } from '../../i18n';
 
-export const PagePlaceholder: React.FC<{ title: string }> = ({ title }) => (
-  <div data-testid="page-placeholder">
-    <h1>{title}</h1>
-    <p>This screen is built in its own feature story.</p>
-  </div>
-);
+/**
+ * Story 15 (WIS-11): `titleKey` is an i18n key (e.g. `common:nav.slaRules`),
+ * resolved here so the placeholder heading localizes with the rest of the shell.
+ */
+export const PagePlaceholder: React.FC<{ titleKey: string }> = ({ titleKey }) => {
+  const { t } = useT('common');
+  return (
+    <div data-testid="page-placeholder">
+      <h1>{t(titleKey)}</h1>
+      <p>{t('state.featureComingSoon')}</p>
+    </div>
+  );
+};

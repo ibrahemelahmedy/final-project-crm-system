@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "oxlint",
+    "lint": "oxlint && npm run i18n:check",
+    "i18n:check": "node scripts/check-no-literals.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -14,10 +15,13 @@
     "@tanstack/react-query": "^5.102.3",
     "@tanstack/react-query-devtools": "^5.102.3",
     "axios": "^1.19.0",
+    "i18next": "^26.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.86.0",
+    "react-i18next": "^17.0.12",
     "react-router-dom": "^7.18.2",
+    "recharts": "^3.10.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,6 +21,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'department',
+        'locale',
         'is_active',
         'last_login_at',
     ];
@@ -38,6 +41,19 @@ class User extends Authenticatable
             'role' => UserRole::class,
             'is_active' => 'boolean',
         ];
+    }
+
+    /** Free-text match over name and email — the Users list search box. */
+    public function scopeSearch(Builder $query, ?string $term): Builder
+    {
+        if (! $term) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $q) use ($term) {
+            $q->where('name', 'like', '%'.$term.'%')
+                ->orWhere('email', 'like', '%'.$term.'%');
+        });
     }
 
     public function isAdministrator(): bool

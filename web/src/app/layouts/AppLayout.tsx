@@ -5,6 +5,8 @@ import { useUiPreferences } from '../providers/UiPreferencesContext';
 import { NavItem } from '../components/NavItem';
 import { HeaderUserSkeleton } from '../components/HeaderUserSkeleton';
 import { resolveNavItems, visibleNavItems } from '../navigation/navItems';
+import { NotificationBell } from '../../features/notifications';
+import { useT } from '../../i18n';
 
 const initials = (name: string): string =>
   name
@@ -16,7 +18,8 @@ const initials = (name: string): string =>
 
 export const AppLayout: React.FC = () => {
   const { user, logout } = useAuth();
-  const { resolvedTheme, toggleTheme } = useUiPreferences();
+  const { resolvedTheme, toggleTheme, locale, setLocale } = useUiPreferences();
+  const { t } = useT('common');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerToggleRef = useRef<HTMLButtonElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -63,7 +66,7 @@ export const AppLayout: React.FC = () => {
   return (
     <div className="shell">
       <a className="skip-link" href="#main-content">
-        Skip to content
+        {t('shell.skipToContent')}
       </a>
 
       <div
@@ -75,7 +78,7 @@ export const AppLayout: React.FC = () => {
       <nav
         id="app-sidebar"
         className="shell-sidebar"
-        aria-label="Main"
+        aria-label={t('nav.main')}
         data-open={drawerOpen}
         ref={sidebarRef}
         tabIndex={-1}
@@ -90,7 +93,7 @@ export const AppLayout: React.FC = () => {
             <circle cx="24" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth="7" />
             <circle cx="42" cy="32" r="9" fill="none" stroke="currentColor" strokeWidth="7" />
           </svg>
-          <span className="shell-brand-title">Wisal</span>
+          <span className="shell-brand-title">{t('brand')}</span>
         </div>
 
         <div className="shell-nav-group">
@@ -101,7 +104,7 @@ export const AppLayout: React.FC = () => {
 
         {adminItems.length > 0 && (
           <>
-            <h2 className="shell-nav-group-label">Admin</h2>
+            <h2 className="shell-nav-group-label">{t('nav.admin')}</h2>
             <div className="shell-nav-group">
               {adminItems.map((item) => (
                 <NavItem key={item.to} item={item} onNavigate={closeDrawer} />
@@ -126,7 +129,7 @@ export const AppLayout: React.FC = () => {
           <button
             type="button"
             className="shell-drawer-toggle"
-            aria-label="Open navigation"
+            aria-label={t('shell.openNavigation')}
             aria-expanded={drawerOpen}
             aria-controls="app-sidebar"
             onClick={() => setDrawerOpen((open) => !open)}
@@ -142,8 +145,9 @@ export const AppLayout: React.FC = () => {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3" />
             </svg>
-            <span className="shell-search-text">Search tickets, customers…</span>
-            <span className="shell-search-kbd">⌘K</span>
+            <span className="shell-search-text">{t('shell.searchPlaceholder')}</span>
+            {/* i18n-exempt: keyboard shortcut, must not mirror or translate. */}
+            <span className="shell-search-kbd" dir="ltr">⌘K</span>
           </div>
 
           <div className="shell-header-spacer" />
@@ -155,7 +159,7 @@ export const AppLayout: React.FC = () => {
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14 M5 12h14" />
             </svg>
-            New Ticket
+            {t('shell.newTicket')}
           </Link>
 
           <div className="shell-header-divider" />
@@ -164,7 +168,7 @@ export const AppLayout: React.FC = () => {
             type="button"
             className="shell-icon-btn"
             onClick={toggleTheme}
-            aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={resolvedTheme === 'dark' ? t('shell.switchToLight') : t('shell.switchToDark')}
           >
             {resolvedTheme === 'dark' ? (
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -185,20 +189,23 @@ export const AppLayout: React.FC = () => {
             )}
           </button>
 
-          {/* Language slot — behaviour owned by WIS-11. */}
-          <button type="button" className="shell-icon-btn" disabled title="Coming soon" aria-label="Language">
+          {/* Story 15 (WIS-11) fills Story 02's slot — a two-option toggle, not
+              a route change and not a reload, so the route and unsaved form
+              state survive by construction. */}
+          <button
+            type="button"
+            className="shell-icon-btn shell-lang-btn"
+            onClick={() => setLocale(locale === 'ar' ? 'en' : 'ar')}
+            aria-label={locale === 'ar' ? t('shell.switchToEnglish') : t('shell.switchToArabic')}
+          >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z" />
             </svg>
+            {/* i18n-exempt: ISO language pill, shows the language you'd switch TO. */}
+            <span className="shell-lang-pill" dir="ltr">{locale === 'ar' ? 'EN' : 'AR'}</span>
           </button>
 
-          {/* Notification slot — behaviour owned by WIS-13. */}
-          <button type="button" className="shell-icon-btn" disabled title="Coming soon" aria-label="Notifications">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0" />
-            </svg>
-            <span className="shell-notification-dot" aria-hidden="true" />
-          </button>
+          <NotificationBell />
 
           {user ? (
             <button type="button" className="shell-header-user" onClick={() => logout()}>

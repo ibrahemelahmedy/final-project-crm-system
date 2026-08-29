@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Channel;
 use App\Enums\Priority;
 use App\Enums\TicketStatus;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -63,6 +64,16 @@ class Ticket extends Model
     public function events(): HasMany
     {
         return $this->hasMany(TicketEvent::class)->latest('created_at');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(TicketMessage::class)->orderBy('id');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(TicketTask::class);
     }
 
     public function scopeVisibleTo(Builder $query, User $user): Builder

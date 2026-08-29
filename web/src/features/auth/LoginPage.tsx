@@ -4,56 +4,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { loginSchema, type LoginValues } from './loginSchema';
 import { useLogin } from './useLogin';
+import { useAuth } from './AuthContext';
 import { useUiPreferences } from '../../app/providers/UiPreferencesContext';
-
-type Lang = 'en' | 'ar';
-
-const translations = {
-  en: {
-    title: 'Wisal',
-    signIn: 'Sign in',
-    subtitle: 'Use your Wisal work account',
-    email: 'Email address',
-    password: 'Password',
-    signingIn: 'Signing in…',
-    tooManyAttempts: (s: number) => `Too many attempts. Try again in ${s} seconds.`,
-    adminNote: 'Accounts are provisioned by your administrator',
-    invalidCredentials: 'Invalid email or password',
-    networkError: 'Unable to reach the server. Check your connection and try again.',
-    switchDark: 'Switch to dark mode',
-    switchLight: 'Switch to light mode',
-    switchAr: 'التبديل إلى العربية',
-    switchEn: 'Switch to English',
-  },
-  ar: {
-    title: 'وِصال',
-    signIn: 'تسجيل الدخول',
-    subtitle: 'استخدم حساب وِصال العمل الخاص بك',
-    email: 'البريد الإلكتروني',
-    password: 'كلمة المرور',
-    signingIn: 'جارٍ تسجيل الدخول…',
-    tooManyAttempts: (s: number) => `محاولات كثيرة جداً. حاول مجدداً بعد ${s} ثانية.`,
-    adminNote: 'يتم إنشاء الحسابات بواسطة المسؤول',
-    invalidCredentials: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
-    networkError: 'تعذّر الاتصال بالخادم. تحقق من اتصالك وحاول مجدداً.',
-    switchDark: 'التبديل إلى الوضع الداكن',
-    switchLight: 'التبديل إلى الوضع الفاتح',
-    switchAr: 'التبديل إلى العربية',
-    switchEn: 'Switch to English',
-  },
-} as const;
+import { useT } from '../../i18n';
 
 export const LoginPage: React.FC = () => {
   const mutation = useLogin();
   const [retrySeconds, setRetrySeconds] = useState<number | null>(null);
-  const { resolvedTheme, toggleTheme, direction, setDirection } = useUiPreferences();
+  const { resolvedTheme, toggleTheme, direction, locale, setLocale } = useUiPreferences();
+  const { t } = useT('auth');
+  // Story 08 — why an involuntary sign-out happened, if one did.
+  const { sessionEndedReason } = useAuth();
 
-  const lang: Lang = direction === 'rtl' ? 'ar' : 'en';
-  const t = translations[lang];
+  const lang = locale;
   const dir = direction;
 
   const toggleLang = () => {
-    setDirection(direction === 'rtl' ? 'ltr' : 'rtl');
+    setLocale(locale === 'ar' ? 'en' : 'ar');
   };
 
   const {
@@ -73,9 +40,9 @@ export const LoginPage: React.FC = () => {
     ? ((mutation.error as AxiosError).response?.data as { message?: string; errors?: Record<string, string[]> })
         ?.errors?.email?.[0] ||
       ((mutation.error as AxiosError).response?.data as { message?: string })?.message ||
-      t.invalidCredentials
+      t('login.invalidCredentials')
     : isNetworkOrOtherError
-    ? t.networkError
+    ? t('login.networkError')
     : null;
 
   useEffect(() => {
@@ -122,7 +89,7 @@ export const LoginPage: React.FC = () => {
           color: var(--text-main, #0F172A);
           padding-inline: 16px;
           box-sizing: border-box;
-          font-family: Inter, 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+          font-family: var(--font-base, Inter, 'IBM Plex Sans Arabic', system-ui, sans-serif);
         }
 
         /* Outer wrapper: 400px column, everything stacked */
@@ -300,7 +267,7 @@ export const LoginPage: React.FC = () => {
             <circle cx="24" cy="32" r="14" fill="none" stroke="var(--btn-bg, #4F46E5)" strokeWidth="7"/>
             <circle cx="42" cy="32" r="9" fill="none" stroke="var(--btn-bg, #4F46E5)" strokeWidth="7"/>
           </svg>
-          <h2 className="logo-title">{t.title}</h2>
+          <h2 className="logo-title">{t('login.title')}</h2>
         </div>
 
         {/* Card — white box */}
@@ -311,7 +278,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               className="icon-btn fv"
               onClick={toggleTheme}
-              aria-label={resolvedTheme === 'dark' ? t.switchLight : t.switchDark}
+              aria-label={resolvedTheme === 'dark' ? t('common:shell.switchToLight') : t('common:shell.switchToDark')}
             >
               {resolvedTheme === 'dark' ? (
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -336,15 +303,15 @@ export const LoginPage: React.FC = () => {
               type="button"
               className="icon-btn fv"
               onClick={toggleLang}
-              aria-label={lang === 'en' ? t.switchAr : t.switchEn}
+              aria-label={lang === 'en' ? t('common:shell.switchToArabic') : t('common:shell.switchToEnglish')}
             >
               {lang === 'en' ? 'ع' : 'EN'}
             </button>
           </div>
 
           <div className="title-block">
-            <h1>{t.signIn}</h1>
-            <p>{t.subtitle}</p>
+            <h1>{t('login.signIn')}</h1>
+            <p>{t('login.subtitle')}</p>
           </div>
 
           <form
@@ -353,7 +320,7 @@ export const LoginPage: React.FC = () => {
             style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
           >
             <div className="form-group">
-              <label htmlFor="email" className="form-label">{t.email}</label>
+              <label htmlFor="email" className="form-label">{t('login.email')}</label>
               <input
                 id="email"
                 type="email"
@@ -366,7 +333,7 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">{t.password}</label>
+              <label htmlFor="password" className="form-label">{t('login.password')}</label>
               <input
                 id="password"
                 type="password"
@@ -377,6 +344,23 @@ export const LoginPage: React.FC = () => {
               />
               {fieldErrors.password && <p className="field-error">{fieldErrors.password.message}</p>}
             </div>
+
+            {/*
+              Story 08: the session ended without the user asking — their
+              account was deactivated, or their tokens were revoked mid-session.
+              Saying WHY here is what turns an apparently random logout into
+              something the user can act on. Suppressed once they have a fresh
+              error of their own from this attempt.
+            */}
+            {sessionEndedReason && !apiErrorMessage && !isRateLimited && (
+              <div className="alert-error" role="alert" aria-live="polite">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 8v5 M12 16h.01"/>
+                </svg>
+                <span>{sessionEndedReason}</span>
+              </div>
+            )}
 
             {/* API error — inline, between password and button, matches design reference */}
             {apiErrorMessage && (
@@ -396,7 +380,7 @@ export const LoginPage: React.FC = () => {
                   <circle cx="12" cy="12" r="9"/>
                   <path d="M12 8v5 M12 16h.01"/>
                 </svg>
-                <span>{t.tooManyAttempts(retrySeconds ?? 60)}</span>
+                <span>{t('rateLimit', { count: retrySeconds ?? 60 })}</span>
               </div>
             )}
 
@@ -407,13 +391,13 @@ export const LoginPage: React.FC = () => {
               className="btn-submit fv"
             >
               {isPending && <span className="spinner" aria-hidden="true" />}
-              {isPending ? t.signingIn : t.signIn}
+              {isPending ? t('login.signingIn') : t('login.signIn')}
             </button>
           </form>
         </div>
 
         {/* Footer note — outside the card, below it */}
-        <p className="footer-note">{t.adminNote}</p>
+        <p className="footer-note">{t('login.adminNote')}</p>
       </div>
     </div>
   );

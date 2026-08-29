@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth, type User } from '../../features/auth/AuthContext';
 import { RequireAuth } from '../../features/auth/RequireAuth';
 import { UiPreferencesProvider } from '../providers/UiPreferencesContext';
@@ -17,6 +18,20 @@ vi.mock('../../lib/api', async () => {
     api: { post: vi.fn() },
   };
 });
+
+// AppLayout now renders Story 11's NotificationBell, which polls through
+// this module — mocked so every route in this manifest sweep renders without
+// a real network call.
+vi.mock('../../features/notifications/api/notificationsApi', () => ({
+  fetchUnreadCount: vi.fn().mockResolvedValue(0),
+  fetchNotifications: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { current_page: 1, last_page: 1, per_page: 20, from: null, to: 0, total: 0 },
+    links: { first: null, last: null, prev: null, next: null },
+  }),
+  markNotificationRead: vi.fn(),
+  markAllNotificationsRead: vi.fn(),
+}));
 
 const adminUser: User = {
   id: 4,
@@ -40,29 +55,35 @@ const SignedIn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 function renderAt(path: string) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, refetchInterval: false, refetchOnWindowFocus: false } },
+  });
+
   return render(
-    <UiPreferencesProvider>
-      <MemoryRouter initialEntries={[path]}>
-        <AuthProvider>
-          <SignedIn>
-            <Routes>
-              <Route
-                element={
-                  <RequireAuth>
-                    <AppLayout />
-                  </RequireAuth>
-                }
-              >
-                {navItems.map((item) => (
-                  <Route key={item.to} path={item.to} element={<PagePlaceholder title={item.label} />} />
-                ))}
-              </Route>
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </SignedIn>
-        </AuthProvider>
-      </MemoryRouter>
-    </UiPreferencesProvider>
+    <QueryClientProvider client={queryClient}>
+      <UiPreferencesProvider>
+        <MemoryRouter initialEntries={[path]}>
+          <AuthProvider>
+            <SignedIn>
+              <Routes>
+                <Route
+                  element={
+                    <RequireAuth>
+                      <AppLayout />
+                    </RequireAuth>
+                  }
+                >
+                  {navItems.map((item) => (
+                    <Route key={item.to} path={item.to} element={<PagePlaceholder titleKey={item.labelKey} />} />
+                  ))}
+                </Route>
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </SignedIn>
+          </AuthProvider>
+        </MemoryRouter>
+      </UiPreferencesProvider>
+    </QueryClientProvider>
   );
 }
 
