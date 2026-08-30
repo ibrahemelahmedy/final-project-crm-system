@@ -71,11 +71,11 @@ class UpdateCustomerRequest extends FormRequest
             }
 
             if (! $this->duplicateCustomer && filled($phone)) {
-                $normalized = Customer::normalizePhone($phone);
+                $candidates = Customer::phoneMatchCandidates($phone);
 
-                if ($normalized) {
+                if ($candidates) {
                     $existing = Customer::whereNull('deleted_at')
-                        ->where('phone_normalized', $normalized)
+                        ->whereIn('phone_normalized', $candidates)
                         ->where('id', '!=', $customer->id)
                         ->first();
 

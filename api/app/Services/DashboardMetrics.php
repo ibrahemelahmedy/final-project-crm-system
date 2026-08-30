@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  * per widget. Story 12 (Reports & Dashboards) reuses this service rather than
  * writing a second aggregation layer.
  *
- * SLA-risk is never re-derived here — {@see SlaCalculator} is the only
+ * SLA-risk is never re-derived here — {@see SlaClock} is the only
  * threshold authority (Story 06 consolidation point).
  *
  * "Team" scope: until Story 08 introduces a departments/teams table,
@@ -31,7 +31,7 @@ class DashboardMetrics
     /** Days of resolved history the compliance percentage is measured over. */
     private const COMPLIANCE_WINDOW_DAYS = 7;
 
-    public function __construct(private readonly SlaCalculator $sla)
+    public function __construct(private readonly SlaClock $clock)
     {
     }
 
@@ -145,7 +145,7 @@ class DashboardMetrics
     // ---- Shared helpers ----------------------------------------------------
 
     /**
-     * Open/pending tickets for $user whose SLA risk (per {@see SlaCalculator})
+     * Open/pending tickets for $user whose SLA risk (per {@see SlaClock})
      * is at_risk or breached. Tickets with no active rule for their priority
      * are excluded — never counted as compliant.
      */
@@ -210,11 +210,18 @@ class DashboardMetrics
         return round($compliant / $resolved->count() * 100, 1);
     }
 
-    /** Attaches the computed SLA payload to each ticket as `sla_payload`. */
+    /**
+     * Attaches the computed SLA payload to each ticket as `sla_payload`.
+     *
+     * A ticket with no SLA (no stamped target) stays `null` rather than
+     * carrying a payload of nulls, so every caller's `!== null` filter keeps
+     * meaning "this ticket is measured" — it is never counted compliant.
+     */
     private function decorateSla(Collection $tickets): Collection
     {
         return $tickets->each(function (Ticket $t) {
-            $t->sla_payload = $this->sla->for($t);
+            $snapshot = $this->clock->snapshot($t);
+            $t->sla_payload = $snapshot['risk'] === null ? null : $snapshot;
         });
     }
 }

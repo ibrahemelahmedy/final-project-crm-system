@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\SlaRule;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\SlaClock;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -15,7 +16,7 @@ beforeEach(function () {
     $this->token = $this->agent->createToken('spa')->plainTextToken;
 });
 
-it('surfaces a ticket whose SLA risk is at_risk or breached via the shared calculator', function () {
+it('surfaces a ticket whose SLA risk is at_risk or breached via the shared clock', function () {
     SlaRule::factory()->forPriority(Priority::High->value, 60, 80)->create();
 
     // created 2h ago, resolution SLA 60m -> breached
@@ -25,9 +26,13 @@ it('surfaces a ticket whose SLA risk is at_risk or breached via the shared calcu
         'priority' => Priority::High->value,
         'subject' => 'Breaching ticket',
     ]);
-    $ticket->forceFill(['created_at' => now()->subHours(2)])->save();
+    // Backdate first, then stamp — the targets are anchored on created_at,
+    // exactly as TicketController@store anchors them at creation time.
+    $ticket->forceFill(['created_at' => now()->subHours(2)]);
+    app(SlaClock::class)->applyTo($ticket);
+    $ticket->save();
 
-    $this->withHeader('Authorization', "Bearer {$this->token}")
+    $this->asToken($this->token)
         ->getJson('/api/dashboard/agent/sla-risk')
         ->assertOk()
         ->assertJsonCount(1, 'data')
@@ -43,9 +48,11 @@ it('excludes a ticket with no active SLA rule for its priority', function () {
         'priority' => Priority::Low->value,
         'subject' => 'No rule ticket',
     ]);
-    $ticket->forceFill(['created_at' => now()->subDays(30)])->save();
+    $ticket->forceFill(['created_at' => now()->subDays(30)]);
+    app(SlaClock::class)->applyTo($ticket);   // no rule for Low -> stays null
+    $ticket->save();
 
-    $this->withHeader('Authorization', "Bearer {$this->token}")
+    $this->asToken($this->token)
         ->getJson('/api/dashboard/agent/sla-risk')
         ->assertOk()
         ->assertJsonCount(0, 'data');

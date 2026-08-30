@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\Priority;
-use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,17 +27,34 @@ class SlaRule extends Model
         ];
     }
 
-    /** Human copy for the card's ON BREACH column, derived — never stored. */
+    /**
+     * Human copy for the card's ON BREACH column, derived — never stored.
+     * Storing the sentence would let the copy drift from the behaviour the
+     * engine actually runs.
+     *
+     * Resolved through Laravel's translator, not built from PHP string
+     * concatenation, so it arrives in the caller's language: SetLocale reads
+     * the SPA's Accept-Language on every request. A client-side translation is
+     * impossible here — the sentence is derived from four booleans the card
+     * never sees.
+     *
+     * The design's Normal card reads "Flag in queue, no escalation" and its Low
+     * card reads "No escalation". Both are the SAME no-escalation state, so
+     * both ship as "No escalation" — two strings for one behaviour is exactly
+     * the drift this method exists to prevent.
+     */
     public function breachActionLabel(): string
     {
         if ($this->escalation_enabled && $this->escalate_to_role !== null) {
-            $role = UserRole::from($this->escalate_to_role)->label();
+            $role = __('sla.role_'.$this->escalate_to_role);
 
             return $this->notify_on_breach
-                ? "Notify Team Lead + escalate to {$role}"
-                : "Escalate to {$role}";
+                ? __('sla.breach_notify_and_escalate', ['role' => $role])
+                : __('sla.breach_escalate', ['role' => $role]);
         }
 
-        return $this->notify_on_breach ? 'Notify Team Lead' : 'No escalation';
+        return $this->notify_on_breach
+            ? __('sla.breach_notify')
+            : __('sla.breach_none');
     }
 }

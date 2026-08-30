@@ -31,7 +31,7 @@ it('counts only the caller\'s own assigned open tickets in the summary', functio
         'priority' => Priority::Normal->value,
     ]);
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->agent))
+    $this->asToken(($this->token)($this->agent))
         ->getJson('/api/dashboard/agent/summary')
         ->assertOk()
         ->assertJson(['assigned_count' => 3]);
@@ -51,7 +51,7 @@ it('never returns another agent\'s tickets in the queue', function () {
         'priority' => Priority::Normal->value,
     ]);
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->agent))
+    $this->asToken(($this->token)($this->agent))
         ->getJson('/api/dashboard/agent/queue')
         ->assertOk()
         ->assertJsonCount(1, 'data')
@@ -73,7 +73,7 @@ it('excludes yesterday\'s resolutions from resolved_today_count', function () {
         'resolved_at' => now()->subDay()->subHours(2),
     ]);
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->agent))
+    $this->asToken(($this->token)($this->agent))
         ->getJson('/api/dashboard/agent/summary')
         ->assertOk()
         ->assertJson(['resolved_today_count' => 1]);

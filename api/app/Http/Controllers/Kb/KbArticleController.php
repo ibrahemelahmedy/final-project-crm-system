@@ -121,7 +121,11 @@ class KbArticleController extends Controller
         // and updated_at deliberately does not move — a view is not an edit,
         // and the reader's "Last updated" line must not lie because someone
         // opened the page.
-        KbArticle::whereKey($article->id)->increment('view_count');
+        //
+        // ->getQuery() drops to the BASE query builder on purpose. Eloquent's
+        // own increment() injects `updated_at = now()` into the UPDATE, which
+        // is exactly the behaviour the paragraph above forbids.
+        KbArticle::whereKey($article->id)->getQuery()->increment('view_count');
 
         return new KbArticleResource($article);
     }

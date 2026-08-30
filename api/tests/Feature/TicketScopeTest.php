@@ -46,7 +46,7 @@ beforeEach(function () {
 it('scopes GET /api/tickets to assigned tickets for Agent and suppresses email', function () {
     $token = $this->agent1->createToken('spa')->plainTextToken;
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
+    $response = $this->asToken($token)
         ->getJson('/api/tickets');
 
     $response->assertOk()
@@ -67,7 +67,7 @@ it('scopes GET /api/tickets to assigned tickets for Agent and suppresses email',
 it('allows Team Lead to view tickets from all agents', function () {
     $token = $this->lead->createToken('spa')->plainTextToken;
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
+    $response = $this->asToken($token)
         ->getJson('/api/tickets');
 
     $response->assertOk()

@@ -16,13 +16,13 @@ beforeEach(function () {
 });
 
 it('lets an agent create and update a customer', function () {
-    $create = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $create = $this->asToken($this->agentToken)
         ->postJson('/api/customers', ['name' => 'New Customer', 'email' => 'new@example.com']);
     $create->assertCreated();
 
     $id = $create->json('data.id');
 
-    $update = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $update = $this->asToken($this->agentToken)
         ->patchJson("/api/customers/{$id}", ['name' => 'Updated Name']);
     $update->assertOk();
 });
@@ -30,7 +30,7 @@ it('lets an agent create and update a customer', function () {
 it('forbids an agent from deleting a customer', function () {
     $customer = Customer::factory()->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->deleteJson("/api/customers/{$customer->id}");
 
     $response->assertStatus(403);
@@ -39,7 +39,7 @@ it('forbids an agent from deleting a customer', function () {
 it('lets a team lead delete a customer', function () {
     $customer = Customer::factory()->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->leadToken}")
+    $response = $this->asToken($this->leadToken)
         ->deleteJson("/api/customers/{$customer->id}");
 
     $response->assertStatus(204);
@@ -48,7 +48,7 @@ it('lets a team lead delete a customer', function () {
 it('forbids an agent from running a bulk delete', function () {
     $customers = Customer::factory()->count(2)->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers/bulk', ['action' => 'delete', 'ids' => $customers->pluck('id')->all()]);
 
     $response->assertStatus(403);
@@ -57,7 +57,7 @@ it('forbids an agent from running a bulk delete', function () {
 it('lets a team lead bulk delete and reports the affected count', function () {
     $customers = Customer::factory()->count(3)->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->leadToken}")
+    $response = $this->asToken($this->leadToken)
         ->postJson('/api/customers/bulk', ['action' => 'delete', 'ids' => $customers->pluck('id')->all()]);
 
     $response->assertOk()->assertJsonPath('affected', 3);
@@ -66,7 +66,7 @@ it('lets a team lead bulk delete and reports the affected count', function () {
 it('lets a team lead bulk set a tier', function () {
     $customers = Customer::factory()->count(2)->create(['tier' => 'standard']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->leadToken}")
+    $response = $this->asToken($this->leadToken)
         ->postJson('/api/customers/bulk', [
             'action' => 'set_tier',
             'ids' => $customers->pluck('id')->all(),
@@ -80,7 +80,7 @@ it('lets a team lead bulk set a tier', function () {
 it('rejects a bulk request with more than 200 ids', function () {
     $ids = range(1, 201);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->leadToken}")
+    $response = $this->asToken($this->leadToken)
         ->postJson('/api/customers/bulk', ['action' => 'delete', 'ids' => $ids]);
 
     $response->assertStatus(422);

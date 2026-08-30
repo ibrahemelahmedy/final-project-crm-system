@@ -12,13 +12,7 @@ enum Channel: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Email => 'Email',
-            self::Whatsapp => 'WhatsApp',
-            self::Chat => 'Live chat',
-            self::Sms => 'SMS',
-            self::WebForm => 'Web form',
-        };
+        return __('enums.channel.'.$this->value);
     }
 
     /** @return array<int, array{value: string, label: string}> */

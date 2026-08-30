@@ -14,6 +14,8 @@ use App\Http\Resources\TicketEventResource;
 use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\SlaClock;
+use App\Services\TicketAssigner;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,6 +26,11 @@ use Illuminate\Validation\ValidationException;
 class TicketController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(
+        private SlaClock $clock,
+        private TicketAssigner $assigner,
+    ) {}
 
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -59,9 +66,10 @@ class TicketController extends Controller
         $data['created_by'] = $request->user()->id;
         $data['status'] = TicketStatus::Open->value;
 
+        $autoAssigned = false;
+
         // The intake is explicit: a new ticket is NEVER silently assigned to
-        // its creator. Auto-assignment is Story 06's rule; until it lands,
-        // an unnamed assignee means Unassigned.
+        // its creator. An Administrator naming an agent still wins over the rule.
         if (! empty($data['assigned_to'])) {
             $target = Ticket::make($data);
             $target->assigned_to = $data['assigned_to'];
@@ -70,7 +78,30 @@ class TicketController extends Controller
             }
         }
 
+        // WIS-6: an unnamed assignee is chosen by the auto-assignment rule.
+        // A null pick is valid and leaves the ticket Unassigned.
+        if (empty($data['assigned_to'])) {
+            $picked = $this->assigner->pick();
+            if ($picked !== null) {
+                $data['assigned_to'] = $picked->id;
+                $autoAssigned = true;
+            }
+        }
+
         $ticket = Ticket::create($data);
+
+        // applyTo() runs AFTER create(), not before: the anchor is created_at,
+        // which does not exist until the row is inserted.
+        $this->clock->applyTo($ticket);
+        $ticket->save();
+
+        // After the save, so history reads `created` then `auto_assigned` in
+        // the order they happened. Story 04's observer already wrote an
+        // `assigned` row for the same change; both are kept — `assigned`
+        // records WHAT changed, `auto_assigned` records WHY.
+        if ($autoAssigned) {
+            $ticket->recordAutoAssigned($ticket->assigned_to);
+        }
 
         // Story 05: the customer's original request IS the first message in the thread.
         if (filled($ticket->description)) {
@@ -113,6 +144,32 @@ class TicketController extends Controller
 
             $data['resolved_at'] = $next === TicketStatus::Resolved ? now() : null;
             $data['closed_at'] = $next === TicketStatus::Closed ? now() : null;
+
+            // WIS-6. Ordered against $ticket->status — the value BEFORE the
+            // update. Reading it after $ticket->update($data) would compare the
+            // new status with itself and never resume.
+            if ($next === TicketStatus::Pending) {
+                $this->clock->pause($ticket);
+            } elseif ($ticket->status === TicketStatus::Pending) {
+                $this->clock->resume($ticket);
+            }
+
+            // The first move off Open by an agent is that agent's first
+            // response. Story 05's first outbound message is the earlier and
+            // authoritative signal; markFirstResponse() is idempotent, so that
+            // caller needs no change here.
+            if ($ticket->status === TicketStatus::Open) {
+                $this->clock->markFirstResponse($ticket);
+            }
+        }
+
+        // A priority change re-anchors the targets on created_at + accrued
+        // pause, so time already spent counts against the new, shorter target.
+        // Leaving an escalated ticket on Normal's clock is the bug that makes
+        // an urgent ticket look healthy.
+        if (array_key_exists('priority', $data) && $data['priority'] !== $ticket->priority->value) {
+            $ticket->priority = Priority::from($data['priority']);
+            $this->clock->applyTo($ticket);
         }
 
         if (array_key_exists('assigned_to', $data)) {

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Ticket;
+use App\Services\SlaClock;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,11 +38,11 @@ class TicketResource extends JsonResource
                 'name' => $this->creator->name,
             ] : null,
             // Story 06 fills the values; the keys are fixed and never change.
-            'sla' => [
-                'due_at' => null,
-                'minutes_left' => null,
-                'risk' => null,
-            ],
+            //
+            // snapshot() reads only columns already on this ticket row, so a
+            // 25-row page costs no extra query. app() resolves the singleton —
+            // a JsonResource has no constructor injection.
+            'sla' => app(SlaClock::class)->snapshot($this->resource),
             'resolved_at' => $this->resolved_at,
             'closed_at' => $this->closed_at,
             'created_at' => $this->created_at,

@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "oxlint && npm run i18n:check",
     "i18n:check": "node scripts/check-no-literals.mjs",
     "preview": "vite preview"

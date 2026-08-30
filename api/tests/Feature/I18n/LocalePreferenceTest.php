@@ -11,12 +11,13 @@ it('persists a locale change and reflects it on GET /api/user', function () {
     $this->actingAs($user)
         ->patchJson('/api/user/preferences', ['locale' => 'ar'])
         ->assertOk()
-        ->assertJsonPath('locale', 'ar');
+        // UserResource is wrapped — every other suite asserts `data.*` too.
+        ->assertJsonPath('data.locale', 'ar');
 
     $this->actingAs($user->fresh())
         ->getJson('/api/user')
         ->assertOk()
-        ->assertJsonPath('locale', 'ar');
+        ->assertJsonPath('data.locale', 'ar');
 
     expect($user->fresh()->locale)->toBe('ar');
 });

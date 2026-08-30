@@ -9,7 +9,6 @@ import { UiPreferencesProvider } from './app/providers/UiPreferencesContext';
 import { I18nextProvider, i18n } from './i18n';
 import { LocaleSync } from './app/providers/LocaleSync';
 import { AppLayout } from './app/layouts/AppLayout';
-import { PagePlaceholder } from './app/components/PagePlaceholder';
 import { CustomersPage, CustomerProfilePage } from './features/customers';
 import { TicketQueuePage, TicketDetailPage } from './features/tickets';
 import {
@@ -24,6 +23,7 @@ import {
 } from './features/knowledge-base';
 import { UsersPage, AuditLogPage, SystemSettingsPage } from './features/users-roles-admin';
 import { ReportsPage } from './features/reports';
+import { SlaRulesPage } from './features/sla-rules';
 import { ChannelsPage } from './features/channels';
 import { NotificationsPage } from './features/notifications';
 import { CsatResponsePage } from './features/csat';
@@ -116,7 +116,7 @@ export default function App() {
                   path="/sla-rules"
                   element={
                     <RequireAuth roles={['administrator']}>
-                      <PagePlaceholder titleKey="common:nav.slaRules" />
+                      <SlaRulesPage />
                     </RequireAuth>
                   }
                 />

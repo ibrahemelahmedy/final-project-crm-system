@@ -19,6 +19,7 @@ use App\Http\Controllers\MentionableUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuickReplyController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SlaRuleController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketMessageController;
@@ -57,6 +58,21 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::get('/tickets/{ticket}/csat', [CsatSurveyController::class, 'showForTicket']);
     Route::get('/tickets/{ticket}/messages', [TicketMessageController::class, 'index']);
     Route::post('/tickets/{ticket}/messages', [TicketMessageController::class, 'store']);
+
+    // ---- SLA Rules (Story 06) -----------------------------------------
+    //
+    // Administrator-only, enforced by SlaRulePolicy rather than a route
+    // middleware, so the 403 comes from the same authority the API tests
+    // assert against. There is deliberately NO /sla-rules/meta — the priority
+    // options the form needs already come from GET /api/tickets/meta, and a
+    // second source for the same list is how the two drift.
+    //
+    // The parameter is `{sla_rule}`, snake_case, so implicit binding resolves
+    // `SlaRule $slaRule`.
+    Route::get('/sla-rules', [SlaRuleController::class, 'index']);
+    Route::post('/sla-rules', [SlaRuleController::class, 'store']);
+    Route::patch('/sla-rules/{sla_rule}', [SlaRuleController::class, 'update']);
+    Route::delete('/sla-rules/{sla_rule}', [SlaRuleController::class, 'destroy']);
 
     // ---- Agent Productivity (Story 10) --------------------------------
     //

@@ -17,7 +17,7 @@ it('revokes access token on logout and returns 401 on subsequent requests', func
     $token = $user->createToken('spa')->plainTextToken;
 
     // Logout call
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
+    $response = $this->asToken($token)
         ->postJson('/api/logout');
 
     $response->assertNoContent();
@@ -29,7 +29,7 @@ it('revokes access token on logout and returns 401 on subsequent requests', func
     $this->app->make('auth')->forgetGuards();
 
     // Call protected endpoint with same token -> expect 401
-    $userRequest = $this->withHeader('Authorization', "Bearer {$token}")
+    $userRequest = $this->asToken($token)
         ->getJson('/api/user');
 
     $userRequest->assertStatus(401);

@@ -18,7 +18,7 @@ beforeEach(function () {
 });
 
 it('records a note with a timestamp and the author', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agent1Token}")
+    $response = $this->asToken($this->agent1Token)
         ->postJson("/api/customers/{$this->customer->id}/notes", ['body' => 'Called about renewal.']);
 
     $response->assertCreated()
@@ -27,29 +27,29 @@ it('records a note with a timestamp and the author', function () {
 });
 
 it('shows one agent\'s note to another agent', function () {
-    $this->withHeader('Authorization', "Bearer {$this->agent1Token}")
+    $this->asToken($this->agent1Token)
         ->postJson("/api/customers/{$this->customer->id}/notes", ['body' => 'Visible to everyone.']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agent2Token}")
+    $response = $this->asToken($this->agent2Token)
         ->getJson("/api/customers/{$this->customer->id}/notes");
 
     $response->assertOk()->assertJsonFragment(['body' => 'Visible to everyone.']);
 });
 
 it('keeps a note attributed after its author is deleted', function () {
-    $this->withHeader('Authorization', "Bearer {$this->agent1Token}")
+    $this->asToken($this->agent1Token)
         ->postJson("/api/customers/{$this->customer->id}/notes", ['body' => 'Note before deletion.']);
 
     $this->agent1->delete();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agent2Token}")
+    $response = $this->asToken($this->agent2Token)
         ->getJson("/api/customers/{$this->customer->id}/notes");
 
     $response->assertOk()->assertJsonPath('data.0.author.name', 'Agent One');
 });
 
 it('rejects an empty note body', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agent1Token}")
+    $response = $this->asToken($this->agent1Token)
         ->postJson("/api/customers/{$this->customer->id}/notes", ['body' => '']);
 
     $response->assertStatus(422);

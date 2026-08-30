@@ -20,6 +20,13 @@ class Customer extends Model
 
     protected $fillable = ['name', 'email', 'phone', 'company', 'tier', 'last_contact_at', 'created_by'];
 
+    /**
+     * Mirrors the customers.tier DB default. Without it, a create() that omits
+     * `tier` leaves the in-memory model null and CustomerResource fatals on
+     * `$this->tier->value` before the row is ever re-read.
+     */
+    protected $attributes = ['tier' => 'standard'];
+
     protected function casts(): array
     {
         return [
@@ -69,6 +76,26 @@ class Customer extends Model
     }
 
     /**
+     * Every stored form of the same subscriber number. `phone_normalized`
+     * keeps a leading `+` (C2), so `+14155550148` and `14155550148` are one
+     * number written two ways — a duplicate check must find both.
+     *
+     * @return list<string>
+     */
+    public static function phoneMatchCandidates(?string $value): array
+    {
+        $normalized = static::normalizePhone($value);
+
+        if ($normalized === null) {
+            return [];
+        }
+
+        $digits = ltrim($normalized, '+');
+
+        return array_values(array_unique([$digits, '+'.$digits]));
+    }
+
+    /**
      * First letter of the first and last whitespace-separated word of name,
      * upper-cased; a single-word name yields one letter. Used by
      * CustomerResource — not stored.
@@ -110,11 +137,18 @@ class Customer extends Model
 
         $like = '%'.str_replace(['%', '_'], ['\%', '\_'], $term).'%';
 
+        // `ESCAPE` is spelled out because SQLite (phpunit.xml) has NO default
+        // LIKE escape character — only PostgreSQL does. Without it the
+        // backslashes added above are matched literally and a search for
+        // `100%` returns nothing instead of the one row that contains it.
+        // The literal below is a single backslash in both engines.
+        $escape = " escape '\\'";
+
         return $query->where(fn (Builder $q) => $q
-            ->where('name', 'like', $like)
-            ->orWhere('email', 'like', $like)
-            ->orWhere('company', 'like', $like)
-            ->orWhere('phone_normalized', 'like', $like));
+            ->whereRaw("name like ?".$escape, [$like])
+            ->orWhereRaw("email like ?".$escape, [$like])
+            ->orWhereRaw("company like ?".$escape, [$like])
+            ->orWhereRaw("phone_normalized like ?".$escape, [$like]));
     }
 
     public function notes(): HasMany

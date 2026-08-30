@@ -22,7 +22,7 @@ it('gives a Team Lead team-scoped open counts', function () {
     Ticket::factory()->count(2)->create(['status' => TicketStatus::Open->value, 'priority' => Priority::Normal->value, 'assigned_to' => $this->agent->id]);
     Ticket::factory()->create(['status' => TicketStatus::Closed->value, 'priority' => Priority::Normal->value]);
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->lead))
+    $this->asToken(($this->token)($this->lead))
         ->getJson('/api/dashboard/team/summary')
         ->assertOk()
         ->assertJson(['open_count' => 2, 'team_name' => 'Support Ops']);
@@ -37,14 +37,14 @@ it('forbids an Agent from every team endpoint', function () {
 });
 
 it('returns null sla_compliance_pct when nothing resolved in the window', function () {
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->lead))
+    $this->asToken(($this->token)($this->lead))
         ->getJson('/api/dashboard/team/summary')
         ->assertOk()
         ->assertJson(['sla_compliance_pct' => null]);
 });
 
 it('lists one workload row per active agent and team lead', function () {
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->lead))
+    $this->asToken(($this->token)($this->lead))
         ->getJson('/api/dashboard/team/workload')
         ->assertOk()
         ->assertJsonCount(2);

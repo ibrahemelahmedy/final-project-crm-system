@@ -1,1 +1,62 @@
-{}
+{
+  "title": "SLA Rules",
+  "subtitle_one": "{{count}} active rule · applied by priority",
+  "subtitle_other": "{{count}} active rules · applied by priority",
+  "addRule": "Add Rule",
+  "allTiersTaken": "Every priority tier already has a rule",
+  "inactive": "INACTIVE",
+  "editRule": "Edit the {{tier}} SLA rule",
+  "facts": {
+    "respondWithin": "RESPOND WITHIN",
+    "resolveWithin": "RESOLVE WITHIN",
+    "onBreach": "ON BREACH"
+  },
+  "duration": {
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days"
+  },
+  "empty": {
+    "title": "No SLA rules yet",
+    "body": "Tickets will have no response or resolution target until a rule exists."
+  },
+  "error": {
+    "title": "Could not load the SLA rules",
+    "body": "Something went wrong while fetching them. Try again.",
+    "retry": "Retry"
+  },
+  "form": {
+    "createTitle": "Add SLA rule",
+    "editTitle": "Edit SLA rule",
+    "priority": "Priority",
+    "respondWithin": "Respond within",
+    "resolveWithin": "Resolve within",
+    "atRisk": "At-risk threshold",
+    "atRiskHelp": "A ticket reads at risk once this share of its resolution target is used.",
+    "notifyOnBreach": "Notify on breach",
+    "escalate": "Escalate automatically",
+    "escalateTo": "Escalate to",
+    "escalateAfter": "Escalate after",
+    "escalateAfterHelp": "Measured from the response target. Leave empty to escalate at breach.",
+    "autoClose": "Auto-close resolved tickets after",
+    "autoCloseUnit": "days",
+    "active": "Rule is active",
+    "save": "Save rule",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "saveFailed": "The rule could not be saved. Check the fields and try again."
+  },
+  "units": {
+    "minutes": "minutes",
+    "hours": "hours",
+    "days": "days"
+  },
+  "roles": {
+    "team_lead": "Team Lead",
+    "administrator": "Administrator"
+  }
+}

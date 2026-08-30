@@ -15,7 +15,7 @@ beforeEach(function () {
 it('paginates with a default page size of 25', function () {
     Customer::factory()->count(30)->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers');
 
     $response->assertOk()
@@ -27,7 +27,7 @@ it('filters by company and by tier', function () {
     Customer::factory()->create(['company' => 'Northwind Retail', 'tier' => 'enterprise']);
     Customer::factory()->create(['company' => 'Vertex Solutions', 'tier' => 'standard']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers?'.http_build_query(['company' => ['Northwind Retail'], 'tier' => ['enterprise']]));
 
     $response->assertOk()->assertJsonCount(1, 'data')
@@ -38,7 +38,7 @@ it('searches across name, email, and company', function () {
     Customer::factory()->create(['name' => 'Findable Person', 'company' => 'Acme']);
     Customer::factory()->create(['name' => 'Other Person', 'company' => 'Other Co']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers?q=Findable');
 
     $response->assertOk()->assertJsonCount(1, 'data');
@@ -48,7 +48,7 @@ it('treats a percent sign in the search term literally', function () {
     Customer::factory()->create(['name' => 'Acme 100% Ltd']);
     Customer::factory()->create(['name' => 'Other']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers?'.http_build_query(['q' => '100%']));
 
     $response->assertOk()->assertJsonCount(1, 'data');
@@ -57,7 +57,7 @@ it('treats a percent sign in the search term literally', function () {
 it('keeps filters on the pagination links', function () {
     Customer::factory()->count(30)->create(['company' => 'Northwind Retail']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers?'.http_build_query(['company' => ['Northwind Retail']]));
 
     $response->assertOk();
@@ -65,7 +65,7 @@ it('keeps filters on the pagination links', function () {
 });
 
 it('rejects an unknown sort column', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers?sort=password');
 
     $response->assertStatus(422);
@@ -74,7 +74,7 @@ it('rejects an unknown sort column', function () {
 it('returns facet counts computed over the filtered set, and all three tiers even at zero', function () {
     Customer::factory()->create(['company' => 'Northwind Retail', 'tier' => 'enterprise']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers/facets');
 
     $response->assertOk();
@@ -85,7 +85,7 @@ it('returns facet counts computed over the filtered set, and all three tiers eve
 it('returns zero for open_tickets_count while tickets has no customer_id', function () {
     Customer::factory()->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson('/api/customers');
 
     $response->assertOk()->assertJsonPath('data.0.open_tickets_count', 0);

@@ -4,6 +4,12 @@ One row per feature folder under `.squad/plans/`. `NN` continues as a global exe
 
 Rows are listed in **execution order**, not alphabetically — read this table top to bottom to know what to build next.
 
+**Depth vs status.** This column carries two different things: the plan's authored depth
+(`full` / `contract`) until the story ships, then `implemented`. The `index-sync` Stop hook
+rewrites it once every Done-Criteria box in the story file is ticked, so a row still reading
+`full` means the boxes are unticked — not necessarily that no code exists. Check the story
+file, not this column, when the two disagree.
+
 | NN | Feature | Overview | Story | Tracker | Depth |
 |----|---------|----------|-------|---------|-------|
 | 01 | authentication | [authentication/00-overview.md](authentication/00-overview.md) | Authentication & Access Control | WIS-1 | **implemented** |
@@ -64,7 +70,14 @@ already cite it.
 - **`TicketResource.sla` has three frozen keys** (`due_at`, `minutes_left`, `risk`). Story 04 ships
   them `null`; Story 06 fills the values and changes no key.
 - **All SQL must be valid on PostgreSQL *and* SQLite** — `api/.env` runs pgsql (Supabase),
-  `api/phpunit.xml` runs SQLite `:memory:`.
+  `api/phpunit.xml` runs SQLite `:memory:`. In practice that rules out `NULLS LAST`
+  (use a `CASE` expression), `INTERVAL` / `julianday()` day arithmetic (do it in PHP and
+  bind a Carbon value), and a bare `LIKE` with backslash escapes (SQLite has no default
+  escape character — spell out `ESCAPE '\'`).
+- **Server-derived display copy is localised server-side.** Every `*_label` field travels
+  with its value on the same resource, so `Priority`/`TicketStatus`/`Channel`/`UserRole`
+  labels and `SlaRule::breachActionLabel()` resolve through `__()` against `api/lang/{en,ar}`.
+  `SetLocale` reads the SPA's `Accept-Language`. Do not duplicate these maps in TypeScript.
 - **`ticketKeys` is the one TanStack Query keying scheme** for anything ticket-shaped; every ticket
   mutation invalidates `ticketKeys.all`.
 - **Filter and pagination state lives in the URL**, never in component state.

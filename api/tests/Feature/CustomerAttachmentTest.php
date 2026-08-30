@@ -29,7 +29,7 @@ beforeEach(function () {
 it('accepts an allowed file within the size cap', function () {
     $file = UploadedFile::fake()->create('brief.pdf', 100, 'application/pdf');
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $response->assertCreated();
@@ -41,7 +41,7 @@ it('accepts an allowed file within the size cap', function () {
 it('rejects an oversized file with a message naming the limit in MB', function () {
     $file = UploadedFile::fake()->create('huge.pdf', 20000, 'application/pdf');
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $response->assertStatus(422);
@@ -52,7 +52,7 @@ it('rejects an oversized file with a message naming the limit in MB', function (
 it('rejects a disallowed type with a message listing the allowed types', function () {
     $file = UploadedFile::fake()->create('script.exe', 10, 'application/octet-stream');
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $response->assertStatus(422);
@@ -64,7 +64,7 @@ it('never uses the client filename as the storage path', function () {
     // validation at all; the traversal attempt lives in the rest of the name.
     $file = UploadedFile::fake()->create('../../../.env.pdf', 10, 'application/pdf');
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $response->assertCreated();
@@ -78,12 +78,12 @@ it('never uses the client filename as the storage path', function () {
 
 it('refuses to download an attachment belonging to another customer', function () {
     $file = UploadedFile::fake()->create('brief.pdf', 10, 'application/pdf');
-    $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $attachment = CustomerAttachment::first();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->get("/api/customers/{$this->otherCustomer->id}/attachments/{$attachment->id}");
 
     $response->assertStatus(404);
@@ -91,16 +91,16 @@ it('refuses to download an attachment belonging to another customer', function (
 
 it('lets the uploader delete their own attachment and an agent not delete someone else\'s', function () {
     $file = UploadedFile::fake()->create('brief.pdf', 10, 'application/pdf');
-    $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $this->asToken($this->agentToken)
         ->post("/api/customers/{$this->customer->id}/attachments", ['file' => $file]);
 
     $attachment = CustomerAttachment::first();
 
-    $forbidden = $this->withHeader('Authorization', "Bearer {$this->otherAgentToken}")
+    $forbidden = $this->asToken($this->otherAgentToken)
         ->deleteJson("/api/customers/{$this->customer->id}/attachments/{$attachment->id}");
     $forbidden->assertStatus(403);
 
-    $allowed = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $allowed = $this->asToken($this->agentToken)
         ->deleteJson("/api/customers/{$this->customer->id}/attachments/{$attachment->id}");
     $allowed->assertStatus(204);
 });

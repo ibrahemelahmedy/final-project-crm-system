@@ -21,7 +21,7 @@ it('gives an Administrator the admin summary', function () {
         ['priority' => 'high'],
     )->create();
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->admin))
+    $this->asToken(($this->token)($this->admin))
         ->getJson('/api/dashboard/admin/summary')
         ->assertOk()
         ->assertJsonStructure(['user_count', 'active_sla_rule_count', 'audit_log_count'])
@@ -29,9 +29,9 @@ it('gives an Administrator the admin summary', function () {
 });
 
 it('forbids both an Agent and a Team Lead from the admin summary', function () {
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->agent))
+    $this->asToken(($this->token)($this->agent))
         ->getJson('/api/dashboard/admin/summary')->assertForbidden();
 
-    $this->withHeader('Authorization', 'Bearer '.($this->token)($this->lead))
+    $this->asToken(($this->token)($this->lead))
         ->getJson('/api/dashboard/admin/summary')->assertForbidden();
 });

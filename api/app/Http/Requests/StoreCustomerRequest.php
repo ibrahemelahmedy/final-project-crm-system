@@ -66,10 +66,10 @@ class StoreCustomerRequest extends FormRequest
             // Phone uniqueness can't be a plain unique() rule — the stored
             // column is the display form. Check the normalized value here.
             if (! $this->duplicateCustomer && filled($phone)) {
-                $normalized = Customer::normalizePhone($phone);
+                $candidates = Customer::phoneMatchCandidates($phone);
 
-                if ($normalized) {
-                    $existing = Customer::whereNull('deleted_at')->where('phone_normalized', $normalized)->first();
+                if ($candidates) {
+                    $existing = Customer::whereNull('deleted_at')->whereIn('phone_normalized', $candidates)->first();
 
                     if ($existing) {
                         $validator->errors()->add('phone', 'A customer with this phone number already exists.');

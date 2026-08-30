@@ -13,6 +13,7 @@ use App\Models\SlaRule;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
+use App\Services\SlaClock;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,18 +28,39 @@ class DatabaseSeeder extends Seeder
 
         // One SLA rule per priority tier (Story 06 owns this data long-term;
         // seeded here so the Agent/Team dashboards show real SLA risk).
+        // Every minute value is read straight off the design artboard
+        // (WisalSLARules-LightLTR.dc.html). The Urgent 30-minute escalation is
+        // the intake's own worked example.
         foreach ([
-            ['priority' => Priority::Urgent->value, 'first_response_minutes' => 30, 'resolution_minutes' => 240],
-            ['priority' => Priority::High->value, 'first_response_minutes' => 60, 'resolution_minutes' => 480],
-            ['priority' => Priority::Normal->value, 'first_response_minutes' => 240, 'resolution_minutes' => 1440],
-            ['priority' => Priority::Low->value, 'first_response_minutes' => 480, 'resolution_minutes' => 2880],
+            [
+                'priority' => Priority::Urgent->value,
+                'first_response_minutes' => 15, 'resolution_minutes' => 240,
+                'notify_on_breach' => true, 'escalation_enabled' => true,
+                'escalate_after_minutes' => 30, 'escalate_to_role' => UserRole::Administrator->value,
+            ],
+            [
+                'priority' => Priority::High->value,
+                'first_response_minutes' => 60, 'resolution_minutes' => 480,
+                'notify_on_breach' => true, 'escalation_enabled' => false,
+                'escalate_after_minutes' => null, 'escalate_to_role' => null,
+            ],
+            [
+                'priority' => Priority::Normal->value,
+                'first_response_minutes' => 240, 'resolution_minutes' => 1440,
+                'notify_on_breach' => false, 'escalation_enabled' => false,
+                'escalate_after_minutes' => null, 'escalate_to_role' => null,
+            ],
+            [
+                'priority' => Priority::Low->value,
+                'first_response_minutes' => 1440, 'resolution_minutes' => 7200,
+                'notify_on_breach' => false, 'escalation_enabled' => false,
+                'escalate_after_minutes' => null, 'escalate_to_role' => null,
+            ],
         ] as $rule) {
             SlaRule::updateOrCreate(
                 ['priority' => $rule['priority']],
                 $rule + [
                     'at_risk_threshold_pct' => 80,
-                    'notify_on_breach' => true,
-                    'escalation_enabled' => false,
                     'auto_close_after_days' => 5,
                     'is_active' => true,
                 ]
@@ -206,6 +228,18 @@ class DatabaseSeeder extends Seeder
         Ticket::factory()->count(20)->assignedTo($agent1)->create();
         Ticket::factory()->count(20)->assignedTo($agent2)->create();
         Ticket::factory()->count(20)->unassigned()->create();
+
+        // Story 06 — stamp SLA targets on every seeded ticket so a fresh
+        // database shows real countdowns instead of four dashes. Backdate the
+        // urgent one past its target so the breached state is visible without
+        // waiting four hours.
+        $threadedTicket->forceFill(['created_at' => now()->subHours(6)])->save();
+
+        $clock = app(SlaClock::class);
+        foreach (Ticket::all() as $seeded) {
+            $clock->applyTo($seeded);
+            $seeded->save();
+        }
 
         // Story 05 — seeded conversation threads. Mixed author types AND
         // channels so GET /api/tickets/{id}/messages demonstrably returns one

@@ -3,7 +3,8 @@
   "roots": [
     "src/app",
     "src/i18n",
-    "src/features/auth"
+    "src/features/auth",
+    "src/features/sla-rules"
   ],
   "_rootsNote": "Directories the check ENFORCES today. The retrofit pass (Story 15 implementation outline: 'String extraction across features/*') adds one feature dir here as its literals move to its namespace. Pending: src/features/{customers,tickets,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat}, src/components.",
   "literals": [

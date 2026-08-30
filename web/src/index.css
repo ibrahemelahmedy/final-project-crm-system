@@ -114,6 +114,19 @@ body, html, #root {
      nine-column table survives past it in the widened content area. */
   --queue-table-breakpoint: 900px;
 
+  /* SLA Rules cards — WisalSLARules-LightLTR.dc.html (Story 06).
+     Reuses --prio-* and all four --sla-* tokens from Story 04; adds no --sla-* token. */
+  --sla-rule-border-urgent: #FECACA;  --sla-rule-accent-urgent: #DC2626;
+  --sla-rule-border-high:   #FDE68A;  --sla-rule-accent-high:   #D97706;
+  --sla-rule-border-normal: #BFDBFE;  --sla-rule-accent-normal: #2563EB;
+  --sla-rule-border-low:    #E2E8F0;  --sla-rule-accent-low:    #64748B;
+  /* Small text on a light ground: takes brief.md's badge_text_on_tint (4.84:1),
+     which is why it differs from the accent edge on the same card. */
+  --sla-rule-action-urgent: #DC2626;
+  --sla-rule-action-high:   #B45309;
+  --sla-rule-action-muted:  #334155;
+  --sla-rule-fact-label:    #94A3B8;
+
   /* Conversation thread — WisalConversationThread-LightLTR.dc.html */
   --msg-in-bg: #FFFFFF; --msg-in-border: #E2E8F0; --msg-in-fg: #334155;
   --msg-out-bg: #4F46E5; --msg-out-fg: #FFFFFF; --msg-out-weight: 400;
@@ -212,6 +225,18 @@ body, html, #root {
     --skeleton-sheen: #2A2C33;
     --queue-table-breakpoint: 900px;
 
+    /* SLA Rules cards — WisalSLARules-DarkLTR.dc.html (Story 06).
+       Every dark border is #2A2C33 on purpose: the dark artboard drops the tinted
+       outline entirely and carries the tier signal only on the 4px accent edge. */
+    --sla-rule-border-urgent: #2A2C33;  --sla-rule-accent-urgent: #F87171;
+    --sla-rule-border-high:   #2A2C33;  --sla-rule-accent-high:   #FBBF24;
+    --sla-rule-border-normal: #2A2C33;  --sla-rule-accent-normal: #60A5FA;
+    --sla-rule-border-low:    #2A2C33;  --sla-rule-accent-low:    #94A3B8;
+    --sla-rule-action-urgent: #F87171;
+    --sla-rule-action-high:   #FBBF24;
+    --sla-rule-action-muted:  #CBD5E1;
+    --sla-rule-fact-label:    #64748B;
+
     --msg-in-bg: #1C1D24; --msg-in-border: #2A2C33; --msg-in-fg: #CBD5E1;
     --msg-out-bg: #818CF8; --msg-out-fg: #121317; --msg-out-weight: 500;
     --msg-wa-bg: rgba(52, 211, 153, 0.14); --msg-wa-fg: #D1FAE5;
@@ -305,6 +330,18 @@ body, html, #root {
   --skeleton-sheen: #2A2C33;
   --queue-table-breakpoint: 900px;
 
+  /* SLA Rules cards — WisalSLARules-DarkLTR.dc.html (Story 06).
+     Every dark border is #2A2C33 on purpose: the dark artboard drops the tinted
+     outline entirely and carries the tier signal only on the 4px accent edge. */
+  --sla-rule-border-urgent: #2A2C33;  --sla-rule-accent-urgent: #F87171;
+  --sla-rule-border-high:   #2A2C33;  --sla-rule-accent-high:   #FBBF24;
+  --sla-rule-border-normal: #2A2C33;  --sla-rule-accent-normal: #60A5FA;
+  --sla-rule-border-low:    #2A2C33;  --sla-rule-accent-low:    #94A3B8;
+  --sla-rule-action-urgent: #F87171;
+  --sla-rule-action-high:   #FBBF24;
+  --sla-rule-action-muted:  #CBD5E1;
+  --sla-rule-fact-label:    #64748B;
+
   --msg-in-bg: #1C1D24; --msg-in-border: #2A2C33; --msg-in-fg: #CBD5E1;
   --msg-out-bg: #818CF8; --msg-out-fg: #121317; --msg-out-weight: 500;
   --msg-wa-bg: rgba(52, 211, 153, 0.14); --msg-wa-fg: #D1FAE5;
@@ -396,6 +433,19 @@ body, html, #root {
   --skeleton-base: #EEF0F3;
   --skeleton-sheen: #F5F6F8;
   --queue-table-breakpoint: 900px;
+
+  /* SLA Rules cards — WisalSLARules-LightLTR.dc.html (Story 06).
+     Reuses --prio-* and all four --sla-* tokens from Story 04; adds no --sla-* token. */
+  --sla-rule-border-urgent: #FECACA;  --sla-rule-accent-urgent: #DC2626;
+  --sla-rule-border-high:   #FDE68A;  --sla-rule-accent-high:   #D97706;
+  --sla-rule-border-normal: #BFDBFE;  --sla-rule-accent-normal: #2563EB;
+  --sla-rule-border-low:    #E2E8F0;  --sla-rule-accent-low:    #64748B;
+  /* Small text on a light ground: takes brief.md's badge_text_on_tint (4.84:1),
+     which is why it differs from the accent edge on the same card. */
+  --sla-rule-action-urgent: #DC2626;
+  --sla-rule-action-high:   #B45309;
+  --sla-rule-action-muted:  #334155;
+  --sla-rule-fact-label:    #94A3B8;
 
   --msg-in-bg: #FFFFFF; --msg-in-border: #E2E8F0; --msg-in-fg: #334155;
   --msg-out-bg: #4F46E5; --msg-out-fg: #FFFFFF; --msg-out-weight: 400;
@@ -3740,4 +3790,156 @@ body {
 @media (max-width: 900px) {
   .qr-table-wrap { overflow-x: auto; }
   .qr-table { min-inline-size: 720px; }
+}
+
+/* ---------------------------------------------------------------------------
+   SLA Rules (Story 06, WIS-6) — WisalSLARules-*.dc.html
+
+   Reuses --prio-* (via PriorityBadge) and Story 04's four --sla-* tokens.
+   Adds no --sla-* token and redefines none.
+   --------------------------------------------------------------------------- */
+.slar-page { display: flex; flex-direction: column; gap: 18px; }
+
+.slar-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.slar-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
+.slar-subtitle { font-size: 13px; color: var(--text-muted); margin-block-start: 4px; }
+
+.slar-btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--icon-btn-border);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+}
+.slar-btn-primary {
+  background: var(--nav-active-fg);
+  border-color: var(--nav-active-fg);
+  color: #FFFFFF;
+}
+.slar-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.slar-list { display: flex; flex-direction: column; gap: 12px; }
+
+.slar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--sla-rule-border-normal);
+  /* ONE logical declaration — RTL mirrors the accent edge with no [dir] override. */
+  border-inline-start: 4px solid var(--sla-rule-accent-normal);
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.slar-card-urgent { border-color: var(--sla-rule-border-urgent); border-inline-start-color: var(--sla-rule-accent-urgent); }
+.slar-card-high   { border-color: var(--sla-rule-border-high);   border-inline-start-color: var(--sla-rule-accent-high); }
+.slar-card-normal { border-color: var(--sla-rule-border-normal); border-inline-start-color: var(--sla-rule-accent-normal); }
+.slar-card-low    { border-color: var(--sla-rule-border-low);    border-inline-start-color: var(--sla-rule-accent-low); }
+
+/* Opacity carries the deactivated state, but never alone — see .slar-inactive-chip. */
+.slar-card-inactive { opacity: .55; }
+
+.slar-tier { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.slar-inactive-chip {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--icon-btn-border);
+  color: var(--text-muted);
+}
+
+.slar-facts { display: flex; gap: 36px; flex: 1; flex-wrap: wrap; }
+.slar-fact { display: flex; flex-direction: column; gap: 4px; }
+.slar-fact-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--sla-rule-fact-label);
+}
+.slar-fact-value { font-size: 16px; font-weight: 700; color: var(--text-main); }
+.slar-fact-action { font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.slar-action-urgent { color: var(--sla-rule-action-urgent); }
+.slar-action-high   { color: var(--sla-rule-action-high); }
+.slar-action-muted  { color: var(--sla-rule-action-muted); }
+
+.slar-edit {
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--icon-btn-border);
+  background: transparent;
+  color: var(--icon-btn-color);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* The export defines .fv:focus-visible but the dark artboard uses class="fvd"
+   with no rule anywhere. Both controls get a real ring here; no `outline: none`
+   is used without a replacement. */
+.slar-btn:focus-visible,
+.slar-edit:focus-visible,
+.slar-icon-btn:focus-visible {
+  outline: 2px solid var(--nav-active-fg);
+  outline-offset: 2px;
+}
+
+.slar-skeleton { block-size: 88px; border-radius: 10px; }
+
+.slar-state {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.slar-state-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+.slar-state-body { font-size: 13px; color: var(--text-muted); max-inline-size: 44ch; }
+.slar-state .slar-btn { margin-block-start: 8px; }
+
+.slar-modal { inline-size: 520px; }
+.slar-duration { display: flex; align-items: center; gap: 8px; }
+.slar-duration input { flex: 1; }
+.slar-suffix { font-size: 13px; color: var(--text-muted); }
+.slar-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-main); }
+.slar-icon-btn {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.slar-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Story 04's breakpoint, reused — not a second one. */
+@media (max-width: 900px) {
+  .slar-card { align-items: flex-start; flex-wrap: wrap; }
+  .slar-facts { gap: 16px 24px; }
 }

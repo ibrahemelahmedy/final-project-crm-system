@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -88,5 +89,11 @@ class User extends Authenticatable
         $last = Str::upper(Str::substr($words->last(), 0, 1));
 
         return $first.$last;
+    }
+
+    /** Story 06: what TicketAssigner counts open load against. */
+    public function assignedTickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'assigned_to');
     }
 }

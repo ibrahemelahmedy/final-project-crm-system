@@ -10,11 +10,7 @@ enum UserRole: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Agent => 'Agent',
-            self::TeamLead => 'Team Lead',
-            self::Administrator => 'Administrator',
-        };
+        return __('enums.user_role.'.$this->value);
     }
 
     /** Route the SPA redirects to immediately after login. */

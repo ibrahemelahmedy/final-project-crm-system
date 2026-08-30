@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
  *
  * One method per widget block; every block honours the same [$from, $to]
  * bounds, which is structurally what guarantees no two widgets on the page can
- * show a different range. SLA figures are delegated to {@see SlaCalculator}
+ * show a different range. SLA figures are delegated to {@see SlaClock}
  * (Story 06's source of truth) and never recomputed here.
  *
  * Figures are computed on request against indexed queries — no materialised
@@ -30,7 +30,7 @@ class ReportAggregator
     /** The artboard's "Target: 90%" line — not a per-rule field today. */
     public const SLA_TARGET_RATE = 90.0;
 
-    public function __construct(private readonly SlaCalculator $sla)
+    public function __construct(private readonly SlaClock $clock)
     {
     }
 
@@ -126,7 +126,7 @@ class ReportAggregator
 
     private function slaBlock(Carbon $from, Carbon $to): array
     {
-        $agg = $this->sla->complianceForRange($from, $to);
+        $agg = $this->clock->complianceBetween($from, $to);
 
         return [
             'available' => $agg['resolved_count'] > 0,

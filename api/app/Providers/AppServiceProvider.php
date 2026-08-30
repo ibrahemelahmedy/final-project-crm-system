@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\CustomerAttachment;
 use App\Models\Ticket;
 use App\Observers\TicketResolutionObserver;
+use App\Policies\CustomerPolicy;
 use App\Policies\ReportPolicy;
 use App\Services\Kb\ArticleSearch;
+use App\Services\SlaClock;
 use App\Services\Kb\LikeArticleSearch;
 use App\Services\Kb\PostgresArticleSearch;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
         // Resolved lazily (a closure, not a conditional at register time) so
         // no database connection is opened while the container boots — which
         // would break `artisan config:cache` and every console command.
+        // Story 06: one SLA clock per request. The $rules memo makes the
+        // engine's per-tier lookup happen four times per run instead of once
+        // per ticket.
+        $this->app->singleton(SlaClock::class);
+
         $this->app->bind(ArticleSearch::class, function () {
             return DB::connection()->getDriverName() === 'pgsql'
                 ? new PostgresArticleSearch
@@ -44,6 +52,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Story 12: the management Reports dashboard gate. Denied to Agents.
         Gate::define('view-reports', [ReportPolicy::class, 'view']);
+
+        // Story 03: `deleteAttachment` lives on CustomerPolicy but is called
+        // with a CustomerAttachment instance, which Laravel would otherwise
+        // resolve to a non-existent CustomerAttachmentPolicy and deny outright
+        // — including for the uploader. One mapping, no second policy class.
+        Gate::policy(CustomerAttachment::class, CustomerPolicy::class);
 
         // Story 13: create exactly one CSAT survey when a ticket transitions
         // to Resolved. Story 04 transitions inline with no event, so this is a

@@ -41,7 +41,7 @@ it('exposes the status transition map on GET /api/tickets/meta', function () {
     ]);
     $token = $user->createToken('spa')->plainTextToken;
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
+    $response = $this->asToken($token)
         ->getJson('/api/tickets/meta');
 
     $response->assertOk();
@@ -96,7 +96,7 @@ it('locks the Channels overview response shape inside auth:sanctum (Story 14)', 
         'is_active' => true,
     ]);
 
-    $this->withHeader('Authorization', 'Bearer '.$user->createToken('spa')->plainTextToken)
+    $this->asToken($user->createToken('spa')->plainTextToken)
         ->getJson('/api/channels/overview')
         ->assertOk()
         ->assertJsonStructure([
@@ -115,7 +115,7 @@ it('adds department, initials, and last_login_at to UserResource without renamin
         'last_login_at' => now(),
     ]);
 
-    $this->withHeader('Authorization', 'Bearer '.$user->createToken('spa')->plainTextToken)
+    $this->asToken($user->createToken('spa')->plainTextToken)
         ->getJson('/api/user')
         ->assertOk()
         // Story 01's keys are still here, unrenamed.

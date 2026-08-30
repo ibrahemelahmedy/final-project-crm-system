@@ -18,7 +18,7 @@ beforeEach(function () {
 });
 
 it('creates a customer with a name and an email', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', [
             'name' => 'Amelia Chen',
             'email' => 'amelia.chen@northwind.io',
@@ -32,7 +32,7 @@ it('creates a customer with a name and an email', function () {
 });
 
 it('creates a customer with a name and only a phone', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', [
             'name' => 'Marcus Webb',
             'phone' => '+1 (415) 555-0148',
@@ -43,7 +43,7 @@ it('creates a customer with a name and only a phone', function () {
 });
 
 it('rejects a customer with neither an email nor a phone', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', ['name' => 'No Contact']);
 
     $response->assertStatus(422)
@@ -51,7 +51,7 @@ it('rejects a customer with neither an email nor a phone', function () {
 });
 
 it('rejects a customer with no name', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', ['email' => 'noname@example.com']);
 
     $response->assertStatus(422)
@@ -59,7 +59,7 @@ it('rejects a customer with no name', function () {
 });
 
 it('never exposes phone_normalized, created_by, or deleted_at', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', [
             'name' => 'Amelia Chen',
             'email' => 'amelia.chen@northwind.io',
@@ -74,7 +74,7 @@ it('never exposes phone_normalized, created_by, or deleted_at', function () {
 });
 
 it('stores email lower-cased and derives a normalized phone', function () {
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->postJson('/api/customers', [
             'name' => 'Amelia Chen',
             'email' => 'Amelia@X.IO',
@@ -93,7 +93,7 @@ it('stores email lower-cased and derives a normalized phone', function () {
 it('updates a customer without tripping its own unique rule', function () {
     $customer = Customer::factory()->create(['email' => 'amelia@x.io']);
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->patchJson("/api/customers/{$customer->id}", [
             'email' => 'amelia@x.io',
         ]);
@@ -106,12 +106,12 @@ it('soft-deletes a customer', function () {
     $leadToken = $lead->createToken('spa')->plainTextToken;
     $customer = Customer::factory()->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$leadToken}")
+    $response = $this->asToken($leadToken)
         ->deleteJson("/api/customers/{$customer->id}");
 
     $response->assertStatus(204);
     $this->assertSoftDeleted('customers', ['id' => $customer->id]);
 
-    $list = $this->withHeader('Authorization', "Bearer {$leadToken}")->getJson('/api/customers');
+    $list = $this->asToken($leadToken)->getJson('/api/customers');
     $list->assertJsonMissing(['id' => $customer->id]);
 });

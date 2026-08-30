@@ -171,9 +171,9 @@ class CustomerController extends Controller
         }
 
         if (! $existing && $phone) {
-            $normalized = Customer::normalizePhone($phone);
-            if ($normalized) {
-                $existing = Customer::whereNull('deleted_at')->where('phone_normalized', $normalized)->first();
+            $candidates = Customer::phoneMatchCandidates($phone);
+            if ($candidates) {
+                $existing = Customer::whereNull('deleted_at')->whereIn('phone_normalized', $candidates)->first();
             }
         }
 

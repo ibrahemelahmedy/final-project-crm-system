@@ -115,6 +115,12 @@ it('never surfaces a draft in the most-viewed rail, even for an editor', functio
 it('increments view_count on a read without moving updated_at', function () {
     // A view is not an edit — the reader's "Last updated" staleness signal
     // must not be reset by someone opening the page.
+    //
+    // updated_at is pushed into the PAST first. Reading it as-written made
+    // this assertion pass whenever the seed and the request landed in the same
+    // wall-clock second, so a regression here only surfaced about once a run.
+    $this->published->forceFill(['updated_at' => now()->subDay()])->save();
+
     $before = $this->published->fresh();
 
     $this->asUser($this->agent)->getJson('/api/kb/articles/published-guidance')->assertOk();

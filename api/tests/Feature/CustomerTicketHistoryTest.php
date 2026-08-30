@@ -25,7 +25,7 @@ it('returns the tickets belonging to a customer, newest first', function () {
     $newer = Ticket::factory()->create(['customer_id' => $customer->id, 'subject' => 'Newer ticket']);
     $newer->forceFill(['created_at' => now()])->saveQuietly();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson("/api/customers/{$customer->id}/tickets");
 
     $response->assertOk()->assertJsonCount(2, 'data');
@@ -37,7 +37,7 @@ it('returns the tickets belonging to a customer, newest first', function () {
 it('returns an empty page for a customer with no tickets', function () {
     $customer = Customer::factory()->create();
 
-    $response = $this->withHeader('Authorization', "Bearer {$this->agentToken}")
+    $response = $this->asToken($this->agentToken)
         ->getJson("/api/customers/{$customer->id}/tickets");
 
     $response->assertOk()->assertJsonCount(0, 'data');

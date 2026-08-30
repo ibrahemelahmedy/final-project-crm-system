@@ -1,1 +1,78 @@
-{}
+{
+  "title": "قواعد مستوى الخدمة",
+  "subtitle_zero": "لا توجد قواعد مفعّلة · تُطبَّق حسب الأولوية",
+  "subtitle_one": "قاعدة مفعّلة واحدة · تُطبَّق حسب الأولوية",
+  "subtitle_two": "قاعدتان مفعّلتان · تُطبَّق حسب الأولوية",
+  "subtitle_few": "{{count}} قواعد مفعّلة · تُطبَّق حسب الأولوية",
+  "subtitle_many": "{{count}} قاعدة مفعّلة · تُطبَّق حسب الأولوية",
+  "subtitle_other": "{{count}} قاعدة مفعّلة · تُطبَّق حسب الأولوية",
+  "addRule": "إضافة قاعدة",
+  "allTiersTaken": "كل مستويات الأولوية لديها قاعدة بالفعل",
+  "inactive": "معطّلة",
+  "editRule": "تعديل قاعدة {{tier}}",
+  "facts": {
+    "respondWithin": "الرد خلال",
+    "resolveWithin": "الحل خلال",
+    "onBreach": "عند الخرق"
+  },
+  "duration": {
+    "minutes_zero": "أقل من دقيقة",
+    "minutes_one": "دقيقة واحدة",
+    "minutes_two": "دقيقتان",
+    "minutes_few": "{{count}} دقائق",
+    "minutes_many": "{{count}} دقيقة",
+    "minutes_other": "{{count}} دقيقة",
+    "hours_zero": "أقل من ساعة",
+    "hours_one": "ساعة واحدة",
+    "hours_two": "ساعتان",
+    "hours_few": "{{count}} ساعات",
+    "hours_many": "{{count}} ساعة",
+    "hours_other": "{{count}} ساعة",
+    "days_zero": "أقل من يوم",
+    "days_one": "يوم واحد",
+    "days_two": "يومان",
+    "days_few": "{{count}} أيام",
+    "days_many": "{{count}} يوماً",
+    "days_other": "{{count}} يوم"
+  },
+  "empty": {
+    "title": "لا توجد قواعد مستوى خدمة بعد",
+    "body": "لن يكون للتذاكر هدف للرد أو للحل حتى تُضاف قاعدة."
+  },
+  "error": {
+    "title": "تعذّر تحميل قواعد مستوى الخدمة",
+    "body": "حدث خطأ أثناء جلبها. حاول مرة أخرى.",
+    "retry": "إعادة المحاولة"
+  },
+  "form": {
+    "createTitle": "إضافة قاعدة مستوى خدمة",
+    "editTitle": "تعديل قاعدة مستوى الخدمة",
+    "priority": "الأولوية",
+    "respondWithin": "الرد خلال",
+    "resolveWithin": "الحل خلال",
+    "atRisk": "عتبة الخطر",
+    "atRiskHelp": "تُقرأ التذكرة على أنها معرّضة للخطر بمجرد استهلاك هذه النسبة من هدف الحل.",
+    "notifyOnBreach": "تنبيه عند الخرق",
+    "escalate": "التصعيد تلقائياً",
+    "escalateTo": "التصعيد إلى",
+    "escalateAfter": "التصعيد بعد",
+    "escalateAfterHelp": "يُحسب من هدف الرد. اتركه فارغاً للتصعيد عند الخرق.",
+    "autoClose": "إغلاق التذاكر المحلولة تلقائياً بعد",
+    "autoCloseUnit": "يوم",
+    "active": "القاعدة مفعّلة",
+    "save": "حفظ القاعدة",
+    "saving": "جارٍ الحفظ…",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "saveFailed": "تعذّر حفظ القاعدة. راجع الحقول وحاول مرة أخرى."
+  },
+  "units": {
+    "minutes": "دقائق",
+    "hours": "ساعات",
+    "days": "أيام"
+  },
+  "roles": {
+    "team_lead": "قائد الفريق",
+    "administrator": "مدير النظام"
+  }
+}

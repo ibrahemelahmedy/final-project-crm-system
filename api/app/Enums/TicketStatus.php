@@ -11,12 +11,7 @@ enum TicketStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Open => 'Open',
-            self::Pending => 'Pending',
-            self::Resolved => 'Resolved',
-            self::Closed => 'Closed',
-        };
+        return __('enums.ticket_status.'.$this->value);
     }
 
     /** A closed ticket is finished; a resolved one can still be reopened by a reply. */
