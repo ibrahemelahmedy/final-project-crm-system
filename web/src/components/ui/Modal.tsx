@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useT } from '../../i18n';
 
 // The project's first modal — the pattern every later modal follows:
 // - rendered in a portal to document.body
@@ -24,6 +25,7 @@ export const Modal: React.FC<{
   children: React.ReactNode;
   width?: number;
 }> = ({ open, onClose, titleId, title, children, width = 480 }) => {
+  const { t } = useT('common');
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<Element | null>(null);
 
@@ -95,7 +97,7 @@ export const Modal: React.FC<{
           <h2 id={titleId} className="modal-title">
             {title}
           </h2>
-          <button type="button" className="dt-icon-btn fv" aria-label="Close" onClick={onClose}>
+          <button type="button" className="dt-icon-btn fv" aria-label={t('actions.close')} onClick={onClose}>
             ✕
           </button>
         </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useT } from '../../i18n';
 import { Modal } from './Modal';
 
 // Port of WisalModals-LightLTR.dc.html lines 139-150. The title must name
@@ -15,6 +16,7 @@ export const ConfirmDialog: React.FC<{
   onConfirm: () => void;
   onCancel: () => void;
 }> = ({ open, title, body, confirmLabel, tone, isPending, onConfirm, onCancel }) => {
+  const { t } = useT('common');
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export const ConfirmDialog: React.FC<{
       <p className="modal-confirm-body">{body}</p>
       <div className="modal-footer modal-footer-end">
         <button type="button" ref={cancelRef} className="dt-btn dt-btn-outline fv" onClick={onCancel}>
-          Cancel
+          {t('actions.cancel')}
         </button>
         <button
           type="button"
@@ -39,7 +41,7 @@ export const ConfirmDialog: React.FC<{
           disabled={isPending}
           onClick={onConfirm}
         >
-          {isPending ? 'Working…' : confirmLabel}
+          {isPending ? t('actions.working') : confirmLabel}
         </button>
       </div>
     </Modal>

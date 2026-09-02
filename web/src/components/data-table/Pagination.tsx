@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../i18n';
 
 function pageWindow(current: number, last: number): (number | 'ellipsis')[] {
   const pages = new Set<number>([1, last, current - 1, current, current + 1]);
@@ -21,23 +22,20 @@ export const Pagination: React.FC<{
   perPage: number;
   onPageChange: (page: number) => void;
 }> = ({ currentPage, lastPage, total, perPage, onPageChange }) => {
+  const { t } = useT('common');
   const from = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
   const to = Math.min(currentPage * perPage, total);
 
   return (
     <div className="dt-pagination">
       <span className="dt-pagination-summary">
-        Showing{' '}
-        <span dir="ltr">
-          {from}–{to}
-        </span>{' '}
-        of <span dir="ltr">{total}</span>
+        {t('table.showingRange', { from, to, total })}
       </span>
       <div className="dt-pagination-controls">
         <button
           type="button"
           className="dt-page-btn dt-page-chevron fv"
-          aria-label="Previous page"
+          aria-label={t('table.previousPage')}
           disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
         >
@@ -66,7 +64,7 @@ export const Pagination: React.FC<{
         <button
           type="button"
           className="dt-page-btn dt-page-chevron dt-page-chevron-next fv"
-          aria-label="Next page"
+          aria-label={t('table.nextPage')}
           disabled={currentPage >= lastPage}
           onClick={() => onPageChange(currentPage + 1)}
         >

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useT } from '../../i18n';
 import type { ColumnDef } from './types';
 
 // Buttons, not drag-and-drop — up/down satisfies "reorder" for every input
@@ -15,12 +16,17 @@ export function ColumnMenu<T>({
   onToggleHidden: (id: string) => void;
   onMove: (id: string, direction: 'up' | 'down') => void;
 }) {
+  const { t } = useT('common');
   const [open, setOpen] = useState(false);
   const [announcement, setAnnouncement] = useState('');
 
   const move = (col: ColumnDef<T>, direction: 'up' | 'down') => {
     onMove(col.id, direction);
-    setAnnouncement(`Moved ${col.header} ${direction === 'up' ? 'earlier' : 'later'}`);
+    setAnnouncement(
+      direction === 'up'
+        ? t('table.columnMovedEarlier', { column: col.header })
+        : t('table.columnMovedLater', { column: col.header })
+    );
   };
 
   return (
@@ -32,7 +38,7 @@ export function ColumnMenu<T>({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        Columns
+        {t('table.columns')}
       </button>
       <div aria-live="polite" className="sr-only">
         {announcement}
@@ -46,7 +52,7 @@ export function ColumnMenu<T>({
                   type="checkbox"
                   checked={!hidden.includes(col.id)}
                   disabled={col.locked}
-                  title={col.locked ? 'The customer name is always shown' : undefined}
+                  title={col.locked ? t('table.lockedColumnHint') : undefined}
                   onChange={() => onToggleHidden(col.id)}
                 />
                 {col.header}
@@ -55,7 +61,7 @@ export function ColumnMenu<T>({
                 <button
                   type="button"
                   className="dt-icon-btn fv"
-                  aria-label={`Move ${col.header} earlier`}
+                  aria-label={t('table.moveColumnEarlier', { column: col.header })}
                   disabled={i === 0}
                   onClick={() => move(col, 'up')}
                 >
@@ -64,7 +70,7 @@ export function ColumnMenu<T>({
                 <button
                   type="button"
                   className="dt-icon-btn fv"
-                  aria-label={`Move ${col.header} later`}
+                  aria-label={t('table.moveColumnLater', { column: col.header })}
                   disabled={i === columns.length - 1}
                   onClick={() => move(col, 'down')}
                 >

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../i18n';
 
 export type BulkAction = {
   id: string;
@@ -18,12 +19,13 @@ export const BulkActionBar: React.FC<{
   actions: BulkAction[];
   onClear: () => void;
 }> = ({ count, actions, onClear }) => {
+  const { t } = useT('common');
   if (count <= 0) return null;
 
   return (
     <div className="dt-bulk-bar">
       <span className="dt-bulk-count" aria-live="polite">
-        {count} selected
+        {t('table.selected', { count })}
       </span>
       <div className="dt-bulk-divider" />
       {actions.map((action) => (
@@ -40,7 +42,7 @@ export const BulkActionBar: React.FC<{
         </button>
       ))}
       <div className="dt-bulk-spacer" />
-      <button type="button" className="dt-icon-btn fv" aria-label="Clear selection" onClick={onClear}>
+      <button type="button" className="dt-icon-btn fv" aria-label={t('table.clearSelection')} onClick={onClear}>
         ✕
       </button>
     </div>

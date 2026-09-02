@@ -1,3 +1,4 @@
+import { useT } from '../../i18n';
 import type { ColumnDef } from './types';
 
 // Port of WisalCustomers-LoadingState.dc.html lines 90-97: real header
@@ -10,10 +11,11 @@ export function DataTableSkeleton<T>({
   columns: ColumnDef<T>[];
   rows?: number;
 }) {
+  const { t } = useT('common');
   const gridTemplate = ['32px', ...columns.map((c) => c.width)].join(' ');
 
   return (
-    <div role="table" aria-busy="true" aria-label="Loading" className="dt-table">
+    <div role="table" aria-busy="true" aria-label={t('table.loadingRows')} className="dt-table">
       <div role="row" className="dt-row dt-header-row" style={{ gridTemplateColumns: gridTemplate }}>
         <div role="columnheader" className="dt-cell dt-select-cell" />
         {columns.map((col) => (

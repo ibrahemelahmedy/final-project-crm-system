@@ -41,7 +41,8 @@
     "apply": "تطبيق",
     "back": "رجوع",
     "next": "التالي",
-    "previous": "السابق"
+    "previous": "السابق",
+    "working": "جارٍ العمل…"
   },
   "state": {
     "loading": "جارٍ التحميل…",
@@ -50,6 +51,29 @@
     "errorBody": "تعذّر تحميل هذا. حاول مرة أخرى.",
     "offline": "يبدو أنك غير متصل بالإنترنت",
     "featureComingSoon": "هذه الشاشة تُبنى في قصة الميزة الخاصة بها."
+  },
+  "table": {
+    "selected_zero": "لم يتم تحديد أي عنصر",
+    "selected_one": "تم تحديد عنصر واحد",
+    "selected_two": "تم تحديد عنصرين",
+    "selected_few": "تم تحديد {{count}} عناصر",
+    "selected_many": "تم تحديد {{count}} عنصراً",
+    "selected_other": "تم تحديد {{count}} عنصر",
+    "clearSelection": "إلغاء التحديد",
+    "columns": "الأعمدة",
+    "lockedColumnHint": "هذا العمود يظهر دائماً",
+    "moveColumnEarlier": "نقل {{column}} إلى الأعلى",
+    "moveColumnLater": "نقل {{column}} إلى الأسفل",
+    "columnMovedEarlier": "تم نقل {{column}} إلى الأعلى",
+    "columnMovedLater": "تم نقل {{column}} إلى الأسفل",
+    "selectAllRows": "تحديد كل الصفوف في هذه الصفحة",
+    "selectRow": "تحديد {{label}}",
+    "loadError": "حدث خطأ أثناء تحميل هذه البيانات.",
+    "tryAgain": "حاول مرة أخرى",
+    "loadingRows": "جارٍ التحميل",
+    "showingRange": "عرض {{from}}–{{to}} من {{total}}",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية"
   },
   "format": {
     "dateLabel": "التاريخ",

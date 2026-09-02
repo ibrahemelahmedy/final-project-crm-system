@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useT } from '../../i18n';
 import type { ColumnDef, DataTableProps } from './types';
 
 // Sort chevron — export line 74 (WisalCustomers-LightLTR.dc.html).
@@ -58,6 +59,7 @@ export function DataTable<T>({
   caption,
   getRowLabel,
 }: DataTableProps<T>) {
+  const { t } = useT('common');
   // ONE grid-template-columns definition — this is what makes RTL mirroring
   // free. A second, RTL-specific track list must never be added anywhere.
   const gridTemplate = ['32px', ...columns.map((c) => c.width)].join(' ');
@@ -97,7 +99,7 @@ export function DataTable<T>({
             checked={allSelected}
             indeterminate={someSelected}
             onChange={toggleAll}
-            aria-label="Select all rows on this page"
+            aria-label={t('table.selectAllRows')}
           />
         </div>
         {columns.map((col) => (
@@ -153,7 +155,7 @@ export function DataTable<T>({
                 checked={selected}
                 onChange={() => toggleRow(id)}
                 onClick={(e) => e.stopPropagation()}
-                aria-label={`Select ${label}`}
+                aria-label={t('table.selectRow', { label })}
               />
             </div>
             {columns.map((col) => (
