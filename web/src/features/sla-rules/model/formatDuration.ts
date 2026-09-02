@@ -27,17 +27,20 @@ export function toMinutes(value: number, unit: DurationUnit): number {
 }
 
 /**
+ * Story 16 (WIS-17): `t` is required, not optional. An optional translator
+ * with an English fallback was exactly the shape that kept
+ * `value === 1 ? '' : 's'` — untranslatable, Arabic-incapable pluralization —
+ * alive inside an already-"migrated" feature. Every real call site has a
+ * `sla`-namespace `t` available; tests get one from the real i18next instance
+ * via `i18n.getFixedT('en', 'sla')`, so they exercise the actual catalogue
+ * rather than a second hand-written English table.
+ *
  * @param t Translator for the `sla` namespace, so the unit words localise.
- *          Falls back to English when omitted (tests and non-i18n callers).
  */
 export function formatDuration(
   minutes: number,
-  t?: (key: string, opts: { count: number }) => string,
+  t: (key: string, opts: { count: number }) => string,
 ): string {
   const { value, unit } = splitDuration(minutes);
-
-  if (t) return t(`duration.${unit}`, { count: value });
-
-  const singular = { minutes: 'minute', hours: 'hour', days: 'day' }[unit];
-  return `${value} ${singular}${value === 1 ? '' : 's'}`;
+  return t(`duration.${unit}`, { count: value });
 }

@@ -50,6 +50,10 @@
     "close": "Close",
     "saveFailed": "The rule could not be saved. Check the fields and try again."
   },
+  "validation": {
+    "resolutionAfterResponse": "The resolution target must be longer than the response target.",
+    "escalateToRequired": "Choose who the ticket escalates to."
+  },
   "units": {
     "minutes": "minutes",
     "hours": "hours",

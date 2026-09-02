@@ -66,6 +66,10 @@
     "close": "إغلاق",
     "saveFailed": "تعذّر حفظ القاعدة. راجع الحقول وحاول مرة أخرى."
   },
+  "validation": {
+    "resolutionAfterResponse": "يجب أن يكون هدف الحل أطول من هدف الرد.",
+    "escalateToRequired": "اختر إلى مَن يتم تصعيد التذكرة."
+  },
   "units": {
     "minutes": "دقائق",
     "hours": "ساعات",

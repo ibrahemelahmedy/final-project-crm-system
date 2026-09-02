@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import { loginSchema, type LoginValues } from './loginSchema';
+import { createLoginSchema, type LoginValues } from './loginSchema';
 import { useLogin } from './useLogin';
 import { useAuth } from './AuthContext';
 import { useUiPreferences } from '../../app/providers/UiPreferencesContext';
@@ -22,6 +22,8 @@ export const LoginPage: React.FC = () => {
   const toggleLang = () => {
     setLocale(locale === 'ar' ? 'en' : 'ar');
   };
+
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const {
     register,

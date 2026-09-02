@@ -1,27 +1,30 @@
 import { describe, it, expect } from 'vitest';
+import i18n from '../../../i18n/instance';
 import { formatDuration, splitDuration, toMinutes } from './formatDuration';
+
+const t = i18n.getFixedT('en', 'sla');
 
 describe('formatDuration', () => {
   it('renders the four seeded tiers exactly as the artboard reads', () => {
-    expect(formatDuration(15)).toBe('15 minutes');
-    expect(formatDuration(60)).toBe('1 hour');
-    expect(formatDuration(240)).toBe('4 hours');
-    expect(formatDuration(1440)).toBe('1 day');
+    expect(formatDuration(15, t)).toBe('15 minutes');
+    expect(formatDuration(60, t)).toBe('1 hour');
+    expect(formatDuration(240, t)).toBe('4 hours');
+    expect(formatDuration(1440, t)).toBe('1 day');
     // The deliberate deviation: "5 business days" on the artboard ships as
     // "5 days", because the clock counts wall-clock minutes.
-    expect(formatDuration(7200)).toBe('5 days');
+    expect(formatDuration(7200, t)).toBe('5 days');
   });
 
   it('uses the largest whole unit only', () => {
     // Not "1 hour 30 minutes" — the fact column is one line at 16px/700.
-    expect(formatDuration(90)).toBe('90 minutes');
-    expect(formatDuration(480)).toBe('8 hours');
+    expect(formatDuration(90, t)).toBe('90 minutes');
+    expect(formatDuration(480, t)).toBe('8 hours');
   });
 
   it('handles singular and plural', () => {
-    expect(formatDuration(1)).toBe('1 minute');
-    expect(formatDuration(2)).toBe('2 minutes');
-    expect(formatDuration(2880)).toBe('2 days');
+    expect(formatDuration(1, t)).toBe('1 minute');
+    expect(formatDuration(2, t)).toBe('2 minutes');
+    expect(formatDuration(2880, t)).toBe('2 days');
   });
 });
 

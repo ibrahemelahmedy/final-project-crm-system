@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../../../i18n';
 import { DurationField } from './DurationField';
 import { useSaveSlaRule } from '../hooks/useSaveSlaRule';
-import { slaRuleSchema, type SlaRuleInput } from '../model/slaRuleSchema';
+import { createSlaRuleSchema, type SlaRuleInput } from '../model/slaRuleSchema';
 import type { EscalationRole, PriorityValue, SlaRule } from '../model/types';
 
 type Props = {
@@ -50,6 +50,7 @@ function toInput(rule: SlaRule): SlaRuleInput {
  */
 export function SlaRuleFormModal({ rule, availableTiers, tierLabels, onClose }: Props) {
   const { t } = useT('sla');
+  const slaRuleSchema = useMemo(() => createSlaRuleSchema(t), [t]);
   const save = useSaveSlaRule();
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<Element | null>(null);
