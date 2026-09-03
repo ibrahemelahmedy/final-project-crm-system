@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Ticket } from '../../model/ticket';
-import { replySchema } from '../../model/replySchema';
+import { createReplySchema } from '../../model/replySchema';
+import { useT } from '../../../../i18n';
 import { ComposerChannelBadge } from './ComposerChannelBadge';
 import { MentionAutocomplete } from '../../../agent-productivity/components/MentionAutocomplete';
 import type { MentionableUser } from '../../../agent-productivity/model/mentionableUser';
@@ -52,6 +53,8 @@ export function ReplyComposer({
   toolbarSlot,
   onSendNote,
 }: ReplyComposerProps) {
+  const { t } = useT('conversation');
+  const replySchema = useMemo(() => createReplySchema(t), [t]);
   const [mode, setMode] = useState<ComposerMode>('public');
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +92,7 @@ export function ReplyComposer({
   const submitPublic = useCallback(async () => {
     const parsed = replySchema.safeParse({ body: value });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Write a reply before sending.');
+      setError(parsed.error.issues[0]?.message ?? t('composer.replyRequired'));
       return;
     }
     setError(null);
@@ -101,12 +104,12 @@ export function ReplyComposer({
       setFailed(true);
       taRef.current?.focus();
     }
-  }, [value, onSend]);
+  }, [value, onSend, replySchema, t]);
 
   const submitNote = useCallback(async () => {
     const parsed = replySchema.safeParse({ body: value });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Write a note before saving.');
+      setError(parsed.error.issues[0]?.message ?? t('composer.noteRequired'));
       return;
     }
     if (!onSendNote) return;
@@ -123,7 +126,7 @@ export function ReplyComposer({
       setFailed(true);
       taRef.current?.focus();
     }
-  }, [value, onSendNote, mentionedUsers]);
+  }, [value, onSendNote, mentionedUsers, replySchema, t]);
 
   const submit = mode === 'internal' ? submitNote : submitPublic;
 
@@ -175,8 +178,8 @@ export function ReplyComposer({
   const showModeTabs = Boolean(onSendNote);
 
   const placeholder = useMemo(
-    () => (mode === 'internal' ? 'Add an internal note…' : 'Type a reply…'),
-    [mode]
+    () => (mode === 'internal' ? t('composer.notePlaceholder') : t('composer.replyPlaceholder')),
+    [mode, t]
   );
 
   return (
@@ -191,7 +194,7 @@ export function ReplyComposer({
       <div className="composer-toolbar-row">
         <ComposerChannelBadge channel={ticket.channel} label={ticket.channel_label} />
         {showModeTabs && (
-          <div className="composer-mode-tabs" role="tablist" aria-label="Composer mode">
+          <div className="composer-mode-tabs" role="tablist" aria-label={t('composer.mode')}>
             <button
               type="button"
               role="tab"
@@ -203,7 +206,7 @@ export function ReplyComposer({
                 setFailed(false);
               }}
             >
-              Reply to customer
+              {t('composer.replyToCustomer')}
             </button>
             <button
               type="button"
@@ -216,7 +219,7 @@ export function ReplyComposer({
                 setFailed(false);
               }}
             >
-              Internal note
+              {t('composer.internalNote')}
             </button>
           </div>
         )}
@@ -224,7 +227,7 @@ export function ReplyComposer({
 
       {mode === 'internal' && (
         <div className="composer-note-banner" role="status">
-          Not visible to customer
+          {t('composer.notVisible')}
         </div>
       )}
 
@@ -232,7 +235,9 @@ export function ReplyComposer({
 
       <div className="composer-card" data-mode={mode}>
         <label className="tq-sr-only" htmlFor="reply-body">
-          {mode === 'internal' ? `Internal note on ticket #${ticket.id}` : `Reply to ticket #${ticket.id}`}
+          {mode === 'internal'
+            ? t('composer.noteLabel', { id: ticket.id })
+            : t('composer.replyLabel', { id: ticket.id })}
         </label>
         <div className="composer-textarea-wrap">
           <textarea
@@ -255,14 +260,14 @@ export function ReplyComposer({
           )}
         </div>
         <div className="composer-actions">
-          {mode === 'internal' && <span className="composer-note-footer">Internal only · agents see this</span>}
+          {mode === 'internal' && <span className="composer-note-footer">{t('composer.internalOnly')}</span>}
           <button
             type="button"
             className="composer-send"
             onClick={() => void submit()}
             disabled={trimmedEmpty || isSending}
           >
-            {mode === 'internal' ? 'Add internal note' : 'Send'}
+            {mode === 'internal' ? t('composer.addInternalNote') : t('composer.send')}
             {mode === 'public' && (
               <svg
                 width="16"
@@ -287,12 +292,10 @@ export function ReplyComposer({
       {failed && (
         <div className="composer-error" role="alert">
           <span>
-            {mode === 'internal'
-              ? "Couldn't save — your note is still here. Check your connection and retry."
-              : 'Your reply could not be sent.'}
+            {mode === 'internal' ? t('composer.noteFailed') : t('composer.replyFailed')}
           </span>
           <button type="button" className="tq-btn-outline" onClick={() => void submit()}>
-            Retry
+            {t('common:actions.retry')}
           </button>
         </div>
       )}

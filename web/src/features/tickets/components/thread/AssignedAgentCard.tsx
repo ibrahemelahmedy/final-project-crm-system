@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal } from '../../../../components/ui';
+import { useT } from '../../../../i18n';
 import type { Ticket, TicketMeta } from '../../model/ticket';
 import { useTicketAttributeMutation } from '../../hooks/useTicketAttributeMutation';
 import { httpStatus, serverMessage } from '../../model/apiError';
@@ -11,6 +12,7 @@ export function AssignedAgentCard({
   ticket: Ticket;
   meta: TicketMeta | undefined;
 }) {
+  const { t } = useT('conversation');
   const [open, setOpen] = useState(false);
   const [choice, setChoice] = useState<string>(
     ticket.assignee ? String(ticket.assignee.id) : ''
@@ -29,8 +31,8 @@ export function AssignedAgentCard({
         onError: (e) => {
           setError(
             httpStatus(e) === 403
-              ? 'Only the assigned agent or a Team Lead can reassign this ticket.'
-              : (serverMessage(e) ?? 'Could not reassign this ticket.')
+              ? t('agent.forbidden')
+              : (serverMessage(e) ?? t('agent.error'))
           );
         },
       }
@@ -39,14 +41,14 @@ export function AssignedAgentCard({
 
   return (
     <section>
-      <p className="meta-section-label">ASSIGNED AGENT</p>
+      <p className="meta-section-label">{t('section.assignedAgent')}</p>
       <div className="meta-card agent-card">
         <span className="thread-avatar thread-avatar--agent" style={{ inlineSize: 30, blockSize: 30 }} aria-hidden="true">
           {assignee?.initials ?? '—'}
         </span>
-        <span className="agent-card-name">{assignee?.name ?? 'Unassigned'}</span>
+        <span className="agent-card-name">{assignee?.name ?? t('agent.unassigned')}</span>
         <button type="button" className="link-btn" onClick={() => setOpen(true)}>
-          {assignee ? 'Reassign' : 'Assign'}
+          {assignee ? t('agent.reassign') : t('agent.assign')}
         </button>
       </div>
 
@@ -55,17 +57,17 @@ export function AssignedAgentCard({
           open={open}
           onClose={() => setOpen(false)}
           titleId="reassign-title"
-          title="Reassign ticket"
+          title={t('agent.reassignTitle')}
           width={360}
         >
           <div className="reassign-body">
-            <label htmlFor="reassign-select">Assign to</label>
+            <label htmlFor="reassign-select">{t('agent.assignTo')}</label>
             <select
               id="reassign-select"
               value={choice}
               onChange={(e) => setChoice(e.target.value)}
             >
-              <option value="">Unassigned</option>
+              <option value="">{t('agent.unassigned')}</option>
               {(meta?.agents ?? []).map((a) => (
                 <option key={a.value} value={a.value}>
                   {a.label}
@@ -79,7 +81,7 @@ export function AssignedAgentCard({
             )}
             <div className="modal-footer modal-footer-end">
               <button type="button" className="dt-btn dt-btn-outline fv" onClick={() => setOpen(false)}>
-                Cancel
+                {t('common:actions.cancel')}
               </button>
               <button
                 type="button"
@@ -87,7 +89,7 @@ export function AssignedAgentCard({
                 disabled={mutation.isPending}
                 onClick={submit}
               >
-                {mutation.isPending ? 'Saving…' : 'Save'}
+                {mutation.isPending ? t('common:actions.working') : t('common:actions.save')}
               </button>
             </div>
           </div>

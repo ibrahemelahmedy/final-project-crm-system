@@ -1,5 +1,6 @@
 import type { TicketStatus } from '../model/ticket';
 import { STATUS_FALLBACK_LABELS } from '../model/display';
+import { useT } from '../../../i18n';
 
 type Props = { status: TicketStatus; label?: string };
 
@@ -11,9 +12,10 @@ type Props = { status: TicketStatus; label?: string };
  * same grey chip in adjacent columns.
  */
 export function StatusBadge({ status, label }: Props) {
+  const { t } = useT('tickets');
   return (
     <span className={`tq-status tq-status-${status}`}>
-      {label ?? STATUS_FALLBACK_LABELS[status]}
+      {label ?? t(STATUS_FALLBACK_LABELS[status])}
     </span>
   );
 }

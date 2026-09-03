@@ -1,10 +1,12 @@
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm, useWatch, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { newTicketSchema, type NewTicketValues } from '../model/newTicketSchema';
+import { createNewTicketSchema, type NewTicketValues } from '../model/newTicketSchema';
 import type { TicketMeta, TicketPriority } from '../model/ticket';
+import { PRIORITY_FALLBACK_LABELS } from '../model/display';
 import { useCreateTicket } from '../hooks/useTicketMutations';
+import { useT } from '../../../i18n';
 import { CustomerCombobox } from './CustomerCombobox';
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
 const PRIORITIES: TicketPriority[] = ['low', 'normal', 'high', 'urgent'];
 
 export function NewTicketModal({ meta, onClose, onCreated }: Props) {
+  const { t } = useT('tickets');
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
@@ -31,7 +34,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<NewTicketValues>({
-    resolver: zodResolver(newTicketSchema),
+    resolver: zodResolver(useMemo(() => createNewTicketSchema(t), [t])),
     defaultValues: { subject: '', category: '', priority: 'normal', channel: 'email', description: '' },
   });
 
@@ -92,7 +95,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
           setError(field as keyof NewTicketValues, { message: messages[0] });
         }
       } else {
-        setError('root', { message: 'We could not create this ticket. Try again.' });
+        setError('root', { message: t('newTicket.createError') });
       }
     }
   });
@@ -107,9 +110,9 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
       <div ref={panelRef} className="tq-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <header className="tq-modal-head">
           <h2 id={titleId} className="tq-modal-title">
-            New Ticket
+            {t('newTicket.title')}
           </h2>
-          <button type="button" className="tq-modal-close" onClick={onClose} aria-label="Close dialog">
+          <button type="button" className="tq-modal-close" onClick={onClose} aria-label={t('newTicket.closeDialog')}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
@@ -125,7 +128,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <label className="tq-label" htmlFor="tq-subject">
-              Subject
+              {t('newTicket.subjectLabel')}
             </label>
             <input
               id="tq-subject"
@@ -147,7 +150,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <label className="tq-label" htmlFor="tq-customer">
-              Customer
+              {t('newTicket.customerLabel')}
             </label>
             <Controller
               control={control}
@@ -171,7 +174,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <label className="tq-label" htmlFor="tq-category">
-              Category
+              {t('newTicket.categoryLabel')}
             </label>
             <select
               id="tq-category"
@@ -179,7 +182,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
               aria-invalid={errors.category ? true : undefined}
               {...register('category')}
             >
-              <option value="">Select a category</option>
+              <option value="">{t('newTicket.selectCategory')}</option>
               {(meta?.categories ?? []).map((c) => (
                 <option key={c.value} value={c.value}>
                   {c.label}
@@ -191,7 +194,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <span className="tq-label" id="tq-priority-label">
-              Priority
+              {t('newTicket.priorityLabel')}
             </span>
             {/* A radiogroup with roving tabIndex — four independent buttons
                 would give a keyboard user four stops for one value. */}
@@ -221,7 +224,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
                       }
                     }}
                   >
-                    {p.charAt(0).toUpperCase() + p.slice(1)}
+                    {t(PRIORITY_FALLBACK_LABELS[p])}
                   </button>
                 );
               })}
@@ -230,7 +233,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <label className="tq-label" htmlFor="tq-channel">
-              Channel
+              {t('newTicket.channelLabel')}
             </label>
             <select id="tq-channel" className="tq-input" {...register('channel')}>
               {(meta?.channels ?? []).map((c) => (
@@ -243,7 +246,7 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
 
           <div className="tq-field">
             <label className="tq-label" htmlFor="tq-description">
-              Description
+              {t('newTicket.descriptionLabel')}
             </label>
             <textarea id="tq-description" className="tq-input tq-textarea" rows={4} {...register('description')} />
           </div>
@@ -251,19 +254,19 @@ export function NewTicketModal({ meta, onClose, onCreated }: Props) {
           {/* Inert by design: wiring it would invent file storage, virus
               scanning and a retention policy that no story owns. Deleting it
               would stop the modal matching the reviewed design. */}
-          <div className="tq-dropzone" aria-hidden="true" title="Coming soon">
+          <div className="tq-dropzone" aria-hidden="true" title={t('newTicket.dropzoneHint')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 16V4 M7 9l5-5 5 5 M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
             </svg>
-            <span>Drag files here or click to browse</span>
+            <span>{t('newTicket.dropzoneText')}</span>
           </div>
 
           <footer className="tq-modal-foot">
             <button type="button" className="tq-btn-outline" onClick={onClose}>
-              Cancel
+              {t('common:actions.cancel')}
             </button>
             <button type="submit" className="tq-btn-primary" disabled={isSubmitting || customerId === undefined}>
-              {isSubmitting ? 'Creating…' : 'Create Ticket'}
+              {isSubmitting ? t('newTicket.creating') : t('newTicket.create')}
             </button>
           </footer>
         </form>

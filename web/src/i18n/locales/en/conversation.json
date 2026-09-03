@@ -1,1 +1,92 @@
-{}
+{
+  "section": {
+    "activity": "ACTIVITY",
+    "classification": "CLASSIFICATION",
+    "customer": "CUSTOMER",
+    "assignedAgent": "ASSIGNED AGENT",
+    "ticketDetails": "TICKET DETAILS"
+  },
+  "activity": {
+    "empty": "No activity yet.",
+    "created": "{{who}} created the ticket",
+    "statusChanged": "{{who}} changed status to {{value}}",
+    "priorityChanged": "{{who}} changed priority to {{value}}",
+    "categoryChanged": "{{who}} changed category to {{value}}",
+    "assigned": "{{who}} assigned the ticket",
+    "unassigned": "{{who}} unassigned the ticket",
+    "reopened": "{{who}} reopened the ticket",
+    "replied": "{{who}} replied",
+    "generic": "{{who}} — {{event}}",
+    "deletedUser": "Deleted user"
+  },
+  "agent": {
+    "reassign": "Reassign",
+    "assign": "Assign",
+    "reassignTitle": "Reassign ticket",
+    "assignTo": "Assign to",
+    "unassigned": "Unassigned",
+    "forbidden": "Only the assigned agent or a Team Lead can reassign this ticket.",
+    "error": "Could not reassign this ticket."
+  },
+  "customer": {
+    "detailsUnavailable": "Contact details unavailable",
+    "since": "Customer since {{date}}"
+  },
+  "composerBadge": {
+    "title": "Replies are sent on the ticket's original channel",
+    "replyVia": "Reply via {{channel}}"
+  },
+  "note": {
+    "badge": "Internal note"
+  },
+  "messages": {
+    "loading": "Loading…",
+    "loadEarlier": "Load earlier messages",
+    "newMessageFrom": "New message from {{name}}",
+    "systemAuthor": "System",
+    "deletedAuthor": "a deleted user"
+  },
+  "composer": {
+    "replyRequired": "Write a reply before sending.",
+    "noteRequired": "Write a note before saving.",
+    "mode": "Composer mode",
+    "replyToCustomer": "Reply to customer",
+    "internalNote": "Internal note",
+    "notVisible": "Not visible to customer",
+    "noteLabel": "Internal note on ticket #{{id}}",
+    "replyLabel": "Reply to ticket #{{id}}",
+    "internalOnly": "Internal only · agents see this",
+    "addInternalNote": "Add internal note",
+    "send": "Send",
+    "notePlaceholder": "Add an internal note…",
+    "replyPlaceholder": "Type a reply…",
+    "noteFailed": "Couldn't save — your note is still here. Check your connection and retry.",
+    "replyFailed": "Your reply could not be sent."
+  },
+  "attribute": {
+    "current": "(current)"
+  },
+  "states": {
+    "loadingConversation": "Loading conversation",
+    "noMessagesTitle": "No messages yet",
+    "noMessagesBody": "This ticket was created without a message. Send the first reply to start the thread.",
+    "errorTitle": "This conversation could not be loaded",
+    "errorBody": "Something went wrong while loading this ticket.",
+    "forbiddenTitle": "You do not have access to this ticket",
+    "forbiddenAgentBody": "Ticket #{{id}} is assigned to another agent. Ask a Team Lead to reassign it, or open your own queue.",
+    "forbiddenGenericBody": "You do not have permission to view this ticket.",
+    "backToTickets": "Back to Tickets"
+  },
+  "meta": {
+    "changeStatus": "Change status",
+    "changePriority": "Change priority",
+    "notAllowed": "That change was not allowed."
+  },
+  "close": {
+    "confirmLabel": "Confirm closing ticket",
+    "title": "Close this ticket?",
+    "openTasksWarning_one": "{{count}} open task on this ticket will be cancelled.",
+    "openTasksWarning_other": "{{count}} open tasks on this ticket will be cancelled.",
+    "closeTicket": "Close ticket"
+  }
+}

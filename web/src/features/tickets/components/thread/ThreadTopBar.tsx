@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useT } from '../../../../i18n';
 
 function BackChevron() {
   // Mirrors under RTL by swapping the path — not scaleX(-1).
@@ -21,11 +22,12 @@ function BackChevron() {
 }
 
 export function ThreadTopBar({ id, subject }: { id: number; subject: string }) {
+  const { t } = useT('conversation');
   return (
     <div className="thread-topbar">
       <Link to="/tickets" className="thread-back">
         <BackChevron />
-        Back to Tickets
+        {t('states.backToTickets')}
       </Link>
       <span className="thread-topbar-divider" aria-hidden="true" />
       <span className="thread-topbar-id" dir="ltr">

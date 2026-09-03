@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { TicketMessage } from '../../model/ticketMessage';
+import { useT } from '../../../../i18n';
 import { Avatar } from './Avatar';
 import { MessageMeta } from './MessageMeta';
 
@@ -39,6 +40,7 @@ function renderBody(body: string, mentionNames: string[]): ReactNode {
  * `body` renders as plain text (`white-space: pre-wrap`) — never HTML.
  */
 export function MessageBubble({ message }: { message: TicketMessage }) {
+  const { t } = useT('conversation');
   const outbound = message.author_type === 'agent';
   const isNote = message.visibility === 'internal';
   const initials =
@@ -53,7 +55,7 @@ export function MessageBubble({ message }: { message: TicketMessage }) {
         channel={message.channel}
       />
       <div className="thread-body">
-        {isNote && <span className="note-badge">Internal note</span>}
+        {isNote && <span className="note-badge">{t('note.badge')}</span>}
         <MessageMeta message={message} />
         <div className={bubbleClass(message)}>{renderBody(message.body, mentionNames)}</div>
       </div>

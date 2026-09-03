@@ -8,6 +8,7 @@ import { useBulkTickets } from '../hooks/useTicketMutations';
 import { FACET_LABELS } from '../model/display';
 import { SORTABLE, type FacetKey } from '../model/ticketFilters';
 import type { TicketStatus } from '../model/ticket';
+import { useT } from '../../../i18n';
 import { TicketTable } from '../components/TicketTable';
 import { TicketQueueSkeleton } from '../components/TicketQueueSkeleton';
 import { TicketQueueEmpty } from '../components/TicketQueueEmpty';
@@ -21,8 +22,11 @@ import { Pagination } from '../components/Pagination';
 type SortKey = (typeof SORTABLE)[number];
 
 type PendingBulk = {
-  action: string;
+  kind: 'assign' | 'status' | 'close';
+  /** Assignee name, for the assign confirmation. */
   target?: string;
+  /** Translated status label, for the status confirmation. */
+  statusLabel?: string;
   tone: 'danger' | 'primary';
   payload:
     | { action: 'assign'; assigned_to: number | null }
@@ -30,6 +34,7 @@ type PendingBulk = {
 };
 
 export function TicketQueuePage() {
+  const { t } = useT('tickets');
   const { filters, setFilters, clearFilters, activeCount } = useTicketFilters();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -90,11 +95,11 @@ export function TicketQueuePage() {
   const activeLabels = useMemo(() => {
     const labels: string[] = [];
     for (const key of ['priority', 'status', 'channel', 'assigned_to', 'category'] as FacetKey[]) {
-      if (filters[key].length > 0) labels.push(`"${FACET_LABELS[key]}"`);
+      if (filters[key].length > 0) labels.push(`"${t(FACET_LABELS[key])}"`);
     }
     if (filters.q.trim()) labels.push(`"${filters.q.trim()}"`);
     return labels;
-  }, [filters]);
+  }, [filters, t]);
 
   const selectedRefs = useMemo(
     () => tickets.filter((t) => selected.includes(t.id)).map((t) => t.reference),
@@ -117,19 +122,30 @@ export function TicketQueuePage() {
 
   const total = query.data?.meta.total ?? 0;
 
+  const bulkCount = selected.length || report?.applied || 0;
+  const confirmTitle = !pending
+    ? ''
+    : pending.kind === 'assign'
+      ? t('bulk.confirmAssignTitle', { count: bulkCount, target: pending.target })
+      : pending.kind === 'status'
+        ? t('bulk.confirmStatusTitle', { count: bulkCount, status: pending.statusLabel })
+        : t('bulk.confirmCloseTitle', { count: bulkCount });
+  const confirmLabel = !pending
+    ? ''
+    : pending.kind === 'assign'
+      ? t('bulk.assign')
+      : pending.kind === 'status'
+        ? t('bulk.setStatusConfirmLabel')
+        : t('bulk.closeAction');
+
   return (
     <div className="tq-page">
       <header className="tq-page-head">
-        <h1 className="tq-page-title">Tickets</h1>
+        <h1 className="tq-page-title">{t('queue.title')}</h1>
         {/* "{total} tickets" only — nothing computes an SLA-breach count until
             Story 06, and a hardcoded number would be a lie on the product's
             most-viewed screen. */}
-        <p className="tq-page-subtitle">
-          <span dir="ltr" className="tq-ltr">
-            {total}
-          </span>{' '}
-          {total === 1 ? 'ticket' : 'tickets'}
-        </p>
+        <p className="tq-page-subtitle">{t('queue.ticketCount', { count: total })}</p>
       </header>
 
       {selected.length > 0 && (
@@ -139,7 +155,7 @@ export function TicketQueuePage() {
           statuses={meta?.statuses ?? []}
           onAssign={(agentId, agentName) =>
             setPending({
-              action: 'Assign',
+              kind: 'assign',
               target: agentName,
               tone: 'primary',
               payload: { action: 'assign', assigned_to: agentId },
@@ -147,14 +163,15 @@ export function TicketQueuePage() {
           }
           onChangeStatus={(status, label) =>
             setPending({
-              action: `Set ${label} for`,
+              kind: 'status',
+              statusLabel: label,
               tone: 'primary',
               payload: { action: 'status', status },
             })
           }
           onClose={() =>
             setPending({
-              action: 'Close',
+              kind: 'close',
               tone: 'danger',
               payload: { action: 'status', status: 'closed' },
             })
@@ -209,10 +226,9 @@ export function TicketQueuePage() {
 
       {pending && (
         <BulkConfirmDialog
-          action={pending.action}
-          count={selected.length || report?.applied || 0}
+          title={confirmTitle}
+          confirmLabel={confirmLabel}
           references={selectedRefs}
-          target={pending.target}
           tone={pending.tone}
           isPending={bulk.isPending}
           report={report}

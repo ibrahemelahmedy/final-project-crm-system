@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Option } from '../../model/ticket';
+import { useT } from '../../../../i18n';
 
 type Props = {
   title: string;
@@ -21,6 +22,7 @@ export function AttributePopover({
   onChoose,
   onClose,
 }: Props) {
+  const { t } = useT('conversation');
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -61,7 +63,7 @@ export function AttributePopover({
                 onClick={() => onChoose(opt.value)}
               >
                 {opt.label}
-                {isCurrent && <span className="tq-sr-only"> (current)</span>}
+                {isCurrent && <span className="tq-sr-only"> {t('attribute.current')}</span>}
               </button>
             </li>
           );

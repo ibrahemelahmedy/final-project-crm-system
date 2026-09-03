@@ -1,5 +1,6 @@
 import { useUiPreferences } from '../../../app/providers/UiPreferencesContext';
 import type { Paginated, Ticket } from '../model/ticket';
+import { useT } from '../../../i18n';
 
 type Props = {
   meta: Paginated<Ticket>['meta'];
@@ -30,6 +31,7 @@ function pageWindow(current: number, last: number): (number | 'ellipsis')[] {
 }
 
 export function Pagination({ meta, onPageChange }: Props) {
+  const { t } = useT('tickets');
   const { direction } = useUiPreferences();
   const rtl = direction === 'rtl';
 
@@ -40,18 +42,15 @@ export function Pagination({ meta, onPageChange }: Props) {
   const last = meta.last_page;
 
   return (
-    <nav className="tq-pagination" aria-label="Ticket queue pagination">
+    <nav className="tq-pagination" aria-label={t('queue.paginationLabel')}>
       {/* Straight from the server's meta — a client-computed range disagrees
           with the server the moment a row is created between requests. */}
       <p className="tq-pagination-summary">
-        Showing{' '}
-        <span dir="ltr" className="tq-ltr">
-          {meta.from ?? 0}–{meta.to ?? 0}
-        </span>{' '}
-        of{' '}
-        <span dir="ltr" className="tq-ltr">
-          {meta.total}
-        </span>
+        {t('common:table.showingRange', {
+          from: meta.from ?? 0,
+          to: meta.to ?? 0,
+          total: meta.total,
+        })}
       </p>
 
       <div className="tq-pagination-controls">
@@ -60,7 +59,7 @@ export function Pagination({ meta, onPageChange }: Props) {
           className="tq-page-btn"
           onClick={() => onPageChange(current - 1)}
           disabled={current <= 1}
-          aria-label="Previous page"
+          aria-label={t('common:table.previousPage')}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d={prevPath} />
@@ -95,7 +94,7 @@ export function Pagination({ meta, onPageChange }: Props) {
           className="tq-page-btn"
           onClick={() => onPageChange(current + 1)}
           disabled={current >= last}
-          aria-label="Next page"
+          aria-label={t('common:table.nextPage')}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d={nextPath} />

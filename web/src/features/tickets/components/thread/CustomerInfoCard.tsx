@@ -1,23 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useCustomer } from '../../../customers';
 import type { TicketParty } from '../../model/ticket';
+import { useT, formatDate } from '../../../../i18n';
 
-function monthYear(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return new Intl.DateTimeFormat(undefined, { month: 'short', year: 'numeric' }).format(d);
-}
+const MONTH_YEAR_OPTIONS = { month: 'short' as const, year: 'numeric' as const };
 
 /**
  * Sourced from GET /api/customers/{id} — not TicketResource.customer, which is
  * {id, name} only. Its own three states; a failed fetch never blanks the screen.
  */
 export function CustomerInfoCard({ customer }: { customer: TicketParty }) {
+  const { t } = useT('conversation');
   const query = useCustomer(customer.id);
 
   return (
     <section>
-      <p className="meta-section-label">CUSTOMER</p>
+      <p className="meta-section-label">{t('section.customer')}</p>
 
       {query.isPending ? (
         <div className="meta-card">
@@ -29,7 +27,7 @@ export function CustomerInfoCard({ customer }: { customer: TicketParty }) {
           <Link to={`/customers/${customer.id}`} className="customer-card-name">
             {customer.name}
           </Link>
-          <p className="customer-card-line">Contact details unavailable</p>
+          <p className="customer-card-line">{t('customer.detailsUnavailable')}</p>
         </div>
       ) : (
         <div className="meta-card customer-card">
@@ -46,7 +44,9 @@ export function CustomerInfoCard({ customer }: { customer: TicketParty }) {
                 {query.data.name}
               </Link>
               <p className="customer-card-since">
-                Customer since {monthYear(query.data.created_at)}
+                {t('customer.since', {
+                  date: formatDate(query.data.created_at, MONTH_YEAR_OPTIONS),
+                })}
               </p>
             </div>
           </div>

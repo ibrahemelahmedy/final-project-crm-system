@@ -3,8 +3,13 @@ import { z } from 'zod';
 // `.trim()` runs before `.min(1)`, mirroring the server's prepareForValidation().
 // The message string is identical on both sides so a user never sees two
 // different wordings for the same refusal.
-export const replySchema = z.object({
-  body: z.string().trim().min(1, 'Write a reply before sending.').max(10000),
-});
+//
+// Story 16 (WIS-17): `t` is required — the caller passes a `conversation`-namespace
+// translator so the refusal is localized.
+export function createReplySchema(t: (key: string) => string) {
+  return z.object({
+    body: z.string().trim().min(1, t('composer.replyRequired')).max(10000),
+  });
+}
 
-export type ReplyValues = z.infer<typeof replySchema>;
+export type ReplyValues = z.infer<ReturnType<typeof createReplySchema>>;

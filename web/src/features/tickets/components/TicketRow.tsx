@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Ticket } from '../model/ticket';
-import { formatAbsoluteTime, formatRelativeTime } from '../model/display';
+import { useT, formatDateTime, formatRelative } from '../../../i18n';
 import { ChannelIcon } from './ChannelIcon';
 import { PriorityBadge } from './PriorityBadge';
 import { StatusBadge } from './StatusBadge';
@@ -13,7 +13,16 @@ type Props = {
   onToggle: (id: number) => void;
 };
 
+const ABSOLUTE_TIME_OPTIONS = {
+  day: 'numeric' as const,
+  month: 'short' as const,
+  year: 'numeric' as const,
+  hour: 'numeric' as const,
+  minute: '2-digit' as const,
+};
+
 export function TicketRow({ ticket, zebra, selected, onToggle }: Props) {
+  const { t } = useT('tickets');
   return (
     // The row is NOT a link and has no click handler — there is no
     // /tickets/{id} route until Story 05, so it also carries no cursor:pointer.
@@ -28,7 +37,7 @@ export function TicketRow({ ticket, zebra, selected, onToggle }: Props) {
           className="tq-checkbox"
           checked={selected}
           onChange={() => onToggle(ticket.id)}
-          aria-label={`Select ticket ${ticket.reference}`}
+          aria-label={t('row.selectTicket', { reference: ticket.reference })}
         />
       </td>
 
@@ -48,8 +57,8 @@ export function TicketRow({ ticket, zebra, selected, onToggle }: Props) {
         <Link to={`/tickets/${ticket.id}`} className="tq-subject tq-subject-link" title={ticket.subject}>
           {ticket.subject}
         </Link>
-        <span className="tq-updated" title={formatAbsoluteTime(ticket.updated_at)}>
-          {formatRelativeTime(ticket.updated_at)}
+        <span className="tq-updated" title={formatDateTime(ticket.updated_at, ABSOLUTE_TIME_OPTIONS)}>
+          {formatRelative(ticket.updated_at)}
         </span>
       </td>
 
@@ -74,7 +83,7 @@ export function TicketRow({ ticket, zebra, selected, onToggle }: Props) {
             <span className="tq-assignee-name">{ticket.assignee.name}</span>
           </span>
         ) : (
-          <span className="tq-unassigned">Unassigned</span>
+          <span className="tq-unassigned">{t('unassigned')}</span>
         )}
       </td>
 

@@ -3,6 +3,7 @@ import type { TicketMeta } from '../model/ticket';
 import type { FacetKey, TicketFilters } from '../model/ticketFilters';
 import { FACET_LABELS } from '../model/display';
 import { FilterChip } from './FilterChip';
+import { useT } from '../../../i18n';
 
 type Props = {
   filters: TicketFilters;
@@ -13,8 +14,6 @@ type Props = {
   onClearAll: () => void;
 };
 
-const UNASSIGNED_OPTION = { value: 'unassigned', label: 'Unassigned' };
-
 export function FilterBar({
   filters,
   meta,
@@ -23,6 +22,8 @@ export function FilterBar({
   onSearchChange,
   onClearAll,
 }: Props) {
+  const { t } = useT('tickets');
+  const UNASSIGNED_OPTION = { value: 'unassigned', label: t('unassigned') };
   // The input is a local text buffer feeding a debounced URL write; the URL
   // remains the single source of truth for `q`. Re-syncing on every external
   // filters.q change is what keeps Back/Forward and Clear-all consistent with
@@ -60,7 +61,7 @@ export function FilterBar({
       {facets.map(({ key, options }) => (
         <FilterChip
           key={key}
-          label={FACET_LABELS[key]}
+          label={t(FACET_LABELS[key])}
           options={options}
           selected={filters[key]}
           onChange={(next) => onFacetChange(key, next)}
@@ -73,13 +74,13 @@ export function FilterBar({
         className="tq-search"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Search subjects…"
-        aria-label="Search ticket subjects"
+        placeholder={t('filter.searchPlaceholder')}
+        aria-label={t('filter.searchAriaLabel')}
       />
 
       {activeCount > 0 && (
         <button type="button" className="tq-clear-all" onClick={onClearAll}>
-          Clear all
+          {t('filter.clearAll')}
         </button>
       )}
     </div>

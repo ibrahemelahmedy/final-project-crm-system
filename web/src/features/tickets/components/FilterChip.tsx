@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import type { Option } from '../model/ticket';
+import { useT } from '../../../i18n';
 
 type Props = {
   label: string;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function FilterChip({ label, options, selected, onChange, onClear }: Props) {
+  const { t } = useT('tickets');
   const [open, setOpen] = useState(false);
   const chipRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -17,10 +19,13 @@ export function FilterChip({ label, options, selected, onChange, onClear }: Prop
 
   const active = selected.length > 0;
   const summary = !active
-    ? `${label}: All`
+    ? t('filter.summaryAll', { label })
     : selected.length === 1
-      ? `${label}: ${options.find((o) => o.value === selected[0])?.label ?? selected[0]}`
-      : `${label}: ${selected.length} selected`;
+      ? t('filter.summarySingle', {
+          label,
+          value: options.find((o) => o.value === selected[0])?.label ?? selected[0],
+        })
+      : t('filter.summarySelected', { label, count: selected.length });
 
   // Closes on Escape and on outside click, returning focus to the chip.
   useEffect(() => {
@@ -75,7 +80,7 @@ export function FilterChip({ label, options, selected, onChange, onClear }: Prop
           type="button"
           className="tq-chip-clear"
           onClick={onClear}
-          aria-label={`Clear ${label.toLowerCase()} filter`}
+          aria-label={t('filter.clearFilter', { label })}
         >
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <path d="M18 6L6 18M6 6l12 12" />
@@ -85,7 +90,7 @@ export function FilterChip({ label, options, selected, onChange, onClear }: Prop
 
       {open && (
         <div ref={popoverRef} id={listId} className="tq-popover" role="listbox" aria-multiselectable="true" aria-label={label}>
-          {options.length === 0 && <p className="tq-popover-empty">No options</p>}
+          {options.length === 0 && <p className="tq-popover-empty">{t('filter.noOptions')}</p>}
           {options.map((option) => (
             <label key={option.value} className="tq-popover-option" role="option" aria-selected={selected.includes(option.value)}>
               <input

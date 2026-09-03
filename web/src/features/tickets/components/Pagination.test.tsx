@@ -37,10 +37,14 @@ describe('Pagination', () => {
     expect(container.querySelector('.tq-pagination-summary')?.textContent).toContain('132');
   });
 
-  it('wraps the numerals so they do not reverse under rtl', () => {
+  it('renders the range as one interpolated sentence, not reassembled fragments', () => {
+    // Story 16 (WIS-17): "Showing … of …" is a single interpolated key so it
+    // reads correctly in Arabic; the numerals are a digit run the bidi
+    // algorithm keeps LTR on their own.
     const { container } = renderPagination(makeMeta());
-    const ltrSpans = container.querySelectorAll('.tq-pagination-summary [dir="ltr"]');
-    expect(ltrSpans.length).toBeGreaterThanOrEqual(2);
+    expect(container.querySelector('.tq-pagination-summary')?.textContent).toMatch(
+      /Showing\s*1–10\s*of\s*132/
+    );
   });
 
   it('marks the current page with aria-current and leaves it enabled', () => {
@@ -64,32 +68,22 @@ describe('Pagination', () => {
   });
 
   it('swaps the chevron paths under rtl', () => {
-    const ltr = renderPagination(makeMeta({ current_page: 5 }));
-    const prevLtr = screen
-      .getByRole('button', { name: 'Previous page' })
-      .querySelector('path')
-      ?.getAttribute('d');
-    const nextLtr = screen
-      .getByRole('button', { name: 'Next page' })
-      .querySelector('path')
-      ?.getAttribute('d');
+    // The prev/next buttons bracket the numbered page buttons; identify them by
+    // position so the assertion is locale-agnostic (their labels translate).
+    const chevronPaths = (container: HTMLElement) => {
+      const btns = container.querySelectorAll('.tq-pagination-controls > .tq-page-btn');
+      return {
+        prev: btns[0].querySelector('path')?.getAttribute('d'),
+        next: btns[btns.length - 1].querySelector('path')?.getAttribute('d'),
+      };
+    };
 
-    expect(prevLtr).toBe(PREV_LTR);
-    expect(nextLtr).toBe(NEXT_LTR);
+    const ltr = renderPagination(makeMeta({ current_page: 5 }));
+    expect(chevronPaths(ltr.container)).toEqual({ prev: PREV_LTR, next: NEXT_LTR });
     ltr.unmount();
 
-    renderPagination(makeMeta({ current_page: 5 }), { rtl: true });
-    const prevRtl = screen
-      .getByRole('button', { name: 'Previous page' })
-      .querySelector('path')
-      ?.getAttribute('d');
-    const nextRtl = screen
-      .getByRole('button', { name: 'Next page' })
-      .querySelector('path')
-      ?.getAttribute('d');
-
+    const rtl = renderPagination(makeMeta({ current_page: 5 }), { rtl: true });
     // The PATHS swap — a transform: scaleX(-1) would mirror the focus ring too.
-    expect(prevRtl).toBe(NEXT_LTR);
-    expect(nextRtl).toBe(PREV_LTR);
+    expect(chevronPaths(rtl.container)).toEqual({ prev: NEXT_LTR, next: PREV_LTR });
   });
 });

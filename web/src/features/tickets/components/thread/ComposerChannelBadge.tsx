@@ -1,5 +1,6 @@
 import type { TicketChannel } from '../../model/ticket';
 import { ChannelIcon } from '../ChannelIcon';
+import { useT } from '../../../../i18n';
 
 /**
  * Read-only indicator — no chevron, no picker (Product rules). Replies always
@@ -12,13 +13,14 @@ export function ComposerChannelBadge({
   channel: TicketChannel;
   label: string;
 }) {
+  const { t } = useT('conversation');
   return (
     <span
       className={`composer-channel${channel === 'whatsapp' ? ' composer-channel--wa' : ''}`}
-      title="Replies are sent on the ticket's original channel"
+      title={t('composerBadge.title')}
     >
       <ChannelIcon channel={channel} label={label} size={13} />
-      Reply via {label}
+      {t('composerBadge.replyVia', { channel: label })}
     </span>
   );
 }

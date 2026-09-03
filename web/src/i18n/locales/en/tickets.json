@@ -1,1 +1,141 @@
-{}
+{
+  "columns": {
+    "select": "Select",
+    "channel": "Channel",
+    "id": "ID",
+    "subject": "Subject",
+    "customer": "Customer",
+    "priority": "Priority",
+    "status": "Status",
+    "assignee": "Assignee",
+    "slaLeft": "SLA left"
+  },
+  "priority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "status": {
+    "open": "Open",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "closed": "Closed"
+  },
+  "channel": {
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "chat": "Live chat",
+    "sms": "SMS",
+    "web_form": "Web form"
+  },
+  "facets": {
+    "status": "Status",
+    "priority": "Priority",
+    "channel": "Channel",
+    "category": "Category",
+    "assigned_to": "Agent"
+  },
+  "unassigned": "Unassigned",
+  "queue": {
+    "title": "Tickets",
+    "ticketCount_one": "{{count}} ticket",
+    "ticketCount_other": "{{count}} tickets",
+    "tableCaption": "Ticket queue",
+    "paginationLabel": "Ticket queue pagination",
+    "selectAllOnPage": "Select all tickets on this page"
+  },
+  "newTicket": {
+    "title": "New Ticket",
+    "closeDialog": "Close dialog",
+    "subjectLabel": "Subject",
+    "customerLabel": "Customer",
+    "categoryLabel": "Category",
+    "priorityLabel": "Priority",
+    "channelLabel": "Channel",
+    "descriptionLabel": "Description",
+    "subjectRequired": "Subject is required",
+    "customerRequired": "Select a customer",
+    "selectCategory": "Select a category",
+    "dropzoneHint": "Coming soon",
+    "dropzoneText": "Drag files here or click to browse",
+    "creating": "Creating…",
+    "create": "Create Ticket",
+    "createError": "We could not create this ticket. Try again."
+  },
+  "bulk": {
+    "actionsLabel": "Bulk actions",
+    "assign": "Assign",
+    "assignTo": "Assign to",
+    "changeStatus": "Change Status",
+    "changeStatusTo": "Change status to",
+    "closeAction": "Close",
+    "setStatusConfirmLabel": "Set status",
+    "confirmAssignTitle_one": "Assign {{count}} ticket to {{target}}?",
+    "confirmAssignTitle_other": "Assign {{count}} tickets to {{target}}?",
+    "confirmStatusTitle_one": "Set {{status}} for {{count}} ticket?",
+    "confirmStatusTitle_other": "Set {{status}} for {{count}} tickets?",
+    "confirmCloseTitle_one": "Close {{count}} ticket?",
+    "confirmCloseTitle_other": "Close {{count}} tickets?",
+    "appliedCount_one": "Applied to {{count}} ticket.",
+    "appliedCount_other": "Applied to {{count}} tickets.",
+    "skippedCount_one": "{{count}} skipped — you do not have permission to change them.",
+    "skippedCount_other": "{{count}} skipped — you do not have permission to change them.",
+    "andMore_one": "{{list}} and {{count}} more",
+    "andMore_other": "{{list}} and {{count}} more",
+    "done": "Done"
+  },
+  "filter": {
+    "summaryAll": "{{label}}: All",
+    "summarySingle": "{{label}}: {{value}}",
+    "summarySelected_one": "{{label}}: {{count}} selected",
+    "summarySelected_other": "{{label}}: {{count}} selected",
+    "clearFilter": "Clear {{label}} filter",
+    "noOptions": "No options",
+    "searchPlaceholder": "Search subjects…",
+    "searchAriaLabel": "Search ticket subjects",
+    "clearAll": "Clear all"
+  },
+  "combobox": {
+    "searchCustomers": "Search customers…",
+    "customerResults": "Customer results",
+    "searching": "Searching…",
+    "noCustomersFound": "No customers found"
+  },
+  "sla": {
+    "notConfigured": "SLA not configured",
+    "noDueDate": "No due date",
+    "overdue": "{{time}} over",
+    "hourAbbrev": "h",
+    "minuteAbbrev": "m",
+    "breached": "SLA breached",
+    "atRisk": "SLA at risk",
+    "withinSla": "Within SLA"
+  },
+  "queueEmpty": {
+    "filteredTitle": "No tickets match your filters",
+    "orSeparator": " or ",
+    "removeFilters": "Try removing {{filters}} to see more results.",
+    "removeFilter": "Try removing a filter to see more results.",
+    "clearFiltersAction": "Clear filters",
+    "noTicketsTitle": "No tickets yet",
+    "noTicketsBody": "Tickets you or your team create will appear here.",
+    "newTicket": "New ticket"
+  },
+  "queueError": {
+    "forbidden": "You do not have access to this queue.",
+    "generic": "We could not load the ticket queue.",
+    "checkConnection": "Check your connection and try again."
+  },
+  "queueSkeleton": {
+    "loading": "Loading tickets"
+  },
+  "row": {
+    "selectTicket": "Select ticket {{reference}}"
+  },
+  "detail": {
+    "insertKbArticle": "Insert KB article",
+    "insertKbHeading": "Insert a Knowledge Base article",
+    "insertQuickReply": "Insert quick reply"
+  }
+}

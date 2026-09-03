@@ -6,9 +6,10 @@
     "src/features/auth",
     "src/features/sla-rules",
     "src/features/portal",
-    "src/components"
+    "src/components",
+    "src/features/tickets"
   ],
-  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) is the retrofit pass closing this list — it adds one root here as its literals move into that root's i18n namespace. Pending: src/features/{customers,tickets,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat}.",
+  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) is the retrofit pass closing this list — it adds one root here as its literals move into that root's i18n namespace. Pending: src/features/{customers,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat}.",
   "literals": [
     { "value": "⌘K", "reason": "Keyboard shortcut badge — must not mirror or translate (brief.md, Story 02)." },
     { "value": "Wisal", "reason": "Product name — rendered from the `brand` key where localized; the bare token is exempt." },
@@ -18,6 +19,7 @@
   ],
   "patterns": [
     { "value": "^[0-9\\s.,:/#%+()-]+$", "reason": "Pure numbers / punctuation / ISO-like tokens carry no translatable prose." },
-    { "value": "^var\\(--[a-z0-9-]+(,\\s*[^)]+)?\\)$", "reason": "CSS custom-property reference in an inline style value — a style token, not user-facing text." }
+    { "value": "^var\\(--[a-z0-9-]+(,\\s*[^)]+)?\\)$", "reason": "CSS custom-property reference in an inline style value — a style token, not user-facing text." },
+    { "value": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9_]+)+$", "reason": "Story 16 (WIS-17): dotted i18n key reference in a fallback-label / key map (e.g. `priority.low`) — resolved through t(), not user-facing prose." }
   ]
 }

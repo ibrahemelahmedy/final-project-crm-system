@@ -1,3 +1,5 @@
+import { useT } from '../../../i18n';
+
 type Props = {
   error: unknown;
   onRetry: () => void;
@@ -18,11 +20,9 @@ function statusOf(error: unknown): number | undefined {
 }
 
 export function TicketQueueError({ error, onRetry }: Props) {
+  const { t } = useT('tickets');
   const status = statusOf(error);
-  const message =
-    status === 403
-      ? 'You do not have access to this queue.'
-      : 'We could not load the ticket queue.';
+  const message = status === 403 ? t('queueError.forbidden') : t('queueError.generic');
 
   return (
     <div className="tq-empty" role="alert">
@@ -33,9 +33,9 @@ export function TicketQueueError({ error, onRetry }: Props) {
         </svg>
       </div>
       <h2 className="tq-empty-title">{message}</h2>
-      <p className="tq-empty-body">Check your connection and try again.</p>
+      <p className="tq-empty-body">{t('queueError.checkConnection')}</p>
       <button type="button" className="tq-btn-primary" onClick={onRetry}>
-        Retry
+        {t('common:actions.retry')}
       </button>
     </div>
   );

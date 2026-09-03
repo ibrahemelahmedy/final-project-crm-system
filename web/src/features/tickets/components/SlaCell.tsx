@@ -1,4 +1,5 @@
 import type { TicketSla } from '../model/ticket';
+import { useT } from '../../../i18n';
 
 type Props = { sla: TicketSla };
 
@@ -10,19 +11,23 @@ type Props = { sla: TicketSla };
 // The three risk branches below are written now and unreachable until Story 06
 // lands, so that story changes only the API, never this component.
 
-function formatMinutes(minutes: number): string {
-  const abs = Math.abs(minutes);
-  const hours = Math.floor(abs / 60);
-  const mins = abs % 60;
-  if (hours === 0) return `${mins}m`;
-  if (mins === 0) return `${hours}h`;
-  return `${hours}h ${mins}m`;
-}
-
 export function SlaCell({ sla }: Props) {
+  const { t } = useT('tickets');
+
+  const formatMinutes = (minutes: number): string => {
+    const abs = Math.abs(minutes);
+    const hours = Math.floor(abs / 60);
+    const mins = abs % 60;
+    const h = t('sla.hourAbbrev');
+    const m = t('sla.minuteAbbrev');
+    if (hours === 0) return `${mins}${m}`;
+    if (mins === 0) return `${hours}${h}`;
+    return `${hours}${h} ${mins}${m}`;
+  };
+
   if (sla.risk === null) {
     return (
-      <span className="tq-sla tq-sla-none" aria-label="SLA not configured">
+      <span className="tq-sla tq-sla-none" aria-label={t('sla.notConfigured')}>
         —
       </span>
     );
@@ -30,10 +35,19 @@ export function SlaCell({ sla }: Props) {
 
   const left = sla.minutes_left;
   // Each branch renders TEXT, not just colour — brief.md line 196.
-  const text = left === null ? 'No due date' : left < 0 ? `${formatMinutes(left)} over` : formatMinutes(left);
+  const text =
+    left === null
+      ? t('sla.noDueDate')
+      : left < 0
+        ? t('sla.overdue', { time: formatMinutes(left) })
+        : formatMinutes(left);
   const risk = sla.risk;
   const label =
-    risk === 'breached' ? 'SLA breached' : risk === 'at_risk' ? 'SLA at risk' : 'Within SLA';
+    risk === 'breached'
+      ? t('sla.breached')
+      : risk === 'at_risk'
+        ? t('sla.atRisk')
+        : t('sla.withinSla');
 
   return (
     <span className={`tq-sla tq-sla-${risk}`} title={label}>

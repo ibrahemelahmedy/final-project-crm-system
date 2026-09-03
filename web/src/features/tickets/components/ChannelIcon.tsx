@@ -1,5 +1,6 @@
 import type { TicketChannel } from '../model/ticket';
 import { CHANNEL_FALLBACK_LABELS, CHANNEL_ICON_PATHS } from '../model/display';
+import { useT } from '../../../i18n';
 
 type Props = { channel: TicketChannel; label?: string; size?: number };
 
@@ -9,7 +10,8 @@ type Props = { channel: TicketChannel; label?: string; size?: number };
  * label is what identifies the channel.
  */
 export function ChannelIcon({ channel, label, size = 15 }: Props) {
-  const name = label ?? CHANNEL_FALLBACK_LABELS[channel];
+  const { t } = useT('tickets');
+  const name = label ?? t(CHANNEL_FALLBACK_LABELS[channel]);
   return (
     <svg
       className="tq-channel-icon"

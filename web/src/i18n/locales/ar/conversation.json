@@ -1,1 +1,96 @@
-{}
+{
+  "section": {
+    "activity": "النشاط",
+    "classification": "التصنيف",
+    "customer": "العميل",
+    "assignedAgent": "الوكيل المُسنَد",
+    "ticketDetails": "تفاصيل التذكرة"
+  },
+  "activity": {
+    "empty": "لا يوجد نشاط بعد.",
+    "created": "{{who}} أنشأ التذكرة",
+    "statusChanged": "{{who}} غيّر الحالة إلى {{value}}",
+    "priorityChanged": "{{who}} غيّر الأولوية إلى {{value}}",
+    "categoryChanged": "{{who}} غيّر الفئة إلى {{value}}",
+    "assigned": "{{who}} أسند التذكرة",
+    "unassigned": "{{who}} ألغى إسناد التذكرة",
+    "reopened": "{{who}} أعاد فتح التذكرة",
+    "replied": "{{who}} ردّ",
+    "generic": "{{who}} — {{event}}",
+    "deletedUser": "مستخدم محذوف"
+  },
+  "agent": {
+    "reassign": "إعادة إسناد",
+    "assign": "إسناد",
+    "reassignTitle": "إعادة إسناد التذكرة",
+    "assignTo": "إسناد إلى",
+    "unassigned": "غير مُسندة",
+    "forbidden": "يمكن فقط للوكيل المُسنَد أو قائد الفريق إعادة إسناد هذه التذكرة.",
+    "error": "تعذّرت إعادة إسناد هذه التذكرة."
+  },
+  "customer": {
+    "detailsUnavailable": "تفاصيل الاتصال غير متاحة",
+    "since": "عميل منذ {{date}}"
+  },
+  "composerBadge": {
+    "title": "تُرسَل الردود عبر قناة التذكرة الأصلية",
+    "replyVia": "الرد عبر {{channel}}"
+  },
+  "note": {
+    "badge": "ملاحظة داخلية"
+  },
+  "messages": {
+    "loading": "جارٍ التحميل…",
+    "loadEarlier": "تحميل الرسائل الأقدم",
+    "newMessageFrom": "رسالة جديدة من {{name}}",
+    "systemAuthor": "النظام",
+    "deletedAuthor": "مستخدم محذوف"
+  },
+  "composer": {
+    "replyRequired": "اكتب رداً قبل الإرسال.",
+    "noteRequired": "اكتب ملاحظة قبل الحفظ.",
+    "mode": "وضع المحرّر",
+    "replyToCustomer": "الرد على العميل",
+    "internalNote": "ملاحظة داخلية",
+    "notVisible": "غير مرئية للعميل",
+    "noteLabel": "ملاحظة داخلية على التذكرة رقم {{id}}",
+    "replyLabel": "الرد على التذكرة رقم {{id}}",
+    "internalOnly": "داخلي فقط · يراه الوكلاء",
+    "addInternalNote": "إضافة ملاحظة داخلية",
+    "send": "إرسال",
+    "notePlaceholder": "أضف ملاحظة داخلية…",
+    "replyPlaceholder": "اكتب رداً…",
+    "noteFailed": "تعذّر الحفظ — ملاحظتك ما زالت هنا. تحقّق من اتصالك وأعد المحاولة.",
+    "replyFailed": "تعذّر إرسال ردّك."
+  },
+  "attribute": {
+    "current": "(الحالي)"
+  },
+  "states": {
+    "loadingConversation": "جارٍ تحميل المحادثة",
+    "noMessagesTitle": "لا توجد رسائل بعد",
+    "noMessagesBody": "أُنشئت هذه التذكرة دون رسالة. أرسل أول رد لبدء المحادثة.",
+    "errorTitle": "تعذّر تحميل هذه المحادثة",
+    "errorBody": "حدث خطأ ما أثناء تحميل هذه التذكرة.",
+    "forbiddenTitle": "لا تملك صلاحية الوصول إلى هذه التذكرة",
+    "forbiddenAgentBody": "التذكرة رقم {{id}} مُسنَدة إلى وكيل آخر. اطلب من قائد الفريق إعادة إسنادها، أو افتح قائمتك الخاصة.",
+    "forbiddenGenericBody": "لا تملك صلاحية عرض هذه التذكرة.",
+    "backToTickets": "العودة إلى التذاكر"
+  },
+  "meta": {
+    "changeStatus": "تغيير الحالة",
+    "changePriority": "تغيير الأولوية",
+    "notAllowed": "هذا التغيير غير مسموح."
+  },
+  "close": {
+    "confirmLabel": "تأكيد إغلاق التذكرة",
+    "title": "إغلاق هذه التذكرة؟",
+    "openTasksWarning_zero": "لن تُلغى أي مهام على هذه التذكرة.",
+    "openTasksWarning_one": "سيتم إلغاء مهمة مفتوحة واحدة على هذه التذكرة.",
+    "openTasksWarning_two": "سيتم إلغاء مهمتين مفتوحتين على هذه التذكرة.",
+    "openTasksWarning_few": "سيتم إلغاء {{count}} مهام مفتوحة على هذه التذكرة.",
+    "openTasksWarning_many": "سيتم إلغاء {{count}} مهمة مفتوحة على هذه التذكرة.",
+    "openTasksWarning_other": "سيتم إلغاء {{count}} مهمة مفتوحة على هذه التذكرة.",
+    "closeTicket": "إغلاق التذكرة"
+  }
+}

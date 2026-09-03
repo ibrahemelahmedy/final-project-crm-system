@@ -1,1 +1,173 @@
-{}
+{
+  "columns": {
+    "select": "تحديد",
+    "channel": "القناة",
+    "id": "الرقم",
+    "subject": "الموضوع",
+    "customer": "العميل",
+    "priority": "الأولوية",
+    "status": "الحالة",
+    "assignee": "المسؤول",
+    "slaLeft": "الوقت المتبقي لمستوى الخدمة"
+  },
+  "priority": {
+    "low": "منخفضة",
+    "normal": "عادية",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+  "status": {
+    "open": "مفتوحة",
+    "pending": "قيد الانتظار",
+    "resolved": "محلولة",
+    "closed": "مغلقة"
+  },
+  "channel": {
+    "email": "البريد الإلكتروني",
+    "whatsapp": "واتساب",
+    "chat": "دردشة مباشرة",
+    "sms": "رسالة نصية",
+    "web_form": "نموذج الموقع"
+  },
+  "facets": {
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "channel": "القناة",
+    "category": "الفئة",
+    "assigned_to": "الوكيل"
+  },
+  "unassigned": "غير مُسندة",
+  "queue": {
+    "title": "التذاكر",
+    "ticketCount_zero": "لا توجد تذاكر",
+    "ticketCount_one": "تذكرة واحدة",
+    "ticketCount_two": "تذكرتان",
+    "ticketCount_few": "{{count}} تذاكر",
+    "ticketCount_many": "{{count}} تذكرة",
+    "ticketCount_other": "{{count}} تذكرة",
+    "tableCaption": "قائمة التذاكر",
+    "paginationLabel": "تصفّح قائمة التذاكر",
+    "selectAllOnPage": "تحديد كل التذاكر في هذه الصفحة"
+  },
+  "newTicket": {
+    "title": "تذكرة جديدة",
+    "closeDialog": "إغلاق الحوار",
+    "subjectLabel": "الموضوع",
+    "customerLabel": "العميل",
+    "categoryLabel": "الفئة",
+    "priorityLabel": "الأولوية",
+    "channelLabel": "القناة",
+    "descriptionLabel": "الوصف",
+    "subjectRequired": "الموضوع مطلوب",
+    "customerRequired": "اختر عميلاً",
+    "selectCategory": "اختر فئة",
+    "dropzoneHint": "قريباً",
+    "dropzoneText": "اسحب الملفات هنا أو انقر للاستعراض",
+    "creating": "جارٍ الإنشاء…",
+    "create": "إنشاء تذكرة",
+    "createError": "تعذّر إنشاء هذه التذكرة. حاول مرة أخرى."
+  },
+  "bulk": {
+    "actionsLabel": "إجراءات جماعية",
+    "assign": "إسناد",
+    "assignTo": "إسناد إلى",
+    "changeStatus": "تغيير الحالة",
+    "changeStatusTo": "تغيير الحالة إلى",
+    "closeAction": "إغلاق",
+    "setStatusConfirmLabel": "تعيين الحالة",
+    "confirmAssignTitle_zero": "إسناد {{count}} تذكرة إلى {{target}}؟",
+    "confirmAssignTitle_one": "إسناد تذكرة واحدة إلى {{target}}؟",
+    "confirmAssignTitle_two": "إسناد تذكرتين إلى {{target}}؟",
+    "confirmAssignTitle_few": "إسناد {{count}} تذاكر إلى {{target}}؟",
+    "confirmAssignTitle_many": "إسناد {{count}} تذكرة إلى {{target}}؟",
+    "confirmAssignTitle_other": "إسناد {{count}} تذكرة إلى {{target}}؟",
+    "confirmStatusTitle_zero": "تعيين {{status}} لـ {{count}} تذكرة؟",
+    "confirmStatusTitle_one": "تعيين {{status}} لتذكرة واحدة؟",
+    "confirmStatusTitle_two": "تعيين {{status}} لتذكرتين؟",
+    "confirmStatusTitle_few": "تعيين {{status}} لـ {{count}} تذاكر؟",
+    "confirmStatusTitle_many": "تعيين {{status}} لـ {{count}} تذكرة؟",
+    "confirmStatusTitle_other": "تعيين {{status}} لـ {{count}} تذكرة؟",
+    "confirmCloseTitle_zero": "إغلاق {{count}} تذكرة؟",
+    "confirmCloseTitle_one": "إغلاق تذكرة واحدة؟",
+    "confirmCloseTitle_two": "إغلاق تذكرتين؟",
+    "confirmCloseTitle_few": "إغلاق {{count}} تذاكر؟",
+    "confirmCloseTitle_many": "إغلاق {{count}} تذكرة؟",
+    "confirmCloseTitle_other": "إغلاق {{count}} تذكرة؟",
+    "appliedCount_zero": "لم يُطبَّق على أي تذكرة.",
+    "appliedCount_one": "طُبِّق على تذكرة واحدة.",
+    "appliedCount_two": "طُبِّق على تذكرتين.",
+    "appliedCount_few": "طُبِّق على {{count}} تذاكر.",
+    "appliedCount_many": "طُبِّق على {{count}} تذكرة.",
+    "appliedCount_other": "طُبِّق على {{count}} تذكرة.",
+    "skippedCount_zero": "لم يتم تخطي أي تذكرة.",
+    "skippedCount_one": "تم تخطي تذكرة واحدة — لا تملك صلاحية تغييرها.",
+    "skippedCount_two": "تم تخطي تذكرتين — لا تملك صلاحية تغييرهما.",
+    "skippedCount_few": "تم تخطي {{count}} تذاكر — لا تملك صلاحية تغييرها.",
+    "skippedCount_many": "تم تخطي {{count}} تذكرة — لا تملك صلاحية تغييرها.",
+    "skippedCount_other": "تم تخطي {{count}} تذكرة — لا تملك صلاحية تغييرها.",
+    "andMore_zero": "{{list}}",
+    "andMore_one": "{{list}} وواحدة أخرى",
+    "andMore_two": "{{list}} واثنتان أخريان",
+    "andMore_few": "{{list}} و{{count}} أخرى",
+    "andMore_many": "{{list}} و{{count}} أخرى",
+    "andMore_other": "{{list}} و{{count}} أخرى",
+    "done": "تم"
+  },
+  "filter": {
+    "summaryAll": "{{label}}: الكل",
+    "summarySingle": "{{label}}: {{value}}",
+    "summarySelected_zero": "{{label}}: لا شيء محدد",
+    "summarySelected_one": "{{label}}: عنصر واحد محدد",
+    "summarySelected_two": "{{label}}: عنصران محددان",
+    "summarySelected_few": "{{label}}: {{count}} عناصر محددة",
+    "summarySelected_many": "{{label}}: {{count}} عنصراً محدداً",
+    "summarySelected_other": "{{label}}: {{count}} عنصر محدد",
+    "clearFilter": "إلغاء عامل تصفية {{label}}",
+    "noOptions": "لا توجد خيارات",
+    "searchPlaceholder": "ابحث في الموضوعات…",
+    "searchAriaLabel": "ابحث في موضوعات التذاكر",
+    "clearAll": "مسح الكل"
+  },
+  "combobox": {
+    "searchCustomers": "ابحث عن العملاء…",
+    "customerResults": "نتائج العملاء",
+    "searching": "جارٍ البحث…",
+    "noCustomersFound": "لم يُعثر على عملاء"
+  },
+  "sla": {
+    "notConfigured": "مستوى الخدمة غير مُهيّأ",
+    "noDueDate": "لا يوجد موعد استحقاق",
+    "overdue": "{{time}} متأخر",
+    "hourAbbrev": "س",
+    "minuteAbbrev": "د",
+    "breached": "تم خرق مستوى الخدمة",
+    "atRisk": "مستوى الخدمة معرّض للخطر",
+    "withinSla": "ضمن مستوى الخدمة"
+  },
+  "queueEmpty": {
+    "filteredTitle": "لا توجد تذاكر تطابق عوامل التصفية",
+    "orSeparator": " أو ",
+    "removeFilters": "جرّب إزالة {{filters}} لرؤية المزيد من النتائج.",
+    "removeFilter": "جرّب إزالة عامل تصفية لرؤية المزيد من النتائج.",
+    "clearFiltersAction": "مسح عوامل التصفية",
+    "noTicketsTitle": "لا توجد تذاكر بعد",
+    "noTicketsBody": "ستظهر هنا التذاكر التي تنشئها أنت أو فريقك.",
+    "newTicket": "تذكرة جديدة"
+  },
+  "queueError": {
+    "forbidden": "لا تملك صلاحية الوصول إلى هذه القائمة.",
+    "generic": "تعذّر تحميل قائمة التذاكر.",
+    "checkConnection": "تحقّق من اتصالك وحاول مرة أخرى."
+  },
+  "queueSkeleton": {
+    "loading": "جارٍ تحميل التذاكر"
+  },
+  "row": {
+    "selectTicket": "تحديد التذكرة {{reference}}"
+  },
+  "detail": {
+    "insertKbArticle": "إدراج مقالة من قاعدة المعرفة",
+    "insertKbHeading": "إدراج مقالة من قاعدة المعرفة",
+    "insertQuickReply": "إدراج رد سريع"
+  }
+}

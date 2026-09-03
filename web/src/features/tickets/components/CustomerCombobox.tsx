@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useCustomerSearch } from '../../customers';
+import { useT } from '../../../i18n';
 
 type Props = {
   /** Must match the <label for> of the field wrapping this control. */
@@ -17,6 +18,7 @@ type Props = {
  * It submits customer_id, NEVER a name string.
  */
 export function CustomerCombobox({ id, value, onChange, invalid, describedBy }: Props) {
+  const { t } = useT('tickets');
   const [text, setText] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -75,7 +77,7 @@ export function CustomerCombobox({ id, value, onChange, invalid, describedBy }: 
         aria-invalid={invalid || undefined}
         aria-describedby={describedBy}
         value={text}
-        placeholder="Search customers…"
+        placeholder={t('combobox.searchCustomers')}
         onChange={(e) => {
           setText(e.target.value);
           setOpen(true);
@@ -89,10 +91,10 @@ export function CustomerCombobox({ id, value, onChange, invalid, describedBy }: 
       />
 
       {open && (
-        <ul id={listId} className="tq-combobox-list" role="listbox" aria-label="Customer results">
-          {isFetching && <li className="tq-combobox-empty">Searching…</li>}
+        <ul id={listId} className="tq-combobox-list" role="listbox" aria-label={t('combobox.customerResults')}>
+          {isFetching && <li className="tq-combobox-empty">{t('combobox.searching')}</li>}
           {!isFetching && results.length === 0 && text.trim() !== '' && (
-            <li className="tq-combobox-empty">No customers found</li>
+            <li className="tq-combobox-empty">{t('combobox.noCustomersFound')}</li>
           )}
           {results.map((customer, index) => (
             <li

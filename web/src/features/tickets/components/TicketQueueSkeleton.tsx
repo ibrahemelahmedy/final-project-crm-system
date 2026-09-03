@@ -1,4 +1,5 @@
 import { COLUMNS } from '../model/columns';
+import { useT } from '../../../i18n';
 
 /**
  * From WisalTicketQueue-LoadingState.dc.html lines 79–105, with one deliberate
@@ -11,9 +12,10 @@ import { COLUMNS } from '../model/columns';
 const BAR_WIDTHS = ['16px', '15px', '44px', '80%', '70%', '60px', '70px', '80px', '50px'];
 
 export function TicketQueueSkeleton({ rows = 5 }: { rows?: number }) {
+  const { t } = useT('tickets');
   return (
     <div className="tq-skeleton" role="status" aria-busy="true">
-      <span className="tq-sr-only">Loading tickets</span>
+      <span className="tq-sr-only">{t('queueSkeleton.loading')}</span>
 
       <div className="tq-sk-head">
         <span className="tq-sk tq-sk-title" />

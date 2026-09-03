@@ -4,6 +4,7 @@ import { ArticlePickerPanel } from '../../knowledge-base';
 import { TicketCsatPanel } from '../../csat';
 import { QuickReplyPicker } from '../../agent-productivity';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useTicketDetail } from '../hooks/useTicketDetail';
 import { useTicketMessages, flattenChronological } from '../hooks/useTicketMessages';
 import { useTicketEvents } from '../hooks/useTicketEvents';
@@ -23,6 +24,7 @@ import {
 } from '../components/thread/ThreadStates';
 
 export function TicketDetailPage() {
+  const { t } = useT('tickets');
   const { ticketId } = useParams();
   const id = Number(ticketId);
   const { user } = useAuth();
@@ -112,12 +114,12 @@ export function TicketDetailPage() {
                   aria-expanded={pickerOpen}
                   onClick={() => setPickerOpen((open) => !open)}
                 >
-                  Insert KB article
+                  {t('detail.insertKbArticle')}
                 </button>
                 {pickerOpen && (
                   <ArticlePickerPanel
                     autoFocus
-                    heading="Insert a Knowledge Base article"
+                    heading={t('detail.insertKbHeading')}
                     onClose={() => setPickerOpen(false)}
                     onInsert={(markdown) => insertAtCaretRef.current?.(markdown)}
                   />
@@ -128,7 +130,7 @@ export function TicketDetailPage() {
                   aria-expanded={quickReplyOpen}
                   onClick={() => setQuickReplyOpen((open) => !open)}
                 >
-                  Insert quick reply
+                  {t('detail.insertQuickReply')}
                 </button>
                 {quickReplyOpen && (
                   <QuickReplyPicker

@@ -1,17 +1,21 @@
 import type { TicketMessage } from '../../model/ticketMessage';
-import { formatAbsoluteTime } from '../../model/display';
+import { formatDateTime } from '../../../../i18n';
 import { ChannelIcon } from '../ChannelIcon';
 
-function shortTime(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return new Intl.DateTimeFormat(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(d);
-}
+const ABSOLUTE_TIME_OPTIONS = {
+  day: 'numeric' as const,
+  month: 'short' as const,
+  year: 'numeric' as const,
+  hour: 'numeric' as const,
+  minute: '2-digit' as const,
+};
+
+const SHORT_TIME_OPTIONS = {
+  month: 'short' as const,
+  day: 'numeric' as const,
+  hour: 'numeric' as const,
+  minute: '2-digit' as const,
+};
 
 export function MessageMeta({ message }: { message: TicketMessage }) {
   const { author_type, author, is_mine, channel, channel_label } = message;
@@ -37,10 +41,10 @@ export function MessageMeta({ message }: { message: TicketMessage }) {
           <ChannelIcon channel={channel} label={channel_label} size={13} />
         </span>
       )}
-      <span className="thread-meta-time" title={formatAbsoluteTime(message.created_at)}>
+      <span className="thread-meta-time" title={formatDateTime(message.created_at, ABSOLUTE_TIME_OPTIONS)}>
         {author_type !== 'system' && `${channel_label} · `}
         <span dir="ltr" style={{ display: 'inline-block' }}>
-          {shortTime(message.created_at)}
+          {formatDateTime(message.created_at, SHORT_TIME_OPTIONS)}
         </span>
       </span>
     </div>

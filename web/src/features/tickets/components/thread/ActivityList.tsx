@@ -1,38 +1,41 @@
 import type { TicketEvent } from '../../model/ticket';
-import { formatAbsoluteTime, formatRelativeTime } from '../../model/display';
+import { useT, formatDateTime, formatRelative } from '../../../../i18n';
 
-function sentence(event: TicketEvent): string {
-  const who = event.actor?.name ?? 'Deleted user';
-  switch (event.event) {
-    case 'created':
-      return `${who} created the ticket`;
-    case 'status_changed':
-      return `${who} changed status to ${event.new_value}`;
-    case 'priority_changed':
-      return `${who} changed priority to ${event.new_value}`;
-    case 'category_changed':
-      return `${who} changed category to ${event.new_value}`;
-    case 'assigned':
-      return `${who} assigned the ticket`;
-    case 'unassigned':
-      return `${who} unassigned the ticket`;
-    case 'reopened':
-      return `${who} reopened the ticket`;
-    case 'replied':
-      return `${who} replied`;
-    default:
-      return `${who} — ${event.event}`;
-  }
-}
+const ABSOLUTE_TIME_OPTIONS = {
+  day: 'numeric' as const,
+  month: 'short' as const,
+  year: 'numeric' as const,
+  hour: 'numeric' as const,
+  minute: '2-digit' as const,
+};
+
+const EVENT_KEYS: Record<string, string> = {
+  created: 'activity.created',
+  status_changed: 'activity.statusChanged',
+  priority_changed: 'activity.priorityChanged',
+  category_changed: 'activity.categoryChanged',
+  assigned: 'activity.assigned',
+  unassigned: 'activity.unassigned',
+  reopened: 'activity.reopened',
+  replied: 'activity.replied',
+};
 
 export function ActivityList({ events }: { events: TicketEvent[] }) {
+  const { t } = useT('conversation');
   const recent = events.slice(0, 10);
+
+  const sentence = (event: TicketEvent): string => {
+    const who = event.actor?.name ?? t('activity.deletedUser');
+    const key = EVENT_KEYS[event.event];
+    if (key) return t(key, { who, value: event.new_value });
+    return t('activity.generic', { who, event: event.event });
+  };
 
   return (
     <section>
-      <p className="meta-section-label">ACTIVITY</p>
+      <p className="meta-section-label">{t('section.activity')}</p>
       {recent.length === 0 ? (
-        <p className="customer-card-line">No activity yet.</p>
+        <p className="customer-card-line">{t('activity.empty')}</p>
       ) : (
         <ol className="activity-list">
           {recent.map((event) => (
@@ -41,9 +44,9 @@ export function ActivityList({ events }: { events: TicketEvent[] }) {
               <time
                 className="activity-time"
                 dateTime={event.created_at}
-                title={formatAbsoluteTime(event.created_at)}
+                title={formatDateTime(event.created_at, ABSOLUTE_TIME_OPTIONS)}
               >
-                {formatRelativeTime(event.created_at)}
+                {formatRelative(event.created_at)}
               </time>
             </li>
           ))}

@@ -1,7 +1,9 @@
+import { useT } from '../../../i18n';
+
 type Props = {
   /** Drives which of the two distinct empty cases renders. */
   activeCount: number;
-  /** Human names of the facets currently narrowing the queue. */
+  /** Translated names of the facets currently narrowing the queue. */
   activeLabels: string[];
   onClearFilters: () => void;
   onNewTicket: () => void;
@@ -14,6 +16,7 @@ type Props = {
  * nothing hides the way out.
  */
 export function TicketQueueEmpty({ activeCount, activeLabels, onClearFilters, onNewTicket }: Props) {
+  const { t } = useT('tickets');
   const filtered = activeCount > 0;
 
   return (
@@ -27,22 +30,24 @@ export function TicketQueueEmpty({ activeCount, activeLabels, onClearFilters, on
 
       {filtered ? (
         <>
-          <h2 className="tq-empty-title">No tickets match your filters</h2>
+          <h2 className="tq-empty-title">{t('queueEmpty.filteredTitle')}</h2>
           <p className="tq-empty-body">
             {activeLabels.length > 0
-              ? `Try removing ${activeLabels.join(' or ')} to see more results.`
-              : 'Try removing a filter to see more results.'}
+              ? t('queueEmpty.removeFilters', {
+                  filters: activeLabels.join(t('queueEmpty.orSeparator')),
+                })
+              : t('queueEmpty.removeFilter')}
           </p>
           <button type="button" className="tq-btn-primary" onClick={onClearFilters}>
-            Clear filters
+            {t('queueEmpty.clearFiltersAction')}
           </button>
         </>
       ) : (
         <>
-          <h2 className="tq-empty-title">No tickets yet</h2>
-          <p className="tq-empty-body">Tickets you or your team create will appear here.</p>
+          <h2 className="tq-empty-title">{t('queueEmpty.noTicketsTitle')}</h2>
+          <p className="tq-empty-body">{t('queueEmpty.noTicketsBody')}</p>
           <button type="button" className="tq-btn-primary" onClick={onNewTicket}>
-            New ticket
+            {t('queueEmpty.newTicket')}
           </button>
         </>
       )}

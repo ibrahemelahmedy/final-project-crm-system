@@ -4,7 +4,8 @@ export type SortKey = (typeof SORTABLE)[number];
 
 export type QueueColumn = {
   id: string;
-  label: string;
+  /** i18n key in the `tickets` namespace, under `columns.*`. */
+  labelKey: string;
   sortKey?: SortKey;
   /** Rendered visually hidden — the select and channel columns have no visible label. */
   hiddenLabel?: boolean;
@@ -25,13 +26,13 @@ export type QueueColumn = {
  * a non-component export.
  */
 export const COLUMNS: QueueColumn[] = [
-  { id: 'select', label: 'Select', hiddenLabel: true },
-  { id: 'channel', label: 'Channel', hiddenLabel: true },
-  { id: 'id', label: 'ID', sortKey: 'id' },
-  { id: 'subject', label: 'Subject' },
-  { id: 'customer', label: 'Customer', sortKey: 'customer' },
-  { id: 'priority', label: 'Priority', sortKey: 'priority' },
-  { id: 'status', label: 'Status', sortKey: 'status' },
-  { id: 'assignee', label: 'Assignee' },
-  { id: 'sla', label: 'SLA left' },
+  { id: 'select', labelKey: 'columns.select', hiddenLabel: true },
+  { id: 'channel', labelKey: 'columns.channel', hiddenLabel: true },
+  { id: 'id', labelKey: 'columns.id', sortKey: 'id' },
+  { id: 'subject', labelKey: 'columns.subject' },
+  { id: 'customer', labelKey: 'columns.customer', sortKey: 'customer' },
+  { id: 'priority', labelKey: 'columns.priority', sortKey: 'priority' },
+  { id: 'status', labelKey: 'columns.status', sortKey: 'status' },
+  { id: 'assignee', labelKey: 'columns.assignee' },
+  { id: 'sla', labelKey: 'columns.slaLeft' },
 ];

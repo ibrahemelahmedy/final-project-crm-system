@@ -11,15 +11,17 @@ import { ActivityList } from './ActivityList';
 import { useTicketAttributeMutation } from '../../hooks/useTicketAttributeMutation';
 import { serverMessage } from '../../model/apiError';
 import { TicketTasksPanel, useOpenTaskCount } from '../../../agent-productivity';
+import { useT } from '../../../../i18n';
+import {
+  PRIORITY_FALLBACK_LABELS,
+  STATUS_FALLBACK_LABELS,
+} from '../../model/display';
+import type { TicketPriority, TicketStatus } from '../../model/ticket';
 
 type Which = 'status' | 'priority' | null;
 
-const ALL_STATUSES: Option[] = [
-  { value: 'open', label: 'Open' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'resolved', label: 'Resolved' },
-  { value: 'closed', label: 'Closed' },
-];
+const ALL_STATUS_VALUES: TicketStatus[] = ['open', 'pending', 'resolved', 'closed'];
+const ALL_PRIORITY_VALUES: TicketPriority[] = ['low', 'normal', 'high', 'urgent'];
 
 export function TicketMetaPanel({
   ticket,
@@ -33,6 +35,7 @@ export function TicketMetaPanel({
   /** Story 13 mounts the CSAT panel here without restructuring this screen. */
   extraSlot?: ReactNode;
 }) {
+  const { t } = useT('conversation');
   const [open, setOpen] = useState<Which>(null);
   const [error, setError] = useState<string | null>(null);
   const [pendingClose, setPendingClose] = useState(false);
@@ -48,22 +51,18 @@ export function TicketMetaPanel({
 
   const statusOptions: Option[] = (() => {
     const allowed = meta?.transitions?.[ticket.status];
-    const values = allowed
-      ? [ticket.status, ...allowed]
-      : ALL_STATUSES.map((s) => s.value as typeof ticket.status);
+    const values = allowed ? [ticket.status, ...allowed] : ALL_STATUS_VALUES;
     const labelOf = (v: string) =>
       meta?.statuses?.find((s) => s.value === v)?.label ??
-      ALL_STATUSES.find((s) => s.value === v)?.label ??
-      v;
+      (STATUS_FALLBACK_LABELS[v as TicketStatus]
+        ? t(STATUS_FALLBACK_LABELS[v as TicketStatus])
+        : v);
     return values.map((v) => ({ value: v, label: labelOf(v) }));
   })();
 
-  const priorityOptions: Option[] = (meta?.priorities?.length ? meta.priorities : null) ?? [
-    { value: 'low', label: 'Low' },
-    { value: 'normal', label: 'Normal' },
-    { value: 'high', label: 'High' },
-    { value: 'urgent', label: 'Urgent' },
-  ];
+  const priorityOptions: Option[] =
+    (meta?.priorities?.length ? meta.priorities : null) ??
+    ALL_PRIORITY_VALUES.map((v) => ({ value: v, label: t(PRIORITY_FALLBACK_LABELS[v]) }));
 
   const applyStatusChange = (value: string) => {
     mutation.mutate(
@@ -74,7 +73,7 @@ export function TicketMetaPanel({
           setPendingClose(false);
           statusBtn.current?.focus();
         },
-        onError: (e) => setError(serverMessage(e) ?? 'That change was not allowed.'),
+        onError: (e) => setError(serverMessage(e) ?? t('meta.notAllowed')),
       }
     );
   };
@@ -101,7 +100,7 @@ export function TicketMetaPanel({
           close();
           priorityBtn.current?.focus();
         },
-        onError: (e) => setError(serverMessage(e) ?? 'That change was not allowed.'),
+        onError: (e) => setError(serverMessage(e) ?? t('meta.notAllowed')),
       }
     );
   };
@@ -109,7 +108,7 @@ export function TicketMetaPanel({
   return (
     <aside className="meta-panel">
       <section>
-        <p className="meta-section-label">TICKET DETAILS</p>
+        <p className="meta-section-label">{t('section.ticketDetails')}</p>
         <div className="meta-badges">
           <span className="meta-badge-wrap">
             <button
@@ -124,7 +123,7 @@ export function TicketMetaPanel({
             </button>
             {open === 'status' && (
               <AttributePopover
-                title="Change status"
+                title={t('meta.changeStatus')}
                 value={ticket.status}
                 options={statusOptions}
                 isPending={mutation.isPending}
@@ -148,7 +147,7 @@ export function TicketMetaPanel({
             </button>
             {open === 'priority' && (
               <AttributePopover
-                title="Change priority"
+                title={t('meta.changePriority')}
                 value={ticket.priority}
                 options={priorityOptions}
                 isPending={mutation.isPending}
@@ -170,11 +169,11 @@ export function TicketMetaPanel({
       <ActivityList events={events} />
 
       {pendingClose && (
-        <div className="close-warn-overlay" role="alertdialog" aria-label="Confirm closing ticket">
+        <div className="close-warn-overlay" role="alertdialog" aria-label={t('close.confirmLabel')}>
           <div className="close-warn-card">
-            <p className="close-warn-title">Close this ticket?</p>
+            <p className="close-warn-title">{t('close.title')}</p>
             <p className="close-warn-body">
-              {openTaskCount} open task{openTaskCount === 1 ? '' : 's'} on this ticket will be cancelled.
+              {t('close.openTasksWarning', { count: openTaskCount })}
             </p>
             {error && <p className="attr-popover-error">{error}</p>}
             <div className="close-warn-actions">
@@ -186,7 +185,7 @@ export function TicketMetaPanel({
                   close();
                 }}
               >
-                Cancel
+                {t('common:actions.cancel')}
               </button>
               <button
                 type="button"
@@ -194,7 +193,7 @@ export function TicketMetaPanel({
                 disabled={mutation.isPending}
                 onClick={() => applyStatusChange('closed')}
               >
-                Close ticket
+                {t('close.closeTicket')}
               </button>
             </div>
           </div>

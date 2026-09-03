@@ -1,16 +1,16 @@
 import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useT } from '../../../i18n';
 
 export type BulkSkipReport = { applied: number; skipped: number } | null;
 
 type Props = {
-  /** e.g. "Close" or "Assign" — used verbatim in the title. */
-  action: string;
-  count: number;
+  /** The fully composed, already-translated confirmation question. */
+  title: string;
+  /** The already-translated label for the confirm button. */
+  confirmLabel: string;
   /** Ticket references, e.g. ["#4821", "#4819"]. */
   references: string[];
-  /** Appended to the title, e.g. "to Sarah Ahmed". */
-  target?: string;
   tone?: 'danger' | 'primary';
   isPending?: boolean;
   /** Set once the request resolves; the dialog then shows the skip report. */
@@ -20,16 +20,16 @@ type Props = {
 };
 
 export function BulkConfirmDialog({
-  action,
-  count,
+  title,
+  confirmLabel,
   references,
-  target,
   tone = 'danger',
   isPending = false,
   report,
   onConfirm,
   onCancel,
 }: Props) {
+  const { t } = useT('tickets');
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -77,7 +77,6 @@ export function BulkConfirmDialog({
 
   const shown = references.slice(0, 5);
   const rest = references.length - shown.length;
-  const noun = count === 1 ? 'ticket' : 'tickets';
 
   return createPortal(
     <div className="tq-modal-backdrop">
@@ -97,33 +96,31 @@ export function BulkConfirmDialog({
 
         {/* The title names BOTH the count and the action — brief.md line 186. */}
         <h2 id={titleId} className="tq-confirm-title">
-          {action} {count} {noun}
-          {target ? ` to ${target}` : ''}?
+          {title}
         </h2>
 
         {report ? (
           <p className="tq-confirm-body" role="status">
-            Applied to {report.applied} {report.applied === 1 ? 'ticket' : 'tickets'}.
-            {report.skipped > 0
-              ? ` ${report.skipped} skipped — you do not have permission to change them.`
-              : ''}
+            {t('bulk.appliedCount', { count: report.applied })}
+            {report.skipped > 0 ? ` ${t('bulk.skippedCount', { count: report.skipped })}` : ''}
           </p>
         ) : (
           <p className="tq-confirm-body">
-            {shown.join(', ')}
-            {rest > 0 ? ` and ${rest} more` : ''}
+            {rest > 0
+              ? t('bulk.andMore', { list: shown.join(', '), count: rest })
+              : shown.join(', ')}
           </p>
         )}
 
         <div className="tq-confirm-actions">
           {report ? (
             <button type="button" className="tq-btn-primary" onClick={onCancel}>
-              Done
+              {t('bulk.done')}
             </button>
           ) : (
             <>
               <button ref={cancelRef} type="button" className="tq-btn-outline" onClick={onCancel}>
-                Cancel
+                {t('common:actions.cancel')}
               </button>
               <button
                 type="button"
@@ -131,7 +128,7 @@ export function BulkConfirmDialog({
                 onClick={onConfirm}
                 disabled={isPending}
               >
-                {isPending ? 'Working…' : action}
+                {isPending ? t('common:actions.working') : confirmLabel}
               </button>
             </>
           )}

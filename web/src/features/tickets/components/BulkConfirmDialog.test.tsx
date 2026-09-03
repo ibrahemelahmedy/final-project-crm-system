@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { BulkConfirmDialog } from './BulkConfirmDialog';
 
 const base = {
-  action: 'Close',
-  count: 3,
+  title: 'Close 3 tickets?',
+  confirmLabel: 'Close',
   references: ['#4821', '#4819', '#4815'],
   report: null,
   onConfirm: vi.fn(),
@@ -12,22 +12,29 @@ const base = {
 };
 
 describe('BulkConfirmDialog', () => {
-  it('names the count and the action in the confirmation', () => {
+  it('renders the composed confirmation question in the heading', () => {
     render(<BulkConfirmDialog {...base} />);
 
     const heading = screen.getByRole('heading');
-    expect(heading).toHaveTextContent('Close');
-    expect(heading).toHaveTextContent('3');
-    expect(heading).toHaveTextContent('tickets');
+    expect(heading).toHaveTextContent('Close 3 tickets?');
   });
 
-  it('names the assignment target when assigning', () => {
-    render(<BulkConfirmDialog {...base} action="Assign" target="Sarah Ahmed" tone="primary" />);
+  it('renders the assignment question passed by the caller', () => {
+    render(
+      <BulkConfirmDialog
+        {...base}
+        title="Assign 3 tickets to Sarah Ahmed?"
+        confirmLabel="Assign"
+        tone="primary"
+      />
+    );
     expect(screen.getByRole('heading')).toHaveTextContent('Assign 3 tickets to Sarah Ahmed?');
   });
 
-  it('uses the singular noun for one ticket', () => {
-    render(<BulkConfirmDialog {...base} count={1} references={['#4821']} />);
+  it('renders the singular question passed by the caller', () => {
+    render(
+      <BulkConfirmDialog {...base} title="Close 1 ticket?" references={['#4821']} />
+    );
     expect(screen.getByRole('heading')).toHaveTextContent('Close 1 ticket?');
   });
 
@@ -35,7 +42,6 @@ describe('BulkConfirmDialog', () => {
     render(
       <BulkConfirmDialog
         {...base}
-        count={8}
         references={['#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8']}
       />
     );

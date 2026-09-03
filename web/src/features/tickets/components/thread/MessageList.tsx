@@ -1,6 +1,14 @@
 import { Fragment, useEffect, useRef } from 'react';
 import type { TicketMessage } from '../../model/ticketMessage';
+import { useT, formatDate } from '../../../../i18n';
 import { MessageBubble } from './MessageBubble';
+
+const DAY_LABEL_OPTIONS = {
+  weekday: 'short' as const,
+  month: 'short' as const,
+  day: 'numeric' as const,
+  year: 'numeric' as const,
+};
 
 type Props = {
   messages: TicketMessage[];
@@ -15,16 +23,6 @@ function dayKey(iso: string): string {
   return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
 }
 
-function dayLabel(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return new Intl.DateTimeFormat(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(d);
-}
 
 export function MessageList({
   messages,
@@ -33,18 +31,20 @@ export function MessageList({
   onLoadEarlier,
   scrollRef,
 }: Props) {
+  const { t } = useT('conversation');
   const liveRef = useRef<HTMLDivElement>(null);
   const lastIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const newest = messages[messages.length - 1];
     if (newest && lastIdRef.current !== null && newest.id !== lastIdRef.current && liveRef.current) {
-      liveRef.current.textContent = `New message from ${
-        newest.author?.name ?? (newest.author_type === 'system' ? 'System' : 'a deleted user')
-      }`;
+      const name =
+        newest.author?.name ??
+        (newest.author_type === 'system' ? t('messages.systemAuthor') : t('messages.deletedAuthor'));
+      liveRef.current.textContent = t('messages.newMessageFrom', { name });
     }
     lastIdRef.current = newest?.id ?? null;
-  }, [messages]);
+  }, [messages, t]);
 
   return (
     <div className="thread-scroll" ref={scrollRef}>
@@ -56,7 +56,7 @@ export function MessageList({
             onClick={onLoadEarlier}
             disabled={isFetchingNextPage}
           >
-            {isFetchingNextPage ? 'Loading…' : 'Load earlier messages'}
+            {isFetchingNextPage ? t('messages.loading') : t('messages.loadEarlier')}
           </button>
         </div>
       )}
@@ -69,7 +69,7 @@ export function MessageList({
             <Fragment key={message.id}>
               {showDay && (
                 <li className="thread-day" aria-hidden="true">
-                  <span>{dayLabel(message.created_at)}</span>
+                  <span>{formatDate(message.created_at, DAY_LABEL_OPTIONS)}</span>
                 </li>
               )}
               <MessageBubble message={message} />

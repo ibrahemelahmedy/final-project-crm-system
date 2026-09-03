@@ -1,4 +1,5 @@
 import type { Ticket } from '../model/ticket';
+import { useT } from '../../../i18n';
 
 import { TicketTableHeader } from './TicketTableHeader';
 import { TicketRow } from './TicketRow';
@@ -30,13 +31,14 @@ export function TicketTable({
   onToggleAll,
   dimmed = false,
 }: Props) {
+  const { t } = useT('tickets');
   const allSelected = tickets.length > 0 && tickets.every((t) => selected.includes(t.id));
   const someSelected = tickets.some((t) => selected.includes(t.id));
 
   return (
     <div className="tq-table-scroll">
       <table className="tq-table" data-dimmed={dimmed ? 'true' : 'false'}>
-        <caption className="tq-sr-only">Ticket queue</caption>
+        <caption className="tq-sr-only">{t('queue.tableCaption')}</caption>
         <TicketTableHeader
           sort={sort}
           onSortChange={onSortChange}

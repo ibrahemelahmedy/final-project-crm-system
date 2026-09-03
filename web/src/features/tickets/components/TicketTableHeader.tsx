@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { COLUMNS, type SortKey } from '../model/columns';
+import { useT } from '../../../i18n';
 
 type Props = {
   sort: string;
@@ -27,6 +28,7 @@ function SortGlyph({ state }: { state: 'ascending' | 'descending' | 'none' }) {
 }
 
 export function TicketTableHeader({ sort, onSortChange, allSelected, someSelected, onToggleAll }: Props) {
+  const { t } = useT('tickets');
   const selectAllRef = useRef<HTMLInputElement>(null);
 
   // `indeterminate` is a DOM property with no HTML attribute and no React
@@ -57,7 +59,7 @@ export function TicketTableHeader({ sort, onSortChange, allSelected, someSelecte
                   className="tq-checkbox"
                   checked={allSelected}
                   onChange={onToggleAll}
-                  aria-label="Select all tickets on this page"
+                  aria-label={t('queue.selectAllOnPage')}
                 />
               ) : col.sortKey ? (
                 <button
@@ -66,11 +68,11 @@ export function TicketTableHeader({ sort, onSortChange, allSelected, someSelecte
                   data-active={isActive ? 'true' : 'false'}
                   onClick={() => onSortChange(col.sortKey as SortKey)}
                 >
-                  {col.label}
+                  {t(col.labelKey)}
                   <SortGlyph state={isActive ? activeDir : 'none'} />
                 </button>
               ) : (
-                <span className={col.hiddenLabel ? 'tq-sr-only' : undefined}>{col.label}</span>
+                <span className={col.hiddenLabel ? 'tq-sr-only' : undefined}>{t(col.labelKey)}</span>
               )}
             </th>
           );
