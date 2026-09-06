@@ -15,6 +15,9 @@ import enNotifications from './locales/en/notifications.json';
 import enReports from './locales/en/reports.json';
 import enCsat from './locales/en/csat.json';
 import enChannels from './locales/en/channels.json';
+import enPortal from './locales/en/portal.json';
+import enIntegrations from './locales/en/integrations.json';
+import enOrganization from './locales/en/organization.json';
 
 import arCommon from './locales/ar/common.json';
 import arAuth from './locales/ar/auth.json';
@@ -30,6 +33,9 @@ import arNotifications from './locales/ar/notifications.json';
 import arReports from './locales/ar/reports.json';
 import arCsat from './locales/ar/csat.json';
 import arChannels from './locales/ar/channels.json';
+import arPortal from './locales/ar/portal.json';
+import arIntegrations from './locales/ar/integrations.json';
+import arOrganization from './locales/ar/organization.json';
 
 export type Locale = 'en' | 'ar';
 
@@ -48,6 +54,9 @@ export const NAMESPACES = [
   'reports',
   'csat',
   'channels',
+  'portal',
+  'integrations',
+  'organization',
 ] as const;
 
 export const resources = {
@@ -66,6 +75,9 @@ export const resources = {
     reports: enReports,
     csat: enCsat,
     channels: enChannels,
+    portal: enPortal,
+    integrations: enIntegrations,
+    organization: enOrganization,
   },
   ar: {
     common: arCommon,
@@ -82,6 +94,9 @@ export const resources = {
     reports: arReports,
     csat: arCsat,
     channels: arChannels,
+    portal: arPortal,
+    integrations: arIntegrations,
+    organization: arOrganization,
   },
 } as const;
 

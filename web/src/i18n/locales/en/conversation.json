@@ -88,5 +88,19 @@
     "openTasksWarning_one": "{{count}} open task on this ticket will be cancelled.",
     "openTasksWarning_other": "{{count}} open tasks on this ticket will be cancelled.",
     "closeTicket": "Close ticket"
+  },
+  "assist": {
+    "summaryLabel": "TICKET SUMMARY",
+    "summarizedAgo": "Summarized {{time}}",
+    "regenerateSummary": "Regenerate summary",
+    "summaryFailed": "Couldn't generate a summary.",
+    "suggestedReplyLabel": "AI SUGGESTED REPLY",
+    "regenerateSuggestion": "Regenerate suggestion",
+    "suggest": "Suggest a reply",
+    "use": "Use this reply",
+    "dismiss": "Dismiss",
+    "inserted": "AI reply inserted into composer — review before sending",
+    "failed": "Couldn't generate a suggestion.",
+    "generating": "Generating…"
   }
 }

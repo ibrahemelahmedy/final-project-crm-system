@@ -92,5 +92,19 @@
     "openTasksWarning_many": "سيتم إلغاء {{count}} مهمة مفتوحة على هذه التذكرة.",
     "openTasksWarning_other": "سيتم إلغاء {{count}} مهمة مفتوحة على هذه التذكرة.",
     "closeTicket": "إغلاق التذكرة"
+  },
+  "assist": {
+    "summaryLabel": "ملخص التذكرة",
+    "summarizedAgo": "تم التلخيص {{time}}",
+    "regenerateSummary": "إعادة توليد الملخص",
+    "summaryFailed": "تعذر إنشاء الملخص.",
+    "suggestedReplyLabel": "رد مقترح بالذكاء الاصطناعي",
+    "regenerateSuggestion": "إعادة توليد الاقتراح",
+    "suggest": "اقتراح رد",
+    "use": "استخدام هذا الرد",
+    "dismiss": "تجاهل",
+    "inserted": "تم إدراج رد الذكاء الاصطناعي في حقل الكتابة — راجعه قبل الإرسال",
+    "failed": "تعذر إنشاء اقتراح.",
+    "generating": "جارٍ الإنشاء…"
   }
 }
