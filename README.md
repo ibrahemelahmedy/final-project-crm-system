@@ -18,17 +18,19 @@ where it is honestly incomplete. Every claim below points at the file that prove
 | Section | What you get |
 |---|---|
 | [1. Run it in 60 seconds](#1-run-it-in-60-seconds) | Clone → migrate → seed → login |
-| [2. What was asked for, and what shipped](#2-what-was-asked-for-and-what-shipped) | The 12 requirement categories, each with a status and a reason |
-| [3. Architecture](#3-architecture) | Layers, request lifecycle, the deliberate structural decisions |
+| [2. What was asked for, and what shipped](#2-what-was-asked-for-and-what-shipped) | The 12 requirement categories, each with a status and a reason, plus the assumptions taken |
+| [3. Architecture](#3-architecture) | Layers, request lifecycle, error handling, the deliberate structural decisions |
 | [4. Data model](#4-data-model) | ERD, the core tables, the invariants they encode |
 | [5. API surface](#5-api-surface) | Every endpoint, grouped, with its guard |
 | [6. Frontend](#6-frontend) | Feature folders, state, forms, i18n and RTL |
-| [7. Security and access control](#7-security-and-access-control) | Roles, policies, rate limits, audit trail |
-| [8. Testing](#8-testing) | What is covered, what the edge-case tests actually assert |
-| [9. How this was built](#9-how-this-was-built--spec-driven-ai-assisted) | The spec-driven loop, and how AI output was verified |
-| [10. Known gaps](#10-known-gaps) | The unflattering list |
-| [11. Deployment](#11-deployment) | Vercel, Supabase, the one cron line |
-| [12. Repository map](#12-repository-map) | Where everything lives |
+| [7. One feature, end to end](#7-one-feature-end-to-end) | A single click traced from the browser to the database and back |
+| [8. Security and access control](#8-security-and-access-control) | Roles, policies, rate limits, audit trail |
+| [9. Testing](#9-testing) | What is covered, what the edge-case tests actually assert |
+| [10. How this was built](#10-how-this-was-built--spec-driven-ai-assisted) | The spec-driven loop, the plan anatomy, and how AI output was verified |
+| [11. Working practice](#11-working-practice--git-conventions-review) | Git history, conventions, what keeps the code maintainable |
+| [12. Known gaps](#12-known-gaps) | The unflattering list |
+| [13. Deployment](#13-deployment) | Vercel, Supabase, the one cron line |
+| [14. Repository map](#14-repository-map) | Where everything lives |
 | [ملخص بالعربية](#ملخص-بالعربية) | Arabic summary |
 
 ---
@@ -74,6 +76,33 @@ cd api && php artisan sla:evaluate
 `--dry-run` reports without writing. `--backfill` stamps SLA targets on tickets created before
 the SLA story landed, and is idempotent.
 
+### Check this README against the code
+
+Nothing here asks to be taken on trust. These five commands reproduce the claims that matter:
+
+```bash
+cd api && vendor/bin/pest                 # 500 tests, 2,345 assertions
+```
+
+```bash
+cd web && npm run test                    # 546 tests across 83 files
+```
+
+```bash
+cd web && npm run lint && npm run build   # oxlint + the no-hard-coded-strings check + tsc
+```
+
+```bash
+git log --oneline                         # 41 commits — one story per commit
+```
+
+```bash
+grep -c "Route::" api/routes/api.php      # the endpoint count behind section 5
+```
+
+Run the API suite without `--parallel` unless the local PostgreSQL user has `CREATEDB`; the
+parallel runner creates a database per process.
+
 ---
 
 ## 2. What was asked for, and what shipped
@@ -96,11 +125,27 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
 | 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — the admin surface to connect, configure, test and monitor. No live provider wiring; that is per-provider engineering | WIS-19 |
-| 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#10-known-gaps) | WIS-11, WIS-17, WIS-20 |
+| 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20 |
 
 Twenty stories were specified, planned and implemented (WIS-1 … WIS-20). Their specifications
 are in [.squad/stories/](.squad/stories) and their implementation plans in
 [.squad/plans/](.squad/plans), indexed by [.squad/plans/00-index.md](.squad/plans/00-index.md).
+
+### Assumptions taken where the requirement was silent
+
+The requirement capture left real questions open. Each was answered deliberately, written into
+the story that needed it, and is listed here so a reader can disagree with the answer rather
+than guess at it.
+
+| The requirement did not say | What was assumed, and why |
+|---|---|
+| How many roles, and what each may do | Three: Agent, Team Lead, Administrator. Two roles cannot express "sees the team but not the system"; four invents a distinction the client never described. Fixed in [ADR-004](docs/decisions/ADR-004-authentication.md) and used unchanged by every screen. |
+| Whether customers log in the way staff do | No. External customers are a different audience with a different threat model, so the portal uses a one-time code and a separate session table, never a staff token — [ADR-005](docs/decisions/ADR-005-customer-portal-access.md). |
+| What happens to an SLA target when an admin edits the rule | Existing tickets keep the target they were stamped with; the edit applies going forward. The alternative — recomputing history — would silently rewrite whether past tickets were breached. |
+| Whether "multi-channel" means live inboxes | No. Every message is tagged with its channel and the data model supports ingestion, but wiring real providers is per-provider engineering and was scoped out openly rather than faked. |
+| Working hours for SLA arithmetic | Elapsed wall-clock minutes, not a business-hours calendar — that needs holiday and timezone policy the client never supplied, and inventing one produces confidently wrong numbers. Time spent *pending on the customer* is excluded instead, via `sla_paused_at` / `sla_paused_minutes` ([SlaClock.php](api/app/Services/SlaClock.php)), which is the part an agent would actually dispute. |
+| Which language is the default | Arabic and English are equal; the UI follows the user's stored preference, and the API localises server-sent labels from `Accept-Language`. Neither is hard-coded as primary. |
+| Whether tickets can exist without a customer | No — enforced in the schema, not in a validator. A support ticket with no requester is not a support ticket. |
 
 ---
 
@@ -169,6 +214,33 @@ duplicated run cannot corrupt state. See
 resolving `Accept-Language` so server-sent labels come back in the caller's language, then
 `auth:sanctum` plus an `active` gate, plus an `administrator` gate on the admin route groups.
 
+### Errors have one shape
+
+Success is always `{ "data": … }`, shaped by an API Resource. Failure is never a stack trace and
+never an ad-hoc string:
+
+| Situation | Status | Body |
+|---|---|---|
+| Validation failed | `422` | Laravel's `{ message, errors: { field: [...] } }`, produced by the Form Request — the SPA maps `errors` straight onto the form fields |
+| Not authenticated / token for a deactivated user | `401` | `{ message }` |
+| Authenticated but not permitted | `403` | `{ message }` — from a policy, never from a hand-written check |
+| Rate limited | `429` | `{ message }` + `Retry-After` |
+| A domain rule refused | its own status | Domain exceptions carry their own rendering |
+
+The domain exceptions are the interesting part, because each encodes a decision:
+[`PortalCodeUnusableException`](api/app/Exceptions/PortalCodeUnusableException.php) renders the
+same `410` for *missing, consumed, expired and attempt-exhausted*, so a caller cannot tell the
+four apart and probe the code space;
+[`AssistUnavailableException`](api/app/Exceptions/AssistUnavailableException.php) collapses every
+AI-provider failure — timeout, rate limit, 5xx, refusal, empty completion, unconfigured — into one
+`503`, so provider behaviour never leaks into the UI; and
+[`AuditLogIsAppendOnly`](api/app/Exceptions/AuditLogIsAppendOnly.php) is a second layer behind a
+route surface that already exposes no update or delete verb.
+
+`bootstrap/app.php` forces JSON rendering for everything under `/api/*` and turns a tampered CSAT
+signature into the same calm "expired" payload as an unknown one, so signed links stay
+non-enumerable.
+
 ### The dual-engine constraint
 
 Runtime is PostgreSQL (Supabase). Local test runs have moved between SQLite and a local
@@ -221,6 +293,24 @@ Four invariants worth knowing, each enforced in the schema rather than in applic
 - **A message carries a visibility**, so an internal note can never leak into a customer-visible
   thread ([`add_visibility_to_ticket_messages_table`](api/database/migrations/2026_08_28_140000_add_visibility_to_ticket_messages_table.php),
   enum in [MessageVisibility.php](api/app/Enums/MessageVisibility.php)).
+
+### Where the query cost was actually thought about
+
+- **Indexes were added for named access patterns, not sprinkled.** The reporting aggregations get
+  `created_at`, `resolved_at` and a composite `(assigned_to, resolved_at)`
+  ([migration](api/database/migrations/2026_08_28_150000_add_reporting_indexes_to_tickets_table.php));
+  the audit-log viewer gets indexes matching its actual filter combinations, with the measured
+  before/after written into the migration's docblock
+  ([migration](api/database/migrations/2026_08_28_090300_add_audit_log_viewer_indexes.php)).
+- **The queue page classifies SLA risk with zero extra queries.** `SlaClock::snapshot()` reads
+  only columns already on the loaded ticket row — a per-row rule lookup would have cost 25
+  queries on a 25-row page.
+- **Knowledge-base search is real full-text search on PostgreSQL** — a `tsvector` column, a GIN
+  index and a trigger that keeps it current, with `setweight(title,'A') || setweight(body,'B')`
+  so a title match outranks a body-only match. The migration is guarded on the driver and is a
+  no-op elsewhere, where `App\Services\Kb\LikeArticleSearch` takes over — which is the
+  dual-engine rule applied rather than merely stated
+  ([migration](api/database/migrations/2026_08_28_100300_add_search_vector_to_kb_articles.php)).
 
 Domain vocabulary is typed as PHP enums, never as loose strings —
 [api/app/Enums/](api/app/Enums), fourteen of them:
@@ -325,11 +415,65 @@ enforces it: `npm run lint` runs
 a hard-coded user-facing string inside any enforced root. The enforced roots and every
 deliberate exception (with its reason) are in
 [web/scripts/i18n-allowlist.json](web/scripts/i18n-allowlist.json). That list is also an honest
-record of what is *not* yet enforced — see [Known gaps](#10-known-gaps).
+record of what is *not* yet enforced — see [Known gaps](#12-known-gaps).
 
 ---
 
-## 7. Security and access control
+## 7. One feature, end to end
+
+One click — an agent sends a reply on a ticket, mentioning a colleague — traced through every
+layer, because a feature list says nothing about whether the layers actually join up.
+
+```mermaid
+sequenceDiagram
+    participant A as Agent (browser)
+    participant H as useSendReply (TanStack mutation)
+    participant R as POST /api/tickets/{id}/messages
+    participant V as StoreTicketMessageRequest
+    participant P as TicketPolicy
+    participant S as MentionResolver
+    participant D as Database (one transaction)
+    participant N as NotificationDispatcher
+
+    A->>H: submit the composer
+    H->>R: axios POST { body, visibility, mentions[] }
+    R->>V: validate + authorize
+    V->>P: TicketPolicy@view / reply
+    R->>S: resolve mentions BEFORE any insert
+    R->>D: BEGIN
+    D-->>D: ticket_messages row (channel from the ticket, never the client)
+    D-->>D: ticket touched — last activity moves
+    D-->>D: ticket_events: replied / internal_note_added
+    D-->>D: mention pivot rows + one "mentioned" event each
+    D-->>D: customer.last_contact_at — only if the message is public
+    R->>D: COMMIT
+    R->>N: dispatch mention notifications (after commit)
+    R-->>H: 201 { data: TicketMessageResource }
+    H->>H: invalidate thread, ticket, queue and event caches
+    H-->>A: the reply appears; the queue row's activity updates
+```
+
+Five decisions in that path are worth naming, because each one is a bug that did not happen:
+
+1. **The channel is taken from the ticket, never from the request body.** A client cannot forge
+   the channel a message arrived on.
+2. **Mentions resolve before the insert, inside the same transaction.** A mention of a user the
+   author is not allowed to see aborts the whole thing — it can never leave a half-written
+   message row behind. Asserted by `MentionAuthorizationTest.php`.
+3. **Notifications dispatch after commit, not inside it.** A "you were mentioned" alert for a
+   message that failed to persist is a lie the user cannot check.
+4. **`customer.last_contact_at` advances only for a customer-visible message.** An internal note
+   is not customer contact, so it must not make the customer look recently served.
+5. **The response is an API Resource, not a model.** Which is why an internal note never leaks
+   into a payload that a portal session can read.
+
+The same shape holds everywhere else: validate in a Form Request, authorize in a policy, do the
+work in a service or one transaction, shape the response in a Resource, invalidate precisely on
+the client.
+
+---
+
+## 8. Security and access control
 
 **Authentication.** Laravel Sanctum tokens for staff. The Customer Portal deliberately does
 *not* reuse it: external customers authenticate with a one-time access code and a separate
@@ -373,7 +517,7 @@ handler is in [bootstrap/app.php](api/bootstrap/app.php) and the behaviour is un
 
 ---
 
-## 8. Testing
+## 9. Testing
 
 Two suites, both green on the commit this README landed on:
 
@@ -420,7 +564,7 @@ pinned independently.
 
 ---
 
-## 9. How this was built — spec-driven, AI-assisted
+## 10. How this was built — spec-driven, AI-assisted
 
 This project was built with AI assistance under a fixed process, and the process left artefacts
 behind on purpose. They are in the repository, not in a chat log.
@@ -450,6 +594,33 @@ records which: `full` (verified file paths and line ranges, implement straight f
 build on does not exist yet — inventing line numbers would be a lie). See
 [.squad/plans/00-index.md](.squad/plans/00-index.md).
 
+**What a plan actually contains.** Not a to-do list — a document another engineer could
+implement from without asking a question. Roughly 17,800 lines of them are in this repository.
+[The SLA plan](.squad/plans/sla-rules-automation/06-story-sla-rules-automation.md) is
+representative, at ~1,500 lines:
+
+| Plan section | What it pins down |
+|---|---|
+| Prerequisites · Context — read these files first | The exact existing files to read before touching anything |
+| Story goal | One paragraph; the thing that is true when this is done |
+| Product rules — where this plan resolves a conflict | Every place the requirement contradicted itself or an earlier story, and the ruling |
+| Backend tasks 1–10 | One numbered task per unit of work: the table and model, the eleven ticket columns, `SlaClock`, auto-assignment takeover from an earlier story, the engine command, the notifier seam, the resource block, requests/policy/controller/routes, the seeder |
+| Frontend tasks 11–14 | Tokens, the feature folder and route, the schema and formatter, the page and its components |
+| Edge cases & failure modes | Enumerated before implementation, each with the expected behaviour |
+| Migration / rollback | How to undo it |
+| Test plan | The Pest and Vitest tests to write, named, per task |
+| Verification steps | The commands to run to prove it works |
+| Shared contracts this story establishes | The tables, columns and payload blocks later stories may depend on |
+| Done criteria | Checkboxes; the index flips to `implemented` only when all are ticked |
+
+**Build order came from the dependency graph, not from enthusiasm.** Authentication first
+because everything sits behind it, then the app shell every screen renders inside, then i18n —
+deliberately early, because retrofitting translation means reopening every component (and the one
+part deferred anyway became the project's biggest debt, see [Known gaps](#12-known-gaps)). Then
+the ticket entity, then everything that reads it: the thread, customers, the SLA engine, and only
+then the dashboards and reports that aggregate all of it. The full ordering and each story's
+dependencies are in [.squad/plans/00-index.md](.squad/plans/00-index.md).
+
 **Implementation in a scoped session.** A fresh session gets the plan file and nothing else, so
 the model cannot drift into unrelated code.
 
@@ -475,7 +646,44 @@ deliberately breaks with ADR-004's model for a different audience.
 
 ---
 
-## 10. Known gaps
+## 11. Working practice — Git, conventions, review
+
+**One story, one commit.** The history reads as the delivery log: 41 commits, Conventional
+Commits with the feature slug as the scope, and the story id in the subject where it applies.
+
+```
+feat(sla): SLA rules engine and ticket due-date automation
+feat(agent-productivity): quick replies, ticket tasks and mentions
+feat(i18n): extract src/components strings into common namespace (WIS-17 Task 2)
+fix(api): redirect bootstrap cache to /tmp so Vercel rebuilds it
+docs(plans): mark delivered stories as implemented
+```
+
+`git log --oneline` is a readable list of what shipped, in order. A `fix(...)` commit
+corresponds to a write-up in [docs/debugging/](docs/debugging) — the two are meant to be read
+together.
+
+**What keeps the code maintainable**, concretely rather than as an adjective:
+
+- **One place per rule.** If two callers need a behaviour, it is a service. `SlaClock` is the
+  strict version of this: no controller, resource, command or test recomputes an SLA threshold.
+- **Types instead of strings.** Fourteen PHP enums for the domain vocabulary; on the client,
+  TypeScript with `noUnusedLocals`, `noUnusedParameters` and `noFallthroughCasesInSwitch`
+  enforced at build time ([web/tsconfig.app.json](web/tsconfig.app.json)), and Zod schemas on the
+  forms so the runtime shape and the compile-time type cannot drift.
+- **The compiler and the linter are part of the build.** `npm run build` runs `tsc -b` first, and
+  `npm run lint` runs oxlint plus the i18n literal check — a hard-coded user-facing string fails
+  the build rather than being caught in review.
+- **Comments explain decisions, not syntax.** The docblocks worth reading are the ones stating
+  why a design was chosen and what it buys — see the header of
+  [SlaClock.php](api/app/Services/SlaClock.php) or the rate-limiter block in
+  [bootstrap/app.php](api/bootstrap/app.php).
+- **Tests are the review gate.** A story is not done while its plan's test list is unwritten;
+  the Done Criteria checkboxes are what flip the plan index to `implemented`.
+
+---
+
+## 12. Known gaps
 
 Stated plainly, because a reviewer will find them anyway and because pretending otherwise is
 worse than the gap.
@@ -503,7 +711,7 @@ worse than the gap.
 
 ---
 
-## 11. Deployment
+## 13. Deployment
 
 Two Vercel projects, one PostgreSQL database on Supabase.
 
@@ -521,6 +729,12 @@ Two Vercel projects, one PostgreSQL database on Supabase.
   * * * * * php artisan schedule:run
   ```
 
+**Current state of the hosted environments**, checked on 2026-09-06: the API deployment is up —
+`https://wisal-crm-api.vercel.app/api/user` answers `401`, which is the correct response to an
+unauthenticated call. The SPA deployment at `wisal-crm-web.vercel.app` is **not currently
+serving** (Vercel `404: NOT_FOUND`); it needs a redeploy. Until it is back, run the frontend
+locally — [section 1](#1-run-it-in-60-seconds) takes about a minute.
+
 Three deployment failures are already documented rather than rediscovered: bootstrap cache,
 API origin mismatch, and script-name routing —
 [docs/debugging/003](docs/debugging/003-vercel-bootstrap-cache.md),
@@ -528,7 +742,7 @@ API origin mismatch, and script-name routing —
 
 ---
 
-## 12. Repository map
+## 14. Repository map
 
 ```
 .
@@ -581,5 +795,5 @@ API origin mismatch, and script-name routing —
 وكل عطل حقيقي واجهناه مكتوب في `docs/debugging/` بالعربية: ماذا حدث، ولماذا، وكيف حُلّ — من
 ضمنها حالات أنتج فيها الذكاء الاصطناعي حلًا يبدو صحيحًا وكان خاطئًا، وأمسكه الاختبار لا القراءة.
 
-**النواقص** مكتوبة صراحة في قسم [Known gaps](#10-known-gaps) أعلاه — أهمها أن استخراج النصوص
+**النواقص** مكتوبة صراحة في قسم [Known gaps](#12-known-gaps) أعلاه — أهمها أن استخراج النصوص
 للترجمة لم يكتمل في تسعة مجلدات، وأن التكاملات سطح إعدادات فقط بلا ربط فعلي بمزوّد خارجي.
