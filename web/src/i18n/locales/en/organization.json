@@ -1,0 +1,107 @@
+{
+  "title": "Organization Settings",
+  "subtitle": "Manage branches, departments, and custom branding for your organization.",
+  "tabs": {
+    "label": "Organization sections",
+    "branches": "Branches",
+    "departments": "Departments",
+    "branding": "Branding"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "alreadyInactive": "Already inactive",
+    "cancel": "Cancel",
+    "saving": "Saving…"
+  },
+  "branches": {
+    "addButton": "+ Add branch",
+    "addTitle": "Add branch",
+    "editTitle": "Edit branch",
+    "saveButton": "Save branch",
+    "tableCaption": "Branches",
+    "column": {
+      "name": "NAME",
+      "region": "REGION",
+      "agents": "AGENTS",
+      "status": "STATUS",
+      "actions": "ACTIONS"
+    },
+    "field": {
+      "name": "Branch name",
+      "region": "Region",
+      "timezone": "Timezone",
+      "active": "Active"
+    },
+    "error": {
+      "nameRequired": "Enter a branch name."
+    },
+    "empty": {
+      "title": "No additional branches yet",
+      "body": "All tickets and agents currently stay assigned to your default branch. Add a branch to start organizing your team by location."
+    }
+  },
+  "departments": {
+    "addButton": "+ Add department",
+    "addTitle": "Add department",
+    "editTitle": "Edit department",
+    "saveButton": "Save department",
+    "tableCaption": "Departments",
+    "noBranchBanner": "You need to add at least one branch before you can create a department.",
+    "goToBranches": "Go to Branches",
+    "column": {
+      "name": "NAME",
+      "branch": "BRANCH",
+      "agents": "AGENTS",
+      "status": "STATUS",
+      "actions": "ACTIONS"
+    },
+    "field": {
+      "name": "Department name",
+      "branch": "Branch",
+      "active": "Active",
+      "noBranchesAvailable": "No branches available",
+      "branchUnavailableHint": "Add a branch first to assign this department."
+    },
+    "error": {
+      "nameRequired": "Enter a department name.",
+      "branchRequired": "Choose a branch."
+    },
+    "empty": {
+      "title": "No departments yet",
+      "body": "Departments organize agents within a branch. Add a branch first, then create your first department."
+    }
+  },
+  "branding": {
+    "logoTitle": "Logo",
+    "customLogoUploaded": "Custom logo uploaded",
+    "defaultMark": "Wisal default mark",
+    "logoHint": "Recommended: PNG, JPG or WEBP, 256×256px, transparent background",
+    "uploadNew": "Upload new",
+    "remove": "Remove",
+    "primaryColorTitle": "Primary color",
+    "contrastPass": "Passes WCAG AA contrast on white ({{light}}:1) and dark backgrounds ({{dark}}:1)",
+    "contrastWarn": "Contrast warning: {{hex}} is only {{ratio}}:1 against white or dark backgrounds — below the 4.5:1 required for WCAG AA. Text and icons using this color may be unreadable. You can still save, but consider choosing a different shade.",
+    "saveChanges": "Save changes",
+    "resetToDefault": "Reset to default",
+    "livePreviewTitle": "Live preview",
+    "previewCaption": "This preview updates instantly as you change the logo or color — no separate preview step needed.",
+    "error": {
+      "invalidColor": "Enter a valid 6-digit hex color, e.g. #4F46E5."
+    }
+  },
+  "timezones": {
+    "riyadh": "Asia/Riyadh (GMT+3)",
+    "dubai": "Asia/Dubai (GMT+4)",
+    "cairo": "Africa/Cairo (GMT+2)",
+    "istanbul": "Europe/Istanbul (GMT+3)",
+    "london": "Europe/London (GMT+0)",
+    "newYork": "America/New_York (GMT-5)",
+    "losAngeles": "America/Los_Angeles (GMT-8)",
+    "utc": "UTC"
+  }
+}

@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +24,8 @@ class User extends Authenticatable
         'password',
         'role',
         'department',
+        'branch_id',
+        'department_id',
         'locale',
         'is_active',
         'last_login_at',
@@ -95,5 +98,21 @@ class User extends Authenticatable
     public function assignedTickets(): HasMany
     {
         return $this->hasMany(Ticket::class, 'assigned_to');
+    }
+
+    /**
+     * Story 20 (WIS-20). Named `departmentRef`, not `department` — that
+     * name is already taken by the free-text attribute above ($fillable),
+     * and a relation of the same name would be silently shadowed on
+     * property access ($user->department would keep returning the string).
+     */
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function departmentRef(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 }
