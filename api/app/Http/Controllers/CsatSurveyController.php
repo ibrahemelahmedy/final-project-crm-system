@@ -8,11 +8,11 @@ use App\Http\Resources\CsatSurveyResource;
 use App\Http\Resources\TicketCsatResource;
 use App\Models\CsatSurvey;
 use App\Models\Ticket;
+use App\Services\CsatShareLink;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
 
 /**
  * Story 13 (CSAT Collection / WIS-14).
@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\URL;
 class CsatSurveyController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private CsatShareLink $shareLink) {}
 
     /** The public identical-for-every-failure body. */
     private function invalidBody(): array
@@ -98,28 +100,8 @@ class CsatSurveyController extends Controller
 
         $this->authorize('view', $survey);
 
-        $survey->setAttribute('share_url', $this->shareUrl($survey));
+        $survey->setAttribute('share_url', $this->shareLink->for($survey));
 
         return (new TicketCsatResource($survey))->response();
-    }
-
-    /**
-     * The customer-facing link points at the SPA route `/feedback/{uuid}`; the
-     * SPA forwards the `expires` + `signature` query params to `GET
-     * /api/csat/{uuid}`. Keyed on route names `csat.show` / `csat.store` —
-     * renaming either invalidates every outstanding link.
-     */
-    private function shareUrl(CsatSurvey $survey): string
-    {
-        $signed = URL::temporarySignedRoute(
-            'csat.show',
-            $survey->expires_at,
-            ['uuid' => $survey->uuid]
-        );
-
-        $query = parse_url($signed, PHP_URL_QUERY);
-        $frontend = trim(explode(',', (string) env('FRONTEND_URL', 'http://localhost:5173'))[0]);
-
-        return rtrim($frontend, '/')."/feedback/{$survey->uuid}?{$query}";
     }
 }

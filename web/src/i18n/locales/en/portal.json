@@ -1,0 +1,113 @@
+{
+  "brand": "Wisal",
+  "access": {
+    "heading": "Track your request",
+    "identifierLabel": "Email or phone number",
+    "identifierPlaceholder": "you@example.com or +1 555 010 1234",
+    "identifierHint": "We accept email addresses or phone numbers with country code.",
+    "identifierError": "Enter a valid email address or phone number.",
+    "sendCode": "Send code",
+    "sending": "Sending…",
+    "genericSentBanner": "If this matches a record, we've sent a code.",
+    "codeSentTo": "Code sent to {{identifier}}",
+    "codeLegend": "Verification code",
+    "digitLabel": "Digit {{n}}",
+    "verify": "Verify",
+    "verifying": "Verifying…",
+    "codeInvalid": "That code is incorrect.",
+    "attemptsRemaining_one": "{{count}} attempt remaining.",
+    "attemptsRemaining_other": "{{count}} attempts remaining.",
+    "codeExpiredTitle": "This code has expired. Request a new one to continue.",
+    "resendIn": "Didn't get a code? Resend in {{time}}",
+    "resendAvailable": "Resend code",
+    "faqFooter": "Need help without an account?",
+    "faqLink": "Browse our FAQs"
+  },
+  "nav": {
+    "requests": "Track requests",
+    "history": "History",
+    "faq": "FAQs",
+    "signOut": "Sign out"
+  },
+  "ui": {
+    "back": "Back",
+    "retry": "Try again",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "requests": {
+    "title": "Track requests",
+    "new": "Submit a request",
+    "empty": "You don't have any open requests right now.",
+    "emptyAction": "Submit a request",
+    "error": "We couldn't load your requests.",
+    "retry": "Try again",
+    "loading": "Loading your requests…",
+    "lastActivity": "Last activity {{time}}",
+    "messageCount_one": "{{count}} message",
+    "messageCount_other": "{{count}} messages"
+  },
+  "history": {
+    "title": "History",
+    "empty": "Nothing has been resolved yet.",
+    "emptyAction": "Track your open requests",
+    "error": "We couldn't load your history.",
+    "loading": "Loading your history…",
+    "resolvedOn": "Resolved {{date}}"
+  },
+  "newRequest": {
+    "title": "Submit a request",
+    "subjectLabel": "Subject",
+    "subjectRequired": "Give your request a short subject.",
+    "categoryLabel": "Category",
+    "descriptionLabel": "Tell us what's going on",
+    "descriptionRequired": "Describe what you need help with.",
+    "submit": "Submit request",
+    "submitting": "Submitting…",
+    "cancel": "Cancel",
+    "error": "We couldn't submit your request. Please try again.",
+    "category": {
+      "general": "General",
+      "billing": "Billing",
+      "technical": "Technical",
+      "account": "Account",
+      "feature_request": "Feature request"
+    }
+  },
+  "detail": {
+    "openedOn": "Opened {{date}}",
+    "lastActivity": "Last activity {{time}}",
+    "resolvedOn": "Resolved {{date}}",
+    "loading": "Loading this request…",
+    "error": "We couldn't load this request.",
+    "notFound": "We couldn't find that request.",
+    "threadEmpty": "No messages on this request yet.",
+    "replyLabel": "Write a reply",
+    "replyPlaceholder": "Add anything that might help us…",
+    "replyError": "Your reply wasn't sent. Please try again.",
+    "reply": "Send reply",
+    "replying": "Sending…",
+    "closedNotice": "This request is closed and can no longer receive replies.",
+    "rateExperience": "Rate your support experience",
+    "system": "System",
+    "you": "You"
+  },
+  "faq": {
+    "title": "FAQs",
+    "intro": "Answers to the questions we're asked most. No sign-in needed.",
+    "empty": "No articles found.",
+    "emptyAction": "Clear your search",
+    "error": "We couldn't load the FAQs.",
+    "loading": "Loading articles…",
+    "searchLabel": "Search FAQs",
+    "searchPlaceholder": "Search FAQs",
+    "backToList": "All FAQs",
+    "notFound": "We couldn't find that article.",
+    "publishedOn": "Published {{date}}",
+    "signIn": "Track an existing request"
+  },
+  "toggleTo": "العربية"
+}
