@@ -1,0 +1,60 @@
+{
+  "title": "Integrations",
+  "subtitle": "Connect Wisal to your ERP and communication providers",
+  "notice": "Saving a connection stores its configuration and checks that the endpoint is reachable. Sending and receiving messages through these providers is not enabled in this release.",
+  "status": {
+    "not_connected": "NOT CONNECTED",
+    "connected": "CONNECTED",
+    "error": "CONNECTION ERROR"
+  },
+  "action": {
+    "connect": "Connect",
+    "configure": "Configure",
+    "reconnect": "Reconnect",
+    "viewDetails": "View details",
+    "disconnect": "Disconnect"
+  },
+  "audit": {
+    "lastChecked": "Last checked {{when}}",
+    "lastCheckFailed": "Last check failed"
+  },
+  "type": {
+    "erp": { "label": "ERP", "help": "Sync customer and order records from your ERP system into Wisal tickets." },
+    "email": { "label": "Email", "help": "Receive and send support tickets through a connected email inbox." },
+    "sms": { "label": "SMS", "help": "Send and receive customer replies over SMS." },
+    "whatsapp": { "label": "WhatsApp", "help": "Handle customer conversations over WhatsApp Business." },
+    "api_webhook": { "label": "Custom API / Webhook", "help": "Push and pull ticket data through a custom API endpoint." }
+  },
+  "form": {
+    "connectTitle": "Connect {{type}}",
+    "configureTitle": "Configure {{type}}",
+    "endpointUrl": "Endpoint URL",
+    "endpointPlaceholder": "https://api.your-erp.com/v1",
+    "secret": "API key / secret",
+    "reveal": "Reveal",
+    "hide": "Hide",
+    "copy": "Copy",
+    "copied": "Copied",
+    "savedHint": "Saved key ends in {{last4}}. Leave blank to keep it.",
+    "test": "Test connection",
+    "testing": "Testing…",
+    "testHelp": "Checks that the endpoint responds. It does not verify that the provider accepts the key.",
+    "testPassed": "The endpoint responded.",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "error": {
+    "unreachable": "Couldn't reach the endpoint. Check the URL and API key, then try again.",
+    "scheme": "The endpoint URL must start with https://.",
+    "blocked_host": "That address is not reachable from the server. Use a public https endpoint.",
+    "server_error": "The endpoint responded with a server error. Try again later.",
+    "loadTitle": "Could not load the integrations",
+    "loadBody": "Something went wrong while fetching them. Try again.",
+    "retry": "Retry"
+  },
+  "disconnect": {
+    "title": "Disconnect {{type}}?",
+    "body": "The stored endpoint and API key for {{type}} are deleted. This cannot be undone.",
+    "confirm": "Disconnect"
+  }
+}
