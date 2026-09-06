@@ -17,14 +17,22 @@ and how the project was planned and verified. This file is only the live state.
 
 ## Current phase
 
-**2026-09-06 — All 20 stories implemented, and the documentation is now published.**
-`docs/` and `STATUS.md` were excluded by `.gitignore` and had never been committed;
-that is fixed, and [README.md](README.md) was written as the project's documentation
-(Story WIS-21).
+**2026-09-06 — All 20 stories implemented; the documentation is published (WIS-21).**
+`docs/` and `STATUS.md` were excluded by `.gitignore` and had never been committed —
+fixed in `a1fc16c`. [README.md](README.md) is now the project's documentation, with
+eight real screenshots of the running app under `docs/screenshots/` (`a9f8794`).
+
+**Live:** https://k1-wisal.vercel.app — verified serving, with `/api/*` reaching the
+API deployment. The older `wisal-crm-web.vercel.app` is dead; **the repository's
+GitHub About link still points at it and needs one edit in the repo settings.**
 
 Suites green on 2026-09-06: **500 API tests / 2,345 assertions (Pest)** and
 **546 web tests across 83 files (Vitest)**; `npm run lint` and `npm run build` clean.
 Run the API suite without `--parallel` unless the local Postgres user has `CREATEDB`.
+
+Open, both outside the code: rotate the **Jira API token** and the **Supabase
+password** — they sit in plaintext in `docs/requirements/required-for-System-ERP/data.txt`,
+which is excluded from git but still live.
 
 Remaining known gap: the **i18n retrofit** (WIS-17). Every catalogue exists in both
 languages and every server-sent `*_label` is localised, but the no-hard-coded-strings
@@ -79,7 +87,8 @@ Full token set (colors, priority, status, typography) and every core UI
 pattern built via Claude Design and reviewed screen-by-screen:
 [docs/design/brief.md](docs/design/brief.md) — the reference document itself.
 
-Screens, in `docs/design/references/`:
+Screens, in `docs/design/references/` — **23 folders**, most in four variants
+(light/dark × LTR/RTL):
 
 | Folder | Covers |
 |---|---|
@@ -92,6 +101,13 @@ Screens, in `docs/design/references/`:
 | `5.Modals/` | Create/edit forms and destructive-action confirmation |
 | `6.Knowledge/` | Knowledge Base index + article reading view |
 | `7.Admin Reports/` | Users, SLA Rules, Reports (charts) |
+| `8.`–`11.` | Quick replies (management, picker), ticket tasks, internal-note thread |
+| `12.`–`14.` | Notifications centre, CSAT response, Channels overview |
+| `15.`–`17.` | Customer Portal access (2 steps), AI Assist panel |
+| `18.`–`21.` | Integrations admin, Organization settings (branding, departments, branches) |
+
+Rendered screenshots of the **running app** (not designs) are separate:
+`docs/screenshots/`, embedded in [README.md](README.md).
 
 Every batch was reviewed for: structural parity across light/dark/LTR/RTL,
 WCAG contrast (computed, not assumed), and a recurring bug pattern worth
@@ -106,17 +122,18 @@ Workflow explained in [.squad/README.md](.squad/README.md). Live state:
 
 The index's **Depth** column records plan depth (`full` / `contract`) and flips to
 `implemented` via the `index-sync` Stop hook once a story's Done Criteria are all ticked.
-**Ticking those boxes is the project owner's step, not Claude's** — see the
-`feedback_plan_checkbox_ownership` memory.
+**Ticking those boxes is the project owner's step, not Claude's** — the checkbox is the
+owner's acceptance of the work, so an agent never ticks it on its own.
 
-Three roles used consistently across every design screen: **Agent**,
-**Team Lead/Supervisor**, **Administrator**. Customer Portal login is
-explicitly out of scope — it is external/customer-facing and would be its own
-story.
+Three staff roles used consistently across every design screen: **Agent**,
+**Team Lead/Supervisor**, **Administrator**. The Customer Portal — deferred out
+of the first nine stories as external-facing — **shipped as WIS-16**, with its own
+identity model (one-time access codes, a separate session table, never a staff
+token): [ADR-005](docs/decisions/ADR-005-customer-portal-access.md).
 
 ## Working agreement
 
-Claude guides — gives exact commands, prompts, and drafts to review — and
-only executes directly on an explicit go-ahead. Established after two
-corrections in this project. See the `feedback_execution_boundary` memory for
-the full rule.
+An agent working on this repo guides first — gives the exact commands, prompts and
+drafts to review — and executes directly only on an explicit go-ahead. Established
+after two corrections early in the project: scaffolding files and running generators
+unasked both cost more time than they saved.
