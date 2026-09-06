@@ -448,27 +448,27 @@ Node commands run in `web/`.
 
 ## Done Criteria
 
-- [ ] Every authenticated route renders inside `AppLayout` via a single layout route; `/login` renders outside it; no page component imports the shell for itself.
-- [ ] `DashboardStub` is deleted from `web/src/App.tsx`, and its inline sign-out button is gone — the header owns sign-out.
+- [x] Every authenticated route renders inside `AppLayout` via a single layout route; `/login` renders outside it; no page component imports the shell for itself.
+- [x] `DashboardStub` is deleted from `web/src/App.tsx`, and its inline sign-out button is gone — the header owns sign-out.
 - [ ] The sidebar renders exactly the **eight** items from `navItems`, in the design's order, and **every** path resolves to its own placeholder rather than falling through the `*` redirect — asserted by an `it.each` test over the manifest, not by inspection.
 - [ ] An Agent and a Team Lead see six items and **no** `ADMIN` heading; an Administrator sees eight under the heading. The empty-group case cannot render a dangling heading.
-- [ ] `/sla-rules` and `/users` are additionally guarded by `RequireAuth roles={['administrator']}` at the route level, and a comment in `navItems.tsx` states that nav filtering is a UX affordance and not a security boundary.
-- [ ] The header shows `user.name` and `user.role_label`, and its sign-out button calls `logout()` from `AuthContext` — no second logout path exists.
-- [ ] Exactly one nav item carries `aria-current="page"` at any time, driven by the same `isActive` flag as the highlight; `/dashboard` does not stay active on `/dashboard/admin`.
-- [ ] Theme and direction live in one `UiPreferencesContext`; `LoginPage.tsx` no longer defines `getInitialTheme`, `getInitialLang`, or its own toggles, and its **12** tests still pass unchanged.
-- [ ] Nothing writes to `localStorage` on mount: with no prior choice, `resolvedTheme` follows `prefers-color-scheme` **and `localStorage.length` is `0`** — asserted. An explicit choice persists and overrides the OS in both directions.
-- [ ] The provider subscribes to the media query's `change` event, so an OS theme flip is followed live while `theme === 'system'`.
-- [ ] Below **1024px** the sidebar is a drawer opened by a labelled control with `aria-expanded`/`aria-controls`; it closes on selection, on `Escape`, and on backdrop click; focus returns to the toggle; the body scroll lock is released on unmount.
-- [ ] The drawer slides in from the correct edge under **both** `dir="ltr"` and `dir="rtl"` — the physical `translateX` is mirrored explicitly, not left to logical properties.
-- [ ] The page body has no horizontal scrollbar at any width from 360px up; `.shell-main` carries `min-inline-size: 0`.
-- [ ] Layout uses logical properties (`border-inline-end`, `padding-inline`, `inset-inline-start`) throughout — no `margin-left`/`border-right` in shell CSS — and the `⌘K` badge keeps `direction: ltr`.
-- [ ] A skip link is the first focusable element; every nav item and enabled control has a visible focus ring; **no `outline: none` without a replacement in the same rule** appears anywhere in this story's CSS.
-- [ ] The drawer transition and the skeleton shimmer are both disabled under `prefers-reduced-motion: reduce`.
-- [ ] `HeaderUserSkeleton` renders when `user` is `null` with the slot's dimensions reserved, and `AppLayout` does not crash in that state.
+- [x] `/sla-rules` and `/users` are additionally guarded by `RequireAuth roles={['administrator']}` at the route level, and a comment in `navItems.tsx` states that nav filtering is a UX affordance and not a security boundary.
+- [x] The header shows `user.name` and `user.role_label`, and its sign-out button calls `logout()` from `AuthContext` — no second logout path exists.
+- [x] Exactly one nav item carries `aria-current="page"` at any time, driven by the same `isActive` flag as the highlight; `/dashboard` does not stay active on `/dashboard/admin`.
+- [x] Theme and direction live in one `UiPreferencesContext`; `LoginPage.tsx` no longer defines `getInitialTheme`, `getInitialLang`, or its own toggles, and its **12** tests still pass unchanged.
+- [x] Nothing writes to `localStorage` on mount: with no prior choice, `resolvedTheme` follows `prefers-color-scheme` **and `localStorage.length` is `0`** — asserted. An explicit choice persists and overrides the OS in both directions.
+- [x] The provider subscribes to the media query's `change` event, so an OS theme flip is followed live while `theme === 'system'`.
+- [x] Below **1024px** the sidebar is a drawer opened by a labelled control with `aria-expanded`/`aria-controls`; it closes on selection, on `Escape`, and on backdrop click; focus returns to the toggle; the body scroll lock is released on unmount.
+- [x] The drawer slides in from the correct edge under **both** `dir="ltr"` and `dir="rtl"` — the physical `translateX` is mirrored explicitly, not left to logical properties.
+- [x] The page body has no horizontal scrollbar at any width from 360px up; `.shell-main` carries `min-inline-size: 0`.
+- [x] Layout uses logical properties (`border-inline-end`, `padding-inline`, `inset-inline-start`) throughout — no `margin-left`/`border-right` in shell CSS — and the `⌘K` badge keeps `direction: ltr`.
+- [x] A skip link is the first focusable element; every nav item and enabled control has a visible focus ring; **no `outline: none` without a replacement in the same rule** appears anywhere in this story's CSS.
+- [x] The drawer transition and the skeleton shimmer are both disabled under `prefers-reduced-motion: reduce`.
+- [x] `HeaderUserSkeleton` renders when `user` is `null` with the slot's dimensions reserved, and `AppLayout` does not crash in that state.
 - [ ] The language and notification header slots exist, are visibly inert (`disabled`, `title="Coming soon"`), and carry a comment naming **WIS-11** and **WIS-13** as their owners; the bell's dot is `aria-hidden`.
-- [ ] Shell tokens live in `web/src/index.css` as custom properties (including `--shell-breakpoint`), with the light values on bare `:root` and the dark values in **both** the `prefers-color-scheme` block and the `[data-theme="dark"]` block.
-- [ ] `npm run build` and `npm run lint` are clean, and `ReactQueryDevtools` is absent from `web/dist/assets/*.js`.
+- [x] Shell tokens live in `web/src/index.css` as custom properties (including `--shell-breakpoint`), with the light values on bare `:root` and the dark values in **both** the `prefers-color-scheme` block and the `[data-theme="dark"]` block.
+- [x] `npm run build` and `npm run lint` are clean, and `ReactQueryDevtools` is absent from `web/dist/assets/*.js`.
 - [ ] `api/` is untouched and its **21** Pest tests still pass.
-- [ ] `00-overview.md` and `00-index.md` updated with this story.
+- [x] `00-overview.md` and `00-index.md` updated with this story.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 03.**

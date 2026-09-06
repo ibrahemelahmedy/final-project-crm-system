@@ -7,8 +7,10 @@ use App\Enums\CustomerTier;
 use App\Enums\Priority;
 use App\Enums\TicketStatus;
 use App\Enums\UserRole;
+use App\Models\Branch;
 use App\Models\CsatSurvey;
 use App\Models\Customer;
+use App\Models\Department;
 use App\Models\SlaRule;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
@@ -67,47 +69,92 @@ class DatabaseSeeder extends Seeder
             );
         }
 
+        // Story 20 (WIS-20) — the four branches and four departments the
+        // Organization Settings artboards show. This seeder, not the
+        // backfill migration, owns fresh-install branch/department data:
+        // migrate:fresh --seed runs migrations before seeders, so the
+        // backfill sees zero users at that point and correctly no-ops.
+        // `branch_id` / `department_id` below are a SEPARATE taxonomy from
+        // the free-text `department` string already used throughout this
+        // file (Decision 3) — they need not match 1:1.
+        $branchDowntown = Branch::create(['name' => 'Downtown HQ', 'region' => 'Riyadh, SA', 'timezone' => 'Asia/Riyadh', 'is_active' => true]);
+        $branchNorth = Branch::create(['name' => 'North Branch', 'region' => 'Jeddah, SA', 'timezone' => 'Asia/Riyadh', 'is_active' => true]);
+        $branchEast = Branch::create(['name' => 'East Support Center', 'region' => 'Dammam, SA', 'timezone' => 'Asia/Riyadh', 'is_active' => true]);
+        Branch::create(['name' => 'Remote Team', 'region' => null, 'timezone' => 'UTC', 'is_active' => false]);
+
+        $deptTechnical = Department::create(['branch_id' => $branchDowntown->id, 'name' => 'Technical Support', 'is_active' => true]);
+        $deptBilling = Department::create(['branch_id' => $branchDowntown->id, 'name' => 'Billing', 'is_active' => true]);
+        $deptSuccess = Department::create(['branch_id' => $branchNorth->id, 'name' => 'Customer Success', 'is_active' => true]);
+        $deptEscalations = Department::create(['branch_id' => $branchEast->id, 'name' => 'Escalations', 'is_active' => true]);
+
+        // Maps each existing free-text `department` string onto one of the
+        // four org-structure departments above, so every seeded user's
+        // branch_id/department_id is set and the AGENTS column reads real
+        // numbers rather than four zeros.
+        $orgAssignment = fn (string $freeTextDepartment) => match ($freeTextDepartment) {
+            'Support Ops' => [$branchDowntown, $deptTechnical],
+            'Billing Support' => [$branchDowntown, $deptBilling],
+            'Platform' => [$branchNorth, $deptSuccess],
+            'Technical Support' => [$branchEast, $deptEscalations],
+            default => [$branchDowntown, $deptTechnical],
+        };
+
+        [$branch, $dept] = $orgAssignment('Support Ops');
         $agent1 = User::create([
             'name' => 'Sarah Ahmed',
             'email' => 'agent@wisal.test',
             'role' => UserRole::Agent,
             'department' => 'Support Ops',
+            'branch_id' => $branch->id,
+            'department_id' => $dept->id,
             'is_active' => true,
             'password' => $password,
         ]);
 
+        [$branch, $dept] = $orgAssignment('Billing Support');
         $agent2 = User::create([
             'name' => 'Tarek Mansour',
             'email' => 'agent2@wisal.test',
             'role' => UserRole::Agent,
             'department' => 'Billing Support',
+            'branch_id' => $branch->id,
+            'department_id' => $dept->id,
             'is_active' => true,
             'password' => $password,
         ]);
 
+        [$branch, $dept] = $orgAssignment('Support Ops');
         User::create([
             'name' => 'Mona Zaki',
             'email' => 'lead@wisal.test',
             'role' => UserRole::TeamLead,
             'department' => 'Support Ops',
+            'branch_id' => $branch->id,
+            'department_id' => $dept->id,
             'is_active' => true,
             'password' => $password,
         ]);
 
+        [$branch, $dept] = $orgAssignment('Platform');
         User::create([
             'name' => 'System Admin',
             'email' => 'admin@wisal.test',
             'role' => UserRole::Administrator,
             'department' => 'Platform',
+            'branch_id' => $branch->id,
+            'department_id' => $dept->id,
             'is_active' => true,
             'password' => $password,
         ]);
 
+        [$branch, $dept] = $orgAssignment('Technical Support');
         User::create([
             'name' => 'Disabled User',
             'email' => 'disabled@wisal.test',
             'role' => UserRole::Agent,
             'department' => 'Technical Support',
+            'branch_id' => $branch->id,
+            'department_id' => $dept->id,
             'is_active' => false,
             'password' => $password,
         ]);
@@ -131,11 +178,15 @@ class DatabaseSeeder extends Seeder
             // LAST ACTIVE column must render as "Never", not a blank cell.
             ['Noor Haddad', 'noor.haddad@wisal.io', UserRole::Agent, 'Technical Support', true, null],
         ] as [$name, $email, $role, $department, $isActive, $minutesAgo]) {
+            [$branch, $dept] = $orgAssignment($department);
+
             User::create([
                 'name' => $name,
                 'email' => $email,
                 'role' => $role,
                 'department' => $department,
+                'branch_id' => $branch->id,
+                'department_id' => $dept->id,
                 'is_active' => $isActive,
                 'last_login_at' => $minutesAgo === null ? null : now()->subMinutes($minutesAgo),
                 'password' => $password,

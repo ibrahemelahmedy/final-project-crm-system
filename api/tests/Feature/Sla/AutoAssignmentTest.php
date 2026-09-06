@@ -103,7 +103,8 @@ it('writes an auto_assigned event to ticket_events and never to audit_logs', fun
     expect($event->field)->toBe('assigned_to');
 
     // The ticket lifecycle lives in ticket_events only — never audit_logs.
-    expect(DB::table('audit_logs')->where('action', 'like', '%auto_assign%')->count())->toBe(0);
+    // (audit_logs' column is `event`, not `action` — see its migration.)
+    expect(DB::table('audit_logs')->where('event', 'like', '%auto_assign%')->count())->toBe(0);
 });
 
 it('spreads four tickets across four idle agents', function () {

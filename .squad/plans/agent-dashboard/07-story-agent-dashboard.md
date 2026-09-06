@@ -282,13 +282,16 @@ Mapped 1:1 to `.squad/stories/agent-dashboard/WIS-9/intake.md`.
       the audit log — **and no ticket queue** (`AdminDashboardPage.test.tsx` asserts no table).
 - [x] Every widget on every role's dashboard maps to a named bullet in the design brief's
       "Role-based home" list. No widget was added because data was available.
-- [ ] The "approaching SLA breach" widget reads Story 06's SLA-risk source; no threshold check is
+- [x] The "approaching SLA breach" widget reads Story 06's SLA-risk source; no threshold check is
       reimplemented in this feature.
-      <!-- plan-review 2026-08-28: 🔀 Story 06 has not run; `App\Services\SlaCalculator` was
-           authored inside this story instead of calling Story 06's computation. The widget itself
-           reimplements no threshold. Also: SlaCalculator.php:50 falls back to computing from
-           created_at when `resolution_due_at` is null, instead of EXCLUDING the row as the
-           Edge Cases section requires. -->
+      <!-- plan-review 2026-09-03: fixed since 2026-08-28. DashboardMetrics now depends on
+           App\Services\SlaClock (Story 06's shared computation, api/app/Services/SlaClock.php,
+           introduced in commit 62f7c76 before this story) instead of a story-local
+           SlaCalculator — see api/app/Services/DashboardMetrics.php:34,223. SlaClock::riskFor()
+           returns null (excluded) when resolution_due_at is null
+           (api/app/Services/SlaClock.php:136-138), and
+           api/tests/Feature/Dashboard/SlaRiskSourceTest.php:43-59 asserts a ticket with no
+           active rule is excluded from /api/dashboard/agent/sla-risk. -->
 - [x] On first load each widget shows its own loading skeleton independently; a slow or failing
       widget does not block the page (per-widget `useQuery`; `AgentDashboardPage.test.tsx`).
 - [ ] A role with zero relevant items sees an Empty state with a clear next action — not an error

@@ -6,6 +6,7 @@ import { AuthProvider } from './features/auth/AuthContext';
 import { RequireAuth } from './features/auth/RequireAuth';
 import { LoginPage } from './features/auth/LoginPage';
 import { UiPreferencesProvider } from './app/providers/UiPreferencesContext';
+import { BrandingProvider } from './app/providers/BrandingProvider';
 import { I18nextProvider, i18n } from './i18n';
 import { LocaleSync } from './app/providers/LocaleSync';
 import { AppLayout } from './app/layouts/AppLayout';
@@ -28,6 +29,19 @@ import { ChannelsPage } from './features/channels';
 import { NotificationsPage } from './features/notifications';
 import { CsatResponsePage } from './features/csat';
 import { QuickRepliesPage } from './features/agent-productivity';
+import { IntegrationsPage } from './features/integrations';
+import { OrganizationPage } from './features/organization';
+import {
+  PortalLayout,
+  RequirePortalSession,
+  PortalAccessPage,
+  PortalRequestsPage,
+  PortalHistoryPage,
+  PortalNewRequestPage,
+  PortalRequestDetailPage,
+  PortalFaqPage,
+  PortalArticlePage,
+} from './features/portal';
 
 export default function App() {
   return (
@@ -37,6 +51,7 @@ export default function App() {
         <BrowserRouter>
           <AuthProvider>
             <LocaleSync />
+            <BrandingProvider>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
 
@@ -45,6 +60,26 @@ export default function App() {
                   never redirected to /dashboard. Authenticates into nothing;
                   access is the signed link in the query string. */}
               <Route path="/feedback/:uuid" element={<CsatResponsePage />} />
+
+              {/* Story 17 (WIS-16). The Customer Portal — a THIRD audience, outside
+                  RequireAuth and AppLayout per the intake ("external to the internal
+                  App Shell, not a tab inside it"). Its identity is a portal_sessions
+                  bearer token, not a Sanctum session; /portal/faq is public because
+                  FAQs are public content (§8). Declared before the `*` catch-all so a
+                  signed-out customer is never bounced to /dashboard. */}
+              <Route path="/portal" element={<PortalLayout />}>
+                <Route index element={<PortalAccessPage />} />
+                <Route path="faq" element={<PortalFaqPage />} />
+                <Route path="faq/:slug" element={<PortalArticlePage />} />
+                <Route element={<RequirePortalSession />}>
+                  <Route path="requests" element={<PortalRequestsPage />} />
+                  {/* Declared BEFORE requests/:ticketId, or the dynamic segment
+                      swallows "new" — the hazard the KB routes record below. */}
+                  <Route path="requests/new" element={<PortalNewRequestPage />} />
+                  <Route path="requests/:ticketId" element={<PortalRequestDetailPage />} />
+                  <Route path="history" element={<PortalHistoryPage />} />
+                </Route>
+              </Route>
 
               <Route
                 element={
@@ -162,10 +197,35 @@ export default function App() {
                     </RequireAuth>
                   }
                 />
+                {/* Story 18 (WIS-19). Administrator-only. This guard is UX
+                    only — the `administrator` middleware on the whole
+                    /api/admin/* group is the boundary, and
+                    AdminAuthorizationTest proves it. */}
+                <Route
+                  path="/integrations"
+                  element={
+                    <RequireAuth roles={['administrator']}>
+                      <IntegrationsPage />
+                    </RequireAuth>
+                  }
+                />
+                {/* Story 20 (WIS-20). Administrator-only. This guard is UX
+                    only — the `administrator` middleware on the whole
+                    /api/admin/* group is the boundary, and
+                    AdminAuthorizationTest proves it. */}
+                <Route
+                  path="/organization/:tab?"
+                  element={
+                    <RequireAuth roles={['administrator']}>
+                      <OrganizationPage />
+                    </RequireAuth>
+                  }
+                />
               </Route>
 
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
+            </BrandingProvider>
           </AuthProvider>
           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </BrowserRouter>

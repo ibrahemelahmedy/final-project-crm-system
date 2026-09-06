@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PriorityBadge } from '../../tickets';
-import { formatRelativeTime } from '../../tickets/model/display';
+import { formatRelative } from '../../../i18n';
 import { useTeamEscalations } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -36,7 +36,7 @@ export function EscalationsWidget() {
                 </span>
                 <span className="escalation-meta">
                   Escalated by {t.escalated_by_name ?? 'Unknown'}
-                  {t.escalated_at ? ` · ${formatRelativeTime(t.escalated_at)}` : ''}
+                  {t.escalated_at ? ` · ${formatRelative(t.escalated_at)}` : ''}
                 </span>
               </span>
               <PriorityBadge priority={t.priority} label={t.priority_label} />

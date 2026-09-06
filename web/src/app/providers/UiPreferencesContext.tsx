@@ -17,6 +17,13 @@ type UiPreferencesContextType = {
   setLocale: (l: Locale) => void;
   /** Reconcile from `GET /api/user` / the login response WITHOUT re-PATCHing — the server wins on a cold load. */
   syncLocaleFromServer: (l: Locale) => void;
+  /**
+   * Story 17 (WIS-16): sets state, persists to `wisal-lang`, and applies to
+   * i18next — WITHOUT the `/user/preferences` PATCH, because a Customer
+   * Portal visitor has no staff session to persist a server-side preference
+   * against. Staff screens keep using `setLocale`.
+   */
+  setLocaleLocalOnly: (l: Locale) => void;
   /** Non-null when the last server PATCH failed; the local choice still applies on this device. */
   localeError: string | null;
   clearLocaleError: () => void;
@@ -131,7 +138,11 @@ export const UiPreferencesProvider: React.FC<{ children: React.ReactNode }> = ({
     [persistLocale]
   );
 
-  const syncLocaleFromServer = useCallback(
+  // The body syncLocaleFromServer always had — state + i18next + persist,
+  // no PATCH. Story 17 exposes it under an honest name for the portal too;
+  // syncLocaleFromServer keeps its own name and behaviour for callers that
+  // reconcile from the server.
+  const setLocaleLocalOnly = useCallback(
     (next: Locale) => {
       setLocaleState((current) => {
         if (current !== next) {
@@ -143,6 +154,8 @@ export const UiPreferencesProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     [persistLocale]
   );
+
+  const syncLocaleFromServer = setLocaleLocalOnly;
 
   const clearLocaleError = useCallback(() => setLocaleError(null), []);
 
@@ -157,6 +170,7 @@ export const UiPreferencesProvider: React.FC<{ children: React.ReactNode }> = ({
         toggleTheme,
         setLocale,
         syncLocaleFromServer,
+        setLocaleLocalOnly,
         localeError,
         clearLocaleError,
       }}

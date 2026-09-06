@@ -23,8 +23,39 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <!--
+            Tests run on a LOCAL PostgreSQL database, not SQLite :memory:.
+
+            Why not SQLite: php_pdo_sqlite.dll is blocked by a Windows Application Control
+            policy on the dev machine, so every test errored with "could not find driver".
+            See docs/debugging/002-pdo-sqlite-blocked.md.
+
+            Why Postgres and not MySQL: production is Postgres (Supabase), and the schema
+            relies on Postgres features MySQL/MariaDB does not have — e.g. the partial unique
+            index in 2026_08_27_111743_create_customers_table.php:34
+            ("CREATE UNIQUE INDEX ... WHERE ..."). Testing on Postgres keeps the test engine
+            and the production engine the same, so driver-specific bugs surface here first.
+
+            One-time setup per machine (see docs/debugging/002-pdo-sqlite-blocked.md):
+              CREATE ROLE wisal_test LOGIN PASSWORD 'wisal_test';
+              CREATE DATABASE wisal_testing OWNER wisal_test;
+
+            The credentials below are a throwaway LOCAL-ONLY role for an empty scratch
+            database. They are not a secret and grant nothing outside this machine.
+
+            Not a lock-in: PHPUnit's <env> does NOT overwrite a variable that already exists
+            in the real environment, so CI (or a machine with pdo_sqlite working) can switch
+            back by exporting DB_CONNECTION=sqlite and DB_DATABASE=:memory: before running.
+
+            NEVER point these at the Supabase instance configured in .env — RefreshDatabase
+            truncates every table it touches.
+        -->
+        <env name="DB_CONNECTION" value="pgsql"/>
+        <env name="DB_HOST" value="127.0.0.1"/>
+        <env name="DB_PORT" value="5432"/>
+        <env name="DB_DATABASE" value="wisal_testing"/>
+        <env name="DB_USERNAME" value="wisal_test"/>
+        <env name="DB_PASSWORD" value="wisal_test"/>
         <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>

@@ -21,6 +21,12 @@ type ReplyComposerProps = {
   /** Story 10 mounts QuickReplyPicker (and its trigger) in this row. */
   toolbarSlot?: React.ReactNode;
   /**
+   * Story 19 (WIS-18) mounts SuggestedReplyCard here. Story 05 reserved the
+   * node below for exactly this; the composer's own behaviour is unchanged
+   * and a mount that omits this prop still renders the (empty) slot.
+   */
+  assistSlot?: React.ReactNode;
+  /**
    * Story 10: submits an INTERNAL NOTE — never visible to the customer.
    * Omitting this prop hides the "Internal note" mode entirely, so an
    * unrelated composer mount is unaffected.
@@ -51,6 +57,7 @@ export function ReplyComposer({
   isSending,
   onInsertAtCaret,
   toolbarSlot,
+  assistSlot,
   onSendNote,
 }: ReplyComposerProps) {
   const { t } = useT('conversation');
@@ -184,12 +191,10 @@ export function ReplyComposer({
 
   return (
     <div className="thread-composer" data-mode={mode}>
-      {/* AI-suggested reply (design export lines 120-125) is NOT built in this story.
-          The intake defers AI; this node reserves the position so the feature lands
-          without moving another element. It renders nothing: no pill, no disabled
-          button, no "Coming soon". A suggestion the product cannot generate must not
-          be depicted. */}
-      <div className="thread-assist-slot" />
+      {/* Story 05 reserved this node for the AI-suggested reply; Story 19
+          (WIS-18) fills it. Renders nothing when `assistSlot` is omitted, so
+          an unrelated composer mount is byte-identical to before. */}
+      <div className="thread-assist-slot">{assistSlot}</div>
 
       <div className="composer-toolbar-row">
         <ComposerChannelBadge channel={ticket.channel} label={ticket.channel_label} />

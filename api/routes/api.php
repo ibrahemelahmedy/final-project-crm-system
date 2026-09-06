@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\BrandingController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\IntegrationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChannelOverviewController;
@@ -17,10 +21,16 @@ use App\Http\Controllers\Kb\KbPreviewController;
 use App\Http\Controllers\Kb\KbSearchController;
 use App\Http\Controllers\MentionableUserController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrganizationBrandingController;
+use App\Http\Controllers\Portal\PortalAccessController;
+use App\Http\Controllers\Portal\PortalFaqController;
+use App\Http\Controllers\Portal\PortalRequestController;
+use App\Http\Controllers\Portal\PortalSessionController;
 use App\Http\Controllers\QuickReplyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SlaRuleController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TicketAssistController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketMessageController;
 use App\Http\Controllers\TicketQuickReplyController;
@@ -58,6 +68,22 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::get('/tickets/{ticket}/csat', [CsatSurveyController::class, 'showForTicket']);
     Route::get('/tickets/{ticket}/messages', [TicketMessageController::class, 'index']);
     Route::post('/tickets/{ticket}/messages', [TicketMessageController::class, 'store']);
+
+    // ---- AI Assist (Story 19 / WIS-18) --------------------------------
+    //
+    // TicketPolicy@view is the boundary on all four, exactly as
+    // /tickets/{ticket}/csat uses it. The GET is unthrottled beyond the
+    // global API limits because it only reads cached rows; the two
+    // generating routes carry `throttle:ai-assist`, the ONLY paid-per-call
+    // limiter in the app.
+    Route::get('/tickets/{ticket}/ai-assist', [TicketAssistController::class, 'show']);
+    Route::middleware('throttle:ai-assist')->group(function () {
+        Route::post('/tickets/{ticket}/ai-assist/summary', [TicketAssistController::class, 'summary']);
+        Route::post('/tickets/{ticket}/ai-assist/reply', [TicketAssistController::class, 'reply']);
+    });
+    // Dismiss sits outside the throttle group deliberately — dismissing
+    // costs nothing, and a 429 on Dismiss would strand the card on screen.
+    Route::delete('/tickets/{ticket}/ai-assist/reply', [TicketAssistController::class, 'dismiss']);
 
     // ---- SLA Rules (Story 06) -----------------------------------------
     //
@@ -140,6 +166,14 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     // `tickets.channel` column through the shared ticket-visibility scope.
     Route::get('/channels/overview', ChannelOverviewController::class);
 
+    // ---- Organization branding read (Story 20, WIS-20) -----------------
+    //
+    // Read-only, every ACTIVE authenticated user — the SPA reads this on
+    // boot to apply the brand override. Admin-gating it would leave every
+    // agent on the default palette; MANAGING branding stays
+    // administrator-only, under the /admin group below.
+    Route::get('/organization/branding', OrganizationBrandingController::class);
+
     // ---- Administration (Story 08) ------------------------------------
     //
     // The `administrator` gate is on the GROUP, not on individual routes, so
@@ -163,6 +197,38 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
         Route::get('/settings', [SettingsController::class, 'index']);
         Route::patch('/settings', [SettingsController::class, 'update']);
+
+        // ---- Integrations (Story 18, WIS-19) --------------------------
+        //
+        // {type} is INTENTIONALLY unconstrained. AdminAuthorizationTest
+        // walks the live route list and substitutes only {user}; a
+        // ->whereIn('type', ...) constraint would make the literal "{type}"
+        // URI 404 before the administrator gate could 403, and the "denies
+        // an Agent on EVERY /api/admin/* route" assertion would fail for
+        // the wrong reason. The controller resolves the enum and aborts 404
+        // on an unknown value, which is the same guarantee one layer in.
+        Route::get('/integrations', [IntegrationController::class, 'index']);
+        Route::put('/integrations/{type}', [IntegrationController::class, 'save']);
+        Route::post('/integrations/{type}/test', [IntegrationController::class, 'test']);
+        Route::delete('/integrations/{type}', [IntegrationController::class, 'destroy']);
+
+        // ---- Organization (Story 20, WIS-20) ---------------------------
+        //
+        // No DELETE on either entity: deactivation is PATCH is_active=false
+        // (Decision 10), which is what keeps departments and users.branch_id
+        // from ever being orphaned.
+        Route::get('/branches', [BranchController::class, 'index']);
+        Route::post('/branches', [BranchController::class, 'store']);
+        Route::patch('/branches/{branch}', [BranchController::class, 'update']);
+
+        Route::get('/departments', [DepartmentController::class, 'index']);
+        Route::post('/departments', [DepartmentController::class, 'store']);
+        Route::patch('/departments/{department}', [DepartmentController::class, 'update']);
+
+        Route::get('/branding', [BrandingController::class, 'show']);
+        Route::patch('/branding', [BrandingController::class, 'update']);
+        Route::post('/branding/logo', [BrandingController::class, 'uploadLogo']);
+        Route::delete('/branding/logo', [BrandingController::class, 'destroyLogo']);
     });
 
     // ---- Knowledge Base (Story 09) ------------------------------------
@@ -217,14 +283,48 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::delete('/customers/{customer}/attachments/{attachment}', [CustomerAttachmentController::class, 'destroy']);
 });
 
+// ---- Customer Portal (Story 17 / WIS-16) ------------------------------
+//
+// A THIRD audience — external customers, deliberately outside `auth:sanctum`.
+// Identity is a portal_sessions bearer token, resolved by the `portal`
+// middleware (never `auth:sanctum`, never `active` — see PortalAuth's
+// docblock). Two named limiters, both independent of `login` and `csat`:
+// `portal-access` (public, IP + identifier keyed) and `portal` (session,
+// keyed on the bearer token). `/faq/{slug}` is declared after the literal
+// `/faq`, the same ordering hazard as /tickets/meta above.
+Route::prefix('portal')->group(function () {
+    // Request uses the resend guardrail (5/min/identifier); verify has its own
+    // looser limiter so hitting PortalAccess::MAX_ATTEMPTS returns 410, not 429.
+    Route::post('/access/request', [PortalAccessController::class, 'request'])
+        ->middleware('throttle:portal-access')->name('portal.access.request');
+    Route::post('/access/verify', [PortalAccessController::class, 'verify'])
+        ->middleware('throttle:portal-verify')->name('portal.access.verify');
+    // AC6: FAQs are public content (§8) — readable BEFORE sign-in, by design.
+    Route::get('/faq', [PortalFaqController::class, 'index'])
+        ->middleware('throttle:portal-access')->name('portal.faq.index');
+    Route::get('/faq/{slug}', [PortalFaqController::class, 'show'])
+        ->middleware('throttle:portal-access')->name('portal.faq.show');
+});
+
+Route::prefix('portal')->middleware(['portal', 'throttle:portal'])->group(function () {
+    Route::get('/me', [PortalSessionController::class, 'show'])->name('portal.me');
+    Route::post('/logout', [PortalSessionController::class, 'destroy'])->name('portal.logout');
+    Route::get('/requests', [PortalRequestController::class, 'index'])->name('portal.requests.index');
+    Route::post('/requests', [PortalRequestController::class, 'store'])->name('portal.requests.store');
+    Route::get('/requests/{ticket}', [PortalRequestController::class, 'show'])->name('portal.requests.show');
+    Route::post('/requests/{ticket}/messages', [PortalRequestController::class, 'reply'])->name('portal.requests.reply');
+});
+
 // ---- CSAT public response surface (Story 13 / WIS-14) ----------------
 //
-// The FIRST public API routes in the app — deliberately OUTSIDE
-// `auth:sanctum`. Access is a signed, expiring link (`signed`) and nothing
-// else; the visitor is authenticated into nothing. `throttle:csat` is keyed
-// on IP and separate from every other limiter, so survey traffic cannot
-// exhaust the agent-facing API. SecurityHeaders is appended globally in
-// bootstrap/app.php, so these responses carry the same headers as the rest.
+// The first PUBLIC-BY-SIGNED-LINK routes in the app — deliberately outside
+// `auth:sanctum` (the Customer Portal group above is public a different way:
+// its own session token, not a signed URL). Access is a signed, expiring
+// link (`signed`) and nothing else; the visitor is authenticated into
+// nothing. `throttle:csat` is keyed on IP and separate from every other
+// limiter, so survey traffic cannot exhaust the agent-facing API.
+// SecurityHeaders is appended globally in bootstrap/app.php, so these
+// responses carry the same headers as the rest.
 //
 // Route names `csat.show` / `csat.store` are the signing key — renaming
 // either invalidates every outstanding link.

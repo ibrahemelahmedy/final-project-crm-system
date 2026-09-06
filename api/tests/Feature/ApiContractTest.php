@@ -129,6 +129,32 @@ it('adds department, initials, and last_login_at to UserResource without renamin
         ->assertJsonPath('data.home_route', '/dashboard/team');
 });
 
+it('adds branch_id, branch_name, department_id, department_name to UserResource without renaming department (Story 20)', function () {
+    $branch = \App\Models\Branch::factory()->create(['name' => 'Downtown HQ']);
+    $department = \App\Models\Department::factory()->create(['branch_id' => $branch->id, 'name' => 'Billing']);
+    $user = \App\Models\User::factory()->create([
+        'department' => 'Support Ops',
+        'branch_id' => $branch->id,
+        'department_id' => $department->id,
+        'is_active' => true,
+    ]);
+
+    $this->asToken($user->createToken('spa')->plainTextToken)
+        ->getJson('/api/user')
+        ->assertOk()
+        ->assertJsonStructure(['data' => [
+            'id', 'name', 'email', 'role', 'role_label', 'home_route', 'is_active',
+            'department', 'branch_id', 'branch_name', 'department_id', 'department_name',
+            'initials', 'last_login_at',
+        ]])
+        // The free-text column is UNCHANGED — Decision 3.
+        ->assertJsonPath('data.department', 'Support Ops')
+        ->assertJsonPath('data.branch_id', $branch->id)
+        ->assertJsonPath('data.branch_name', 'Downtown HQ')
+        ->assertJsonPath('data.department_id', $department->id)
+        ->assertJsonPath('data.department_name', 'Billing');
+});
+
 it('locks the response shape of the users, audit-log, and settings endpoints (Story 08)', function () {
     $admin = \App\Models\User::factory()->create([
         'role' => \App\Enums\UserRole::Administrator,
@@ -185,6 +211,27 @@ it('locks the response shape of the users, audit-log, and settings endpoints (St
     $this->withHeaders($auth)->patchJson('/api/admin/settings', ['settings' => ['password_min_length' => 10]])
         ->assertOk()
         ->assertJsonStructure(['data', 'changed']);
+});
+
+it('locks the response shape of the integrations endpoint and never leaks the secret (Story 18)', function () {
+    $admin = \App\Models\User::factory()->create([
+        'role' => \App\Enums\UserRole::Administrator,
+        'is_active' => true,
+    ]);
+    $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
+
+    \App\Models\Integration::factory()->create(['type' => \App\Enums\IntegrationType::Erp->value]);
+
+    $response = $this->withHeaders($auth)->getJson('/api/admin/integrations')
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [[
+                'type', 'label_key', 'status', 'endpoint_url',
+                'secret_last_four', 'last_checked_at', 'last_check_failed_at', 'last_error_key',
+            ]],
+        ]);
+
+    $response->assertJsonMissingPath('data.0.secret');
 });
 
 it('keeps the public CSAT routes outside auth:sanctum and gated by signed + throttle:csat (Story 13)', function () {
@@ -262,4 +309,79 @@ it('locks the Knowledge Base response shapes (Story 09)', function () {
         ->postJson('/api/kb/articles/bulk', ['action' => 'unpublish', 'ids' => [$article->id]])
         ->assertOk()
         ->assertJsonStructure(['action', 'affected', 'skipped']);
+});
+
+/**
+ * Story 17 (WIS-16, Customer Portal). Every /api/portal/* route, derived
+ * from the router itself, must carry a portal rate limiter — one of
+ * `throttle:portal-access` / `throttle:portal-verify` (public) or `portal`
+ * (session-gated) — and NEVER `auth:sanctum`. A new portal endpoint added
+ * without one of those gates fails this test the day it lands, the same
+ * structural guarantee AdminAuthorizationTest gives /api/admin/*.
+ */
+it('gates every portal route with a portal limiter or the portal guard, never auth:sanctum', function () {
+    $checked = 0;
+    $publicLimiters = ['throttle:portal-access', 'throttle:portal-verify'];
+
+    foreach (\Illuminate\Support\Facades\Route::getRoutes() as $route) {
+        if (! str_starts_with($route->uri(), 'api/portal/')) {
+            continue;
+        }
+
+        $middleware = $route->gatherMiddleware();
+
+        expect($middleware)->not->toContain('auth:sanctum');
+        expect(
+            array_intersect($publicLimiters, $middleware) !== []
+            || in_array('portal', $middleware, true)
+        )->toBeTrue();
+
+        $checked++;
+    }
+
+    expect($checked)->toBeGreaterThan(0);
+});
+
+it('locks the response shape of GET /api/tickets/{ticket}/ai-assist (Story 19)', function () {
+    config(['ai.enabled' => false]);
+    $agent = \App\Models\User::factory()->create([
+        'role' => \App\Enums\UserRole::Agent,
+        'is_active' => true,
+    ]);
+    $ticket = \App\Models\Ticket::factory()->assignedTo($agent)->create();
+    $token = $agent->createToken('spa')->plainTextToken;
+
+    $response = $this->asToken($token)->getJson("/api/tickets/{$ticket->id}/ai-assist");
+
+    $response->assertOk()->assertJsonStructure(['enabled', 'summary', 'suggestion']);
+    expect(array_keys($response->json()))->toEqualCanonicalizing(['enabled', 'summary', 'suggestion']);
+});
+
+it('locks the response shape of the branches, departments, and branding endpoints (Story 20)', function () {
+    $admin = \App\Models\User::factory()->create([
+        'role' => \App\Enums\UserRole::Administrator,
+        'is_active' => true,
+    ]);
+    $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
+
+    $branch = \App\Models\Branch::factory()->create();
+    \App\Models\Department::factory()->create(['branch_id' => $branch->id]);
+
+    $this->withHeaders($auth)->getJson('/api/admin/branches')
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [['id', 'name', 'region', 'timezone', 'is_active', 'agent_count', 'created_at']],
+        ]);
+
+    $this->withHeaders($auth)->getJson('/api/admin/departments')
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [['id', 'branch_id', 'branch_name', 'name', 'is_active', 'agent_count', 'created_at']],
+        ]);
+
+    $response = $this->withHeaders($auth)->getJson('/api/admin/branding')
+        ->assertOk()
+        ->assertJsonStructure(['data' => ['primary_color', 'logo_url', 'updated_at']]);
+
+    $response->assertJsonMissingPath('data.logo_path');
 });

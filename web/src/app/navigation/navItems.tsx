@@ -110,6 +110,28 @@ export const navItems: NavItemDef[] = [
       'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3.5 20c.3-3 2.7-5 5.5-5s5.2 2 5.5 5 M18 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M18 10.5v1M18 15.3v1M15.4 12.4l.9.5M19.7 15l.9.5M15.4 15.6l.9-.5M19.7 12l.9-.5'
     ),
   },
+  {
+    // Story 18 (WIS-19). Admin-only config surface for ERP / Email / SMS /
+    // WhatsApp / Custom API connections — no PagePlaceholder predecessor,
+    // this is a brand-new nav entry.
+    labelKey: 'nav.integrations',
+    label: 'Integrations',
+    to: '/integrations',
+    group: 'admin',
+    roles: ['administrator'],
+    icon: icon('M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4 M7 7h10v10H7z'),
+  },
+  {
+    // Story 20 (WIS-20). Admin-only Branches/Departments/Branding screen —
+    // no PagePlaceholder predecessor, a brand-new nav entry, last under
+    // ADMIN per the artboards' sidebar order.
+    labelKey: 'nav.organization',
+    label: 'Organization',
+    to: '/organization',
+    group: 'admin',
+    roles: ['administrator'],
+    icon: icon('M4 5.5C4 4.7 4.7 4 5.5 4h13c.8 0 1.5.7 1.5 1.5v15H4z M9 9h2M9 13h2M9 17h2M13 9h2M13 13h2M13 17h2'),
+  },
 ];
 
 // Filtering here is a UX affordance, not a security boundary — server-side

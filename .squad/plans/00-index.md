@@ -27,6 +27,11 @@ file, not this column, when the two disagree.
 | 13 | csat-collection | [csat-collection/00-overview.md](csat-collection/00-overview.md) | CSAT Collection (post-resolution survey) | WIS-14 | contract |
 | 14 | channels-overview | [channels-overview/00-overview.md](channels-overview/00-overview.md) | Channels Overview (read-only) | WIS-15 | contract |
 | 15 | internationalization | [internationalization/00-overview.md](internationalization/00-overview.md) | Internationalization (Arabic & English) | WIS-11 | contract |
+| 16 | i18n-retrofit | [i18n-retrofit/00-overview.md](i18n-retrofit/00-overview.md) | i18n String Extraction Retrofit — Complete WIS-11 Coverage | WIS-17 | full |
+| 17 | customer-portal | [customer-portal/00-overview.md](customer-portal/00-overview.md) | Customer Portal — Self-Service (Category 8) | WIS-16 | full |
+| 19 | ai-assist-panel | [ai-assist-panel/00-overview.md](ai-assist-panel/00-overview.md) | AI Assist — Ticket Summary & Suggested Reply (Category 7, partial) | WIS-18 | **implemented** |
+| 18 | integrations-erp | [integrations-erp/00-overview.md](integrations-erp/00-overview.md) | Integrations & ERP — Admin Connection Management (Category 11) | WIS-19 | **implemented** |
+| 20 | organization-settings | [organization-settings/00-overview.md](organization-settings/00-overview.md) | Organization Settings — Branches, Departments & Branding (Category 12, remainder) | WIS-20 | **implemented** |
 
 ## Two plan depths — read this before implementing
 
@@ -59,8 +64,27 @@ already cite it.
                                                      └── 14 channels
         08 users-roles ── (depends on 01 only; also resolves the `teams` debt)
         09 knowledge-base ── (depends on 02; feeds 05's article picker)
-        15 i18n ── (depends on 02; touches every screen's strings — last on purpose)
+        15 i18n ── 16 i18n-retrofit ── (15 builds the machine; 16 extracts every screen's strings)
+
+        17 customer-portal ── depends on 03·04·05·09·13·15, coordinates with 16
+                              (a THIRD audience outside auth:sanctum — after everything)
+
+        18 integrations-erp ── depends on 01·02·06·08·14·15 only (no product data)
+                              — the ADMIN CONFIG counterpart to 14 channels; pullable earlier
+
+        19 ai-assist-panel ── depends on 04·05·10·15, coordinates with 16
+                              (fills the slot 05 reserved and left empty; a leaf — nothing
+                               depends on it, and it is the first PAID outbound call)
+
+        20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
+                              (closes Category 12's remaining three bullets; reuses 08's admin
+                               gate and `settings` table wholesale and adds NO new authorization
+                               boundary — the first story to make the app's palette data-driven)
 ```
+
+**Rows 18 and 19 are listed out of numeric order above.** `ai-assist-panel` (WIS-18) holds `19` and
+`integrations-erp` (WIS-19) holds `18`; the tracker ids and the sequence numbers cross over. Read
+the `NN` column, not the row order.
 
 ## Cross-cutting rules every plan honours
 
@@ -82,3 +106,7 @@ already cite it.
   mutation invalidates `ticketKeys.all`.
 - **Filter and pagination state lives in the URL**, never in component state.
 - **Every data screen ships all four async states** — loading, error, empty, success.
+- **Two identities, never mixed.** `users` + `auth:sanctum` is staff; `portal_sessions` + the
+  `portal` middleware (Story 17) is external customers. A `Customer` never becomes
+  `$request->user()`, and no `/api/portal/*` route carries `auth:sanctum`. Any customer-facing
+  render of a ticket thread goes through `TicketMessage::publicOnly()` **in the query**.

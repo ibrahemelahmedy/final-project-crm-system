@@ -16,6 +16,8 @@ enum NotificationType: string
     case SlaBreached = 'sla_breached';
     case Mention = 'mention';
     case TaskDue = 'task_due';
+    // Story 17 (WIS-16): a customer replied to their portal request.
+    case CustomerReplied = 'customer_replied';
 
     public function label(): string
     {
@@ -24,6 +26,7 @@ enum NotificationType: string
             self::SlaBreached => 'SLA breached',
             self::Mention => 'Mention',
             self::TaskDue => 'Task due',
+            self::CustomerReplied => 'Customer replied',
         };
     }
 
@@ -35,6 +38,7 @@ enum NotificationType: string
             self::SlaBreached => 'danger',
             self::Mention => 'info',
             self::TaskDue => 'success',
+            self::CustomerReplied => 'info',
         };
     }
 

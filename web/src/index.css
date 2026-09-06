@@ -41,6 +41,15 @@ body, html, #root {
    direction). See app/providers/UiPreferencesContext.tsx.
    ========================================================================== */
 :root {
+  /* Story 20 (WIS-20). The ONLY token an admin-saved primary color
+     overrides — set inline on <html> by BrandingProvider, which outranks
+     this default in both themes. Exactly three consumers below (--btn-bg,
+     --nav-active-fg, --bulk-bar-fg) plus the .fv focus outline read this
+     token; every other #4F46E5/#818CF8 use in this file is an AA-tuned
+     fg/bg pair or a chart series and is deliberately left alone — see the
+     Branding tokens section near the end of this file. */
+  --brand-primary: #4F46E5;
+
   --bg-page: #F8FAFC;
   --bg-card: #FFFFFF;
   --border-card: #E2E8F0;
@@ -48,7 +57,7 @@ body, html, #root {
   --text-muted: #64748B;
   --input-bg: #FFFFFF;
   --input-border: #CBD5E1;
-  --btn-bg: #4F46E5;
+  --btn-bg: var(--brand-primary);
   --btn-text: #FFFFFF;
   --btn-disabled: #C7D2FE;
   --btn-disabled-text: #4338CA;
@@ -63,7 +72,7 @@ body, html, #root {
   --header-border: #E2E8F0;
   --header-height: 68px;
   --nav-active-bg: #EEF2FF;
-  --nav-active-fg: #4F46E5;
+  --nav-active-fg: var(--brand-primary);
   --nav-idle-fg: #475569;
   --nav-group-label: #94A3B8;
   --shell-breakpoint: 1024px;
@@ -81,7 +90,7 @@ body, html, #root {
   --table-checkbox-border: #CBD5E1;  /* LightLTR line 83 */
   --bulk-bar-bg: #EEF2FF;            /* LightRTL line 66 */
   --bulk-bar-border: #C7D2FE;
-  --bulk-bar-fg: #4F46E5;
+  --bulk-bar-fg: var(--brand-primary);
   --tier-standard-bg: #F1F5F9;   --tier-standard-fg: #64748B;    /* LightLTR line 90 */
   --tier-premium-bg: #FFFBEB;    --tier-premium-fg: #B45309;     /* LightLTR line 105 — badge_text_on_tint */
   --tier-enterprise-bg: #EEF2FF; --tier-enterprise-fg: #4F46E5;  /* LightLTR line 85 */
@@ -138,6 +147,12 @@ body, html, #root {
   --meta-panel-bg: #FFFFFF; --meta-label-fg: #94A3B8; --meta-card-bg: #F8FAFC;
   --composer-placeholder: #94A3B8;
   --thread-card-radius: 12px;
+  /* AI Assist (Story 19 / WIS-18) — WisalAIAssistPanel-LightLTR.dc.html */
+  --ai-card-bg: #F5F3FF; --ai-card-border: #DDD6FE;
+  --ai-chip-bg: #7C3AED; --ai-chip-fg: #FFFFFF;
+  --ai-label-fg: #5B21B6; --ai-body-fg: #4C1D95; --ai-action-fg: #7C3AED;
+  --ai-used-bg: #ECFDF5; --ai-used-border: #A7F3D0; --ai-used-fg: #065F46;
+  --ai-idle-border: #CBD5E1; --ai-idle-fg: #64748B;
 
   /* Users & Roles Administration — WisalUsers-LightLTR.dc.html */
   --role-agent-bg: #EEF2FF;         --role-agent-fg: #4F46E5;
@@ -164,10 +179,22 @@ body, html, #root {
   --due-soon-fg: #B45309;    --due-soon-bg: #FFFBEB;
   --due-upcoming-fg: #64748B; --due-upcoming-bg: #F1F5F9;
   --due-completed-fg: #059669; --due-completed-bg: #ECFDF5;
+
+  /* Organization Settings (Story 20, WIS-20) — WisalOrgSettings-{Branches,
+     Departments,Branding}-LightLTR.dc.html */
+  --org-status-active-bg: #ECFDF5;   --org-status-active-fg: #059669;
+  --org-status-inactive-bg: #F1F5F9; --org-status-inactive-fg: #64748B;
+  --org-tab-active-fg: var(--brand-primary); --org-tab-idle-fg: #64748B;
+  --org-row-action-border: #E2E8F0;
+  --org-row-action-danger-fg: #DC2626;
+  --contrast-pass-fg: #059669;
+  --contrast-warn-fg: #7F1D1D; --contrast-warn-bg: #FEF2F2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --brand-primary: #818CF8;
+
     --bg-page: #121317;
     --bg-card: #1C1D24;
     --border-card: #2A2C33;
@@ -175,7 +202,7 @@ body, html, #root {
     --text-muted: #94A3B8;
     --input-bg: #121317;
     --input-border: #2A2C33;
-    --btn-bg: #818CF8;
+    --btn-bg: var(--brand-primary);
     --btn-text: #1C1D24;
     --btn-disabled: #3730A3;
     --btn-disabled-text: #818CF8;
@@ -188,7 +215,7 @@ body, html, #root {
     --header-bg: #1C1D24;
     --header-border: #2A2C33;
     --nav-active-bg: rgba(129, 140, 248, 0.14);
-    --nav-active-fg: #A5B4FC;
+    --nav-active-fg: var(--brand-primary);
     --nav-idle-fg: #94A3B8;
     --nav-group-label: #94A3B8;
 
@@ -201,7 +228,7 @@ body, html, #root {
     --table-checkbox-border: #3F4148;
     --bulk-bar-bg: rgba(129, 140, 248, 0.12);
     --bulk-bar-border: rgba(129, 140, 248, 0.35);
-    --bulk-bar-fg: #A5B4FC;
+    --bulk-bar-fg: var(--brand-primary);
     --tier-standard-bg: #2A2C33;                   --tier-standard-fg: #94A3B8;
     --tier-premium-bg: rgba(251, 191, 36, 0.14);    --tier-premium-fg: #FBBF24;
     --tier-enterprise-bg: rgba(129, 140, 248, 0.14); --tier-enterprise-fg: #A5B4FC;
@@ -247,6 +274,12 @@ body, html, #root {
     --meta-panel-bg: #1C1D24; --meta-label-fg: #64748B; --meta-card-bg: #202128;
     --composer-placeholder: #64748B;
     --thread-card-radius: 12px;
+    /* AI Assist (Story 19 / WIS-18) — WisalAIAssistPanel-DarkLTR.dc.html */
+    --ai-card-bg: rgba(167, 139, 250, 0.14); --ai-card-border: rgba(167, 139, 250, 0.35);
+    --ai-chip-bg: #8B5CF6; --ai-chip-fg: #FFFFFF;
+    --ai-label-fg: #C4B5FD; --ai-body-fg: #DDD6FE; --ai-action-fg: #C4B5FD;
+    --ai-used-bg: rgba(52, 211, 153, 0.14); --ai-used-border: rgba(52, 211, 153, 0.35); --ai-used-fg: #34D399;
+    --ai-idle-border: #475569; --ai-idle-fg: #94A3B8;
 
     /* Users & Roles Administration — WisalUsers-DarkLTR.dc.html */
     --role-agent-bg: rgba(129, 140, 248, 0.14); --role-agent-fg: #A5B4FC;
@@ -272,10 +305,22 @@ body, html, #root {
     --due-soon-fg: #FBBF24;     --due-soon-bg: rgba(251, 191, 36, 0.14);
     --due-upcoming-fg: #94A3B8; --due-upcoming-bg: #2A2C33;
     --due-completed-fg: #34D399; --due-completed-bg: rgba(52, 211, 153, 0.14);
+
+    /* Organization Settings (Story 20, WIS-20) — WisalOrgSettings-{Branches,
+       Departments,Branding}-DarkLTR.dc.html */
+    --org-status-active-bg: rgba(52, 211, 153, 0.14);   --org-status-active-fg: #34D399;
+    --org-status-inactive-bg: #2A2C33;                  --org-status-inactive-fg: #94A3B8;
+    --org-tab-active-fg: var(--brand-primary); --org-tab-idle-fg: #94A3B8;
+    --org-row-action-border: #2A2C33;
+    --org-row-action-danger-fg: #F87171;
+    --contrast-pass-fg: #34D399;
+    --contrast-warn-fg: #FCA5A5; --contrast-warn-bg: rgba(248, 113, 113, 0.14);
   }
 }
 
 :root[data-theme="dark"] {
+  --brand-primary: #818CF8;
+
   --bg-page: #121317;
   --bg-card: #1C1D24;
   --border-card: #2A2C33;
@@ -283,7 +328,7 @@ body, html, #root {
   --text-muted: #94A3B8;
   --input-bg: #121317;
   --input-border: #2A2C33;
-  --btn-bg: #818CF8;
+  --btn-bg: var(--brand-primary);
   --btn-text: #1C1D24;
   --btn-disabled: #3730A3;
   --btn-disabled-text: #818CF8;
@@ -295,7 +340,7 @@ body, html, #root {
   --header-bg: #1C1D24;
   --header-border: #2A2C33;
   --nav-active-bg: rgba(129, 140, 248, 0.14);
-  --nav-active-fg: #A5B4FC;
+  --nav-active-fg: var(--brand-primary);
   --nav-idle-fg: #94A3B8;
   --nav-group-label: #94A3B8;
 
@@ -307,7 +352,7 @@ body, html, #root {
   --table-checkbox-border: #3F4148;
   --bulk-bar-bg: rgba(129, 140, 248, 0.12);
   --bulk-bar-border: rgba(129, 140, 248, 0.35);
-  --bulk-bar-fg: #A5B4FC;
+  --bulk-bar-fg: var(--brand-primary);
   --tier-standard-bg: #2A2C33;                    --tier-standard-fg: #94A3B8;
   --tier-premium-bg: rgba(251, 191, 36, 0.14);     --tier-premium-fg: #FBBF24;
   --tier-enterprise-bg: rgba(129, 140, 248, 0.14); --tier-enterprise-fg: #A5B4FC;
@@ -352,6 +397,12 @@ body, html, #root {
   --meta-panel-bg: #1C1D24; --meta-label-fg: #64748B; --meta-card-bg: #202128;
   --composer-placeholder: #64748B;
   --thread-card-radius: 12px;
+  /* AI Assist (Story 19 / WIS-18) — WisalAIAssistPanel-DarkLTR.dc.html */
+  --ai-card-bg: rgba(167, 139, 250, 0.14); --ai-card-border: rgba(167, 139, 250, 0.35);
+  --ai-chip-bg: #8B5CF6; --ai-chip-fg: #FFFFFF;
+  --ai-label-fg: #C4B5FD; --ai-body-fg: #DDD6FE; --ai-action-fg: #C4B5FD;
+  --ai-used-bg: rgba(52, 211, 153, 0.14); --ai-used-border: rgba(52, 211, 153, 0.35); --ai-used-fg: #34D399;
+  --ai-idle-border: #475569; --ai-idle-fg: #94A3B8;
 
   /* Users & Roles Administration — WisalUsers-DarkLTR.dc.html */
   --role-agent-bg: rgba(129, 140, 248, 0.14); --role-agent-fg: #A5B4FC;
@@ -376,9 +427,21 @@ body, html, #root {
   --due-soon-fg: #FBBF24;     --due-soon-bg: rgba(251, 191, 36, 0.14);
   --due-upcoming-fg: #94A3B8; --due-upcoming-bg: #2A2C33;
   --due-completed-fg: #34D399; --due-completed-bg: rgba(52, 211, 153, 0.14);
+
+  /* Organization Settings (Story 20, WIS-20) — WisalOrgSettings-{Branches,
+     Departments,Branding}-DarkLTR.dc.html */
+  --org-status-active-bg: rgba(52, 211, 153, 0.14);   --org-status-active-fg: #34D399;
+  --org-status-inactive-bg: #2A2C33;                  --org-status-inactive-fg: #94A3B8;
+  --org-tab-active-fg: var(--brand-primary); --org-tab-idle-fg: #94A3B8;
+  --org-row-action-border: #2A2C33;
+  --org-row-action-danger-fg: #F87171;
+  --contrast-pass-fg: #34D399;
+  --contrast-warn-fg: #FCA5A5; --contrast-warn-bg: rgba(248, 113, 113, 0.14);
 }
 
 :root[data-theme="light"] {
+  --brand-primary: #4F46E5;
+
   --bg-page: #F8FAFC;
   --bg-card: #FFFFFF;
   --border-card: #E2E8F0;
@@ -386,7 +449,7 @@ body, html, #root {
   --text-muted: #64748B;
   --input-bg: #FFFFFF;
   --input-border: #CBD5E1;
-  --btn-bg: #4F46E5;
+  --btn-bg: var(--brand-primary);
   --btn-text: #FFFFFF;
   --btn-disabled: #C7D2FE;
   --btn-disabled-text: #4338CA;
@@ -398,7 +461,7 @@ body, html, #root {
   --header-bg: #FFFFFF;
   --header-border: #E2E8F0;
   --nav-active-bg: #EEF2FF;
-  --nav-active-fg: #4F46E5;
+  --nav-active-fg: var(--brand-primary);
   --nav-idle-fg: #475569;
   --nav-group-label: #94A3B8;
 
@@ -411,7 +474,7 @@ body, html, #root {
   --table-checkbox-border: #CBD5E1;
   --bulk-bar-bg: #EEF2FF;
   --bulk-bar-border: #C7D2FE;
-  --bulk-bar-fg: #4F46E5;
+  --bulk-bar-fg: var(--brand-primary);
   --tier-standard-bg: #F1F5F9;   --tier-standard-fg: #64748B;
   --tier-premium-bg: #FFFBEB;    --tier-premium-fg: #B45309;
   --tier-enterprise-bg: #EEF2FF; --tier-enterprise-fg: #4F46E5;
@@ -457,6 +520,12 @@ body, html, #root {
   --meta-panel-bg: #FFFFFF; --meta-label-fg: #94A3B8; --meta-card-bg: #F8FAFC;
   --composer-placeholder: #94A3B8;
   --thread-card-radius: 12px;
+  /* AI Assist (Story 19 / WIS-18) — WisalAIAssistPanel-LightLTR.dc.html */
+  --ai-card-bg: #F5F3FF; --ai-card-border: #DDD6FE;
+  --ai-chip-bg: #7C3AED; --ai-chip-fg: #FFFFFF;
+  --ai-label-fg: #5B21B6; --ai-body-fg: #4C1D95; --ai-action-fg: #7C3AED;
+  --ai-used-bg: #ECFDF5; --ai-used-border: #A7F3D0; --ai-used-fg: #065F46;
+  --ai-idle-border: #CBD5E1; --ai-idle-fg: #64748B;
 
   /* Users & Roles Administration — WisalUsers-LightLTR.dc.html */
   --role-agent-bg: #EEF2FF;         --role-agent-fg: #4F46E5;
@@ -470,6 +539,16 @@ body, html, #root {
   --avatar-amber-bg: #FEF3C7;       --avatar-amber-fg: #92400E;
   --avatar-green-bg: #DCFCE7;       --avatar-green-fg: #15803D;
   --avatar-slate-bg: #F1F5F9;       --avatar-slate-fg: #64748B;
+
+  /* Organization Settings (Story 20, WIS-20) — WisalOrgSettings-{Branches,
+     Departments,Branding}-LightLTR.dc.html */
+  --org-status-active-bg: #ECFDF5;   --org-status-active-fg: #059669;
+  --org-status-inactive-bg: #F1F5F9; --org-status-inactive-fg: #64748B;
+  --org-tab-active-fg: var(--brand-primary); --org-tab-idle-fg: #64748B;
+  --org-row-action-border: #E2E8F0;
+  --org-row-action-danger-fg: #DC2626;
+  --contrast-pass-fg: #059669;
+  --contrast-warn-fg: #7F1D1D; --contrast-warn-bg: #FEF2F2;
 }
 
 body {
@@ -868,7 +947,11 @@ body {
 }
 
 .fv:focus-visible {
-  outline: 2px solid #4F46E5;
+  /* Story 20 (WIS-20): the artboards' own .fv:focus-visible rule uses the
+     primary color, so the focus ring following the brand override is the
+     design's intent — one of the four deliberate --brand-primary
+     consumers (Decision 9). */
+  outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -2464,6 +2547,115 @@ body {
 .thread-skeleton-bubble { block-size: 56px; inline-size: 60%; border-radius: 10px; }
 .thread-skeleton-bubble--out { align-self: flex-end; }
 
+/* ---- AI Assist (Story 19 / WIS-18) ----------------------------------------
+   WisalAIAssistPanel-{Light,Dark}{LTR,RTL}.dc.html. Every AI-produced surface
+   uses this violet card + the `AI` chip so it is never mistaken for
+   agent-authored content (the intake's distinguishability requirement). All
+   sizing is logical so the RTL artboards mirror with no direction-specific
+   rule; the regenerate icon is a circular arrow and needs no mirror either
+   way. Loading bars reuse the shared `.sk` shimmer utility, matching
+   ThreadSkeleton above. ------------------------------------------------- */
+
+.assist-card {
+  background: var(--ai-card-bg);
+  border: 1px solid var(--ai-card-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.assist-card--summary { gap: 8px; }
+
+.assist-card-header { display: flex; align-items: center; justify-content: space-between; }
+.assist-chip-group { display: flex; align-items: center; gap: 6px; }
+
+.assist-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--ai-chip-bg);
+  color: var(--ai-chip-fg);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+.assist-label { font-size: 11px; font-weight: 700; color: var(--ai-label-fg); letter-spacing: 0.03em; }
+
+.assist-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--ai-action-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: pointer;
+}
+.assist-icon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.assist-body { font-size: 13px; line-height: 1.6; color: var(--ai-body-fg); }
+.assist-card--summary .assist-body { font-size: 12.5px; line-height: 1.55; }
+.assist-meta { font-size: 11px; color: var(--text-muted); }
+
+.assist-actions { display: flex; align-items: center; gap: 10px; }
+.assist-use-btn {
+  background: var(--ai-chip-bg);
+  color: var(--ai-chip-fg);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.assist-dismiss-btn {
+  background: transparent;
+  color: var(--ai-action-fg);
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 7px 4px;
+}
+
+.assist-idle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px dashed var(--ai-idle-border);
+  color: var(--ai-idle-fg);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.assist-used {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ai-used-bg);
+  border: 1px solid var(--ai-used-border);
+  color: var(--ai-used-fg);
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.assist-failed { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+.assist-retry-btn { background: transparent; border: none; color: var(--nav-active-fg); font-size: 12px; font-weight: 700; cursor: pointer; padding: 0; }
+
+.assist-skeleton-row { display: flex; align-items: center; justify-content: space-between; }
+.assist-skeleton-actions { display: flex; gap: 10px; }
+
 .tq-subject-link { color: inherit; text-decoration: none; }
 .tq-subject-link:hover, .tq-subject-link:focus-visible { text-decoration: underline; }
 
@@ -3943,3 +4135,314 @@ body {
   .slar-card { align-items: flex-start; flex-wrap: wrap; }
   .slar-facts { gap: 16px 24px; }
 }
+
+/* ---------------------------------------------------------------------------
+   Integrations (Story 18, WIS-19) — WisalIntegrationsAdmin-*.dc.html
+
+   Reuses --status-active-* and --status-inactive-* (connected, not-connected
+   pills), --danger-fg (error pill and Disconnect), --bg-card and
+   --border-card (card and notice), --btn-* via the shared .dt-btn family,
+   and the .modal-* classes from components/ui/Modal.tsx. Adds no new colour
+   token.
+   --------------------------------------------------------------------------- */
+.intg-page { display: flex; flex-direction: column; gap: 18px; }
+
+.intg-head { display: flex; flex-direction: column; gap: 4px; }
+.intg-title { font-size: 22px; font-weight: 700; color: var(--text-main); }
+.intg-subtitle { font-size: 13px; color: var(--text-muted); }
+
+.intg-notice {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-inline-size: 72ch;
+}
+
+.intg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.intg-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.intg-card-head { display: flex; align-items: flex-start; gap: 10px; }
+.intg-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 8px;
+  background: var(--bg-page);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.intg-card-title-group { display: flex; flex-direction: column; gap: 4px; }
+.intg-card-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0; }
+
+.intg-card-help { font-size: 12.5px; color: var(--text-muted); margin: 0; flex-grow: 1; }
+
+.intg-card-action { align-self: flex-start; }
+
+.intg-card-audit { font-size: 11.5px; color: var(--text-muted); margin: 0; }
+.intg-card-audit-error { color: var(--danger-fg); }
+
+/* The dot is decorative; the word beside it is the actual signal — colour is
+   never the only status indicator (brief.md). */
+.intg-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.intg-pill-dot { inline-size: 6px; block-size: 6px; border-radius: 999px; flex-shrink: 0; }
+.intg-pill-connected { color: var(--status-active-fg); }
+.intg-pill-connected .intg-pill-dot { background: var(--status-active-dot); }
+.intg-pill-not_connected { color: var(--status-inactive-fg); }
+.intg-pill-not_connected .intg-pill-dot { background: var(--status-inactive-dot); }
+.intg-pill-error { color: var(--danger-fg); }
+.intg-pill-error .intg-pill-dot { background: var(--danger-fg); }
+
+.intg-skeleton { block-size: 132px; border-radius: 12px; }
+
+.intg-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+}
+.intg-state-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+.intg-state-body { font-size: 13px; color: var(--text-muted); max-inline-size: 44ch; }
+.intg-state .dt-btn { margin-block-start: 8px; }
+
+/* ---- Connect / Configure modal ---- */
+
+.intg-field { display: flex; flex-direction: column; gap: 6px; margin-block-end: 14px; }
+.intg-field-label { font-size: 12.5px; font-weight: 600; color: var(--text-main); }
+.intg-field-hint { font-size: 11.5px; color: var(--text-muted); margin: 0; }
+.intg-field-error { font-size: 12px; color: var(--danger-fg); margin: 0; }
+
+.intg-input {
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+.intg-secret-row { display: flex; gap: 6px; }
+.intg-secret-row .intg-input { flex-grow: 1; }
+.intg-secret-btn { white-space: nowrap; }
+
+.intg-test-help { font-size: 11.5px; color: var(--text-muted); margin-block-end: 10px; }
+
+.intg-test-banner {
+  font-size: 12.5px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-block-end: 14px;
+}
+.intg-test-banner-error { background: var(--prio-urgent-bg); color: var(--danger-fg); }
+.intg-test-banner-ok { background: var(--status-resolved-bg); color: var(--status-resolved-fg); }
+
+.intg-modal-footer { display: flex; align-items: center; gap: 8px; }
+.intg-modal-footer-spacer { flex-grow: 1; }
+
+/* Story 04's breakpoint, reused — not a second one. */
+@media (max-width: 900px) {
+  .intg-grid { grid-template-columns: 1fr; }
+  .intg-secret-row { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   Organization Settings (Story 20 / WIS-20)
+   docs/design/references/{19.WisalOrgSettings-Branding,20.WisalOrgSettings-
+   Departments,21.WisalOrgSettings-Branches}/ — all four variants each. Every
+   colour is a token defined in all four theme blocks above (search
+   `--org-` / `--contrast-`); logical properties throughout, so the RTL
+   artboards are these same rules mirrored, never a second stylesheet. The
+   edit pencil and the deactivate circle (RowActions.tsx) are both
+   direction-neutral glyphs and are never flipped.
+   ========================================================================== */
+
+.org-page { display: flex; flex-direction: column; gap: 16px; }
+
+.org-tabs {
+  display: flex;
+  gap: 4px;
+  border-block-end: 1px solid var(--border-card);
+}
+.org-tab {
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--org-tab-idle-fg);
+  text-decoration: none;
+  border-block-end: 2px solid transparent;
+  margin-block-end: -1px;
+}
+.org-tab-active {
+  color: var(--org-tab-active-fg);
+  border-block-end-color: var(--org-tab-active-fg);
+}
+
+.org-tab-panel { display: flex; flex-direction: column; gap: 14px; }
+.org-tab-toolbar { display: flex; justify-content: flex-end; }
+
+.org-status-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.org-status-pill-active { background: var(--org-status-active-bg); color: var(--org-status-active-fg); }
+.org-status-pill-inactive { background: var(--org-status-inactive-bg); color: var(--org-status-inactive-fg); }
+
+.org-row-actions { display: flex; gap: 6px; }
+.org-row-action-btn {
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--org-row-action-border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.org-row-action-btn-danger { color: var(--org-row-action-danger-fg); }
+.org-row-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.org-no-branch-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--contrast-warn-bg);
+  color: var(--contrast-warn-fg);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.org-no-branch-banner-link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.form-field-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.form-field select {
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+.dt-btn-text {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 9px 4px;
+}
+
+/* ---- Branding tab ------------------------------------------------------- */
+
+.org-branding-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .org-branding-grid { grid-template-columns: 1fr; }
+}
+
+.org-branding-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.org-branding-section-title { font-size: 14px; font-weight: 700; color: var(--text-main); }
+.org-branding-status { font-size: 13px; color: var(--text-main); }
+.org-branding-logo-actions { display: flex; gap: 10px; }
+.org-branding-divider { block-size: 1px; background: var(--border-card); margin-block: 4px; }
+
+.org-color-picker-row { display: flex; align-items: center; gap: 12px; }
+.org-color-swatch {
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--border-card);
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+.org-color-hex-input {
+  block-size: 38px;
+  border-radius: 6px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  padding-inline: 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+}
+
+.org-contrast-pass { font-size: 11.5px; color: var(--contrast-pass-fg); font-weight: 600; }
+.org-contrast-warn {
+  font-size: 11.5px;
+  color: var(--contrast-warn-fg);
+  background: var(--contrast-warn-bg);
+  border-radius: 6px;
+  padding: 8px 10px;
+  line-height: 1.5;
+}
+
+.org-branding-actions { display: flex; gap: 10px; margin-block-start: 4px; }
+
+.org-brand-preview-row { display: flex; align-items: center; gap: 10px; }
+.org-brand-preview-logo { inline-size: 26px; block-size: 26px; object-fit: contain; }
+.org-brand-preview-title { font-size: 18px; font-weight: 700; color: var(--text-main); }

@@ -321,12 +321,12 @@ Testing Library against `web/src/test/setup.ts`.
 
 ## Done Criteria
 
-- [ ] Every notification-generating event (SLA at-risk/breached from Story 06; mention and task-due
+- [x] Every notification-generating event (SLA at-risk/breached from Story 06; mention and task-due
       from Story 10) **persists a row** for the target user; a user offline at the moment of an SLA
       breach sees it on next login.
 - [x] The header bell shows an unread count that is correct after a **full page refresh** and is
       **server-derived**, never client-only state.
-- [ ] Activating a notification navigates to the source record and marks it read as a result of that
+- [x] Activating a notification navigates to the source record and marks it read as a result of that
       navigation.
 - [x] The notification list is **paginated server-side** and filterable by read/unread; the table is
       never fetched in full.
@@ -334,10 +334,10 @@ Testing Library against `web/src/test/setup.ts`.
       same result as running it once.
 - [x] A user with zero notifications sees the Empty state ("You're all caught up"), not a blank
       panel.
-- [ ] A notification whose source was deleted or is no longer visible under the role model renders a
+- [x] A notification whose source was deleted or is no longer visible under the role model renders a
       clear "no longer available" state — never a raw 404, never a leak.
 - [x] Nothing is delivered to a deactivated account (Story 08).
-- [ ] The bell and panel mirror correctly in RTL and theme correctly in both themes, consistently
+- [x] The bell and panel mirror correctly in RTL and theme correctly in both themes, consistently
       with the rest of the shell.
 - [x] **The Story 02 header is not restructured** — only the notification button and its dot are
       replaced, proven by the extended `AppLayout` test.

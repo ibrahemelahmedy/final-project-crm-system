@@ -1,8 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReplyComposer } from './ReplyComposer';
 import { makeTicket } from './testUtils';
+import { SuggestedReplyCard } from '../../../ai-assist';
+import * as assistApi from '../../../ai-assist/api/assistApi';
+
+vi.mock('../../../ai-assist/api/assistApi');
 
 function setup(onSend: (body: string) => Promise<unknown>) {
   return render(<ReplyComposer ticket={makeTicket()} isSending={false} onSend={onSend} />);
@@ -44,5 +49,36 @@ describe('ReplyComposer', () => {
 
     expect(await screen.findByText('Write a reply before sending.')).toBeInTheDocument();
     expect(onSend).not.toHaveBeenCalled();
+  });
+
+  it('stays fully usable — textarea enabled, Send still fires — when the AI suggestion request fails', async () => {
+    const fetchTicketAssist = assistApi.fetchTicketAssist as ReturnType<typeof vi.fn>;
+    const generateSuggestion = assistApi.generateSuggestion as ReturnType<typeof vi.fn>;
+    fetchTicketAssist.mockResolvedValue({ enabled: true, summary: null, suggestion: null });
+    generateSuggestion.mockRejectedValue(new Error('AI is down'));
+
+    const onSend = vi.fn().mockResolvedValue(undefined);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <QueryClientProvider client={client}>
+        <ReplyComposer
+          ticket={makeTicket()}
+          isSending={false}
+          onSend={onSend}
+          assistSlot={<SuggestedReplyCard ticketId={4821} onUse={() => {}} />}
+        />
+      </QueryClientProvider>
+    );
+
+    await userEvent.click(await screen.findByRole('button', { name: /suggest a reply/i }));
+    expect(await screen.findByText(/couldn.t generate a suggestion/i)).toBeInTheDocument();
+
+    // The composer itself is untouched by the AI failure.
+    const ta = screen.getByLabelText(/reply to ticket/i);
+    expect(ta).toBeEnabled();
+    await userEvent.type(ta, 'still works');
+    await userEvent.click(screen.getByRole('button', { name: /^send$/i }));
+
+    expect(onSend).toHaveBeenCalledWith('still works');
   });
 });

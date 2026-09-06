@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ArticlePickerPanel } from '../../knowledge-base';
 import { TicketCsatPanel } from '../../csat';
+import { AiSummaryCard, SuggestedReplyCard } from '../../ai-assist';
 import { QuickReplyPicker } from '../../agent-productivity';
 import { useAuth } from '../../auth/AuthContext';
 import { useT } from '../../../i18n';
@@ -106,6 +107,7 @@ export function TicketDetailPage() {
             ticket={ticket}
             isSending={sendReply.isPending}
             onInsertAtCaret={captureInsert}
+            assistSlot={<SuggestedReplyCard ticketId={ticket.id} onUse={(text) => insertAtCaretRef.current?.(text)} />}
             toolbarSlot={
               <div className="composer-kb-slot">
                 <button
@@ -154,6 +156,7 @@ export function TicketDetailPage() {
           ticket={ticket}
           meta={meta.data}
           events={events.data?.data ?? []}
+          topSlot={<AiSummaryCard ticketId={ticket.id} />}
           extraSlot={<TicketCsatPanel ticketId={ticket.id} ticketStatus={ticket.status} />}
         />
       </div>

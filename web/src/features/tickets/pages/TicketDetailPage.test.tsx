@@ -119,6 +119,51 @@ describe('TicketDetailPage', () => {
     expect(bodies).toEqual(['m1', 'm2', 'm3']);
     document.documentElement.dir = 'ltr';
   });
+
+  it('renders the AI summary card above "Ticket details", without moving the CSAT panel slot (Story 19)', async () => {
+    get.mockImplementation((url: string) => {
+      if (url === '/tickets/4821')
+        return Promise.resolve({ data: { data: makeTicket({ status: 'resolved', status_label: 'Resolved' }) } });
+      if (url.includes('/messages'))
+        return Promise.resolve({ data: { data: [], links: {}, meta: { next_cursor: null } } });
+      if (url === '/tickets/4821/ai-assist') {
+        return Promise.resolve({
+          data: {
+            enabled: true,
+            summary: {
+              content: 'Customer resolved the issue.',
+              locale: 'en',
+              model: 'claude-opus-5',
+              created_at: '2026-08-22T08:00:00Z',
+              updated_at: '2026-08-22T08:00:00Z',
+              dismissed: false,
+            },
+            suggestion: null,
+          },
+        });
+      }
+      if (url === '/tickets/4821/csat')
+        return Promise.resolve({ data: { state: 'none', share_url: null, resolution_cycle: 1 } });
+      return Promise.resolve({ data: { data: [] } });
+    });
+
+    renderPage();
+
+    const summaryLabel = await screen.findByText('TICKET SUMMARY');
+    const ticketDetailsLabel = await screen.findByText('TICKET DETAILS');
+    const csatLabel = await screen.findByText('CSAT SURVEY');
+
+    const metaPanel = document.querySelector('.meta-panel');
+    expect(metaPanel).not.toBeNull();
+    const children = [...(metaPanel as HTMLElement).querySelectorAll('*')];
+    const indexOf = (el: Element) => children.indexOf(el);
+
+    // Summary renders BEFORE "Ticket details" (topSlot is the panel's first
+    // child); the CSAT panel (extraSlot) keeps its own, later position —
+    // Story 05's shell is otherwise untouched.
+    expect(indexOf(summaryLabel)).toBeLessThan(indexOf(ticketDetailsLabel));
+    expect(indexOf(ticketDetailsLabel)).toBeLessThan(indexOf(csatLabel));
+  });
 });
 
 function msg(id: number) {

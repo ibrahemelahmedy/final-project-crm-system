@@ -7,3 +7,7 @@ export { TicketDetailPage } from './pages/TicketDetailPage';
 export { PriorityBadge } from './components/PriorityBadge';
 export { SlaCell } from './components/SlaCell';
 export type { Ticket, TicketSla, SlaRisk, TicketPriority, TicketStatus } from './model/ticket';
+// Story 19 (WIS-18): the ai-assist feature nests its query key under
+// ticketKeys.all so every ticket mutation already invalidates it — the
+// index's cross-cutting rule that ticketKeys is the ONE keying scheme.
+export { ticketKeys } from './api/queryKeys';

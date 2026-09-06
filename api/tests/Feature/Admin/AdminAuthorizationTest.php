@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Models\Branch;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
@@ -15,16 +17,22 @@ beforeEach(function () {
     // A concrete target so {user} model binding resolves — otherwise a 404
     // would mask the 403 the guard is supposed to produce.
     $this->target = User::factory()->create(['role' => UserRole::Agent, 'is_active' => true]);
+
+    // Story 20 (WIS-20). Concrete {branch} / {department} targets for the
+    // same reason.
+    $this->branch = Branch::factory()->create();
+    $this->department = Department::factory()->create(['branch_id' => $this->branch->id]);
 });
 
 /**
- * Every registered /api/admin/* route, as [method, uri] with {user} bound to
- * a real id. Derived from the router itself, not a hand-maintained list, so a
+ * Every registered /api/admin/* route, as [method, uri] with {user}, {type},
+ * {branch}, and {department} bound to a real id / a real IntegrationType
+ * value. Derived from the router itself, not a hand-maintained list, so a
  * new admin endpoint added without a guard fails this test the day it lands.
  *
  * @return array<int, array{0: string, 1: string}>
  */
-function adminRoutes(int $targetId): array
+function adminRoutes(int $targetId, int $branchId, int $departmentId): array
 {
     $out = [];
 
@@ -38,15 +46,21 @@ function adminRoutes(int $targetId): array
                 continue;
             }
 
-            $out[] = [$method, '/'.str_replace('{user}', (string) $targetId, $route->uri())];
+            $uri = str_replace(
+                ['{user}', '{type}', '{branch}', '{department}'],
+                [(string) $targetId, 'erp', (string) $branchId, (string) $departmentId],
+                $route->uri()
+            );
+            $out[] = [$method, '/'.$uri];
         }
     }
 
     return $out;
 }
 
-it('registers at least the seven contracted admin endpoints', function () {
-    $uris = collect(adminRoutes($this->target->id))->map(fn ($r) => $r[0].' '.$r[1])->all();
+it('registers at least the eleven contracted admin endpoints', function () {
+    $uris = collect(adminRoutes($this->target->id, $this->branch->id, $this->department->id))
+        ->map(fn ($r) => $r[0].' '.$r[1])->all();
 
     expect($uris)->toContain('GET /api/admin/users')
         ->toContain('POST /api/admin/users')
@@ -55,13 +69,27 @@ it('registers at least the seven contracted admin endpoints', function () {
         ->toContain('POST /api/admin/users/'.$this->target->id.'/activate')
         ->toContain('GET /api/admin/audit-logs')
         ->toContain('GET /api/admin/settings')
-        ->toContain('PATCH /api/admin/settings');
+        ->toContain('PATCH /api/admin/settings')
+        ->toContain('GET /api/admin/integrations')
+        ->toContain('PUT /api/admin/integrations/erp')
+        ->toContain('POST /api/admin/integrations/erp/test')
+        ->toContain('DELETE /api/admin/integrations/erp')
+        ->toContain('GET /api/admin/branches')
+        ->toContain('POST /api/admin/branches')
+        ->toContain('PATCH /api/admin/branches/'.$this->branch->id)
+        ->toContain('GET /api/admin/departments')
+        ->toContain('POST /api/admin/departments')
+        ->toContain('PATCH /api/admin/departments/'.$this->department->id)
+        ->toContain('GET /api/admin/branding')
+        ->toContain('PATCH /api/admin/branding')
+        ->toContain('POST /api/admin/branding/logo')
+        ->toContain('DELETE /api/admin/branding/logo');
 });
 
 it('denies an Agent on EVERY /api/admin/* route', function () {
     $token = $this->agent->createToken('spa')->plainTextToken;
 
-    foreach (adminRoutes($this->target->id) as [$method, $uri]) {
+    foreach (adminRoutes($this->target->id, $this->branch->id, $this->department->id) as [$method, $uri]) {
         $response = $this->asToken($token)
             ->json($method, $uri);
 
@@ -72,7 +100,7 @@ it('denies an Agent on EVERY /api/admin/* route', function () {
 it('denies a Team Lead on EVERY /api/admin/* route', function () {
     $token = $this->lead->createToken('spa')->plainTextToken;
 
-    foreach (adminRoutes($this->target->id) as [$method, $uri]) {
+    foreach (adminRoutes($this->target->id, $this->branch->id, $this->department->id) as [$method, $uri]) {
         $response = $this->asToken($token)
             ->json($method, $uri);
 
@@ -81,7 +109,7 @@ it('denies a Team Lead on EVERY /api/admin/* route', function () {
 });
 
 it('denies an unauthenticated caller on EVERY /api/admin/* route', function () {
-    foreach (adminRoutes($this->target->id) as [$method, $uri]) {
+    foreach (adminRoutes($this->target->id, $this->branch->id, $this->department->id) as [$method, $uri]) {
         $response = $this->json($method, $uri);
 
         expect($response->status())->toBe(401);

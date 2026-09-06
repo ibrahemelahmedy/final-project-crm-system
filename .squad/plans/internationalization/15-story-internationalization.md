@@ -347,7 +347,7 @@ Frontend (Vitest + Testing Library):
 ## Done Criteria
 
 - [ ] Every user-facing string renders from a locale-keyed catalogue; no hard-coded English literal survives in a component, enforced by a rule or script that **fails `npm run lint` or `npx vitest run`** — not by convention, and with every exception recorded in an allowlist with a reason.
-- [ ] Switching language updates `<html lang>` and `<html dir>`, mirrors the layout, and persists **on the server per user** — a user signing in on another machine keeps their language.
+- [x] Switching language updates `<html lang>` and `<html dir>`, mirrors the layout, and persists **on the server per user** — a user signing in on another machine keeps their language.
 - [ ] Dates, times, and numbers use locale-aware formatting done **client-side via the JS `Intl` API**; the API returns ISO timestamps and raw numbers, and `grep` finds no `IntlDateFormatter` / `NumberFormatter` / `Number::` anywhere in `api/app`.
 - [x] Arabic renders in the Arabic font pairing with line-height raised ~10–15% over Latin, scoped to `[lang='ar']`.
 - [x] A key missing in the active locale falls back to English **and** logs the miss; it never renders a raw key or an empty string.

@@ -2,15 +2,23 @@
 
 namespace App\Providers;
 
+use Anthropic\Client;
 use App\Models\CustomerAttachment;
 use App\Models\Ticket;
 use App\Observers\TicketResolutionObserver;
 use App\Policies\CustomerPolicy;
 use App\Policies\ReportPolicy;
+use App\Services\Ai\AnthropicAssistGenerator;
+use App\Services\Ai\AssistGenerator;
+use App\Services\Ai\UnavailableAssistGenerator;
+use App\Services\HttpIntegrationTester;
+use App\Services\IntegrationConnectionTester;
 use App\Services\Kb\ArticleSearch;
-use App\Services\SlaClock;
 use App\Services\Kb\LikeArticleSearch;
 use App\Services\Kb\PostgresArticleSearch;
+use App\Services\MailPortalCodeNotifier;
+use App\Services\PortalCodeNotifier;
+use App\Services\SlaClock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +45,26 @@ class AppServiceProvider extends ServiceProvider
                 ? new PostgresArticleSearch
                 : new LikeArticleSearch;
         });
+
+        // Story 17 (WIS-16): the OTP delivery seam. Mail-only per Decision 4
+        // in the story plan — Category 11 (SMS/WhatsApp) is out of scope.
+        $this->app->bind(PortalCodeNotifier::class, MailPortalCodeNotifier::class);
+
+        // Story 18 (WIS-19): the "Test connection" seam. Bound to the real
+        // outbound HTTP prober here; every test in the suite binds a fake
+        // instead, so no test ever makes a real outbound request.
+        $this->app->bind(IntegrationConnectionTester::class, HttpIntegrationTester::class);
+
+        // Story 19 (WIS-18): the AI provider seam. Bound to the unavailable
+        // implementation when no key is configured, so an unconfigured
+        // deployment degrades to "no cards" instead of a 500 on every ticket
+        // open. Resolved lazily, like ArticleSearch above — nothing may read
+        // config or open a connection while the container boots.
+        $this->app->singleton(Client::class, fn () => new Client(apiKey: (string) config('ai.key')));
+
+        $this->app->bind(AssistGenerator::class, fn ($app) => config('ai.enabled')
+            ? $app->make(AnthropicAssistGenerator::class)
+            : $app->make(UnavailableAssistGenerator::class));
     }
 
     /**

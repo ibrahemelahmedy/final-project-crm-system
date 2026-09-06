@@ -1598,32 +1598,32 @@ It calls `App\Services\NotificationDispatcher::dispatch($recipient, Notification
 
 ## Done Criteria
 
-- [ ] `sla_rules` exists with `priority` **unique**, and `php artisan migrate:fresh --seed` produces exactly four rules matching the design's minute values (15/240 · 60/480 · 240/1440 · 1440/7200).
+- [x] `sla_rules` exists with `priority` **unique**, and `php artisan migrate:fresh --seed` produces exactly four rules matching the design's minute values (15/240 · 60/480 · 240/1440 · 1440/7200).
 - [x] All eleven SLA columns and all four indexes exist on `tickets`, added by a **new** migration. `2026_08_25_200001_create_tickets_table.php` and every Story 04 migration are **byte-for-byte unchanged**.
 - [ ] `php artisan migrate:rollback --step=2` succeeds **against PostgreSQL**, not only under the SQLite test suite.
-- [ ] `TicketResource.sla` returns **exactly** `due_at`, `minutes_left`, `risk` — same three names, same order — with `risk` one of `"breached" | "at_risk" | "ok" | null`. Asserted by a key-list test, not by inspection.
-- [ ] A page of 25 tickets issues **no additional query** for the `sla` block, asserted by a query-count test.
-- [ ] `SlaClock` is the only class in `api/app/` containing threshold arithmetic. `grep -rn "at_risk_threshold_pct" api/app/` returns hits **only** in `SlaClock.php`, `SlaRule.php`, `SlaRuleResource.php` and the two FormRequests.
-- [ ] Editing an SLA rule leaves every existing ticket's `resolution_due_at`, `sla_at_risk_at` and `risk` **unchanged**, proven by `SlaRuleIsNotRetroactiveTest`.
-- [ ] A ticket moved to Pending freezes its `minutes_left`, and moving it back pushes every target forward by the exact paused span — proven end-to-end through the HTTP API by `PendingClockTest`.
-- [ ] A ticket created with no assignee lands on the least-loaded active **Agent**, writes an `auto_assigned` row to **`ticket_events`** (never `audit_logs`), and stays Unassigned with a **201** when no active agent exists.
-- [ ] `php artisan sla:evaluate` flags at-risk, flags breach, escalates and auto-closes; running it twice changes nothing the second time; `--dry-run` writes nothing; `--backfill` is idempotent.
-- [ ] After a **7-day** simulated gap, one run emits at most **one** at-risk and **one** breach notification per ticket, and a ticket that breached during the gap emits only the breach.
-- [ ] A **reopened** ticket never auto-closes, proven by a test that resolves, reopens, travels 10 days and runs the engine.
+- [x] `TicketResource.sla` returns **exactly** `due_at`, `minutes_left`, `risk` — same three names, same order — with `risk` one of `"breached" | "at_risk" | "ok" | null`. Asserted by a key-list test, not by inspection.
+- [x] A page of 25 tickets issues **no additional query** for the `sla` block, asserted by a query-count test.
+- [x] `SlaClock` is the only class in `api/app/` containing threshold arithmetic. `grep -rn "at_risk_threshold_pct" api/app/` returns hits **only** in `SlaClock.php`, `SlaRule.php`, `SlaRuleResource.php` and the two FormRequests.
+- [x] Editing an SLA rule leaves every existing ticket's `resolution_due_at`, `sla_at_risk_at` and `risk` **unchanged**, proven by `SlaRuleIsNotRetroactiveTest`.
+- [x] A ticket moved to Pending freezes its `minutes_left`, and moving it back pushes every target forward by the exact paused span — proven end-to-end through the HTTP API by `PendingClockTest`.
+- [x] A ticket created with no assignee lands on the least-loaded active **Agent**, writes an `auto_assigned` row to **`ticket_events`** (never `audit_logs`), and stays Unassigned with a **201** when no active agent exists.
+- [x] `php artisan sla:evaluate` flags at-risk, flags breach, escalates and auto-closes; running it twice changes nothing the second time; `--dry-run` writes nothing; `--backfill` is idempotent.
+- [x] After a **7-day** simulated gap, one run emits at most **one** at-risk and **one** breach notification per ticket, and a ticket that breached during the gap emits only the breach.
+- [x] A **reopened** ticket never auto-closes, proven by a test that resolves, reopens, travels 10 days and runs the engine.
 - [ ] Escalation fires only on a ticket with a **null `first_response_at`**, stamps `escalated_at` even when no target exists, and never reassigns a ticket to its current assignee.
-- [ ] `php artisan schedule:list` shows `sla:evaluate` at `*/5 * * * *` with `withoutOverlapping`. **No `app/Console/Kernel.php` was created**, and **no queued job is dispatched anywhere in this story**.
-- [ ] `/sla-rules` renders the real screen; `PagePlaceholder` no longer appears at that route; **`web/src/App.tsx` changes by exactly one `element` value** and the `RequireAuth roles={['administrator']}` wrapper is untouched.
+- [x] `php artisan schedule:list` shows `sla:evaluate` at `*/5 * * * *` with `withoutOverlapping`. **No `app/Console/Kernel.php` was created**, and **no queued job is dispatched anywhere in this story**.
+- [x] `/sla-rules` renders the real screen; `PagePlaceholder` no longer appears at that route; **`web/src/App.tsx` changes by exactly one `element` value** and the `RequireAuth roles={['administrator']}` wrapper is untouched.
 - [x] **`navItems.tsx` is not edited**, and `navItems.test.ts` and `navRoutes.test.tsx` pass **unchanged**.
-- [ ] The four cards match the artboard: tier badge, `RESPOND WITHIN` / `RESOLVE WITHIN` / `ON BREACH`, the pencil glyph, the 4px accent edge — and the Low card reads **`1 day` / `5 days`**, the deliberate deviation recorded in the Product-rules table.
-- [ ] All four async states ship, each from its own component; the error state contains **no** stack trace and **no** API URL; the empty state names the consequence of having no rules.
-- [ ] The subtitle's active-rule count is computed from the response and pluralises correctly. **Add Rule** is disabled with a stated, accessible reason when all four tiers are occupied.
-- [ ] Every new token is declared in **all four** blocks of `web/src/index.css`; no `--sla-*` or `--prio-*` token from Story 04 is redefined; the tier chip is Story 04's `PriorityBadge`.
+- [x] The four cards match the artboard: tier badge, `RESPOND WITHIN` / `RESOLVE WITHIN` / `ON BREACH`, the pencil glyph, the 4px accent edge — and the Low card reads **`1 day` / `5 days`**, the deliberate deviation recorded in the Product-rules table.
+- [x] All four async states ship, each from its own component; the error state contains **no** stack trace and **no** API URL; the empty state names the consequence of having no rules.
+- [x] The subtitle's active-rule count is computed from the response and pluralises correctly. **Add Rule** is disabled with a stated, accessible reason when all four tiers are occupied.
+- [x] Every new token is declared in **all four** blocks of `web/src/index.css`; no `--sla-*` or `--prio-*` token from Story 04 is redefined; the tier chip is Story 04's `PriorityBadge`.
 - [ ] Under RTL the accent edge is on the visual right from a single `border-inline-start` declaration — no `[dir="rtl"]` override and no second stylesheet — and the subtitle's numeral stays LTR.
-- [ ] Below 900px the fact columns wrap and the page body never scrolls horizontally from 375px up.
+- [x] Below 900px the fact columns wrap and the page body never scrolls horizontally from 375px up.
 - [ ] No `outline: none` without a replacement anywhere in this story; the skeleton respects `prefers-reduced-motion`; the modal traps focus, closes on Escape and restores focus to its opener; the deactivated-rule state carries a text chip, not colour alone.
-- [ ] An Agent and a Team Lead both receive **403** on every `/api/sla-rules` route, and `SlaRulePolicy` is a **new** file — `TicketPolicy.php` gained no SLA ability.
+- [x] An Agent and a Team Lead both receive **403** on every `/api/sla-rules` route, and `SlaRulePolicy` is a **new** file — `TicketPolicy.php` gained no SLA ability.
 - [ ] `php artisan test` and `npx vitest run` are both fully green, with `tests/Feature/TicketScopeTest.php` and `tests/Feature/ApiContractTest.php` **unedited**; `npm run build` and `npm run lint` are clean.
-- [ ] `.squad/plans/sla-rules-automation/00-overview.md` records the Story 06 row and its dependency notes.
+- [x] `.squad/plans/sla-rules-automation/00-overview.md` records the Story 06 row and its dependency notes.
 
 ---
 

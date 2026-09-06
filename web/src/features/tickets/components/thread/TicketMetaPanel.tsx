@@ -27,11 +27,14 @@ export function TicketMetaPanel({
   ticket,
   meta,
   events,
+  topSlot,
   extraSlot,
 }: {
   ticket: Ticket;
   meta: TicketMeta | undefined;
   events: TicketEvent[];
+  /** Story 19 (WIS-18) mounts the AI summary card here — ABOVE "Ticket details", per the design. */
+  topSlot?: ReactNode;
   /** Story 13 mounts the CSAT panel here without restructuring this screen. */
   extraSlot?: ReactNode;
 }) {
@@ -107,6 +110,7 @@ export function TicketMetaPanel({
 
   return (
     <aside className="meta-panel">
+      {topSlot}
       <section>
         <p className="meta-section-label">{t('section.ticketDetails')}</p>
         <div className="meta-badges">

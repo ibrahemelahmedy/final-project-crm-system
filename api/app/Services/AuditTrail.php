@@ -21,16 +21,24 @@ use Illuminate\Http\Request;
 class AuditTrail
 {
     public const USER_CREATED = 'user.created';
+
     public const USER_UPDATED = 'user.updated';
+
     public const USER_ROLE_CHANGED = 'user.role_changed';
+
     public const USER_DEACTIVATED = 'user.deactivated';
+
     public const USER_ACTIVATED = 'user.activated';
+
     public const SETTING_CHANGED = 'setting.changed';
 
     /** Story 01's auth events. Listed so the viewer's filter can offer them. */
     public const LOGIN_SUCCESS = 'login.success';
+
     public const LOGIN_FAILED = 'login.failed';
+
     public const LOGIN_INACTIVE = 'login.inactive';
+
     public const LOGOUT = 'logout';
 
     /** Story 06 writes SLA rule changes through this service. */
@@ -46,6 +54,26 @@ class AuditTrail
     public const KB_ARTICLE_UNPUBLISHED = 'kb_article.unpublished';
 
     public const KB_ARTICLE_ARCHIVED = 'kb_article.archived';
+
+    /**
+     * Story 18 (WIS-19). Connecting an external system is a sensitive admin
+     * action. The context carries the TYPE and the ENDPOINT — never the
+     * secret, and never secret_last_four.
+     */
+    public const INTEGRATION_CONNECTED = 'integration.connected';
+
+    public const INTEGRATION_UPDATED = 'integration.updated';
+
+    public const INTEGRATION_DISCONNECTED = 'integration.disconnected';
+
+    public const INTEGRATION_TEST_FAILED = 'integration.test_failed';
+
+    /** Story 20 (WIS-20). Branches, departments, and the branding override. */
+    public const BRANCH_CHANGED = 'branch.changed';
+
+    public const DEPARTMENT_CHANGED = 'department.changed';
+
+    public const BRANDING_CHANGED = 'branding.changed';
 
     /**
      * Every event name this application can write, for the viewer's filter.
@@ -65,6 +93,13 @@ class AuditTrail
             self::KB_ARTICLE_PUBLISHED,
             self::KB_ARTICLE_UNPUBLISHED,
             self::KB_ARTICLE_ARCHIVED,
+            self::INTEGRATION_CONNECTED,
+            self::INTEGRATION_UPDATED,
+            self::INTEGRATION_DISCONNECTED,
+            self::INTEGRATION_TEST_FAILED,
+            self::BRANCH_CHANGED,
+            self::DEPARTMENT_CHANGED,
+            self::BRANDING_CHANGED,
             self::LOGIN_SUCCESS,
             self::LOGIN_FAILED,
             self::LOGIN_INACTIVE,
@@ -85,6 +120,13 @@ class AuditTrail
             self::KB_ARTICLE_PUBLISHED => 'Article published',
             self::KB_ARTICLE_UNPUBLISHED => 'Article unpublished',
             self::KB_ARTICLE_ARCHIVED => 'Article archived',
+            self::INTEGRATION_CONNECTED => 'Integration connected',
+            self::INTEGRATION_UPDATED => 'Integration updated',
+            self::INTEGRATION_DISCONNECTED => 'Integration disconnected',
+            self::INTEGRATION_TEST_FAILED => 'Integration test failed',
+            self::BRANCH_CHANGED => 'Branch changed',
+            self::DEPARTMENT_CHANGED => 'Department changed',
+            self::BRANDING_CHANGED => 'Branding changed',
             self::LOGIN_SUCCESS => 'Signed in',
             self::LOGIN_FAILED => 'Failed sign-in',
             self::LOGIN_INACTIVE => 'Blocked sign-in (deactivated)',
