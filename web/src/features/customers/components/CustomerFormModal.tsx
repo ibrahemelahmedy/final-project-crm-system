@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Modal } from '../../../components/ui/Modal';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
-import { customerSchema, type CustomerFormValues } from '../model/customerSchema';
+import { useT, formatDate } from '../../../i18n';
+import { makeCustomerSchema, type CustomerFormValues } from '../model/customerSchema';
 import { CUSTOMER_TIERS, type Customer, type CustomerTier } from '../model/customer';
 import { useCreateCustomer, useDeleteCustomer, useUpdateCustomer } from '../hooks/useCustomerMutations';
 
-const TIER_LABELS: Record<CustomerTier, string> = {
-  standard: 'Standard',
-  premium: 'Premium',
-  enterprise: 'Enterprise',
+const TIER_LABEL_KEYS: Record<CustomerTier, string> = {
+  standard: 'form.tiers.standard',
+  premium: 'form.tiers.premium',
+  enterprise: 'form.tiers.enterprise',
 };
 
 function toFormValues(customer?: Customer): CustomerFormValues {
@@ -34,6 +35,8 @@ export const CustomerFormModal: React.FC<{
   onDeleted?: () => void;
   onOpenDuplicate?: (id: number) => void;
 }> = ({ open, customer, onClose, onSaved, onDeleted, onOpenDuplicate }) => {
+  const { t } = useT('customers');
+  const customerSchema = useMemo(() => makeCustomerSchema(t), [t]);
   const isEdit = Boolean(customer);
   const {
     register,
@@ -102,57 +105,62 @@ export const CustomerFormModal: React.FC<{
 
   return (
     <>
-      <Modal open={open} onClose={onClose} titleId={titleId} title={isEdit ? 'Edit Customer' : 'Add Customer'}>
+      <Modal
+        open={open}
+        onClose={onClose}
+        titleId={titleId}
+        title={isEdit ? t('form.editTitle') : t('form.addTitle')}
+      >
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="form-field">
-            <label htmlFor="customer-name">Name</label>
+            <label htmlFor="customer-name">{t('form.name')}</label>
             <input id="customer-name" {...register('name')} />
             {errors.name && <p className="form-error">{errors.name.message}</p>}
           </div>
 
           <div className="form-field">
-            <label htmlFor="customer-email">Email</label>
+            <label htmlFor="customer-email">{t('form.email')}</label>
             <input id="customer-email" type="email" {...register('email')} />
             {errors.email && <p className="form-error">{errors.email.message}</p>}
             {duplicate && (
               <p className="form-error">
-                A customer with this email or phone already exists.{' '}
+                {t('form.duplicateWarning')}{' '}
                 <a href={`/customers/${duplicate.id}`} onClick={() => onOpenDuplicate?.(duplicate.id)}>
-                  Open {duplicate.name}
+                  {t('form.openDuplicate', { name: duplicate.name })}
                 </a>
               </p>
             )}
           </div>
 
           <div className="form-field">
-            <label htmlFor="customer-company">Company</label>
+            <label htmlFor="customer-company">{t('form.company')}</label>
             <input id="customer-company" {...register('company')} />
           </div>
 
           <div className="form-field">
-            <label htmlFor="customer-phone">Phone</label>
+            <label htmlFor="customer-phone">{t('form.phone')}</label>
             <input id="customer-phone" {...register('phone')} />
             {errors.phone && <p className="form-error">{errors.phone.message}</p>}
           </div>
 
           <div className="form-field">
-            <span id="tier-label">Tier</span>
+            <span id="tier-label">{t('form.tier')}</span>
             <Controller
               control={control}
               name="tier"
               render={() => (
                 <div role="radiogroup" aria-labelledby="tier-label" className="tier-segmented">
-                  {CUSTOMER_TIERS.map((t) => (
+                  {CUSTOMER_TIERS.map((tierOption) => (
                     <button
-                      key={t}
+                      key={tierOption}
                       type="button"
                       role="radio"
-                      aria-checked={tier === t}
-                      className={`tier-option tier-option-${t}${tier === t ? ' tier-option-selected' : ''} fv`}
-                      onClick={() => setValue('tier', t)}
+                      aria-checked={tier === tierOption}
+                      className={`tier-option tier-option-${tierOption}${tier === tierOption ? ' tier-option-selected' : ''} fv`}
+                      onClick={() => setValue('tier', tierOption)}
                       onKeyDown={(e) => {
                         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-                        const i = CUSTOMER_TIERS.indexOf(t);
+                        const i = CUSTOMER_TIERS.indexOf(tierOption);
                         const next =
                           e.key === 'ArrowRight'
                             ? CUSTOMER_TIERS[(i + 1) % CUSTOMER_TIERS.length]
@@ -160,7 +168,7 @@ export const CustomerFormModal: React.FC<{
                         setValue('tier', next);
                       }}
                     >
-                      {TIER_LABELS[t]}
+                      {t(TIER_LABEL_KEYS[tierOption])}
                     </button>
                   ))}
                 </div>
@@ -170,8 +178,8 @@ export const CustomerFormModal: React.FC<{
 
           {isEdit && customer && (
             <div className="form-field form-field-readonly">
-              <label>Customer since</label>
-              <span dir="ltr">{new Date(customer.created_at).toLocaleDateString()}</span>
+              <label>{t('form.customerSince')}</label>
+              <span dir="ltr">{formatDate(customer.created_at)}</span>
             </div>
           )}
 
@@ -182,17 +190,17 @@ export const CustomerFormModal: React.FC<{
                 className="dt-btn dt-btn-danger-outline fv"
                 onClick={() => setConfirmDeleteOpen(true)}
               >
-                Delete Customer
+                {t('form.deleteCustomer')}
               </button>
             ) : (
               <span />
             )}
             <div className="modal-footer-end">
               <button type="button" className="dt-btn dt-btn-outline fv" onClick={onClose}>
-                Cancel
+                {t('form.cancel')}
               </button>
               <button type="submit" className="dt-btn dt-btn-primary fv" disabled={isSubmitting || isPending}>
-                {isSubmitting || isPending ? 'Saving…' : isEdit ? 'Save Changes' : 'Add Customer'}
+                {isSubmitting || isPending ? t('form.saving') : isEdit ? t('form.saveChanges') : t('form.addTitle')}
               </button>
             </div>
           </div>
@@ -202,9 +210,9 @@ export const CustomerFormModal: React.FC<{
       {isEdit && customer && (
         <ConfirmDialog
           open={confirmDeleteOpen}
-          title={`Delete ${customer.name}?`}
-          body={`Removes ${customer.name} from the customer list. Their ticket history is preserved and the record can be restored by an administrator.`}
-          confirmLabel="Delete Customer"
+          title={t('form.deleteConfirmTitle', { name: customer.name })}
+          body={t('form.deleteConfirmBody', { name: customer.name })}
+          confirmLabel={t('form.deleteCustomer')}
           tone="danger"
           isPending={deleteMutation.isPending}
           onCancel={() => setConfirmDeleteOpen(false)}

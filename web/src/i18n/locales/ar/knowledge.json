@@ -1,1 +1,134 @@
-{}
+{
+  "picker": {
+    "defaultHeading": "إدراج مقالة من قاعدة المعرفة",
+    "close": "إغلاق منتقي المقالات",
+    "searchLabel": "البحث في مقالات قاعدة المعرفة",
+    "searchPlaceholder": "البحث في المقالات والأدلة والأسئلة الشائعة…",
+    "resultsFound_zero": "لا توجد مقالات",
+    "resultsFound_one": "مقالة واحدة",
+    "resultsFound_two": "مقالتان",
+    "resultsFound_few": "{{count}} مقالات",
+    "resultsFound_many": "{{count}} مقالة",
+    "resultsFound_other": "{{count}} مقالة",
+    "loadError": "تعذر تحميل المقالات.",
+    "tryAgain": "حاول مرة أخرى",
+    "hint": "اكتب للبحث في قاعدة المعرفة. اختيار نتيجة يُدرج رابطاً في ردك.",
+    "noMatchTitle": "لا توجد مقالات تطابق «{{query}}»",
+    "noMatchBody": "جرّب بحثاً أوسع — كلمات أقل، أو مصطلحاً أعم."
+  },
+  "toc": {
+    "heading": "في هذه الصفحة"
+  },
+  "rail": {
+    "categories": "الفئات",
+    "categoriesAria": "فئات المقالات",
+    "allArticles": "كل المقالات"
+  },
+  "mostViewed": {
+    "heading": "الأكثر مشاهدة",
+    "ariaLabel": "المقالات الأكثر مشاهدة"
+  },
+  "schema": {
+    "titleRequired": "العنوان مطلوب.",
+    "titleTooLong": "اجعل العنوان أقل من 255 حرفاً.",
+    "bodyTooLong": "هذه المقالة طويلة جداً بحيث لا يمكن حفظها.",
+    "bodyRequiredToPublish": "يلزم وجود نص قبل نشر هذه المقالة.",
+    "categoryRequiredToPublish": "تلزم فئة قبل نشر هذه المقالة."
+  },
+  "columns": {
+    "article": "المقالة",
+    "category": "الفئة",
+    "status": "الحالة",
+    "views": "المشاهدات",
+    "updated": "آخر تحديث"
+  },
+  "editor": {
+    "notFoundTitle": "المقالة غير موجودة",
+    "notFoundBody": "هذه المقالة غير موجودة، أو غير متاحة لك.",
+    "backToKb": "العودة إلى قاعدة المعرفة",
+    "editTitle": "تعديل مقالة",
+    "newTitle": "مقالة جديدة",
+    "subtitle": "مكتوبة بصيغة Markdown. تتم إزالة HTML الخام عند حفظ المقالة.",
+    "cancel": "إلغاء",
+    "unpublish": "إلغاء النشر",
+    "saveDraft": "حفظ كمسودة",
+    "publish": "نشر",
+    "title": "العنوان",
+    "category": "الفئة",
+    "selectCategory": "اختر فئة…",
+    "body": "النص (Markdown)",
+    "preview": "معاينة",
+    "previewEmpty": "تظهر المعاينة هنا أثناء الكتابة، معروضة تماماً كما سيراها القارئ.",
+    "saveFailed": "تعذر حفظ هذه المقالة. حاول مرة أخرى."
+  },
+  "reader": {
+    "notFoundTitle": "المقالة غير موجودة",
+    "notFoundBody": "هذه المقالة غير موجودة، أو لم تُنشر بعد. تصفح قاعدة المعرفة لإيجاد ما تحتاجه.",
+    "backToKb": "العودة إلى قاعدة المعرفة",
+    "errorTitle": "حدث خطأ ما",
+    "errorBody": "تعذر تحميل هذه المقالة.",
+    "tryAgain": "حاول مرة أخرى",
+    "breadcrumbLabel": "مسار التنقل",
+    "kbLink": "قاعدة المعرفة",
+    "edit": "تعديل",
+    "lastUpdated": "آخر تحديث",
+    "minRead": "دقيقة قراءة",
+    "revisionCount_zero": "لا توجد مراجعات",
+    "revisionCount_one": "مراجعة واحدة",
+    "revisionCount_two": "مراجعتان",
+    "revisionCount_few": "{{count}} مراجعات",
+    "revisionCount_many": "{{count}} مراجعة",
+    "revisionCount_other": "{{count}} مراجعة",
+    "emptyBody": "لا يوجد محتوى لهذه المقالة بعد.",
+    "emptyBodyEditorHint": "عدّلها لإضافة الإرشادات التي يحتاجها الوكلاء."
+  },
+  "index": {
+    "title": "قاعدة المعرفة",
+    "count_zero": "لا توجد مقالات",
+    "count_one": "مقالة واحدة",
+    "count_two": "مقالتان",
+    "count_few": "{{count}} مقالات",
+    "count_many": "{{count}} مقالة",
+    "count_other": "{{count}} مقالة",
+    "newArticle": "مقالة جديدة",
+    "searchPlaceholder": "البحث في المقالات والأدلة والأسئلة الشائعة…",
+    "searchLabel": "البحث في المقالات",
+    "statusFilters": {
+      "published": "منشورة",
+      "draft": "مسودة",
+      "archived": "مؤرشفة"
+    },
+    "bulkRestricted": "يمكن لقائد الفريق أو المسؤول فقط تغيير حالة المقالة",
+    "bulk": {
+      "publishVerb": "نشر",
+      "publishBody": "تصبح المقالات المحددة مرئية لكل وكيل. أي مقالة تفتقد عنواناً أو نصاً أو فئة يتم تخطيها ويُبلَّغ عنها.",
+      "unpublishVerb": "إلغاء النشر",
+      "unpublishBody": "تعود المقالات المحددة إلى مسودة وتتوقف عن الظهور في بحث الوكلاء.",
+      "archiveVerb": "أرشفة",
+      "archiveBody": "يتم أرشفة المقالات المحددة. تبقى قابلة للقراءة للمحررين وتحتفظ بسجل إصداراتها.",
+      "confirmTitle_zero": "{{verb}} المقالات المحددة؟",
+      "confirmTitle_one": "{{verb}} مقالة واحدة؟",
+      "confirmTitle_two": "{{verb}} مقالتين؟",
+      "confirmTitle_few": "{{verb}} {{count}} مقالات؟",
+      "confirmTitle_many": "{{verb}} {{count}} مقالة؟",
+      "confirmTitle_other": "{{verb}} {{count}} مقالة؟",
+      "notice_zero": "تم نشر {{affected}}. لم يتم تخطي أي مقالة — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}",
+      "notice_one": "تم نشر {{affected}}. تم تخطي مقالة واحدة — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}",
+      "notice_two": "تم نشر {{affected}}. تم تخطي مقالتين — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}",
+      "notice_few": "تم نشر {{affected}}. تم تخطي {{count}} مقالات — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}",
+      "notice_many": "تم نشر {{affected}}. تم تخطي {{count}} مقالة — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}",
+      "notice_other": "تم نشر {{affected}}. تم تخطي {{count}} مقالة — تحتاج المقالة إلى عنوان ونص وفئة قبل نشرها: {{names}}"
+    },
+    "loadError": "تعذر تحميل المقالات.",
+    "emptyFilteredTitleQuery": "لا توجد مقالات تطابق «{{query}}»",
+    "emptyFilteredTitle": "لا توجد مقالات تطابق هذه الفلاتر",
+    "emptyFilteredBody": "لا شيء يطابق {{filters}}. جرّب بحثاً أوسع — كلمات أقل، أو مصطلحاً أعم — أو امسح الفلاتر.",
+    "clearFilters": "مسح الفلاتر",
+    "emptyTitle": "لا توجد مقالات بعد",
+    "emptyBodyEditor": "قاعدة المعرفة فارغة. اكتب أول مقالة ليتوفر لدى الوكلاء مرجع يستندون إليه.",
+    "emptyBodyViewer": "قاعدة المعرفة فارغة. يمكن لمسؤول أو قائد فريق نشر أول مقالة.",
+    "filterCategory": "الفئة",
+    "filterStatus": "الحالة",
+    "caption": "مقالات قاعدة المعرفة"
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useCustomer } from '../hooks/useCustomer';
 import { CustomerAvatar } from '../components/CustomerAvatar';
 import { CustomerTierBadge } from '../components/CustomerTierBadge';
@@ -13,6 +14,7 @@ import { AttachmentsPanel } from '../components/AttachmentsPanel';
 // composed from the modal's field styling, the table card's
 // background/border/radius, and the empty-state geometry.
 export const CustomerProfilePage: React.FC = () => {
+  const { t } = useT('customers');
   const { customerId } = useParams<{ customerId: string }>();
   const id = Number(customerId);
   const { user } = useAuth();
@@ -25,7 +27,7 @@ export const CustomerProfilePage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="profile-page">
-        <p className="dt-empty-body">Loading customer…</p>
+        <p className="dt-empty-body">{t('profile.loading')}</p>
       </div>
     );
   }
@@ -33,9 +35,9 @@ export const CustomerProfilePage: React.FC = () => {
   if (isError || !customer) {
     return (
       <div className="profile-page">
-        <p className="dt-empty-body">Something went wrong loading this customer.</p>
+        <p className="dt-empty-body">{t('profile.error')}</p>
         <button type="button" className="dt-btn dt-btn-primary fv" onClick={() => refetch()}>
-          Try again
+          {t('profile.tryAgain')}
         </button>
       </div>
     );
@@ -53,10 +55,10 @@ export const CustomerProfilePage: React.FC = () => {
         </div>
         <div className="profile-header-actions">
           <button type="button" className="dt-btn dt-btn-primary fv" onClick={() => setEditOpen(true)}>
-            Edit
+            {t('profile.edit')}
           </button>
           <Link to="/customers" className="dt-btn dt-btn-outline fv">
-            Back to customers
+            {t('profile.backToList')}
           </Link>
         </div>
       </div>
@@ -66,14 +68,14 @@ export const CustomerProfilePage: React.FC = () => {
           <InteractionHistory customerId={customer.id} />
         </div>
         <div className="profile-column">
-          <section className="profile-panel" aria-label="Contact details">
-            <h2>Contact details</h2>
+          <section className="profile-panel" aria-label={t('profile.contactDetails')}>
+            <h2>{t('profile.contactDetails')}</h2>
             <dl className="contact-details">
-              <dt>Email</dt>
+              <dt>{t('profile.email')}</dt>
               <dd>{customer.email ?? '—'}</dd>
-              <dt>Phone</dt>
+              <dt>{t('profile.phone')}</dt>
               <dd>{customer.phone ?? '—'}</dd>
-              <dt>Company</dt>
+              <dt>{t('profile.company')}</dt>
               <dd>{customer.company ?? '—'}</dd>
             </dl>
           </section>

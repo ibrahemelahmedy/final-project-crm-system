@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CsatResponsePage } from './CsatResponsePage';
 import * as csatApi from '../api/csatApi';
+import { api } from '../../../lib/api';
 import type { CsatSurvey } from '../model/csat';
 
 vi.mock('../api/csatApi');
@@ -116,5 +117,19 @@ describe('CsatResponsePage', () => {
 
     await user.click(screen.getByRole('button', { name: 'العربية' }));
     expect(await screen.findByText('كيف كان أداؤنا؟')).toBeInTheDocument();
+  });
+
+  it('never writes a user preference — this visitor is never signed in', async () => {
+    const user = userEvent.setup();
+    const patchSpy = vi.spyOn(api, 'patch');
+    fetchMock.mockResolvedValue(outstanding());
+    renderPage();
+    await screen.findByText('How did we do?');
+
+    await user.click(screen.getByRole('button', { name: 'العربية' }));
+    await screen.findByText('كيف كان أداؤنا؟');
+
+    expect(patchSpy).not.toHaveBeenCalledWith('/user/preferences', expect.anything());
+    patchSpy.mockRestore();
   });
 });

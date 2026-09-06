@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import type { TicketStatus } from '../../tickets';
+import { useT } from '../../../i18n';
 import { useTicketCsat } from '../hooks/useTicketCsat';
 import { RatingGroup } from './RatingGroup';
-import { CSAT_STRINGS } from '../model/csatStrings';
-
-const t = CSAT_STRINGS.en; // agent UI is English-only (matches the rest of the app shell)
 
 /**
  * Story 13 — the agent-facing CSAT panel on the ticket-detail side panel.
@@ -26,6 +24,7 @@ export function TicketCsatPanel({
   ticketId: number;
   ticketStatus: TicketStatus;
 }) {
+  const { t } = useT('csat');
   const everResolved = ticketStatus === 'resolved' || ticketStatus === 'closed';
   const { data, isLoading, isError, refetch } = useTicketCsat(ticketId, everResolved);
   const [copied, setCopied] = useState(false);
@@ -43,37 +42,35 @@ export function TicketCsatPanel({
   };
 
   return (
-    <section className="csat-panel" aria-label="Customer satisfaction survey">
-      <p className="meta-section-label">CSAT SURVEY</p>
+    <section className="csat-panel" aria-label={t('panel.ariaLabel')}>
+      <p className="meta-section-label">{t('panel.heading')}</p>
 
       {isLoading && <div className="csat-panel-skeleton" aria-busy="true" />}
 
       {isError && !isLoading && (
         <div className="csat-panel-error">
-          <span>Couldn't load the survey.</span>
+          <span>{t('panel.loadError')}</span>
           <button type="button" className="tq-btn-outline fv" onClick={() => refetch()}>
-            Retry
+            {t('panel.retry')}
           </button>
         </div>
       )}
 
       {!isLoading && !isError && data && data.state === 'none' && (
-        <p className="csat-panel-empty">No survey for this resolution cycle yet.</p>
+        <p className="csat-panel-empty">{t('panel.empty')}</p>
       )}
 
       {!isLoading && !isError && data && data.state === 'outstanding' && (
         <div className="csat-panel-outstanding">
-          <p className="csat-panel-hint">
-            Share this feedback link with the customer. It expires 30 days after resolution.
-          </p>
+          <p className="csat-panel-hint">{t('panel.hint')}</p>
           <div className="csat-panel-link-row">
-            <input className="csat-panel-link" readOnly value={data.share_url} aria-label="Feedback link" />
+            <input className="csat-panel-link" readOnly value={data.share_url} aria-label={t('panel.linkLabel')} />
             <button
               type="button"
               className="tq-btn-outline fv"
               onClick={() => copy(data.share_url)}
             >
-              {copied ? 'Copied' : 'Copy link'}
+              {copied ? t('panel.copied') : t('panel.copyLink')}
             </button>
           </div>
         </div>
@@ -81,19 +78,19 @@ export function TicketCsatPanel({
 
       {!isLoading && !isError && data && data.state === 'answered' && (
         <div className="csat-panel-answered">
-          <RatingGroup value={data.rating} readOnly strings={t} />
+          <RatingGroup value={data.rating} readOnly t={t} />
           {data.comment ? (
             <p className="csat-panel-comment" dir="auto">
               "{data.comment}"
             </p>
           ) : (
-            <p className="csat-panel-comment csat-panel-comment-muted">No comment left.</p>
+            <p className="csat-panel-comment csat-panel-comment-muted">{t('panel.noComment')}</p>
           )}
         </div>
       )}
 
       {!isLoading && !isError && data && data.state === 'expired' && (
-        <p className="csat-panel-empty">The feedback link expired with no response.</p>
+        <p className="csat-panel-empty">{t('panel.expired')}</p>
       )}
     </section>
   );

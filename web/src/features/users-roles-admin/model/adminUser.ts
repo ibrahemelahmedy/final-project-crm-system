@@ -8,10 +8,10 @@ export type UserRole = 'agent' | 'team_lead' | 'administrator';
 // fourth and renames no value.
 export const USER_ROLES: UserRole[] = ['agent', 'team_lead', 'administrator'];
 
-export const ROLE_LABELS: Record<UserRole, string> = {
-  agent: 'Agent',
-  team_lead: 'Team Lead',
-  administrator: 'Administrator',
+export const ROLE_LABEL_KEYS: Record<UserRole, string> = {
+  agent: 'roles.agent',
+  team_lead: 'roles.team_lead',
+  administrator: 'roles.administrator',
 };
 
 export type AdminUser = {

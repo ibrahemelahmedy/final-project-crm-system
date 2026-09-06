@@ -1,6 +1,8 @@
 // The Reports payload — one response, one range, every widget renders from it.
 // Mirrors App\Http\Resources\ReportSummaryResource on the API.
 
+import { formatDate } from '../../../i18n';
+
 export type TicketVolumePoint = { date: string; created: number; resolved: number };
 
 export type TicketVolumeBlock = {
@@ -108,5 +110,5 @@ export function formatMinutes(total: number | null): string {
 export function formatDayTick(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number);
   const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return formatDate(date, { month: 'short', day: 'numeric' });
 }

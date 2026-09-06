@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useT } from '../../../i18n';
 
 type Props = {
   icon: React.ReactNode;
@@ -17,6 +18,7 @@ type Props = {
  * the subtitle carries a live count. There is no ticket data on this view.
  */
 export function AdminEntryCard({ icon, tone, title, subtitle, subtitleError, cta, to }: Props) {
+  const { t } = useT('dashboard');
   return (
     <Link to={to} className="admin-card">
       <span className={`admin-card-icon admin-card-icon-${tone}`} aria-hidden="true">
@@ -25,7 +27,7 @@ export function AdminEntryCard({ icon, tone, title, subtitle, subtitleError, cta
       <span className="admin-card-body">
         <span className="admin-card-title">{title}</span>
         <span className="admin-card-subtitle">
-          {subtitleError ? 'Count unavailable' : (subtitle ?? 'Loading…')}
+          {subtitleError ? t('adminCard.countUnavailable') : (subtitle ?? t('adminCard.loading'))}
         </span>
       </span>
       <span className="admin-card-cta">

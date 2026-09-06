@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../../i18n';
 
 type Props = {
   label: string;
@@ -16,12 +17,13 @@ type Props = {
  * A tile never renders 0 when the request failed — it renders "—".
  */
 export function StatTile({ label, value, tone = 'default', loading, error }: Props) {
+  const { t } = useT('dashboard');
   return (
     <div className={`stat-tile stat-tile-${tone}`}>
       <div className="stat-tile-label">{label}</div>
       {loading ? (
         <div className="stat-tile-value" role="status">
-          <span className="tq-sr-only">Loading {label}…</span>
+          <span className="tq-sr-only">{t('widget.loadingTitled', { title: label })}</span>
           <span className="stat-tile-skeleton" />
         </div>
       ) : (

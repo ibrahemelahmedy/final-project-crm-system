@@ -3,7 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { useState } from 'react';
 import { RatingGroup } from './RatingGroup';
-import { CSAT_STRINGS } from '../model/csatStrings';
+import i18n from '../../../i18n/instance';
+
+const t = i18n.getFixedT('en', 'csat');
 
 function Harness({ onChange }: { onChange?: (n: number) => void }) {
   const [value, setValue] = useState<number | null>(null);
@@ -14,7 +16,7 @@ function Harness({ onChange }: { onChange?: (n: number) => void }) {
         setValue(n);
         onChange?.(n);
       }}
-      strings={CSAT_STRINGS.en}
+      t={t}
     />
   );
 }
@@ -49,7 +51,7 @@ describe('RatingGroup', () => {
   });
 
   it('renders no radio inputs in read-only mode', () => {
-    render(<RatingGroup value={3} readOnly strings={CSAT_STRINGS.en} />);
+    render(<RatingGroup value={3} readOnly t={t} />);
     expect(screen.queryAllByRole('radio')).toHaveLength(0);
     expect(screen.getByText('3 – Okay')).toBeInTheDocument();
   });

@@ -55,6 +55,8 @@
     "featureComingSoon": "هذه الشاشة تُبنى في قصة الميزة الخاصة بها."
   },
   "table": {
+    "all": "الكل",
+    "noOptions": "لا توجد خيارات",
     "selected_zero": "لم يتم تحديد أي عنصر",
     "selected_one": "تم تحديد عنصر واحد",
     "selected_two": "تم تحديد عنصرين",

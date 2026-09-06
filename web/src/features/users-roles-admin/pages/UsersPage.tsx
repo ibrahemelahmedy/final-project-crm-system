@@ -6,11 +6,12 @@ import { DataTableEmpty } from '../../../components/data-table/DataTableEmpty';
 import { DataTableError } from '../../../components/data-table/DataTableError';
 import { Pagination } from '../../../components/data-table/Pagination';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useUserListParams } from '../hooks/useUserListParams';
 import { useUserFacets, useUsers } from '../hooks/useUsers';
 import { useActivateUser } from '../hooks/useUserMutations';
 import { buildUserColumns } from '../model/columns';
-import { ROLE_LABELS, type AdminUser, type UserRole, type UserStatusFilter } from '../model/adminUser';
+import { ROLE_LABEL_KEYS, type AdminUser, type UserRole, type UserStatusFilter } from '../model/adminUser';
 import { FilterChip } from '../components/FilterChip';
 import { UserFormModal } from '../components/UserFormModal';
 import { DeactivateUserDialog } from '../components/DeactivateUserDialog';
@@ -24,22 +25,26 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
   return debounced;
 }
 
-const STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'all', label: 'All' },
-];
+function makeStatusOptions(t: (key: string) => string) {
+  return [
+    { value: 'active', label: t('status.active') },
+    { value: 'inactive', label: t('status.inactive') },
+    { value: 'all', label: t('status.all') },
+  ];
+}
 
-function describeFilters(params: {
-  q: string;
-  role: UserRole[];
-  department: string[];
-  status: UserStatusFilter;
-}): string {
+function describeFilters(
+  params: { q: string; role: UserRole[]; department: string[]; status: UserStatusFilter },
+  t: (key: string) => string
+): string {
   const parts: string[] = [];
-  if (params.role.length) parts.push(`Role: ${params.role.map((r) => ROLE_LABELS[r]).join(', ')}`);
-  if (params.department.length) parts.push(`Department: ${params.department.join(', ')}`);
-  if (params.status !== 'active') parts.push(`Status: ${params.status === 'all' ? 'All' : 'Inactive'}`);
+  if (params.role.length) {
+    parts.push(`${t('list.filterRole')}: ${params.role.map((r) => t(ROLE_LABEL_KEYS[r])).join(', ')}`);
+  }
+  if (params.department.length) parts.push(`${t('list.filterDepartment')}: ${params.department.join(', ')}`);
+  if (params.status !== 'active') {
+    parts.push(`${t('list.filterStatus')}: ${params.status === 'all' ? t('status.all') : t('status.inactive')}`);
+  }
   if (params.q) parts.push(`"${params.q}"`);
   return parts.join(' · ');
 }
@@ -52,6 +57,7 @@ function describeFilters(params: {
  * implementation and no client-side paging or filtering anywhere on this page.
  */
 export const UsersPage: React.FC = () => {
+  const { t } = useT('users');
   const { user: currentUser } = useAuth();
   const [params, setParams, isFiltered] = useUserListParams();
   const [searchInput, setSearchInput] = useState(params.q);
@@ -87,9 +93,11 @@ export const UsersPage: React.FC = () => {
     setSelectedIds([]);
   }, [serializedParams]);
 
+  const statusOptions = useMemo(() => makeStatusOptions(t), [t]);
+
   const columns = useMemo(
     () =>
-      buildUserColumns({
+      buildUserColumns(t, {
         onEdit: setEditing,
         onDeactivate: setDeactivating,
         onActivate: (u) => activate.mutate(u.id),
@@ -97,7 +105,7 @@ export const UsersPage: React.FC = () => {
       }),
     // `activate` is a stable mutation object from TanStack Query.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser?.id]
+    [currentUser?.id, t]
   );
 
   const rows = data?.data ?? [];
@@ -107,7 +115,7 @@ export const UsersPage: React.FC = () => {
     <div className="users-page">
       <div className="page-title-row">
         <div>
-          <h1>Users</h1>
+          <h1>{t('list.title')}</h1>
           {isLoading ? (
             <span className="sk" style={{ width: 110, height: 14, display: 'inline-block', marginTop: 2 }} />
           ) : (
@@ -115,20 +123,24 @@ export const UsersPage: React.FC = () => {
               {/* The design's subtitle counts ALL internal users, not the
                   filtered page — the facets endpoint supplies it so the
                   number does not jump when a filter is applied. */}
-              {facets?.total ?? total} internal users
-              {facets ? ` across ${facets.department_total} departments` : ''}
+              {facets
+                ? t('list.subtitleWithDepartments', {
+                    count: facets.total,
+                    departments: facets.department_total,
+                  })
+                : t('list.subtitle', { count: total })}
             </p>
           )}
         </div>
         <div className="page-title-actions">
           <Link to="/users/audit-log" className="dt-btn dt-btn-outline fv">
-            Audit Log
+            {t('list.auditLog')}
           </Link>
           <Link to="/users/settings" className="dt-btn dt-btn-outline fv">
-            Settings
+            {t('list.settings')}
           </Link>
           <button type="button" className="dt-btn dt-btn-primary fv" onClick={() => setInviteOpen(true)}>
-            Invite User
+            {t('list.inviteUser')}
           </button>
         </div>
       </div>
@@ -143,14 +155,14 @@ export const UsersPage: React.FC = () => {
         ) : (
           <div className="facet-row">
             <FilterChip
-              label="Role"
+              label={t('list.filterRole')}
               mode="multi"
               options={(facets?.roles ?? []).map((r) => ({ value: r.value, label: r.label, count: r.count }))}
               selected={params.role}
               onChange={(role) => setParams({ role: role as UserRole[] })}
             />
             <FilterChip
-              label="Department"
+              label={t('list.filterDepartment')}
               mode="multi"
               options={(facets?.departments ?? []).map((d) => ({
                 value: d.value,
@@ -161,9 +173,9 @@ export const UsersPage: React.FC = () => {
               onChange={(department) => setParams({ department })}
             />
             <FilterChip
-              label="Status"
+              label={t('list.filterStatus')}
               mode="single"
-              options={STATUS_OPTIONS}
+              options={statusOptions}
               selected={[params.status]}
               onChange={([status]) => setParams({ status: status as UserStatusFilter })}
             />
@@ -174,10 +186,10 @@ export const UsersPage: React.FC = () => {
           <input
             className="search-input"
             type="search"
-            placeholder="Search users…"
+            placeholder={t('list.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            aria-label="Search users"
+            aria-label={t('list.searchLabel')}
           />
         </div>
       </div>
@@ -190,22 +202,22 @@ export const UsersPage: React.FC = () => {
         ) : rows.length === 0 ? (
           isFiltered ? (
             <DataTableEmpty
-              title="No users match these filters"
-              body={`No users match ${describeFilters(params)}. Try a different filter or clear them.`}
+              title={t('list.emptyFilteredTitle')}
+              body={t('list.emptyFilteredBody', { filters: describeFilters(params, t) })}
               actions={[
                 {
-                  label: 'Reset filters',
+                  label: t('list.resetFilters'),
                   variant: 'outline',
                   onClick: () => setParams({ q: '', role: [], department: [], status: 'active' }),
                 },
-                { label: 'Invite User', variant: 'primary', onClick: () => setInviteOpen(true) },
+                { label: t('list.inviteUser'), variant: 'primary', onClick: () => setInviteOpen(true) },
               ]}
             />
           ) : (
             <DataTableEmpty
-              title="No users yet"
-              body="No internal users yet. Invite your first teammate to give them access."
-              actions={[{ label: 'Invite User', variant: 'primary', onClick: () => setInviteOpen(true) }]}
+              title={t('list.emptyTitle')}
+              body={t('list.emptyBody')}
+              actions={[{ label: t('list.inviteUser'), variant: 'primary', onClick: () => setInviteOpen(true) }]}
             />
           )
         ) : (
@@ -225,7 +237,7 @@ export const UsersPage: React.FC = () => {
                 )
               }
               onRowActivate={setEditing}
-              caption="Users"
+              caption={t('list.caption')}
             />
             <Pagination
               currentPage={data?.meta.current_page ?? 1}

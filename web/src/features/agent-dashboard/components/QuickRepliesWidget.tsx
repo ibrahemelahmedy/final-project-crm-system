@@ -1,3 +1,4 @@
+import { useT } from '../../../i18n';
 import { useQuickReplies } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -10,17 +11,18 @@ import { widgetState, emptyList } from '../model/widgetState';
  * live without changing this contract.
  */
 export function QuickRepliesWidget() {
+  const { t } = useT('dashboard');
   const query = useQuickReplies();
   const state = widgetState(query, emptyList);
   const replies = query.data ?? [];
 
   return (
     <DashboardWidget
-      title="Quick Replies"
+      title={t('quickReplies.title')}
       state={state}
       onRetry={() => query.refetch()}
-      errorMessage="Quick replies couldn't load."
-      emptyMessage="No quick replies yet. Saved responses you create will appear here for one-click insert."
+      errorMessage={t('quickReplies.loadError')}
+      emptyMessage={t('quickReplies.empty')}
     >
       <div className="quick-replies-list">
         {replies.map((r) => (

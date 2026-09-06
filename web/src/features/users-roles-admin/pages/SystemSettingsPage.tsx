@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { DataTableError } from '../../../components/data-table/DataTableError';
+import { useT } from '../../../i18n';
 import { useSystemSettings, useUpdateSystemSettings } from '../hooks/useSystemSettings';
 import { buildSettingsSchema, type SettingsFormValues } from '../model/settingsSchema';
 import type { SystemSetting } from '../model/adminUser';
@@ -18,13 +19,14 @@ import type { SystemSetting } from '../model/adminUser';
  * the server's field error when a client check is bypassed.
  */
 export const SystemSettingsPage: React.FC = () => {
+  const { t } = useT('users');
   const { data: settings, isLoading, isError, refetch } = useSystemSettings();
   const update = useUpdateSystemSettings();
 
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const schema = useMemo(() => buildSettingsSchema(settings ?? []), [settings]);
+  const schema = useMemo(() => buildSettingsSchema(settings ?? [], t), [settings, t]);
 
   const defaultValues = useMemo(
     () => Object.fromEntries((settings ?? []).map((s) => [s.key, s.value])) as SettingsFormValues,
@@ -56,7 +58,9 @@ export const SystemSettingsPage: React.FC = () => {
       const result = await update.mutateAsync(values);
       reset(Object.fromEntries(result.data.map((s) => [s.key, s.value])) as SettingsFormValues);
       setSavedAt(
-        result.changed.length === 0 ? 'No changes to save.' : `Saved ${result.changed.length} change(s).`
+        result.changed.length === 0
+          ? t('settings.noChanges')
+          : t('settings.savedCount', { count: result.changed.length })
       );
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
@@ -71,10 +75,10 @@ export const SystemSettingsPage: React.FC = () => {
             attached = true;
           }
         });
-        if (!attached) setFormError(error.response.data?.message ?? 'The change could not be saved.');
+        if (!attached) setFormError(error.response.data?.message ?? t('settings.saveFailed'));
         return;
       }
-      setFormError('Something went wrong. Try again.');
+      setFormError(t('settings.genericError'));
     }
   };
 
@@ -82,7 +86,7 @@ export const SystemSettingsPage: React.FC = () => {
     return (
       <div className="settings-page">
         <div className="page-title-row">
-          <h1>System Settings</h1>
+          <h1>{t('settings.title')}</h1>
         </div>
         <div className="table-card">
           <DataTableError onRetry={() => refetch()} />
@@ -95,14 +99,12 @@ export const SystemSettingsPage: React.FC = () => {
     <div className="settings-page">
       <div className="page-title-row">
         <div>
-          <h1>System Settings</h1>
-          <p className="page-subtitle">
-            Every change is validated before saving and recorded in the audit log.
-          </p>
+          <h1>{t('settings.title')}</h1>
+          <p className="page-subtitle">{t('settings.subtitle')}</p>
         </div>
         <div className="page-title-actions">
           <Link to="/users" className="dt-btn dt-btn-outline fv">
-            Back to Users
+            {t('settings.backToUsers')}
           </Link>
         </div>
       </div>
@@ -118,7 +120,7 @@ export const SystemSettingsPage: React.FC = () => {
             ))}
           </div>
         ) : (settings ?? []).length === 0 ? (
-          <p className="settings-empty">No configurable settings.</p>
+          <p className="settings-empty">{t('settings.empty')}</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             {(settings as SystemSetting[]).map((setting) => (
@@ -140,9 +142,9 @@ export const SystemSettingsPage: React.FC = () => {
                   />
                   <span id={`setting-${setting.key}-bounds`} className="settings-bounds">
                     {setting.min !== null && setting.max !== null
-                      ? `${setting.min}–${setting.max}`
+                      ? t('settings.rangeBounds', { min: setting.min, max: setting.max })
                       : setting.min !== null
-                        ? `min ${setting.min}`
+                        ? t('settings.minOnly', { min: setting.min })
                         : ''}
                   </span>
                   {errors[setting.key] && (
@@ -170,14 +172,14 @@ export const SystemSettingsPage: React.FC = () => {
                 disabled={!isDirty}
                 onClick={() => reset(defaultValues)}
               >
-                Reset
+                {t('settings.reset')}
               </button>
               <button
                 type="submit"
                 className="dt-btn dt-btn-primary fv"
                 disabled={isSubmitting || update.isPending}
               >
-                {isSubmitting || update.isPending ? 'Saving…' : 'Save Settings'}
+                {isSubmitting || update.isPending ? t('settings.saving') : t('settings.save')}
               </button>
             </div>
           </form>

@@ -1,3 +1,4 @@
+import { useT } from '../../../i18n';
 import { useTeamSummary } from '../hooks/useDashboardQueries';
 import { StatTile } from '../components/StatTile';
 import { WorkloadBalanceWidget } from '../components/WorkloadBalanceWidget';
@@ -9,6 +10,7 @@ import { EscalationsWidget } from '../components/EscalationsWidget';
  * endpoint backs the route guard.
  */
 export function TeamDashboardPage() {
+  const { t } = useT('dashboard');
   const summary = useTeamSummary();
   const s = summary.data;
 
@@ -18,7 +20,7 @@ export function TeamDashboardPage() {
   return (
     <div className="dash-page">
       <header className="dash-head">
-        <h1 className="dash-title">Team overview</h1>
+        <h1 className="dash-title">{t('team.heading')}</h1>
         <p className="dash-subtitle">
           {s ? (
             <>
@@ -26,30 +28,30 @@ export function TeamDashboardPage() {
               <span dir="ltr" className="tq-ltr">
                 {s.agent_count}
               </span>{' '}
-              {s.agent_count === 1 ? 'agent' : 'agents'}
+              {t('team.agentCount', { count: s.agent_count })}
             </>
           ) : (
-            'Loading team…'
+            t('team.loading')
           )}
         </p>
       </header>
 
       <div className="stat-tile-row">
         <StatTile
-          label="Team open tickets"
+          label={t('team.openTickets')}
           value={s?.open_count ?? 0}
           loading={summary.isPending}
           error={summary.isError}
         />
         <StatTile
-          label="Active escalations"
+          label={t('team.activeEscalations')}
           value={s?.escalation_count ?? 0}
           tone="danger"
           loading={summary.isPending}
           error={summary.isError}
         />
         <StatTile
-          label="Team SLA compliance"
+          label={t('team.slaCompliance')}
           value={compliance}
           tone="success"
           loading={summary.isPending}

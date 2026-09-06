@@ -10,9 +10,18 @@
     "src/features/tickets",
     "src/features/integrations",
     "src/features/ai-assist",
-    "src/features/organization"
+    "src/features/organization",
+    "src/features/customers",
+    "src/features/users-roles-admin",
+    "src/features/agent-productivity",
+    "src/features/knowledge-base",
+    "src/features/agent-dashboard",
+    "src/features/csat",
+    "src/features/reports",
+    "src/features/channels",
+    "src/features/notifications"
   ],
-  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) is the retrofit pass closing this list — it adds one root here as its literals move into that root's i18n namespace. Story 18 (WIS-19) and Story 19 (WIS-18) each added their own root directly, shipping already compliant, so WIS-17 never has to retrofit either. Pending: src/features/{customers,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat}.",
+  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) closed this list — every feature folder's literals have been migrated into its i18n namespace, matching the pattern established in auth and sla-rules.",
   "literals": [
     { "value": "⌘K", "reason": "Keyboard shortcut badge — must not mirror or translate (brief.md, Story 02)." },
     { "value": "Wisal", "reason": "Product name — rendered from the `brand` key where localized; the bare token is exempt." },

@@ -1,4 +1,5 @@
 import type { ChannelsBlock } from '../model/report';
+import { useT } from '../../../i18n';
 import { ReportCard } from './ReportCard';
 
 /**
@@ -7,11 +8,12 @@ import { ReportCard } from './ReportCard';
  * read the value, and state is never encoded in colour alone.
  */
 export function ChannelMixCard({ block }: { block: ChannelsBlock }) {
+  const { t } = useT('reports');
   return (
     <ReportCard
-      title="Tickets by Channel"
+      title={t('channelMix.title')}
       available={block.available}
-      emptyMessage="No tickets were received on any channel in this date range."
+      emptyMessage={t('channelMix.empty')}
     >
       <ul className="rp-channels">
         {block.items.map((item) => (

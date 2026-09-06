@@ -1,1 +1,148 @@
-{}
+{
+  "columns": {
+    "user": "المستخدم",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "status": "الحالة",
+    "department": "القسم",
+    "lastActive": "آخر نشاط",
+    "actions": "الإجراءات",
+    "neverSignedIn": "لم يسجل الدخول قط"
+  },
+  "rowActions": {
+    "edit": "تعديل",
+    "deactivate": "إلغاء التفعيل",
+    "activate": "تفعيل",
+    "cannotDeactivateSelf": "لا يمكنك إلغاء تفعيل حسابك الخاص",
+    "deactivateTitle": "إلغاء تفعيل {{name}}",
+    "reactivateTitle": "إعادة تفعيل {{name}}"
+  },
+  "roles": {
+    "agent": "وكيل",
+    "team_lead": "قائد فريق",
+    "administrator": "مسؤول"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "all": "الكل"
+  },
+  "relative": {
+    "never": "أبداً",
+    "justNow": "الآن"
+  },
+  "form": {
+    "editTitle": "تعديل مستخدم",
+    "inviteTitle": "دعوة مستخدم",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "roleHint": "لكل مستخدم دور واحد فقط.",
+    "department": "القسم",
+    "departmentOptional": "اختياري",
+    "cancel": "إلغاء",
+    "saving": "جارٍ الحفظ…",
+    "saveChanges": "حفظ التغييرات",
+    "sendInvite": "إرسال الدعوة",
+    "genericError": "حدث خطأ ما. حاول مرة أخرى.",
+    "saveFailed": "تعذر حفظ التغيير."
+  },
+  "deactivateDialog": {
+    "title": "إلغاء تفعيل {{name}}؟",
+    "bodyBeforeStrong": "لن يتمكن {{name}} من تسجيل الدخول، و",
+    "bodyStrong": "ستنتهي جلساته النشطة على الفور",
+    "bodyAfterStrong": "— أي جهاز مسجّل الدخول عليه سيُسجَّل خروجه عند طلبه التالي.",
+    "bodyFooter": "تبقى تذاكره وسجل تدقيقه منسوبة إليه. يمكنك إعادة تفعيل الحساب لاحقاً؛ سيحتاج إلى تسجيل الدخول مرة أخرى.",
+    "cancel": "إلغاء",
+    "working": "جارٍ التنفيذ…",
+    "confirm": "إلغاء تفعيل المستخدم",
+    "cannotDeactivate": "لا يمكن إلغاء تفعيل هذا المستخدم.",
+    "genericError": "حدث خطأ ما. حاول مرة أخرى."
+  },
+  "list": {
+    "title": "المستخدمون",
+    "subtitle_zero": "لا يوجد مستخدمون داخليون",
+    "subtitle_one": "مستخدم داخلي واحد",
+    "subtitle_two": "مستخدمان داخليان",
+    "subtitle_few": "{{count}} مستخدمين داخليين",
+    "subtitle_many": "{{count}} مستخدماً داخلياً",
+    "subtitle_other": "{{count}} مستخدم داخلي",
+    "subtitleWithDepartments_zero": "لا يوجد مستخدمون داخليون في {{departments}} قسم",
+    "subtitleWithDepartments_one": "مستخدم داخلي واحد عبر {{departments}} قسم",
+    "subtitleWithDepartments_two": "مستخدمان داخليان عبر {{departments}} قسم",
+    "subtitleWithDepartments_few": "{{count}} مستخدمين داخليين عبر {{departments}} قسم",
+    "subtitleWithDepartments_many": "{{count}} مستخدماً داخلياً عبر {{departments}} قسم",
+    "subtitleWithDepartments_other": "{{count}} مستخدم داخلي عبر {{departments}} قسم",
+    "auditLog": "سجل التدقيق",
+    "settings": "الإعدادات",
+    "inviteUser": "دعوة مستخدم",
+    "filterRole": "الدور",
+    "filterDepartment": "القسم",
+    "filterStatus": "الحالة",
+    "searchPlaceholder": "البحث عن المستخدمين…",
+    "searchLabel": "البحث عن المستخدمين",
+    "emptyFilteredTitle": "لا يوجد مستخدمون يطابقون هذه الفلاتر",
+    "emptyFilteredBody": "لا يوجد مستخدمون يطابقون {{filters}}. جرّب فلتراً مختلفاً أو امسح الفلاتر.",
+    "resetFilters": "إعادة ضبط الفلاتر",
+    "emptyTitle": "لا يوجد مستخدمون بعد",
+    "emptyBody": "لا يوجد مستخدمون داخليون بعد. ادعُ أول زميل لمنحه صلاحية الوصول.",
+    "caption": "المستخدمون"
+  },
+  "auditLog": {
+    "title": "سجل التدقيق",
+    "subtitle": "كل إجراء حساس، مع الفاعل والإجراء والهدف والوقت. لا يمكن تعديل الإدخالات أو حذفها مطلقاً.",
+    "backToUsers": "العودة إلى المستخدمين",
+    "columns": {
+      "when": "الوقت",
+      "actor": "الفاعل",
+      "action": "الإجراء",
+      "target": "الهدف",
+      "ip": "عنوان IP"
+    },
+    "noLongerUser": "(لم يعد مستخدماً)",
+    "filterActor": "الفاعل",
+    "anyActor": "أي شخص",
+    "filterAction": "الإجراء",
+    "from": "من",
+    "to": "إلى",
+    "clearFilters": "مسح الفلاتر",
+    "emptyFilteredTitle": "لا توجد إدخالات تطابق هذه الفلاتر",
+    "emptyFilteredBody": "لا توجد إدخالات تدقيق تطابق الفاعل أو الإجراء أو النطاق الزمني المحدد. وسّع النطاق أو امسح الفلاتر.",
+    "emptyTitle": "لا توجد إدخالات تدقيق بعد",
+    "emptyBody": "تُسجَّل الإجراءات الحساسة هنا فور حدوثها — تغييرات المستخدمين، تغييرات الأدوار، تغييرات قواعد اتفاقية مستوى الخدمة، وتغييرات الإعدادات.",
+    "caption": "سجل التدقيق",
+    "rowLabel": "{{event}} بواسطة {{actor}}"
+  },
+  "settings": {
+    "title": "إعدادات النظام",
+    "subtitle": "يتم التحقق من كل تغيير قبل حفظه وتسجيله في سجل التدقيق.",
+    "backToUsers": "العودة إلى المستخدمين",
+    "empty": "لا توجد إعدادات قابلة للتهيئة.",
+    "rangeBounds": "{{min}}–{{max}}",
+    "minOnly": "الحد الأدنى {{min}}",
+    "reset": "إعادة تعيين",
+    "saving": "جارٍ الحفظ…",
+    "save": "حفظ الإعدادات",
+    "noChanges": "لا توجد تغييرات لحفظها.",
+    "savedCount_zero": "لم يتم حفظ أي تغيير.",
+    "savedCount_one": "تم حفظ تغيير واحد.",
+    "savedCount_two": "تم حفظ تغييرين.",
+    "savedCount_few": "تم حفظ {{count}} تغييرات.",
+    "savedCount_many": "تم حفظ {{count}} تغييراً.",
+    "savedCount_other": "تم حفظ {{count}} تغيير.",
+    "saveFailed": "تعذر حفظ التغيير.",
+    "genericError": "حدث خطأ ما. حاول مرة أخرى."
+  },
+  "schema": {
+    "roleRequired": "اختر دوراً. لكل مستخدم دور واحد فقط.",
+    "nameRequired": "الاسم مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "أدخل بريداً إلكترونياً صالحاً"
+  },
+  "settingsSchema": {
+    "mustBeNumber": "يجب أن يكون {{label}} رقماً.",
+    "mustBeInteger": "يجب أن يكون {{label}} رقماً صحيحاً.",
+    "tooLow": "لا يمكن أن يكون {{label}} أقل من {{min}}.",
+    "tooHigh": "لا يمكن أن يكون {{label}} أعلى من {{max}}."
+  }
+}

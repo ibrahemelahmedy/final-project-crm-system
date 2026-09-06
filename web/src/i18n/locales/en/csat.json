@@ -1,1 +1,55 @@
-{}
+{
+  "brand": "Wisal",
+  "heading": "How did we do?",
+  "request": "Request {{number}} · \"{{subject}}\"",
+  "ratingLegend": "Your rating",
+  "ratingGroupLabel": "Rate your support experience from 1 to 5",
+  "rating": {
+    "1": "1 – Poor",
+    "2": "2 – Fair",
+    "3": "3 – Okay",
+    "4": "4 – Good",
+    "5": "5 – Great"
+  },
+  "ratingEmoji": {
+    "1": "😞",
+    "2": "😐",
+    "3": "🙂",
+    "4": "😊",
+    "5": "🤩"
+  },
+  "ratingSelected": "{{label}} selected",
+  "commentLabel": "Comment",
+  "commentOptional": "(optional)",
+  "commentHint": "Any detail helps us improve — a single word is fine.",
+  "commentPlaceholder": "Tell us what went well or what could be better…",
+  "submit": "Submit feedback",
+  "submitting": "Submitting…",
+  "submittedTitle": "Thank you for your feedback",
+  "submittedBody": "Your response for request {{number}} has been recorded. It helps us keep improving.",
+  "answeredTitle": "You've already responded",
+  "yourResponse": "YOUR RESPONSE",
+  "commentHeading": "COMMENT",
+  "submittedOn": "Submitted {{date}}",
+  "answeredFooter": "Your response has been recorded. Thank you.",
+  "expiredTitle": "This link is no longer active",
+  "expiredBody": "Feedback links expire after 30 days. This one has passed that window — no action needed.",
+  "errorTitle": "We couldn't load this page",
+  "errorBody": "Check your connection and try again.",
+  "retry": "Retry",
+  "loading": "Loading…",
+  "toggleTo": "العربية",
+  "panel": {
+    "ariaLabel": "Customer satisfaction survey",
+    "heading": "CSAT SURVEY",
+    "loadError": "Couldn't load the survey.",
+    "retry": "Retry",
+    "empty": "No survey for this resolution cycle yet.",
+    "hint": "Share this feedback link with the customer. It expires 30 days after resolution.",
+    "linkLabel": "Feedback link",
+    "copied": "Copied",
+    "copyLink": "Copy link",
+    "noComment": "No comment left.",
+    "expired": "The feedback link expired with no response."
+  }
+}

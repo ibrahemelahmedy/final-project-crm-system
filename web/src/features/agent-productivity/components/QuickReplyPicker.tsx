@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '../../../i18n';
 import { useTicketQuickReplies } from '../hooks/useTicketQuickReplies';
 import type { TicketQuickReply } from '../model/quickReply';
 
@@ -18,6 +19,7 @@ export type QuickReplyPickerProps = {
  * close. It calls no send endpoint — selecting an item only inserts text.
  */
 export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, onInsert, onClose }) => {
+  const { t } = useT('productivity');
   const [term, setTerm] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,12 +40,12 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
   const grouped = useMemo(() => {
     const groups = new Map<string, TicketQuickReply[]>();
     for (const qr of results) {
-      const key = qr.category || 'General';
+      const key = qr.category || t('quickReplyPicker.generalCategory');
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key)!.push(qr);
     }
     return Array.from(groups.entries());
-  }, [results]);
+  }, [results, t]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -97,7 +99,7 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
     <div
       className="qr-picker"
       role="dialog"
-      aria-label="Insert a quick reply"
+      aria-label={t('quickReplyPicker.ariaLabel')}
       ref={panelRef}
       onKeyDown={onKeyDown}
     >
@@ -105,7 +107,7 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
         ref={inputRef}
         type="search"
         className="search-input qr-picker-input"
-        placeholder="Search quick replies…"
+        placeholder={t('quickReplyPicker.searchPlaceholder')}
         value={term}
         onChange={(e) => setTerm(e.target.value)}
         aria-activedescendant={flat[activeIndex] ? `qr-row-${flat[activeIndex].id}` : undefined}
@@ -116,9 +118,9 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
 
       {isError ? (
         <div className="qr-picker-state">
-          <p>Quick replies could not be loaded.</p>
+          <p>{t('quickReplyPicker.loadError')}</p>
           <button type="button" className="tq-btn-outline fv" onClick={() => refetch()}>
-            Retry
+            {t('quickReplyPicker.retry')}
           </button>
         </div>
       ) : isLoading ? (
@@ -129,17 +131,15 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
         </div>
       ) : all.length === 0 ? (
         <div className="qr-picker-state">
-          <p className="qr-picker-empty-title">No quick replies yet</p>
-          <p className="qr-picker-empty-body">
-            Your team lead can create canned responses in Admin → Quick Replies.
-          </p>
+          <p className="qr-picker-empty-title">{t('quickReplyPicker.emptyTitle')}</p>
+          <p className="qr-picker-empty-body">{t('quickReplyPicker.emptyBody')}</p>
         </div>
       ) : results.length === 0 ? (
         <div className="qr-picker-state">
-          <p className="qr-picker-empty-title">No replies match “{term}”</p>
-          <p className="qr-picker-empty-body">Try a different word, or clear the search to browse all.</p>
+          <p className="qr-picker-empty-title">{t('quickReplyPicker.noMatchTitle', { term })}</p>
+          <p className="qr-picker-empty-body">{t('quickReplyPicker.noMatchBody')}</p>
           <button type="button" className="tq-btn-outline fv" onClick={() => setTerm('')}>
-            Clear search
+            {t('quickReplyPicker.clearSearch')}
           </button>
         </div>
       ) : (
@@ -174,9 +174,9 @@ export const QuickReplyPicker: React.FC<QuickReplyPickerProps> = ({ ticketId, on
       )}
 
       <div className="qr-picker-keys" aria-hidden="true">
-        <span>↑↓ navigate</span>
-        <span>Enter insert</span>
-        <span>Esc close</span>
+        <span>{t('keyboard.navigate')}</span>
+        <span>{t('keyboard.insert')}</span>
+        <span>{t('keyboard.close')}</span>
       </div>
     </div>
   );

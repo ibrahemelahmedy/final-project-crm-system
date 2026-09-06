@@ -147,7 +147,7 @@ describe('UsersPage', () => {
     // The pill carries a LABEL, not just a colour (brief.md accessibility).
     expect(screen.getByText('Active')).toBeInTheDocument();
     expect(screen.getByText('Support Ops')).toBeInTheDocument();
-    expect(screen.getByText(/12 min\.? ago|12m ago/)).toBeInTheDocument();
+    expect(screen.getByText(/12 minutes ago/)).toBeInTheDocument();
   });
 
   it('renders an em dash for a null department and Never for a null last login', async () => {

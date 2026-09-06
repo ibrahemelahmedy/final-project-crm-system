@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useT } from '../../../i18n';
 import type { ArticleSummary } from '../model/article';
 
 /**
@@ -13,10 +14,11 @@ export const MostViewedList: React.FC<{
   articles: ArticleSummary[];
   isLoading?: boolean;
 }> = ({ articles, isLoading = false }) => {
+  const { t } = useT('knowledge');
   if (isLoading) {
     return (
       <div className="kb-most-viewed">
-        <div className="kb-rail-label">MOST VIEWED</div>
+        <div className="kb-rail-label">{t('mostViewed.heading')}</div>
         {Array.from({ length: 3 }).map((_, i) => (
           <span key={i} className="sk kb-most-viewed-skeleton" />
         ))}
@@ -31,9 +33,9 @@ export const MostViewedList: React.FC<{
   }
 
   return (
-    <nav className="kb-most-viewed" aria-label="Most viewed articles">
+    <nav className="kb-most-viewed" aria-label={t('mostViewed.ariaLabel')}>
       <div className="kb-rail-label" id="kb-most-viewed-label">
-        MOST VIEWED
+        {t('mostViewed.heading')}
       </div>
       <ul className="kb-most-viewed-list" aria-labelledby="kb-most-viewed-label">
         {articles.map((article) => (

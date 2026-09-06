@@ -1,5 +1,6 @@
 import { presentationFor, statusLabel, type ChannelOverviewItem } from '../model/channel';
 import { ChannelIcon } from './ChannelIcon';
+import { useT, formatNumber } from '../../../i18n';
 
 /** How the count slot should read for this card. `empty` and `unavailable`
  *  both avoid rendering a literal `0` that looks like a measurement. */
@@ -15,7 +16,8 @@ export function ChannelCard({
   item: ChannelOverviewItem;
   count: CountState;
 }) {
-  const presentation = presentationFor(item.value);
+  const { t } = useT('channels');
+  const presentation = presentationFor(item.value, t);
 
   return (
     <div className="ch-card">
@@ -28,7 +30,7 @@ export function ChannelCard({
           <span className="ch-card-name">{presentation.label}</span>
           <span className="ch-badge">
             <ChannelIcon name="info" size={11} />
-            {statusLabel(item.status)}
+            {statusLabel(item.status, t)}
           </span>
         </div>
         <p className="ch-card-help">{presentation.helpLine}</p>
@@ -37,15 +39,15 @@ export function ChannelCard({
       <div className="ch-card-count">
         {count.kind === 'count' && (
           <>
-            <span className="ch-card-count-value">{count.value.toLocaleString()}</span>
-            <span className="ch-card-count-unit">tickets</span>
+            <span className="ch-card-count-value">{formatNumber(count.value)}</span>
+            <span className="ch-card-count-unit">{t('card.tickets')}</span>
           </>
         )}
         {count.kind === 'empty' && (
-          <span className="ch-card-count-note">No tickets this period</span>
+          <span className="ch-card-count-note">{t('card.empty')}</span>
         )}
         {count.kind === 'unavailable' && (
-          <span className="ch-card-count-note">Count unavailable</span>
+          <span className="ch-card-count-note">{t('card.unavailable')}</span>
         )}
       </div>
     </div>

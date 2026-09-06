@@ -1,1 +1,107 @@
-{}
+{
+  "keyboard": {
+    "navigate": "↑↓ navigate",
+    "insert": "Enter insert",
+    "close": "Esc close"
+  },
+  "addTask": {
+    "title": "New task",
+    "taskLabel": "Task",
+    "placeholder": "e.g. Call customer back on Thursday",
+    "dueDateTime": "Due date & time",
+    "assignee": "Assignee",
+    "me": "(me)",
+    "cancel": "Cancel",
+    "save": "Save task",
+    "saveFailed": "The task could not be saved. Try again."
+  },
+  "mention": {
+    "ariaLabel": "Mention a colleague",
+    "colleagues": "COLLEAGUES"
+  },
+  "quickReplyEdit": {
+    "editTitle": "Edit quick reply",
+    "newTitle": "New quick reply",
+    "title": "Title",
+    "category": "Category",
+    "body": "Body",
+    "placeholders": "AVAILABLE PLACEHOLDERS",
+    "cancel": "Cancel",
+    "save": "Save changes",
+    "saveFailed": "That template could not be saved. Try again."
+  },
+  "quickReplyPicker": {
+    "ariaLabel": "Insert a quick reply",
+    "searchPlaceholder": "Search quick replies…",
+    "loadError": "Quick replies could not be loaded.",
+    "retry": "Retry",
+    "emptyTitle": "No quick replies yet",
+    "emptyBody": "Your team lead can create canned responses in Admin → Quick Replies.",
+    "noMatchTitle": "No replies match “{{term}}”",
+    "noMatchBody": "Try a different word, or clear the search to browse all.",
+    "clearSearch": "Clear search",
+    "generalCategory": "General"
+  },
+  "tasksPanel": {
+    "heading": "TASKS",
+    "headingWithCount": "TASKS · {{count}}",
+    "cancel": "Cancel",
+    "addTask": "Add task",
+    "loadErrorTitle": "Couldn't load tasks",
+    "loadErrorBody": "Check your connection, then try again.",
+    "retry": "Retry",
+    "emptyTitle": "No tasks yet",
+    "emptyBody": "Add a task to track a follow-up or reminder for this ticket.",
+    "addFirstTask": "Add a task",
+    "markComplete": "Mark \"{{title}}\" complete"
+  },
+  "dueState": {
+    "none": "No due date",
+    "completed": "Completed · {{date}}",
+    "overdue": "Overdue · {{relative}}",
+    "dueSoon": "Due soon · {{relative}}",
+    "upcoming": "{{relative}} · {{date}}"
+  },
+  "quickRepliesPage": {
+    "title": "Quick Replies",
+    "subtitle_one": "{{count}} template in the shared library",
+    "subtitle_other": "{{count}} templates in the shared library",
+    "newQuickReply": "New quick reply",
+    "categoryLabel": "Category:",
+    "statusLabel": "Status:",
+    "all": "All",
+    "active": "Active",
+    "archived": "Archived",
+    "loadErrorTitle": "Couldn't load quick replies",
+    "loadErrorBody": "Something went wrong while fetching the library. Check your connection and try again.",
+    "retry": "Retry",
+    "emptyTitle": "No quick replies yet",
+    "emptyBody": "Quick replies are shared reply templates your team can insert into ticket responses in one click — great for common questions like password resets or refund policy.",
+    "createFirst": "Create your first quick reply",
+    "columns": {
+      "title": "TITLE",
+      "preview": "PREVIEW",
+      "category": "CATEGORY",
+      "status": "STATUS",
+      "lastUpdated": "LAST UPDATED",
+      "actions": "ACTIONS"
+    },
+    "edit": "Edit",
+    "archive": "Archive",
+    "showingRange": "Showing {{from}}–{{to}} of {{total}}",
+    "archiveConfirmTitle": "Archive quick reply?",
+    "archiveConfirmBody": "Archive \"{{title}}\"? Agents will no longer see it in the quick-reply picker. You can restore it later from the Archived filter.",
+    "categories": {
+      "billing": "Billing",
+      "account": "Account",
+      "technical": "Technical",
+      "general": "General"
+    }
+  },
+  "schema": {
+    "titleRequired": "Give this template a title.",
+    "bodyRequired": "Write the reply body.",
+    "categoryRequired": "Choose a category.",
+    "taskDescriptionRequired": "Describe the task."
+  }
+}

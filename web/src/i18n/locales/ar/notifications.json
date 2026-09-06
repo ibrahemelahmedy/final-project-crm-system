@@ -1,1 +1,15 @@
-{}
+{
+  "ariaLabel": "الإشعارات",
+  "title": "الإشعارات",
+  "markAllRead": "تعليم الكل كمقروء",
+  "loadErrorTitle": "تعذر تحميل الإشعارات",
+  "loadErrorBody": "تحقق من اتصالك وحاول مرة أخرى.",
+  "retry": "إعادة المحاولة",
+  "emptyTitle": "لقد أنجزت كل شيء",
+  "emptyBody": "لا توجد إشعارات الآن — تحقق لاحقاً.",
+  "viewAll": "عرض كل الإشعارات",
+  "noLongerAvailable": "لم يعد متاحاً",
+  "filterAriaLabel": "تصفية الإشعارات",
+  "filterAll": "الكل",
+  "filterUnread": "غير مقروء"
+}

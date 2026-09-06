@@ -1,1 +1,114 @@
-{}
+{
+  "picker": {
+    "defaultHeading": "Insert a Knowledge Base article",
+    "close": "Close article picker",
+    "searchLabel": "Search knowledge base articles",
+    "searchPlaceholder": "Search articles, guides, and FAQs…",
+    "resultsFound_one": "{{count}} article found",
+    "resultsFound_other": "{{count}} articles found",
+    "loadError": "Articles could not be loaded.",
+    "tryAgain": "Try again",
+    "hint": "Type to search the Knowledge Base. Choosing a result inserts a link into your reply.",
+    "noMatchTitle": "No articles match “{{query}}”",
+    "noMatchBody": "Try a broader search — fewer words, or a more general term."
+  },
+  "toc": {
+    "heading": "ON THIS PAGE"
+  },
+  "rail": {
+    "categories": "CATEGORIES",
+    "categoriesAria": "Article categories",
+    "allArticles": "All Articles"
+  },
+  "mostViewed": {
+    "heading": "MOST VIEWED",
+    "ariaLabel": "Most viewed articles"
+  },
+  "schema": {
+    "titleRequired": "A title is required.",
+    "titleTooLong": "Keep the title under 255 characters.",
+    "bodyTooLong": "This article is too long to save.",
+    "bodyRequiredToPublish": "A body is required before this article can be published.",
+    "categoryRequiredToPublish": "A category is required before this article can be published."
+  },
+  "columns": {
+    "article": "ARTICLE",
+    "category": "CATEGORY",
+    "status": "STATUS",
+    "views": "VIEWS",
+    "updated": "UPDATED"
+  },
+  "editor": {
+    "notFoundTitle": "Article not found",
+    "notFoundBody": "This article does not exist, or it is not available to you.",
+    "backToKb": "Back to Knowledge Base",
+    "editTitle": "Edit article",
+    "newTitle": "New article",
+    "subtitle": "Written in Markdown. Raw HTML is removed when the article is saved.",
+    "cancel": "Cancel",
+    "unpublish": "Unpublish",
+    "saveDraft": "Save draft",
+    "publish": "Publish",
+    "title": "Title",
+    "category": "Category",
+    "selectCategory": "Select a category…",
+    "body": "Body (Markdown)",
+    "preview": "PREVIEW",
+    "previewEmpty": "The preview appears here as you write, rendered exactly as the reader will show it.",
+    "saveFailed": "This article could not be saved. Try again."
+  },
+  "reader": {
+    "notFoundTitle": "Article not found",
+    "notFoundBody": "This article does not exist, or it has not been published yet. Browse the Knowledge Base to find what you need.",
+    "backToKb": "Back to Knowledge Base",
+    "errorTitle": "Something went wrong",
+    "errorBody": "This article could not be loaded.",
+    "tryAgain": "Try again",
+    "breadcrumbLabel": "Breadcrumb",
+    "kbLink": "Knowledge Base",
+    "edit": "Edit",
+    "lastUpdated": "Last updated",
+    "minRead": "min read",
+    "revisionCount_one": "{{count}} revision",
+    "revisionCount_other": "{{count}} revisions",
+    "emptyBody": "This article has no content yet.",
+    "emptyBodyEditorHint": "Edit it to add the guidance agents need."
+  },
+  "index": {
+    "title": "Knowledge Base",
+    "count_one": "{{count}} article",
+    "count_other": "{{count}} articles",
+    "newArticle": "New Article",
+    "searchPlaceholder": "Search articles, guides, and FAQs…",
+    "searchLabel": "Search articles",
+    "statusFilters": {
+      "published": "Published",
+      "draft": "Draft",
+      "archived": "Archived"
+    },
+    "bulkRestricted": "Only a team lead or administrator can change article status",
+    "bulk": {
+      "publishVerb": "Publish",
+      "publishBody": "The selected articles become visible to every agent. Any article missing a title, body, or category is skipped and reported back.",
+      "unpublishVerb": "Unpublish",
+      "unpublishBody": "The selected articles return to Draft and stop appearing in agent-facing search.",
+      "archiveVerb": "Archive",
+      "archiveBody": "The selected articles are retired. They stay readable to editors and keep their version history.",
+      "confirmTitle_one": "{{verb}} {{count}} article?",
+      "confirmTitle_other": "{{verb}} {{count}} articles?",
+      "notice_one": "{{affected}} published. {{count}} skipped — an article needs a title, a body, and a category before it can be published: {{names}}",
+      "notice_other": "{{affected}} published. {{count}} skipped — an article needs a title, a body, and a category before it can be published: {{names}}"
+    },
+    "loadError": "Articles could not be loaded.",
+    "emptyFilteredTitleQuery": "No articles match “{{query}}”",
+    "emptyFilteredTitle": "No articles match these filters",
+    "emptyFilteredBody": "Nothing matches {{filters}}. Try a broader search — fewer words, or a more general term — or clear the filters.",
+    "clearFilters": "Clear filters",
+    "emptyTitle": "No articles yet",
+    "emptyBodyEditor": "The Knowledge Base is empty. Write the first article so agents have something to reference.",
+    "emptyBodyViewer": "The Knowledge Base is empty. An administrator or team lead can publish the first article.",
+    "filterCategory": "Category",
+    "filterStatus": "Status",
+    "caption": "Knowledge Base articles"
+  }
+}

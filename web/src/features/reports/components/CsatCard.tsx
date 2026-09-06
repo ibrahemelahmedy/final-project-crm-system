@@ -1,4 +1,5 @@
 import type { CsatBlock } from '../model/report';
+import { useT, formatNumber } from '../../../i18n';
 import { ReportCard } from './ReportCard';
 import '../../csat/csat.css';
 
@@ -14,27 +15,27 @@ import '../../csat/csat.css';
  * There is still no chart element here — the design export has no CSAT chart.
  */
 export function CsatCard({ block }: { block: CsatBlock }) {
+  const { t } = useT('reports');
+  const fmt = (n: number) => formatNumber(n, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return (
     <ReportCard
-      title="Customer Satisfaction (CSAT)"
+      title={t('csat.title')}
       available={block.available}
-      emptyMessage="No CSAT data collected yet."
+      emptyMessage={t('csat.empty')}
     >
       <div className="rp-csat">
         <p className="rp-csat-value" dir="ltr">
-          {block.average != null ? block.average.toFixed(2) : '—'}
+          {block.average != null ? fmt(block.average) : '—'}
           <span className="rp-csat-scale"> / 5</span>
         </p>
-        <p className="rp-csat-count">
-          {block.response_count ?? 0} response{block.response_count === 1 ? '' : 's'}
-        </p>
+        <p className="rp-csat-count">{t('csat.responseCount', { count: block.response_count ?? 0 })}</p>
         {block.by_agent && block.by_agent.length > 0 && (
           <ul className="rp-csat-agents">
             {block.by_agent.map((row) => (
               <li key={row.user_id ?? 'unattributed'} className="rp-csat-agent-row">
                 <span className="rp-csat-agent-name">{row.name}</span>
                 <span className="rp-csat-agent-score" dir="ltr">
-                  {row.average.toFixed(2)} ({row.response_count})
+                  {fmt(row.average)} ({row.response_count})
                 </span>
               </li>
             ))}

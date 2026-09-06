@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useT } from '../../../i18n';
 
 export type ChipOption = { value: string; label: string; count?: number };
 
@@ -20,8 +21,10 @@ export const FilterChip: React.FC<{
   selected: string[];
   onChange: (values: string[]) => void;
   emptySummary?: string;
-}> = ({ label, mode, options, selected, onChange, emptySummary = 'All' }) => {
+}> = ({ label, mode, options, selected, onChange, emptySummary }) => {
+  const { t } = useT('common');
   const [open, setOpen] = useState(false);
+  const resolvedEmptySummary = emptySummary ?? t('table.all');
   const rootRef = useRef<HTMLDivElement>(null);
 
   // Click-away and Escape close the popover. Without this the chip stays open
@@ -48,10 +51,10 @@ export const FilterChip: React.FC<{
 
   const summary =
     selected.length === 0
-      ? emptySummary
+      ? resolvedEmptySummary
       : selected.length === 1
         ? (options.find((o) => o.value === selected[0])?.label ?? selected[0])
-        : `${selected.length} selected`;
+        : t('table.selected', { count: selected.length });
 
   const toggle = (value: string) => {
     if (mode === 'single') {
@@ -84,7 +87,7 @@ export const FilterChip: React.FC<{
           aria-multiselectable={mode === 'multi' ? 'true' : undefined}
           className="facet-popover"
         >
-          {options.length === 0 && <li className="facet-popover-empty">No options</li>}
+          {options.length === 0 && <li className="facet-popover-empty">{t('table.noOptions')}</li>}
           {options.map((option) => (
             <li key={option.value} role="option" aria-selected={selected.includes(option.value)}>
               <label className="facet-option">

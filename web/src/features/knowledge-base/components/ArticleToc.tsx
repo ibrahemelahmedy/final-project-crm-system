@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../../i18n';
 import type { TocEntry } from '../model/article';
 
 /**
@@ -13,6 +14,7 @@ import type { TocEntry } from '../model/article';
  * under RTL on its own — verified against WisalKBArticle-LightRTL.dc.html.
  */
 export const ArticleToc: React.FC<{ entries: TocEntry[] }> = ({ entries }) => {
+  const { t } = useT('knowledge');
   // No headings means no table of contents — an empty "ON THIS PAGE" heading
   // over nothing is noise.
   if (entries.length === 0) {
@@ -23,7 +25,7 @@ export const ArticleToc: React.FC<{ entries: TocEntry[] }> = ({ entries }) => {
     <nav className="kb-toc" aria-labelledby="kb-toc-label">
       <div className="kb-toc-inner">
         <div className="kb-toc-label" id="kb-toc-label">
-          ON THIS PAGE
+          {t('toc.heading')}
         </div>
         <ul className="kb-toc-list">
           {entries.map((entry) => (

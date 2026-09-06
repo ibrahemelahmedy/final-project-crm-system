@@ -1,4 +1,5 @@
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useChannelPeriod } from '../hooks/useChannelPeriod';
 import { useChannelOverview } from '../hooks/useChannelOverview';
 import { PeriodSelector } from '../components/PeriodSelector';
@@ -22,6 +23,7 @@ import { KNOWN_CHANNEL_VALUES, type ChannelOverviewItem } from '../model/channel
  * button, link, or disclosure — Agents see no configuration affordance at all.
  */
 export function ChannelsPage() {
+  const { t } = useT('channels');
   const { user } = useAuth();
   const { period } = useChannelPeriod();
   const query = useChannelOverview(period);
@@ -46,11 +48,9 @@ export function ChannelsPage() {
   return (
     <div className="ch-page">
       <header className="ch-head">
-        <h1 className="ch-title">Channels</h1>
+        <h1 className="ch-title">{t('page.title')}</h1>
         <p className="ch-subtitle">
-          {isAdmin
-            ? 'Ticket origin by channel — no integrations connected'
-            : 'Ticket origin by channel'}
+          {isAdmin ? t('page.subtitleAdmin') : t('page.subtitle')}
         </p>
       </header>
 
@@ -60,8 +60,7 @@ export function ChannelsPage() {
         <div className="ch-notice" role="note">
           <ChannelIcon name="info" size={16} />
           <p className="ch-notice-text">
-            <strong>Channel integrations are not available in this release.</strong> The counts
-            below are drawn from existing ticket data.
+            <strong>{t('page.noticeStrong')}</strong> {t('page.noticeRest')}
           </p>
         </div>
       )}
@@ -69,17 +68,15 @@ export function ChannelsPage() {
       {query.isError && (
         <div className="ch-error" role="alert">
           <ChannelIcon name="info" size={15} />
-          <span className="ch-error-text">
-            Ticket counts couldn&apos;t load. Channel information is still shown.
-          </span>
+          <span className="ch-error-text">{t('page.loadError')}</span>
           <button type="button" className="ch-retry" onClick={() => query.refetch()}>
-            Retry
+            {t('page.retry')}
           </button>
         </div>
       )}
 
       {query.isPending ? (
-        <ul className="ch-list" role="status" aria-label="Loading channels">
+        <ul className="ch-list" role="status" aria-label={t('page.loadingLabel')}>
           {KNOWN_CHANNEL_VALUES.map((value) => (
             <li key={value} className="ch-card ch-card-skeleton">
               <span className="ch-skeleton ch-skeleton-icon" />

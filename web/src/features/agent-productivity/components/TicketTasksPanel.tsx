@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useT } from '../../../i18n';
 import { useTicketTasks, useCompleteTask } from '../hooks/useTicketTasks';
 import { dueStateLabel } from '../model/dueStateLabel';
 import { AddTaskForm } from './AddTaskForm';
@@ -10,6 +11,7 @@ import type { TicketTask } from '../model/task';
  * never re-derived from a raw timestamp.
  */
 export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
+  const { t } = useT('productivity');
   const { data, isPending, isError, refetch } = useTicketTasks(ticketId);
   const completeTask = useCompleteTask(ticketId);
   const [showForm, setShowForm] = useState(false);
@@ -17,10 +19,12 @@ export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
   return (
     <section className="tasks-panel">
       <div className="tasks-panel-head">
-        <p className="meta-section-label">TASKS{data ? ` · ${data.length}` : ''}</p>
+        <p className="meta-section-label">
+          {data ? t('tasksPanel.headingWithCount', { count: data.length }) : t('tasksPanel.heading')}
+        </p>
         {!isPending && !isError && (
           <button type="button" className="link-btn fv" onClick={() => setShowForm((s) => !s)}>
-            {showForm ? 'Cancel' : 'Add task'}
+            {showForm ? t('tasksPanel.cancel') : t('tasksPanel.addTask')}
           </button>
         )}
       </div>
@@ -35,10 +39,10 @@ export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
 
       {isError ? (
         <div className="tasks-panel-state">
-          <p className="tasks-panel-state-title">Couldn't load tasks</p>
-          <p className="tasks-panel-state-body">Check your connection, then try again.</p>
+          <p className="tasks-panel-state-title">{t('tasksPanel.loadErrorTitle')}</p>
+          <p className="tasks-panel-state-body">{t('tasksPanel.loadErrorBody')}</p>
           <button type="button" className="tq-btn-outline fv" onClick={() => refetch()}>
-            Retry
+            {t('tasksPanel.retry')}
           </button>
         </div>
       ) : isPending ? (
@@ -53,12 +57,10 @@ export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
       ) : (data ?? []).length === 0 ? (
         !showForm && (
           <div className="tasks-panel-state">
-            <p className="tasks-panel-state-title">No tasks yet</p>
-            <p className="tasks-panel-state-body">
-              Add a task to track a follow-up or reminder for this ticket.
-            </p>
+            <p className="tasks-panel-state-title">{t('tasksPanel.emptyTitle')}</p>
+            <p className="tasks-panel-state-body">{t('tasksPanel.emptyBody')}</p>
             <button type="button" className="tq-btn-outline fv" onClick={() => setShowForm(true)}>
-              Add a task
+              {t('tasksPanel.addFirstTask')}
             </button>
           </div>
         )
@@ -71,7 +73,7 @@ export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
                 className="task-cb fv"
                 checked={task.status === 'completed'}
                 disabled={task.status !== 'open' || completeTask.isPending}
-                aria-label={`Mark "${task.title}" complete`}
+                aria-label={t('tasksPanel.markComplete', { title: task.title })}
                 onChange={() => completeTask.mutate(task.id)}
               />
               <div className="task-row-body">
@@ -79,7 +81,7 @@ export function TicketTasksPanel({ ticketId }: { ticketId: number }) {
                   {task.title}
                 </span>
                 <span className={`task-due-state task-due-state--${task.due_state}`}>
-                  {dueStateLabel(task)}
+                  {dueStateLabel(task, t)}
                 </span>
               </div>
               {task.assignee && (

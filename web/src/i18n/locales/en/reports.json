@@ -1,1 +1,49 @@
-{}
+{
+  "title": "Reports",
+  "loadError": "The report couldn't load.",
+  "tryAgain": "Try again",
+  "loadingLabel": "Loading report",
+  "emptyState": "No ticket activity in this date range yet. Pick a wider range to see report figures.",
+  "range": {
+    "ariaLabel": "Report date range",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "last90": "Last 90 days",
+    "from": "From",
+    "to": "To"
+  },
+  "agentPerformance": {
+    "title": "Agent Performance",
+    "empty": "No agent resolved a ticket in this date range.",
+    "columns": {
+      "agent": "Agent",
+      "resolved": "Resolved",
+      "avgResponse": "Avg. Response"
+    },
+    "deactivated": "· deactivated"
+  },
+  "channelMix": {
+    "title": "Tickets by Channel",
+    "empty": "No tickets were received on any channel in this date range."
+  },
+  "csat": {
+    "title": "Customer Satisfaction (CSAT)",
+    "empty": "No CSAT data collected yet.",
+    "responseCount_one": "{{count}} response",
+    "responseCount_other": "{{count}} responses"
+  },
+  "slaCompliance": {
+    "title": "SLA Compliance Rate",
+    "empty": "No tickets with an SLA were resolved in this date range.",
+    "target": "Target: {{rate}}%",
+    "breachRate": "Breach rate",
+    "avgResolutionTime": "Avg. resolution time"
+  },
+  "ticketVolume": {
+    "title": "Ticket Volume Over Time",
+    "empty": "No tickets were created or resolved in this date range.",
+    "chartLabel": "Ticket volume over time — tickets created and resolved per day",
+    "created": "Created",
+    "resolved": "Resolved"
+  }
+}

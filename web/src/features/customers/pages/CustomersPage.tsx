@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTable } from '../../../components/data-table/DataTable';
 import { DataTableSkeleton } from '../../../components/data-table/DataTableSkeleton';
@@ -9,12 +9,13 @@ import { ColumnMenu } from '../../../components/data-table/ColumnMenu';
 import { BulkActionBar } from '../../../components/data-table/BulkActionBar';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useCustomerListParams } from '../hooks/useCustomerListParams';
 import { useCustomers } from '../hooks/useCustomers';
 import { useCustomerFacets } from '../hooks/useCustomerFacets';
 import { useColumnPreferences } from '../hooks/useColumnPreferences';
 import { useBulkCustomerAction } from '../hooks/useCustomerMutations';
-import { customerColumns } from '../model/columns';
+import { makeCustomerColumns } from '../model/columns';
 import { FacetFilter } from '../components/FacetFilter';
 import { CustomerFormModal } from '../components/CustomerFormModal';
 import type { CustomerTier } from '../model/customer';
@@ -28,15 +29,19 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
   return debounced;
 }
 
-function describeFilters(params: { q: string; company: string[]; tier: string[] }): string {
+function describeFilters(
+  params: { q: string; company: string[]; tier: string[] },
+  t: (key: string) => string
+): string {
   const parts: string[] = [];
-  if (params.company.length) parts.push(`Company: ${params.company.join(', ')}`);
-  if (params.tier.length) parts.push(`Tier: ${params.tier.join(', ')}`);
+  if (params.company.length) parts.push(`${t('list.filterCompany')}: ${params.company.join(', ')}`);
+  if (params.tier.length) parts.push(`${t('list.filterTier')}: ${params.tier.join(', ')}`);
   if (params.q) parts.push(`"${params.q}"`);
   return parts.join(' · ');
 }
 
 export const CustomersPage: React.FC = () => {
+  const { t } = useT('customers');
   const navigate = useNavigate();
   const { user } = useAuth();
   const [params, setParams, isFiltered] = useCustomerListParams();
@@ -56,6 +61,7 @@ export const CustomersPage: React.FC = () => {
   const bulk = useBulkCustomerAction();
   const canSeeTeamQueue = user?.role === 'team_lead' || user?.role === 'administrator';
 
+  const customerColumns = useMemo(() => makeCustomerColumns(t), [t]);
   const { columns, allColumns, hidden, toggleHidden, moveColumn } = useColumnPreferences(
     user?.id ?? 0,
     customerColumns
@@ -100,27 +106,25 @@ export const CustomersPage: React.FC = () => {
     if (!confirmBulk) return '';
     const n = selectedIds.length;
     if (confirmBulk.action === 'delete') {
-      return n === 1 ? 'Delete 1 customer?' : `Delete ${n} customers?`;
+      return t('list.bulk.deleteConfirmTitle', { count: n });
     }
     const tierLabel = bulkTargets[0]?.tier_label ?? confirmBulk.tier;
-    return n === 1
-      ? `Set tier to ${tierLabel} for 1 customer?`
-      : `Set tier to ${tierLabel} for ${n} customers?`;
+    return t('list.bulk.setTierConfirmTitle', { count: n, tier: tierLabel });
   })();
 
   return (
     <div className="customers-page">
       <div className="page-title-row">
         <div>
-          <h1>Customers</h1>
+          <h1>{t('list.title')}</h1>
           {isLoading ? (
             <span className="sk" style={{ width: 90, height: 14, display: 'inline-block', marginTop: 2 }} />
           ) : (
-            <p className="page-subtitle">{total} customers</p>
+            <p className="page-subtitle">{t('list.count', { count: total })}</p>
           )}
         </div>
         <button type="button" className="dt-btn dt-btn-primary fv" onClick={() => setCreateOpen(true)}>
-          Add Customer
+          {t('list.addCustomer')}
         </button>
       </div>
 
@@ -135,20 +139,20 @@ export const CustomersPage: React.FC = () => {
             actions={[
               {
                 id: 'delete',
-                label: 'Delete',
+                label: t('list.bulk.delete'),
                 tone: 'danger',
                 disabled: !canSeeTeamQueue,
-                title: canSeeTeamQueue ? undefined : 'Only a team lead or administrator can delete customers',
+                title: canSeeTeamQueue ? undefined : t('list.bulk.deleteRestricted'),
                 onClick: () => setConfirmBulk({ action: 'delete' }),
               },
               {
                 id: 'tag',
-                label: 'Tag',
+                label: t('list.bulk.tag'),
                 disabled: !canSeeTeamQueue,
-                title: canSeeTeamQueue ? undefined : 'Only a team lead or administrator can change tiers',
+                title: canSeeTeamQueue ? undefined : t('list.bulk.tierRestricted'),
                 onClick: () => setConfirmBulk({ action: 'set_tier', tier: 'enterprise' }),
               },
-              { id: 'export', label: 'Export', disabled: true, title: 'Coming soon', onClick: () => {} },
+              { id: 'export', label: t('list.bulk.export'), disabled: true, title: t('list.bulk.comingSoon'), onClick: () => {} },
             ]}
           />
         ) : isLoading ? (
@@ -159,14 +163,14 @@ export const CustomersPage: React.FC = () => {
         ) : (
           <div className="facet-row">
             <FacetFilter
-              label="Company"
+              label={t('list.filterCompany')}
               options={(facets?.companies ?? []).map((c) => ({ value: c.value, label: c.value, count: c.count }))}
               selected={params.company}
               onChange={(company) => setParams({ company })}
             />
             <FacetFilter
-              label="Tier"
-              options={(facets?.tiers ?? []).map((t) => ({ value: t.value, label: t.label, count: t.count }))}
+              label={t('list.filterTier')}
+              options={(facets?.tiers ?? []).map((tierFacet) => ({ value: tierFacet.value, label: tierFacet.label, count: tierFacet.count }))}
               selected={params.tier}
               onChange={(tier) => setParams({ tier: tier as CustomerTier[] })}
             />
@@ -177,10 +181,10 @@ export const CustomersPage: React.FC = () => {
           <input
             className="search-input"
             type="search"
-            placeholder="Search customers…"
+            placeholder={t('list.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            aria-label="Search customers"
+            aria-label={t('list.searchLabel')}
           />
           <ColumnMenu columns={allColumns} hidden={hidden} onToggleHidden={toggleHidden} onMove={moveColumn} />
         </div>
@@ -194,18 +198,18 @@ export const CustomersPage: React.FC = () => {
         ) : rows.length === 0 ? (
           isFiltered ? (
             <DataTableEmpty
-              title="No customers match these filters"
-              body={`No customers match ${describeFilters(params)}. Try a different filter or clear them.`}
+              title={t('list.emptyFilteredTitle')}
+              body={t('list.emptyFilteredBody', { filters: describeFilters(params, t) })}
               actions={[
-                { label: 'Reset filters', variant: 'outline', onClick: () => setParams({ q: '', company: [], tier: [] }) },
-                { label: 'Add Customer', variant: 'primary', onClick: () => setCreateOpen(true) },
+                { label: t('list.resetFilters'), variant: 'outline', onClick: () => setParams({ q: '', company: [], tier: [] }) },
+                { label: t('list.addCustomer'), variant: 'primary', onClick: () => setCreateOpen(true) },
               ]}
             />
           ) : (
             <DataTableEmpty
-              title="No customers yet"
-              body="No customers yet. Add your first customer to start tracking their tickets."
-              actions={[{ label: 'Add Customer', variant: 'primary', onClick: () => setCreateOpen(true) }]}
+              title={t('list.emptyTitle')}
+              body={t('list.emptyBody')}
+              actions={[{ label: t('list.addCustomer'), variant: 'primary', onClick: () => setCreateOpen(true) }]}
             />
           )
         ) : (
@@ -225,7 +229,7 @@ export const CustomersPage: React.FC = () => {
                 )
               }
               onRowActivate={(row) => navigate(`/customers/${row.id}`)}
-              caption="Customers"
+              caption={t('list.caption')}
             />
             <Pagination
               currentPage={data?.meta.current_page ?? 1}
@@ -245,10 +249,10 @@ export const CustomersPage: React.FC = () => {
         title={bulkTitle}
         body={
           confirmBulk?.action === 'delete'
-            ? 'The selected customers will be removed from the list. Their ticket history is preserved.'
-            : 'The tier will be updated for every selected customer.'
+            ? t('list.bulk.deleteBody')
+            : t('list.bulk.tierBody')
         }
-        confirmLabel={confirmBulk?.action === 'delete' ? 'Delete' : 'Set tier'}
+        confirmLabel={confirmBulk?.action === 'delete' ? t('list.bulk.delete') : t('list.bulk.setTier')}
         tone={confirmBulk?.action === 'delete' ? 'danger' : undefined}
         isPending={bulk.isPending}
         onCancel={() => setConfirmBulk(null)}

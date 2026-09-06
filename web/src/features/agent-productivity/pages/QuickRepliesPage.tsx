@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
+import { useT, formatDate } from '../../../i18n';
 import { useQuickReplies } from '../hooks/useQuickReplies';
 import {
   useArchiveQuickReply,
@@ -10,13 +11,20 @@ import { QuickReplyEditModal } from '../components/QuickReplyEditModal';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 import type { QuickReply } from '../model/quickReply';
 
-const CATEGORY_OPTIONS = ['billing', 'account', 'technical', 'general'];
+const CATEGORY_OPTIONS = ['billing', 'account', 'technical', 'general'] as const;
+const CATEGORY_LABEL_KEYS: Record<(typeof CATEGORY_OPTIONS)[number], string> = {
+  billing: 'quickRepliesPage.categories.billing',
+  account: 'quickRepliesPage.categories.account',
+  technical: 'quickRepliesPage.categories.technical',
+  general: 'quickRepliesPage.categories.general',
+};
 
 /**
  * The admin quick-reply library (`8.WisalQuickReplies` artboards). Filter
  * and pagination state lives entirely in the URL — never component state.
  */
 export function QuickRepliesPage() {
+  const { t } = useT('productivity');
   const [searchParams, setSearchParams] = useSearchParams();
   const category = searchParams.get('category') ?? '';
   const status = searchParams.get('status') ?? '';
@@ -52,44 +60,42 @@ export function QuickRepliesPage() {
     <div className="qr-page">
       <div className="qr-page-head">
         <div>
-          <h1 className="qr-page-title">Quick Replies</h1>
-          {meta && <p className="qr-page-subtitle">{meta.total} templates in the shared library</p>}
+          <h1 className="qr-page-title">{t('quickRepliesPage.title')}</h1>
+          {meta && <p className="qr-page-subtitle">{t('quickRepliesPage.subtitle', { count: meta.total })}</p>}
         </div>
         <button type="button" className="tq-btn-primary fv" onClick={() => setEditTarget('new')}>
-          New quick reply
+          {t('quickRepliesPage.newQuickReply')}
         </button>
       </div>
 
       <div className="qr-filter-row">
         <label className="qr-filter-chip">
-          <span>Category:</span>
+          <span>{t('quickRepliesPage.categoryLabel')}</span>
           <select value={category} onChange={(e) => setParam('category', e.target.value)}>
-            <option value="">All</option>
+            <option value="">{t('quickRepliesPage.all')}</option>
             {CATEGORY_OPTIONS.map((c) => (
               <option key={c} value={c}>
-                {c[0].toUpperCase() + c.slice(1)}
+                {t(CATEGORY_LABEL_KEYS[c])}
               </option>
             ))}
           </select>
         </label>
         <label className="qr-filter-chip">
-          <span>Status:</span>
+          <span>{t('quickRepliesPage.statusLabel')}</span>
           <select value={status} onChange={(e) => setParam('status', e.target.value)}>
-            <option value="">All</option>
-            <option value="active">Active</option>
-            <option value="archived">Archived</option>
+            <option value="">{t('quickRepliesPage.all')}</option>
+            <option value="active">{t('quickRepliesPage.active')}</option>
+            <option value="archived">{t('quickRepliesPage.archived')}</option>
           </select>
         </label>
       </div>
 
       {isError ? (
         <div className="qr-page-state">
-          <p className="qr-page-state-title">Couldn't load quick replies</p>
-          <p className="qr-page-state-body">
-            Something went wrong while fetching the library. Check your connection and try again.
-          </p>
+          <p className="qr-page-state-title">{t('quickRepliesPage.loadErrorTitle')}</p>
+          <p className="qr-page-state-body">{t('quickRepliesPage.loadErrorBody')}</p>
           <button type="button" className="tq-btn-outline fv" onClick={() => refetch()}>
-            Retry
+            {t('quickRepliesPage.retry')}
           </button>
         </div>
       ) : isPending ? (
@@ -100,13 +106,10 @@ export function QuickRepliesPage() {
         </div>
       ) : items.length === 0 ? (
         <div className="qr-page-state">
-          <p className="qr-page-state-title">No quick replies yet</p>
-          <p className="qr-page-state-body">
-            Quick replies are shared reply templates your team can insert into ticket responses in
-            one click — great for common questions like password resets or refund policy.
-          </p>
+          <p className="qr-page-state-title">{t('quickRepliesPage.emptyTitle')}</p>
+          <p className="qr-page-state-body">{t('quickRepliesPage.emptyBody')}</p>
           <button type="button" className="tq-btn-primary fv" onClick={() => setEditTarget('new')}>
-            Create your first quick reply
+            {t('quickRepliesPage.createFirst')}
           </button>
         </div>
       ) : (
@@ -114,12 +117,12 @@ export function QuickRepliesPage() {
           <table className="qr-table">
             <thead>
               <tr>
-                <th className="qr-th">TITLE</th>
-                <th className="qr-th">PREVIEW</th>
-                <th className="qr-th">CATEGORY</th>
-                <th className="qr-th">STATUS</th>
-                <th className="qr-th">LAST UPDATED</th>
-                <th className="qr-th">ACTIONS</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.title')}</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.preview')}</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.category')}</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.status')}</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.lastUpdated')}</th>
+                <th className="qr-th">{t('quickRepliesPage.columns.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -133,14 +136,14 @@ export function QuickRepliesPage() {
                       {qr.status_label.toUpperCase()}
                     </span>
                   </td>
-                  <td>{new Date(qr.updated_at).toLocaleDateString()} · {qr.updated_by ?? qr.created_by}</td>
+                  <td>{formatDate(qr.updated_at)} · {qr.updated_by ?? qr.created_by}</td>
                   <td className="qr-td-actions">
                     <button type="button" className="link-btn fv" onClick={() => setEditTarget(qr)}>
-                      Edit
+                      {t('quickRepliesPage.edit')}
                     </button>
                     {qr.status === 'active' && (
                       <button type="button" className="link-btn fv" onClick={() => setArchiveTarget(qr)}>
-                        Archive
+                        {t('quickRepliesPage.archive')}
                       </button>
                     )}
                   </td>
@@ -152,7 +155,7 @@ export function QuickRepliesPage() {
           {meta && (
             <div className="qr-pagination">
               <span>
-                Showing {meta.from ?? 0}–{meta.to ?? 0} of {meta.total}
+                {t('quickRepliesPage.showingRange', { from: meta.from ?? 0, to: meta.to ?? 0, total: meta.total })}
               </span>
               <div className="qr-pagination-pages">
                 {Array.from({ length: meta.last_page }, (_, i) => i + 1).map((p) => (
@@ -188,13 +191,9 @@ export function QuickRepliesPage() {
 
       <ConfirmDialog
         open={archiveTarget !== null}
-        title="Archive quick reply?"
-        body={
-          archiveTarget
-            ? `Archive "${archiveTarget.title}"? Agents will no longer see it in the quick-reply picker. You can restore it later from the Archived filter.`
-            : ''
-        }
-        confirmLabel="Archive"
+        title={t('quickRepliesPage.archiveConfirmTitle')}
+        body={archiveTarget ? t('quickRepliesPage.archiveConfirmBody', { title: archiveTarget.title }) : ''}
+        confirmLabel={t('quickRepliesPage.archive')}
         tone="danger"
         isPending={archiveMutation.isPending}
         onCancel={() => setArchiveTarget(null)}

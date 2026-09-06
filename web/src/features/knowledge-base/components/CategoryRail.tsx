@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../../i18n';
 import type { ArticleCategory } from '../model/article';
 
 /**
@@ -20,10 +21,11 @@ export const CategoryRail: React.FC<{
   onSelect: (slugs: string[]) => void;
   isLoading?: boolean;
 }> = ({ categories, total, selected, onSelect, isLoading = false }) => {
+  const { t } = useT('knowledge');
   if (isLoading) {
     return (
       <div className="kb-rail">
-        <div className="kb-rail-label">CATEGORIES</div>
+        <div className="kb-rail-label">{t('rail.categories')}</div>
         {Array.from({ length: 5 }).map((_, i) => (
           <span key={i} className="sk kb-rail-skeleton" />
         ))}
@@ -34,9 +36,9 @@ export const CategoryRail: React.FC<{
   const allActive = selected.length === 0;
 
   return (
-    <nav className="kb-rail" aria-label="Article categories">
+    <nav className="kb-rail" aria-label={t('rail.categoriesAria')}>
       <div className="kb-rail-label" id="kb-rail-label">
-        CATEGORIES
+        {t('rail.categories')}
       </div>
       <ul className="kb-rail-list" aria-labelledby="kb-rail-label">
         <li>
@@ -47,7 +49,7 @@ export const CategoryRail: React.FC<{
             aria-current={allActive ? 'true' : undefined}
             onClick={() => onSelect([])}
           >
-            <span>All Articles</span>
+            <span>{t('rail.allArticles')}</span>
             <span className="kb-rail-count" dir="ltr">
               {total}
             </span>

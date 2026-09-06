@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useT } from '../../../i18n';
 
 export type FacetOption = { value: string; label: string; count: number };
 
@@ -10,14 +11,15 @@ export const FacetFilter: React.FC<{
   selected: string[];
   onChange: (values: string[]) => void;
 }> = ({ label, options, selected, onChange }) => {
+  const { t } = useT('common');
   const [open, setOpen] = useState(false);
 
   const summary =
     selected.length === 0
-      ? 'All'
+      ? t('table.all')
       : selected.length === 1
         ? options.find((o) => o.value === selected[0])?.label ?? selected[0]
-        : `${selected.length} selected`;
+        : t('table.selected', { count: selected.length });
 
   const toggle = (value: string) => {
     onChange(selected.includes(value) ? selected.filter((v) => v !== value) : [...selected, value]);

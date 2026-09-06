@@ -1,5 +1,6 @@
 import { NotificationIcon } from './NotificationIcon';
 import { formatNotificationTime } from '../model/notificationTime';
+import { useT } from '../../../i18n';
 import type { Notification } from '../model/notification';
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
  * background AND bold weight, not the background alone.
  */
 export function NotificationRow({ notification, onActivate }: Props) {
+  const { t } = useT('notifications');
   const isUnread = notification.read_at === null;
   const canNavigate = notification.source_available && notification.link_to !== null;
 
@@ -36,7 +38,7 @@ export function NotificationRow({ notification, onActivate }: Props) {
           </span>
           <span className="notif-row-title">{notification.title}</span>
           {!canNavigate && (
-            <span className="notif-row-unavailable">No longer available</span>
+            <span className="notif-row-unavailable">{t('noLongerAvailable')}</span>
           )}
         </span>
       </button>

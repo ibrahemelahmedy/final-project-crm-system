@@ -1,1 +1,102 @@
-{}
+{
+  "widget": {
+    "loadingTitled": "جارٍ تحميل {{title}}…",
+    "loadingGeneric": "جارٍ تحميل العنصر…",
+    "tryAgain": "حاول مرة أخرى",
+    "loadError": "تعذر تحميل هذا العنصر."
+  },
+  "adminCard": {
+    "countUnavailable": "العدد غير متاح",
+    "loading": "جارٍ التحميل…"
+  },
+  "escalations": {
+    "title": "التصعيدات الحالية",
+    "loadError": "تعذر تحميل التصعيدات.",
+    "empty": "لا توجد تصعيدات نشطة. ستظهر هنا التذاكر التي يصعّدها إليك أحد الوكلاء.",
+    "escalatedBy": "صعّدها {{name}}",
+    "unknown": "غير معروف"
+  },
+  "myQueue": {
+    "title": "قائمة انتظاري",
+    "loadError": "تعذر تحميل قائمة الانتظار.",
+    "empty": "لا توجد تذاكر مسندة إليك بعد — ستظهر هنا الأعمال الجديدة.",
+    "browseQueue": "تصفح قائمة انتظار التذاكر",
+    "ariaLabel": "قائمة انتظاري",
+    "columns": {
+      "id": "المعرّف",
+      "subject": "الموضوع",
+      "customer": "العميل",
+      "priority": "الأولوية",
+      "slaLeft": "الوقت المتبقي لاتفاقية مستوى الخدمة"
+    }
+  },
+  "quickReplies": {
+    "title": "الردود السريعة",
+    "loadError": "تعذر تحميل الردود السريعة.",
+    "empty": "لا توجد ردود سريعة بعد. ستظهر هنا الردود المحفوظة التي تنشئها للإدراج بنقرة واحدة."
+  },
+  "slaRisk": {
+    "title": "اقتراب خرق اتفاقية مستوى الخدمة",
+    "loadError": "تعذر تحميل بيانات مخاطر اتفاقية مستوى الخدمة.",
+    "empty": "لا يوجد شيء في خطر الآن — كل تذكرة مسندة إليك ضمن اتفاقية مستوى الخدمة.",
+    "reviewQueue": "مراجعة قائمة الانتظار كاملة"
+  },
+  "workload": {
+    "title": "توازن أعباء العمل",
+    "loadError": "تعذر تحميل بيانات أعباء العمل.",
+    "empty": "لا يوجد وكلاء في هذا الفريق بعد. أضف وكلاء من إدارة المستخدمين لموازنة أعباء العمل.",
+    "openTicketsAria": "{{name}}: {{count}} تذكرة مفتوحة"
+  },
+  "admin": {
+    "heading": "نظرة عامة للمسؤول",
+    "subtitle": "إعدادات المنصة والإشراف عليها",
+    "userManagement": "إدارة المستخدمين",
+    "manageUsers": "إدارة المستخدمين",
+    "slaRuleConfig": "إعداد قواعد اتفاقية مستوى الخدمة",
+    "configureRules": "إعداد القواعد",
+    "auditLog": "سجل التدقيق",
+    "viewLog": "عرض السجل",
+    "userCount_zero": "لا يوجد مستخدمون داخليون",
+    "userCount_one": "مستخدم داخلي واحد",
+    "userCount_two": "مستخدمان داخليان",
+    "userCount_few": "{{count}} مستخدمين داخليين",
+    "userCount_many": "{{count}} مستخدماً داخلياً",
+    "userCount_other": "{{count}} مستخدم داخلي",
+    "slaRuleCount_zero": "لا توجد قواعد نشطة",
+    "slaRuleCount_one": "قاعدة نشطة واحدة",
+    "slaRuleCount_two": "قاعدتان نشطتان",
+    "slaRuleCount_few": "{{count}} قواعد نشطة",
+    "slaRuleCount_many": "{{count}} قاعدة نشطة",
+    "slaRuleCount_other": "{{count}} قاعدة نشطة",
+    "auditLogCount_zero": "لا توجد أحداث مسجّلة",
+    "auditLogCount_one": "حدث مسجّل واحد",
+    "auditLogCount_two": "حدثان مسجّلان",
+    "auditLogCount_few": "{{count}} أحداث مسجّلة",
+    "auditLogCount_many": "{{count}} حدثاً مسجّلاً",
+    "auditLogCount_other": "{{count}} حدث مسجّل"
+  },
+  "agent": {
+    "subtitle": "إليك ما يحتاج انتباهك اليوم",
+    "assignedToMe": "مسندة إليّ",
+    "approachingSlaBreach": "اقتراب خرق اتفاقية مستوى الخدمة",
+    "resolvedToday": "تم حلها اليوم"
+  },
+  "team": {
+    "heading": "نظرة عامة على الفريق",
+    "loading": "جارٍ تحميل الفريق…",
+    "agentCount_zero": "وكلاء",
+    "agentCount_one": "وكيل",
+    "agentCount_two": "وكيلان",
+    "agentCount_few": "وكلاء",
+    "agentCount_many": "وكيلاً",
+    "agentCount_other": "وكيل",
+    "openTickets": "تذاكر الفريق المفتوحة",
+    "activeEscalations": "التصعيدات النشطة",
+    "slaCompliance": "امتثال الفريق لاتفاقية مستوى الخدمة"
+  },
+  "greeting": {
+    "morning": "صباح الخير، {{name}}",
+    "afternoon": "مساء الخير، {{name}}",
+    "evening": "مساء الخير، {{name}}"
+  }
+}

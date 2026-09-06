@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
+import { useT, formatDateTime } from '../../../i18n';
 import { useCreateCustomerNote, useCustomerNotes } from '../hooks/useCustomerNotes';
-
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: 'numeric',
-  minute: '2-digit',
-});
 
 // Notes are append-only in this story: no edit, no delete. Rendered as
 // TEXT (JSX escapes {note.body}) — never dangerouslySetInnerHTML.
 export const NotesPanel: React.FC<{ customerId: number }> = ({ customerId }) => {
+  const { t } = useT('customers');
   const { data, isLoading, isError, refetch } = useCustomerNotes(customerId);
   const createNote = useCreateCustomerNote(customerId);
   const [body, setBody] = useState('');
@@ -24,30 +18,30 @@ export const NotesPanel: React.FC<{ customerId: number }> = ({ customerId }) => 
   };
 
   return (
-    <section className="profile-panel" aria-label="Notes">
-      <h2>Notes</h2>
+    <section className="profile-panel" aria-label={t('notes.heading')}>
+      <h2>{t('notes.heading')}</h2>
       <form onSubmit={submit} className="note-form">
         <textarea
-          aria-label="Add a note"
+          aria-label={t('notes.addLabel')}
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          placeholder="Add a note for the team…"
+          placeholder={t('notes.placeholder')}
         />
         <button type="submit" className="dt-btn dt-btn-primary fv" disabled={createNote.isPending || body.trim() === ''}>
-          {createNote.isPending ? 'Adding…' : 'Add note'}
+          {createNote.isPending ? t('notes.adding') : t('notes.addButton')}
         </button>
       </form>
 
-      {isLoading && <p className="dt-empty-body">Loading notes…</p>}
+      {isLoading && <p className="dt-empty-body">{t('notes.loading')}</p>}
       {isError && (
         <div>
-          <p className="dt-empty-body">Something went wrong loading notes.</p>
+          <p className="dt-empty-body">{t('notes.error')}</p>
           <button type="button" className="dt-btn dt-btn-outline fv" onClick={() => refetch()}>
-            Try again
+            {t('notes.tryAgain')}
           </button>
         </div>
       )}
-      {!isLoading && !isError && (data?.data.length ?? 0) === 0 && <p className="dt-empty-body">No notes yet.</p>}
+      {!isLoading && !isError && (data?.data.length ?? 0) === 0 && <p className="dt-empty-body">{t('notes.empty')}</p>}
 
       <ul className="note-list">
         {data?.data.map((note) => (
@@ -55,7 +49,7 @@ export const NotesPanel: React.FC<{ customerId: number }> = ({ customerId }) => 
             <div className="note-meta">
               <span className="note-author">{note.author.name}</span>
               <span dir="ltr" className="note-date">
-                {dateFormatter.format(new Date(note.created_at))}
+                {formatDateTime(note.created_at)}
               </span>
             </div>
             <p className="note-body">{note.body}</p>

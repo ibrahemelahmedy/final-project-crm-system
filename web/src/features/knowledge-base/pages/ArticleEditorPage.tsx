@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { useT } from '../../../i18n';
 import { useKbArticle, useKbCategories } from '../hooks/useKbQueries';
 import { useMarkdownPreview } from '../hooks/useMarkdownPreview';
 import {
@@ -9,7 +10,7 @@ import {
   useUnpublishArticle,
   useUpdateArticle,
 } from '../hooks/useKbMutations';
-import { draftSchema, publishSchema, type ArticleFormValues } from '../model/articleSchema';
+import { makeDraftSchema, makePublishSchema, type ArticleFormValues } from '../model/articleSchema';
 import { ArticleStatusBadge } from '../components/ArticleStatusBadge';
 
 type FieldErrors = Partial<Record<keyof ArticleFormValues, string>>;
@@ -37,6 +38,9 @@ function serverErrors(error: unknown): FieldErrors {
  * without a round trip; the server's copy is the actual boundary.
  */
 export const ArticleEditorPage: React.FC = () => {
+  const { t } = useT('knowledge');
+  const draftSchema = useMemo(() => makeDraftSchema(t), [t]);
+  const publishSchema = useMemo(() => makePublishSchema(t), [t]);
   const { slug } = useParams();
   const navigate = useNavigate();
   const isEdit = Boolean(slug);
@@ -107,7 +111,7 @@ export const ArticleEditorPage: React.FC = () => {
       const mapped = serverErrors(error);
       setErrors(mapped);
       if (Object.keys(mapped).length === 0) {
-        setFormError('This article could not be saved. Try again.');
+        setFormError(t('editor.saveFailed'));
       }
       return null;
     }
@@ -152,10 +156,10 @@ export const ArticleEditorPage: React.FC = () => {
   if (isEdit && existing.isError) {
     return (
       <div className="kb-reader kb-reader-state">
-        <h1>Article not found</h1>
-        <p>This article does not exist, or it is not available to you.</p>
+        <h1>{t('editor.notFoundTitle')}</h1>
+        <p>{t('editor.notFoundBody')}</p>
         <Link className="dt-btn dt-btn-primary fv" to="/knowledge-base">
-          Back to Knowledge Base
+          {t('editor.backToKb')}
         </Link>
       </div>
     );
@@ -165,10 +169,8 @@ export const ArticleEditorPage: React.FC = () => {
     <div className="kb-editor">
       <div className="page-title-row">
         <div>
-          <h1>{isEdit ? 'Edit article' : 'New article'}</h1>
-          <p className="page-subtitle">
-            Written in Markdown. Raw HTML is removed when the article is saved.
-          </p>
+          <h1>{isEdit ? t('editor.editTitle') : t('editor.newTitle')}</h1>
+          <p className="page-subtitle">{t('editor.subtitle')}</p>
         </div>
         <div className="kb-editor-actions">
           {isEdit && existing.data && (
@@ -178,7 +180,7 @@ export const ArticleEditorPage: React.FC = () => {
             />
           )}
           <Link className="dt-btn dt-btn-outline fv" to="/knowledge-base">
-            Cancel
+            {t('editor.cancel')}
           </Link>
           {isEdit && existing.data?.status === 'published' && (
             <button
@@ -187,7 +189,7 @@ export const ArticleEditorPage: React.FC = () => {
               disabled={isPending}
               onClick={onUnpublish}
             >
-              Unpublish
+              {t('editor.unpublish')}
             </button>
           )}
           <button
@@ -196,7 +198,7 @@ export const ArticleEditorPage: React.FC = () => {
             disabled={isPending}
             onClick={onSaveDraft}
           >
-            Save draft
+            {t('editor.saveDraft')}
           </button>
           <button
             type="button"
@@ -204,7 +206,7 @@ export const ArticleEditorPage: React.FC = () => {
             disabled={isPending}
             onClick={onPublish}
           >
-            Publish
+            {t('editor.publish')}
           </button>
         </div>
       </div>
@@ -218,7 +220,7 @@ export const ArticleEditorPage: React.FC = () => {
       <div className="kb-editor-split">
         <div className="kb-editor-form">
           <div className="form-field">
-            <label htmlFor="kb-title">Title</label>
+            <label htmlFor="kb-title">{t('editor.title')}</label>
             <input
               id="kb-title"
               className="fv"
@@ -236,7 +238,7 @@ export const ArticleEditorPage: React.FC = () => {
           </div>
 
           <div className="form-field">
-            <label htmlFor="kb-category">Category</label>
+            <label htmlFor="kb-category">{t('editor.category')}</label>
             <select
               id="kb-category"
               className="fv"
@@ -245,7 +247,7 @@ export const ArticleEditorPage: React.FC = () => {
               aria-describedby={errors.kb_category_id ? 'kb-category-error' : undefined}
               onChange={(e) => set('kb_category_id', e.target.value)}
             >
-              <option value="">Select a category…</option>
+              <option value="">{t('editor.selectCategory')}</option>
               {categoryOptions.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -260,7 +262,7 @@ export const ArticleEditorPage: React.FC = () => {
           </div>
 
           <div className="form-field kb-editor-body-field">
-            <label htmlFor="kb-body">Body (Markdown)</label>
+            <label htmlFor="kb-body">{t('editor.body')}</label>
             <textarea
               id="kb-body"
               className="kb-editor-textarea fv"
@@ -279,11 +281,9 @@ export const ArticleEditorPage: React.FC = () => {
         </div>
 
         <div className="kb-editor-preview">
-          <div className="kb-editor-preview-label">PREVIEW</div>
+          <div className="kb-editor-preview-label">{t('editor.preview')}</div>
           {values.body.trim() === '' ? (
-            <p className="kb-editor-preview-empty">
-              The preview appears here as you write, rendered exactly as the reader will show it.
-            </p>
+            <p className="kb-editor-preview-empty">{t('editor.previewEmpty')}</p>
           ) : (
             <div
               className="kb-article-body"

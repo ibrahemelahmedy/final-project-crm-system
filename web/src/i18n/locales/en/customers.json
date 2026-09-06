@@ -1,1 +1,115 @@
-{}
+{
+  "profile": {
+    "loading": "Loading customer…",
+    "error": "Something went wrong loading this customer.",
+    "tryAgain": "Try again",
+    "edit": "Edit",
+    "backToList": "Back to customers",
+    "contactDetails": "Contact details",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company"
+  },
+  "interaction": {
+    "heading": "Interaction history",
+    "loading": "Loading…",
+    "error": "Something went wrong loading tickets.",
+    "tryAgain": "Try again",
+    "pendingStory": "Ticket history appears here once Ticket Management ships.",
+    "empty": "No tickets yet."
+  },
+  "notes": {
+    "heading": "Notes",
+    "addLabel": "Add a note",
+    "placeholder": "Add a note for the team…",
+    "adding": "Adding…",
+    "addButton": "Add note",
+    "loading": "Loading notes…",
+    "error": "Something went wrong loading notes.",
+    "tryAgain": "Try again",
+    "empty": "No notes yet."
+  },
+  "attachments": {
+    "heading": "Attachments",
+    "dropzoneHint": "Drag files here or click to browse",
+    "loading": "Loading attachments…",
+    "error": "Something went wrong loading attachments.",
+    "tryAgain": "Try again",
+    "empty": "No attachments yet.",
+    "unknownUploader": "Unknown",
+    "download": "Download",
+    "remove": "Remove",
+    "removeConfirmTitle": "Remove {{name}}?",
+    "removeConfirmBody": "This attachment will be permanently removed from the customer record.",
+    "typeNotAccepted": "That file type is not accepted. Allowed types: {{types}}.",
+    "tooLarge": "That file is too large. The limit is {{limit}} MB.",
+    "uploadFailed": "That file could not be uploaded."
+  },
+  "form": {
+    "editTitle": "Edit Customer",
+    "addTitle": "Add Customer",
+    "name": "Name",
+    "email": "Email",
+    "company": "Company",
+    "phone": "Phone",
+    "tier": "Tier",
+    "duplicateWarning": "A customer with this email or phone already exists.",
+    "openDuplicate": "Open {{name}}",
+    "customerSince": "Customer since",
+    "deleteCustomer": "Delete Customer",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "saveChanges": "Save Changes",
+    "deleteConfirmTitle": "Delete {{name}}?",
+    "deleteConfirmBody": "Removes {{name}} from the customer list. Their ticket history is preserved and the record can be restored by an administrator.",
+    "tiers": {
+      "standard": "Standard",
+      "premium": "Premium",
+      "enterprise": "Enterprise"
+    }
+  },
+  "columns": {
+    "customer": "CUSTOMER",
+    "email": "EMAIL",
+    "company": "COMPANY",
+    "open": "OPEN",
+    "lastContact": "LAST CONTACT",
+    "tier": "TIER"
+  },
+  "list": {
+    "title": "Customers",
+    "count_one": "{{count}} customer",
+    "count_other": "{{count}} customers",
+    "addCustomer": "Add Customer",
+    "searchPlaceholder": "Search customers…",
+    "searchLabel": "Search customers",
+    "filterCompany": "Company",
+    "filterTier": "Tier",
+    "caption": "Customers",
+    "emptyFilteredTitle": "No customers match these filters",
+    "emptyFilteredBody": "No customers match {{filters}}. Try a different filter or clear them.",
+    "resetFilters": "Reset filters",
+    "emptyTitle": "No customers yet",
+    "emptyBody": "No customers yet. Add your first customer to start tracking their tickets.",
+    "bulk": {
+      "delete": "Delete",
+      "tag": "Tag",
+      "export": "Export",
+      "comingSoon": "Coming soon",
+      "deleteRestricted": "Only a team lead or administrator can delete customers",
+      "tierRestricted": "Only a team lead or administrator can change tiers",
+      "deleteConfirmTitle_one": "Delete {{count}} customer?",
+      "deleteConfirmTitle_other": "Delete {{count}} customers?",
+      "setTierConfirmTitle_one": "Set tier to {{tier}} for {{count}} customer?",
+      "setTierConfirmTitle_other": "Set tier to {{tier}} for {{count}} customers?",
+      "deleteBody": "The selected customers will be removed from the list. Their ticket history is preserved.",
+      "tierBody": "The tier will be updated for every selected customer.",
+      "setTier": "Set tier"
+    }
+  },
+  "schema": {
+    "nameRequired": "Name is required",
+    "emailInvalid": "Enter a valid email address",
+    "contactRequired": "Add an email address or a phone number."
+  }
+}

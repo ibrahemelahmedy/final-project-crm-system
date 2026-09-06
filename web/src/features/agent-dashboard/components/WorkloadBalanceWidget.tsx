@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useT } from '../../../i18n';
 import { useTeamWorkload } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -18,6 +19,7 @@ const initials = (name: string): string =>
  * they render at final width immediately.
  */
 export function WorkloadBalanceWidget() {
+  const { t } = useT('dashboard');
   const query = useTeamWorkload();
   const state = widgetState(query, emptyList);
   const rows = query.data ?? [];
@@ -31,11 +33,11 @@ export function WorkloadBalanceWidget() {
 
   return (
     <DashboardWidget
-      title="Workload Balance"
+      title={t('workload.title')}
       state={state}
       onRetry={() => query.refetch()}
-      errorMessage="Workload data couldn't load."
-      emptyMessage="No agents on this team yet. Add agents in User Management to balance workload."
+      errorMessage={t('workload.loadError')}
+      emptyMessage={t('workload.empty')}
     >
       <div className="workload-list">
         {rows.map((r) => {
@@ -52,7 +54,7 @@ export function WorkloadBalanceWidget() {
                 aria-valuenow={r.open_count}
                 aria-valuemin={0}
                 aria-valuemax={max}
-                aria-label={`${r.name}: ${r.open_count} open tickets`}
+                aria-label={t('workload.openTicketsAria', { name: r.name, count: r.open_count })}
               >
                 <span
                   className="workload-fill"

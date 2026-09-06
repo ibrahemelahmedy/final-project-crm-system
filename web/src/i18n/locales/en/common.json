@@ -55,6 +55,8 @@
     "featureComingSoon": "This screen is built in its own feature story."
   },
   "table": {
+    "all": "All",
+    "noOptions": "No options",
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected",
     "clearSelection": "Clear selection",

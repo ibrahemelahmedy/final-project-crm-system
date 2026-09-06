@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataTable } from '../../../components/data-table/DataTable';
 import { DataTableSkeleton } from '../../../components/data-table/DataTableSkeleton';
@@ -8,10 +8,11 @@ import { Pagination } from '../../../components/data-table/Pagination';
 import { BulkActionBar } from '../../../components/data-table/BulkActionBar';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useKbListParams } from '../hooks/useKbListParams';
 import { useKbArticles, useKbCategories, useMostViewed } from '../hooks/useKbQueries';
 import { useBulkArticleAction } from '../hooks/useKbMutations';
-import { articleColumns } from '../model/columns';
+import { makeArticleColumns } from '../model/columns';
 import { CategoryRail } from '../components/CategoryRail';
 import { MostViewedList } from '../components/MostViewedList';
 import type { ArticleStatus } from '../model/article';
@@ -25,28 +26,32 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
   return debounced;
 }
 
-const STATUS_FILTERS: { value: ArticleStatus; label: string }[] = [
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'archived', label: 'Archived' },
-];
-
 type BulkAction = 'publish' | 'unpublish' | 'archive';
 
-const BULK_COPY: Record<BulkAction, { verb: string; body: string }> = {
-  publish: {
-    verb: 'Publish',
-    body: 'The selected articles become visible to every agent. Any article missing a title, body, or category is skipped and reported back.',
-  },
-  unpublish: {
-    verb: 'Unpublish',
-    body: 'The selected articles return to Draft and stop appearing in agent-facing search.',
-  },
-  archive: {
-    verb: 'Archive',
-    body: 'The selected articles are retired. They stay readable to editors and keep their version history.',
-  },
-};
+function makeStatusFilters(t: (key: string) => string): { value: ArticleStatus; label: string }[] {
+  return [
+    { value: 'published', label: t('index.statusFilters.published') },
+    { value: 'draft', label: t('index.statusFilters.draft') },
+    { value: 'archived', label: t('index.statusFilters.archived') },
+  ];
+}
+
+function makeBulkCopy(t: (key: string) => string): Record<BulkAction, { verb: string; body: string }> {
+  return {
+    publish: {
+      verb: t('index.bulk.publishVerb'),
+      body: t('index.bulk.publishBody'),
+    },
+    unpublish: {
+      verb: t('index.bulk.unpublishVerb'),
+      body: t('index.bulk.unpublishBody'),
+    },
+    archive: {
+      verb: t('index.bulk.archiveVerb'),
+      body: t('index.bulk.archiveBody'),
+    },
+  };
+}
 
 /**
  * The KB index — WisalKBIndex-*.dc.html.
@@ -57,6 +62,10 @@ const BULK_COPY: Record<BulkAction, { verb: string; body: string }> = {
  * exactly as they do on Customers.
  */
 export const KnowledgeBaseIndexPage: React.FC = () => {
+  const { t } = useT('knowledge');
+  const articleColumns = useMemo(() => makeArticleColumns(t), [t]);
+  const statusFilters = useMemo(() => makeStatusFilters(t), [t]);
+  const bulkCopy = useMemo(() => makeBulkCopy(t), [t]);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [params, setParams, isFiltered] = useKbListParams();
@@ -104,9 +113,11 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
     // skipped and why.
     setBulkNotice(
       result.skipped.length > 0
-        ? `${result.affected} published. ${result.skipped.length} skipped — an article needs a title, a body, and a category before it can be published: ${result.skipped
-            .map((s) => s.title)
-            .join(', ')}`
+        ? t('index.bulk.notice', {
+            affected: result.affected,
+            count: result.skipped.length,
+            names: result.skipped.map((s) => s.title).join(', '),
+          })
         : null
     );
     setSelectedIds([]);
@@ -119,9 +130,9 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
       const names = params.category.map(
         (slug) => categories.data?.data.find((c) => c.slug === slug)?.name ?? slug
       );
-      parts.push(`Category: ${names.join(', ')}`);
+      parts.push(`${t('index.filterCategory')}: ${names.join(', ')}`);
     }
-    if (params.status.length) parts.push(`Status: ${params.status.join(', ')}`);
+    if (params.status.length) parts.push(`${t('index.filterStatus')}: ${params.status.join(', ')}`);
     if (params.q) parts.push(`"${params.q}"`);
     return parts.join(' · ');
   };
@@ -130,13 +141,11 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
     <div className="kb-page">
       <div className="page-title-row">
         <div>
-          <h1>Knowledge Base</h1>
+          <h1>{t('index.title')}</h1>
           {isLoading ? (
             <span className="sk" style={{ width: 90, height: 14, display: 'inline-block', marginTop: 2 }} />
           ) : (
-            <p className="page-subtitle">
-              <span dir="ltr">{categories.data?.total ?? total}</span> articles
-            </p>
+            <p className="page-subtitle">{t('index.count', { count: categories.data?.total ?? total })}</p>
           )}
         </div>
         {isEditor && (
@@ -145,7 +154,7 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
             className="dt-btn dt-btn-primary fv"
             onClick={() => navigate('/knowledge-base/new')}
           >
-            New Article
+            {t('index.newArticle')}
           </button>
         )}
       </div>
@@ -167,8 +176,8 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
         <input
           className="kb-searchbar-input fv"
           type="search"
-          placeholder="Search articles, guides, and FAQs…"
-          aria-label="Search articles"
+          placeholder={t('index.searchPlaceholder')}
+          aria-label={t('index.searchLabel')}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
@@ -194,18 +203,16 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
                 onClear={() => setSelectedIds([])}
                 actions={(['publish', 'unpublish', 'archive'] as BulkAction[]).map((action) => ({
                   id: action,
-                  label: BULK_COPY[action].verb,
+                  label: bulkCopy[action].verb,
                   tone: action === 'archive' ? ('danger' as const) : undefined,
                   disabled: !isEditor,
-                  title: isEditor
-                    ? undefined
-                    : 'Only a team lead or administrator can change article status',
+                  title: isEditor ? undefined : t('index.bulkRestricted'),
                   onClick: () => setConfirmBulk(action),
                 }))}
               />
             ) : (
               <div className="facet-row">
-                {STATUS_FILTERS.map((filter) => {
+                {statusFilters.map((filter) => {
                   const active = params.status.includes(filter.value);
                   return (
                     <button
@@ -240,17 +247,17 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
             {isLoading ? (
               <DataTableSkeleton columns={articleColumns} />
             ) : isError ? (
-              <DataTableError message="Articles could not be loaded." onRetry={() => refetch()} />
+              <DataTableError message={t('index.loadError')} onRetry={() => refetch()} />
             ) : rows.length === 0 ? (
               isFiltered ? (
                 // The Empty state suggests broadening the search and quotes
                 // the query back — never a blank list.
                 <DataTableEmpty
-                  title={params.q ? `No articles match “${params.q}”` : 'No articles match these filters'}
-                  body={`Nothing matches ${describeFilters()}. Try a broader search — fewer words, or a more general term — or clear the filters.`}
+                  title={params.q ? t('index.emptyFilteredTitleQuery', { query: params.q }) : t('index.emptyFilteredTitle')}
+                  body={t('index.emptyFilteredBody', { filters: describeFilters() })}
                   actions={[
                     {
-                      label: 'Clear filters',
+                      label: t('index.clearFilters'),
                       variant: 'outline',
                       onClick: () => {
                         setSearchInput('');
@@ -260,7 +267,7 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
                     ...(isEditor
                       ? [
                           {
-                            label: 'New Article',
+                            label: t('index.newArticle'),
                             variant: 'primary' as const,
                             onClick: () => navigate('/knowledge-base/new'),
                           },
@@ -270,17 +277,13 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
                 />
               ) : (
                 <DataTableEmpty
-                  title="No articles yet"
-                  body={
-                    isEditor
-                      ? 'The Knowledge Base is empty. Write the first article so agents have something to reference.'
-                      : 'The Knowledge Base is empty. An administrator or team lead can publish the first article.'
-                  }
+                  title={t('index.emptyTitle')}
+                  body={isEditor ? t('index.emptyBodyEditor') : t('index.emptyBodyViewer')}
                   actions={
                     isEditor
                       ? [
                           {
-                            label: 'New Article',
+                            label: t('index.newArticle'),
                             variant: 'primary',
                             onClick: () => navigate('/knowledge-base/new'),
                           },
@@ -306,7 +309,7 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
                     )
                   }
                   onRowActivate={(row) => navigate(`/knowledge-base/${row.slug}`)}
-                  caption="Knowledge Base articles"
+                  caption={t('index.caption')}
                 />
                 <Pagination
                   currentPage={data?.meta.current_page ?? 1}
@@ -325,11 +328,11 @@ export const KnowledgeBaseIndexPage: React.FC = () => {
         open={confirmBulk !== null}
         title={
           confirmBulk
-            ? `${BULK_COPY[confirmBulk].verb} ${selectedIds.length} ${selectedIds.length === 1 ? 'article' : 'articles'}?`
+            ? t('index.bulk.confirmTitle', { verb: bulkCopy[confirmBulk].verb, count: selectedIds.length })
             : ''
         }
-        body={confirmBulk ? BULK_COPY[confirmBulk].body : ''}
-        confirmLabel={confirmBulk ? BULK_COPY[confirmBulk].verb : ''}
+        body={confirmBulk ? bulkCopy[confirmBulk].body : ''}
+        confirmLabel={confirmBulk ? bulkCopy[confirmBulk].verb : ''}
         tone={confirmBulk === 'archive' ? 'danger' : undefined}
         isPending={bulk.isPending}
         onCancel={() => setConfirmBulk(null)}

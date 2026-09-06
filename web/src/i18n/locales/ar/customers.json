@@ -1,1 +1,127 @@
-{}
+{
+  "profile": {
+    "loading": "جارٍ تحميل بيانات العميل…",
+    "error": "حدث خطأ أثناء تحميل بيانات هذا العميل.",
+    "tryAgain": "حاول مرة أخرى",
+    "edit": "تعديل",
+    "backToList": "العودة إلى العملاء",
+    "contactDetails": "بيانات الاتصال",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "company": "الشركة"
+  },
+  "interaction": {
+    "heading": "سجل التفاعلات",
+    "loading": "جارٍ التحميل…",
+    "error": "حدث خطأ أثناء تحميل التذاكر.",
+    "tryAgain": "حاول مرة أخرى",
+    "pendingStory": "سيظهر سجل التذاكر هنا بمجرد إطلاق إدارة التذاكر.",
+    "empty": "لا توجد تذاكر بعد."
+  },
+  "notes": {
+    "heading": "الملاحظات",
+    "addLabel": "إضافة ملاحظة",
+    "placeholder": "أضف ملاحظة للفريق…",
+    "adding": "جارٍ الإضافة…",
+    "addButton": "إضافة ملاحظة",
+    "loading": "جارٍ تحميل الملاحظات…",
+    "error": "حدث خطأ أثناء تحميل الملاحظات.",
+    "tryAgain": "حاول مرة أخرى",
+    "empty": "لا توجد ملاحظات بعد."
+  },
+  "attachments": {
+    "heading": "المرفقات",
+    "dropzoneHint": "اسحب الملفات هنا أو انقر للتصفح",
+    "loading": "جارٍ تحميل المرفقات…",
+    "error": "حدث خطأ أثناء تحميل المرفقات.",
+    "tryAgain": "حاول مرة أخرى",
+    "empty": "لا توجد مرفقات بعد.",
+    "unknownUploader": "غير معروف",
+    "download": "تنزيل",
+    "remove": "إزالة",
+    "removeConfirmTitle": "إزالة {{name}}؟",
+    "removeConfirmBody": "سيتم إزالة هذا المرفق نهائياً من سجل العميل.",
+    "typeNotAccepted": "نوع الملف هذا غير مقبول. الأنواع المسموح بها: {{types}}.",
+    "tooLarge": "حجم الملف كبير جداً. الحد الأقصى هو {{limit}} ميجابايت.",
+    "uploadFailed": "تعذر رفع هذا الملف."
+  },
+  "form": {
+    "editTitle": "تعديل عميل",
+    "addTitle": "إضافة عميل",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "company": "الشركة",
+    "phone": "الهاتف",
+    "tier": "الفئة",
+    "duplicateWarning": "يوجد عميل بهذا البريد الإلكتروني أو رقم الهاتف بالفعل.",
+    "openDuplicate": "فتح {{name}}",
+    "customerSince": "عميل منذ",
+    "deleteCustomer": "حذف العميل",
+    "cancel": "إلغاء",
+    "saving": "جارٍ الحفظ…",
+    "saveChanges": "حفظ التغييرات",
+    "deleteConfirmTitle": "حذف {{name}}؟",
+    "deleteConfirmBody": "ستتم إزالة {{name}} من قائمة العملاء. يتم الاحتفاظ بسجل التذاكر ويمكن استعادة السجل بواسطة مسؤول.",
+    "tiers": {
+      "standard": "قياسي",
+      "premium": "مميز",
+      "enterprise": "مؤسسي"
+    }
+  },
+  "columns": {
+    "customer": "العميل",
+    "email": "البريد الإلكتروني",
+    "company": "الشركة",
+    "open": "مفتوحة",
+    "lastContact": "آخر تواصل",
+    "tier": "الفئة"
+  },
+  "list": {
+    "title": "العملاء",
+    "count_zero": "لا يوجد عملاء",
+    "count_one": "عميل واحد",
+    "count_two": "عميلان",
+    "count_few": "{{count}} عملاء",
+    "count_many": "{{count}} عميلاً",
+    "count_other": "{{count}} عميل",
+    "addCustomer": "إضافة عميل",
+    "searchPlaceholder": "البحث عن العملاء…",
+    "searchLabel": "البحث عن العملاء",
+    "filterCompany": "الشركة",
+    "filterTier": "الفئة",
+    "caption": "العملاء",
+    "emptyFilteredTitle": "لا يوجد عملاء يطابقون هذه الفلاتر",
+    "emptyFilteredBody": "لا يوجد عملاء يطابقون {{filters}}. جرّب فلتراً مختلفاً أو امسح الفلاتر.",
+    "resetFilters": "إعادة ضبط الفلاتر",
+    "emptyTitle": "لا يوجد عملاء بعد",
+    "emptyBody": "لا يوجد عملاء بعد. أضف أول عميل لبدء تتبع تذاكره.",
+    "bulk": {
+      "delete": "حذف",
+      "tag": "وسم",
+      "export": "تصدير",
+      "comingSoon": "قريباً",
+      "deleteRestricted": "يمكن لقائد الفريق أو المسؤول فقط حذف العملاء",
+      "tierRestricted": "يمكن لقائد الفريق أو المسؤول فقط تغيير الفئات",
+      "deleteConfirmTitle_zero": "حذف العملاء المحددين؟",
+      "deleteConfirmTitle_one": "حذف عميل واحد؟",
+      "deleteConfirmTitle_two": "حذف عميلين؟",
+      "deleteConfirmTitle_few": "حذف {{count}} عملاء؟",
+      "deleteConfirmTitle_many": "حذف {{count}} عميلاً؟",
+      "deleteConfirmTitle_other": "حذف {{count}} عميل؟",
+      "setTierConfirmTitle_zero": "تعيين الفئة إلى {{tier}} للعملاء المحددين؟",
+      "setTierConfirmTitle_one": "تعيين الفئة إلى {{tier}} لعميل واحد؟",
+      "setTierConfirmTitle_two": "تعيين الفئة إلى {{tier}} لعميلين؟",
+      "setTierConfirmTitle_few": "تعيين الفئة إلى {{tier}} لـ {{count}} عملاء؟",
+      "setTierConfirmTitle_many": "تعيين الفئة إلى {{tier}} لـ {{count}} عميلاً؟",
+      "setTierConfirmTitle_other": "تعيين الفئة إلى {{tier}} لـ {{count}} عميل؟",
+      "deleteBody": "ستتم إزالة العملاء المحددين من القائمة. يتم الاحتفاظ بسجل تذاكرهم.",
+      "tierBody": "سيتم تحديث الفئة لكل عميل محدد.",
+      "setTier": "تعيين الفئة"
+    }
+  },
+  "schema": {
+    "nameRequired": "الاسم مطلوب",
+    "emailInvalid": "أدخل بريداً إلكترونياً صالحاً",
+    "contactRequired": "أضف بريداً إلكترونياً أو رقم هاتف."
+  }
+}

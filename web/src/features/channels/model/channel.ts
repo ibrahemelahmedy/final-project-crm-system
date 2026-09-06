@@ -30,17 +30,23 @@ export type ChannelOverview = {
   meta: ChannelOverviewMeta;
 };
 
+type T = (key: string, opts?: Record<string, unknown>) => string;
+
 // ---- Period ---------------------------------------------------------------
 
 export const CHANNEL_PERIODS = ['7d', '30d', '90d'] as const;
 export type ChannelPeriod = (typeof CHANNEL_PERIODS)[number];
 export const DEFAULT_CHANNEL_PERIOD: ChannelPeriod = '30d';
 
-export const PERIOD_LABELS: Record<ChannelPeriod, string> = {
-  '7d': 'Last 7 days',
-  '30d': 'Last 30 days',
-  '90d': 'Last 90 days',
+const PERIOD_LABEL_KEYS: Record<ChannelPeriod, string> = {
+  '7d': 'period.last7',
+  '30d': 'period.last30',
+  '90d': 'period.last90',
 };
+
+export function periodLabel(period: ChannelPeriod, t: T): string {
+  return t(PERIOD_LABEL_KEYS[period]);
+}
 
 export function isChannelPeriod(value: string | null): value is ChannelPeriod {
   return value === '7d' || value === '30d' || value === '90d';
@@ -51,12 +57,12 @@ export function isChannelPeriod(value: string | null): value is ChannelPeriod {
 // There is deliberately NO `connected` entry and no uptime/health field —
 // nothing in this release can produce one, so a future bug cannot render a
 // fabricated healthy state.
-export const STATUS_LABELS: Record<string, string> = {
-  not_connected: 'Not connected',
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  not_connected: 'status.notConnected',
 };
 
-export function statusLabel(status: string): string {
-  return STATUS_LABELS[status] ?? 'Not connected';
+export function statusLabel(status: string, t: T): string {
+  return t(STATUS_LABEL_KEYS[status] ?? 'status.notConnected');
 }
 
 // ---- Per-channel presentation (decorative copy only) --------------------
@@ -70,43 +76,21 @@ export type ChannelPresentation = {
   tint: 'indigo' | 'green' | 'violet' | 'amber' | 'emerald' | 'slate';
 };
 
-export const CHANNEL_PRESENTATION: Record<string, ChannelPresentation> = {
-  email: {
-    label: 'Email',
-    helpLine: 'Tickets arrive via email once an inbox is configured.',
-    icon: 'email',
-    tint: 'indigo',
-  },
-  whatsapp: {
-    label: 'WhatsApp',
-    helpLine: 'Requires a WhatsApp Business API account.',
-    icon: 'whatsapp',
-    tint: 'green',
-  },
-  chat: {
-    label: 'Live chat',
-    helpLine: 'Embed a chat widget on your site or app.',
-    icon: 'chat',
-    tint: 'violet',
-  },
-  sms: {
-    label: 'SMS',
-    helpLine: 'Requires an SMS provider (e.g. Twilio) to be configured.',
-    icon: 'sms',
-    tint: 'amber',
-  },
-  web_form: {
-    label: 'Web forms',
-    helpLine: 'Embed a contact form to collect tickets from your website.',
-    icon: 'web_form',
-    tint: 'emerald',
-  },
+const CHANNEL_PRESENTATION_KEYS: Record<
+  string,
+  { labelKey: string; helpLineKey: string; icon: ChannelIconName; tint: ChannelPresentation['tint'] }
+> = {
+  email: { labelKey: 'presentation.email.label', helpLineKey: 'presentation.email.helpLine', icon: 'email', tint: 'indigo' },
+  whatsapp: { labelKey: 'presentation.whatsapp.label', helpLineKey: 'presentation.whatsapp.helpLine', icon: 'whatsapp', tint: 'green' },
+  chat: { labelKey: 'presentation.chat.label', helpLineKey: 'presentation.chat.helpLine', icon: 'chat', tint: 'violet' },
+  sms: { labelKey: 'presentation.sms.label', helpLineKey: 'presentation.sms.helpLine', icon: 'sms', tint: 'amber' },
+  web_form: { labelKey: 'presentation.web_form.label', helpLineKey: 'presentation.web_form.helpLine', icon: 'web_form', tint: 'emerald' },
 };
 
 /** The five channels this release ships help copy for — derived from the map,
  *  never a second hand-maintained list. Used only to render the channel list
  *  while the API request is in flight or has failed. */
-export const KNOWN_CHANNEL_VALUES = Object.keys(CHANNEL_PRESENTATION);
+export const KNOWN_CHANNEL_VALUES = Object.keys(CHANNEL_PRESENTATION_KEYS);
 
 function humanize(value: string): string {
   return value.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -114,13 +98,15 @@ function humanize(value: string): string {
 
 /** Presentation for a channel value. An unknown value (a sixth enum case
  *  added without touching this story) gets a generic, never-undefined line. */
-export function presentationFor(value: string): ChannelPresentation {
-  return (
-    CHANNEL_PRESENTATION[value] ?? {
-      label: humanize(value),
-      helpLine: 'Connect this channel to start collecting tickets from it.',
-      icon: 'generic',
-      tint: 'slate',
-    }
-  );
+export function presentationFor(value: string, t: T): ChannelPresentation {
+  const known = CHANNEL_PRESENTATION_KEYS[value];
+  if (known) {
+    return { label: t(known.labelKey), helpLine: t(known.helpLineKey), icon: known.icon, tint: known.tint };
+  }
+  return {
+    label: humanize(value),
+    helpLine: t('presentation.genericHelpLine'),
+    icon: 'generic',
+    tint: 'slate',
+  };
 }

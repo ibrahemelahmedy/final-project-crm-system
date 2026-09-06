@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../../../i18n';
 import { useNotificationsList, useMarkAllNotificationsRead, useMarkNotificationRead } from '../hooks/useNotifications';
 import { NotificationRow } from './NotificationRow';
 import type { Notification } from '../model/notification';
@@ -17,6 +18,7 @@ const PANEL_LOADING_ROWS = 4;
  * tested and reasoned about independently.
  */
 export function NotificationPanel({ onRowActivated }: Props) {
+  const { t } = useT('notifications');
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch } = useNotificationsList('all', 1);
   const markRead = useMarkNotificationRead();
@@ -36,16 +38,16 @@ export function NotificationPanel({ onRowActivated }: Props) {
   };
 
   return (
-    <div role="dialog" aria-label="Notifications" className="notif-panel">
+    <div role="dialog" aria-label={t('ariaLabel')} className="notif-panel">
       <div className="notif-panel-header">
-        <span className="notif-panel-title">Notifications</span>
+        <span className="notif-panel-title">{t('title')}</span>
         <button
           type="button"
           className="notif-mark-all-btn fv"
           onClick={() => markAllRead.mutate()}
           disabled={!hasUnread || markAllRead.isPending}
         >
-          Mark all as read
+          {t('markAllRead')}
         </button>
       </div>
 
@@ -69,10 +71,10 @@ export function NotificationPanel({ onRowActivated }: Props) {
             <circle cx="12" cy="12" r="9" />
             <path d="M12 8v5M12 16h.01" />
           </svg>
-          <div className="notif-error-title">Couldn't load notifications</div>
-          <div className="notif-error-body">Check your connection and try again.</div>
+          <div className="notif-error-title">{t('loadErrorTitle')}</div>
+          <div className="notif-error-body">{t('loadErrorBody')}</div>
           <button type="button" className="notif-retry-btn fv" onClick={() => refetch()}>
-            Retry
+            {t('retry')}
           </button>
         </div>
       )}
@@ -82,8 +84,8 @@ export function NotificationPanel({ onRowActivated }: Props) {
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0" />
           </svg>
-          <div className="notif-empty-title">You're all caught up</div>
-          <div className="notif-empty-body">No notifications right now — check back later.</div>
+          <div className="notif-empty-title">{t('emptyTitle')}</div>
+          <div className="notif-empty-body">{t('emptyBody')}</div>
         </div>
       )}
 
@@ -105,7 +107,7 @@ export function NotificationPanel({ onRowActivated }: Props) {
             navigate('/notifications');
           }}
         >
-          View all notifications
+          {t('viewAll')}
         </a>
       </div>
     </div>

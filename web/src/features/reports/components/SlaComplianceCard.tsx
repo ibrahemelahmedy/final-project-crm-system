@@ -1,5 +1,6 @@
 import type { SlaBlock } from '../model/report';
 import { formatMinutes } from '../model/report';
+import { useT } from '../../../i18n';
 import { ReportCard } from './ReportCard';
 
 /**
@@ -8,27 +9,28 @@ import { ReportCard } from './ReportCard';
  * dependent on a tooltip (brief anti-pattern list).
  */
 export function SlaComplianceCard({ block }: { block: SlaBlock }) {
+  const { t } = useT('reports');
   const rate = block.compliance_rate;
   return (
     <ReportCard
-      title="SLA Compliance Rate"
+      title={t('slaCompliance.title')}
       available={block.available && rate != null}
-      emptyMessage="No tickets with an SLA were resolved in this date range."
+      emptyMessage={t('slaCompliance.empty')}
     >
       <div className="rp-sla">
         <div className="rp-sla-figure">
           <span className="rp-sla-value" dir="ltr">
             {rate != null ? `${Math.round(rate)}%` : '—'}
           </span>
-          <span className="rp-sla-target">Target: {Math.round(block.target_rate)}%</span>
+          <span className="rp-sla-target">{t('slaCompliance.target', { rate: Math.round(block.target_rate) })}</span>
         </div>
         <dl className="rp-sla-detail">
           <div>
-            <dt>Breach rate</dt>
+            <dt>{t('slaCompliance.breachRate')}</dt>
             <dd dir="ltr">{block.breach_rate != null ? `${block.breach_rate}%` : '—'}</dd>
           </div>
           <div>
-            <dt>Avg. resolution time</dt>
+            <dt>{t('slaCompliance.avgResolutionTime')}</dt>
             <dd dir="ltr">{formatMinutes(block.avg_resolution_minutes)}</dd>
           </div>
         </dl>

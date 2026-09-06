@@ -1,1 +1,34 @@
-{}
+{
+  "period": {
+    "ariaLabel": "Ticket count period",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "last90": "Last 90 days"
+  },
+  "status": {
+    "notConnected": "Not connected"
+  },
+  "presentation": {
+    "email": { "label": "Email", "helpLine": "Tickets arrive via email once an inbox is configured." },
+    "whatsapp": { "label": "WhatsApp", "helpLine": "Requires a WhatsApp Business API account." },
+    "chat": { "label": "Live chat", "helpLine": "Embed a chat widget on your site or app." },
+    "sms": { "label": "SMS", "helpLine": "Requires an SMS provider (e.g. Twilio) to be configured." },
+    "web_form": { "label": "Web forms", "helpLine": "Embed a contact form to collect tickets from your website." },
+    "genericHelpLine": "Connect this channel to start collecting tickets from it."
+  },
+  "card": {
+    "tickets": "tickets",
+    "empty": "No tickets this period",
+    "unavailable": "Count unavailable"
+  },
+  "page": {
+    "title": "Channels",
+    "subtitleAdmin": "Ticket origin by channel — no integrations connected",
+    "subtitle": "Ticket origin by channel",
+    "noticeStrong": "Channel integrations are not available in this release.",
+    "noticeRest": "The counts below are drawn from existing ticket data.",
+    "loadError": "Ticket counts couldn't load. Channel information is still shown.",
+    "retry": "Retry",
+    "loadingLabel": "Loading channels"
+  }
+}

@@ -1,1 +1,111 @@
-{}
+{
+  "keyboard": {
+    "navigate": "↑↓ للتنقل",
+    "insert": "Enter للإدراج",
+    "close": "Esc للإغلاق"
+  },
+  "addTask": {
+    "title": "مهمة جديدة",
+    "taskLabel": "المهمة",
+    "placeholder": "مثال: الاتصال بالعميل يوم الخميس",
+    "dueDateTime": "تاريخ ووقت الاستحقاق",
+    "assignee": "المكلَّف",
+    "me": "(أنا)",
+    "cancel": "إلغاء",
+    "save": "حفظ المهمة",
+    "saveFailed": "تعذر حفظ المهمة. حاول مرة أخرى."
+  },
+  "mention": {
+    "ariaLabel": "إشارة إلى زميل",
+    "colleagues": "الزملاء"
+  },
+  "quickReplyEdit": {
+    "editTitle": "تعديل رد سريع",
+    "newTitle": "رد سريع جديد",
+    "title": "العنوان",
+    "category": "الفئة",
+    "body": "النص",
+    "placeholders": "المتغيرات المتاحة",
+    "cancel": "إلغاء",
+    "save": "حفظ التغييرات",
+    "saveFailed": "تعذر حفظ هذا القالب. حاول مرة أخرى."
+  },
+  "quickReplyPicker": {
+    "ariaLabel": "إدراج رد سريع",
+    "searchPlaceholder": "البحث في الردود السريعة…",
+    "loadError": "تعذر تحميل الردود السريعة.",
+    "retry": "إعادة المحاولة",
+    "emptyTitle": "لا توجد ردود سريعة بعد",
+    "emptyBody": "يمكن لقائد فريقك إنشاء ردود جاهزة من الإدارة ← الردود السريعة.",
+    "noMatchTitle": "لا توجد ردود تطابق «{{term}}»",
+    "noMatchBody": "جرّب كلمة مختلفة، أو امسح البحث لتصفح الكل.",
+    "clearSearch": "مسح البحث",
+    "generalCategory": "عام"
+  },
+  "tasksPanel": {
+    "heading": "المهام",
+    "headingWithCount": "المهام · {{count}}",
+    "cancel": "إلغاء",
+    "addTask": "إضافة مهمة",
+    "loadErrorTitle": "تعذر تحميل المهام",
+    "loadErrorBody": "تحقق من اتصالك، ثم حاول مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "emptyTitle": "لا توجد مهام بعد",
+    "emptyBody": "أضف مهمة لتتبع متابعة أو تذكير خاص بهذه التذكرة.",
+    "addFirstTask": "إضافة مهمة",
+    "markComplete": "تمييز \"{{title}}\" كمكتملة"
+  },
+  "dueState": {
+    "none": "لا يوجد تاريخ استحقاق",
+    "completed": "مكتملة · {{date}}",
+    "overdue": "متأخرة · {{relative}}",
+    "dueSoon": "تستحق قريباً · {{relative}}",
+    "upcoming": "{{relative}} · {{date}}"
+  },
+  "quickRepliesPage": {
+    "title": "الردود السريعة",
+    "subtitle_zero": "لا توجد قوالب في المكتبة المشتركة",
+    "subtitle_one": "قالب واحد في المكتبة المشتركة",
+    "subtitle_two": "قالبان في المكتبة المشتركة",
+    "subtitle_few": "{{count}} قوالب في المكتبة المشتركة",
+    "subtitle_many": "{{count}} قالباً في المكتبة المشتركة",
+    "subtitle_other": "{{count}} قالب في المكتبة المشتركة",
+    "newQuickReply": "رد سريع جديد",
+    "categoryLabel": "الفئة:",
+    "statusLabel": "الحالة:",
+    "all": "الكل",
+    "active": "نشط",
+    "archived": "مؤرشف",
+    "loadErrorTitle": "تعذر تحميل الردود السريعة",
+    "loadErrorBody": "حدث خطأ أثناء جلب المكتبة. تحقق من اتصالك وحاول مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "emptyTitle": "لا توجد ردود سريعة بعد",
+    "emptyBody": "الردود السريعة قوالب ردود مشتركة يمكن لفريقك إدراجها في ردود التذاكر بنقرة واحدة — رائعة للأسئلة الشائعة مثل إعادة تعيين كلمة المرور أو سياسة الاسترداد.",
+    "createFirst": "إنشاء أول رد سريع",
+    "columns": {
+      "title": "العنوان",
+      "preview": "معاينة",
+      "category": "الفئة",
+      "status": "الحالة",
+      "lastUpdated": "آخر تحديث",
+      "actions": "الإجراءات"
+    },
+    "edit": "تعديل",
+    "archive": "أرشفة",
+    "showingRange": "عرض {{from}}–{{to}} من {{total}}",
+    "archiveConfirmTitle": "أرشفة الرد السريع؟",
+    "archiveConfirmBody": "أرشفة \"{{title}}\"؟ لن يراه الوكلاء بعد الآن في منتقي الردود السريعة. يمكنك استعادته لاحقاً من فلتر المؤرشف.",
+    "categories": {
+      "billing": "الفواتير",
+      "account": "الحساب",
+      "technical": "تقني",
+      "general": "عام"
+    }
+  },
+  "schema": {
+    "titleRequired": "أعطِ هذا القالب عنواناً.",
+    "bodyRequired": "اكتب نص الرد.",
+    "categoryRequired": "اختر فئة.",
+    "taskDescriptionRequired": "صف المهمة."
+  }
+}

@@ -10,18 +10,20 @@ import {
 } from 'recharts';
 import type { TicketVolumeBlock } from '../model/report';
 import { formatDayTick } from '../model/report';
+import { useT } from '../../../i18n';
 import { ReportCard } from './ReportCard';
 import { ChartFrame } from './ChartFrame';
 import { chartColors } from './chartTheme';
 
 export function TicketVolumeCard({ block }: { block: TicketVolumeBlock }) {
+  const { t } = useT('reports');
   return (
     <ReportCard
-      title="Ticket Volume Over Time"
+      title={t('ticketVolume.title')}
       available={block.available}
-      emptyMessage="No tickets were created or resolved in this date range."
+      emptyMessage={t('ticketVolume.empty')}
     >
-      <ChartFrame label="Ticket volume over time — tickets created and resolved per day">
+      <ChartFrame label={t('ticketVolume.chartLabel')}>
         <ResponsiveContainer width="100%" height={240}>
           <LineChart data={block.points} margin={{ top: 8, right: 12, bottom: 4, left: -8 }}>
             <CartesianGrid stroke={chartColors.grid} vertical={false} />
@@ -38,7 +40,7 @@ export function TicketVolumeCard({ block }: { block: TicketVolumeBlock }) {
             <Line
               type="monotone"
               dataKey="created"
-              name="Created"
+              name={t('ticketVolume.created')}
               stroke={chartColors.created}
               strokeWidth={2}
               dot={false}
@@ -47,7 +49,7 @@ export function TicketVolumeCard({ block }: { block: TicketVolumeBlock }) {
             <Line
               type="monotone"
               dataKey="resolved"
-              name="Resolved"
+              name={t('ticketVolume.resolved')}
               stroke={chartColors.resolved}
               strokeWidth={2}
               dot={false}

@@ -1,1 +1,86 @@
-{}
+{
+  "widget": {
+    "loadingTitled": "Loading {{title}}…",
+    "loadingGeneric": "Loading widget…",
+    "tryAgain": "Try again",
+    "loadError": "This widget couldn't load."
+  },
+  "adminCard": {
+    "countUnavailable": "Count unavailable",
+    "loading": "Loading…"
+  },
+  "escalations": {
+    "title": "Current Escalations",
+    "loadError": "Escalations couldn't load.",
+    "empty": "No active escalations. Tickets raised to you by an agent will appear here.",
+    "escalatedBy": "Escalated by {{name}}",
+    "unknown": "Unknown"
+  },
+  "myQueue": {
+    "title": "My Queue",
+    "loadError": "Your queue couldn't load.",
+    "empty": "No tickets assigned to you yet — new work will show up here.",
+    "browseQueue": "Browse the ticket queue",
+    "ariaLabel": "My queue",
+    "columns": {
+      "id": "ID",
+      "subject": "SUBJECT",
+      "customer": "CUSTOMER",
+      "priority": "PRIORITY",
+      "slaLeft": "SLA LEFT"
+    }
+  },
+  "quickReplies": {
+    "title": "Quick Replies",
+    "loadError": "Quick replies couldn't load.",
+    "empty": "No quick replies yet. Saved responses you create will appear here for one-click insert."
+  },
+  "slaRisk": {
+    "title": "Approaching SLA Breach",
+    "loadError": "SLA risk couldn't load.",
+    "empty": "Nothing at risk right now — every assigned ticket is within its SLA.",
+    "reviewQueue": "Review the full queue"
+  },
+  "workload": {
+    "title": "Workload Balance",
+    "loadError": "Workload data couldn't load.",
+    "empty": "No agents on this team yet. Add agents in User Management to balance workload.",
+    "openTicketsAria": "{{name}}: {{count}} open tickets"
+  },
+  "admin": {
+    "heading": "Admin overview",
+    "subtitle": "Platform configuration and oversight",
+    "userManagement": "User Management",
+    "manageUsers": "Manage users",
+    "slaRuleConfig": "SLA Rule Configuration",
+    "configureRules": "Configure rules",
+    "auditLog": "Audit Log",
+    "viewLog": "View log",
+    "userCount_one": "{{count}} internal user",
+    "userCount_other": "{{count}} internal users",
+    "slaRuleCount_one": "{{count}} active rule",
+    "slaRuleCount_other": "{{count}} active rules",
+    "auditLogCount_one": "{{count}} recorded event",
+    "auditLogCount_other": "{{count}} recorded events"
+  },
+  "agent": {
+    "subtitle": "Here's what needs your attention today",
+    "assignedToMe": "Assigned to me",
+    "approachingSlaBreach": "Approaching SLA breach",
+    "resolvedToday": "Resolved today"
+  },
+  "team": {
+    "heading": "Team overview",
+    "loading": "Loading team…",
+    "agentCount_one": "agent",
+    "agentCount_other": "agents",
+    "openTickets": "Team open tickets",
+    "activeEscalations": "Active escalations",
+    "slaCompliance": "Team SLA compliance"
+  },
+  "greeting": {
+    "morning": "Good morning, {{name}}",
+    "afternoon": "Good afternoon, {{name}}",
+    "evening": "Good evening, {{name}}"
+  }
+}

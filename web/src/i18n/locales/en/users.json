@@ -1,1 +1,136 @@
-{}
+{
+  "columns": {
+    "user": "USER",
+    "email": "EMAIL",
+    "role": "ROLE",
+    "status": "STATUS",
+    "department": "DEPARTMENT",
+    "lastActive": "LAST ACTIVE",
+    "actions": "ACTIONS",
+    "neverSignedIn": "Never signed in"
+  },
+  "rowActions": {
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "cannotDeactivateSelf": "You cannot deactivate your own account",
+    "deactivateTitle": "Deactivate {{name}}",
+    "reactivateTitle": "Reactivate {{name}}"
+  },
+  "roles": {
+    "agent": "Agent",
+    "team_lead": "Team Lead",
+    "administrator": "Administrator"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All"
+  },
+  "relative": {
+    "never": "Never",
+    "justNow": "Just now"
+  },
+  "form": {
+    "editTitle": "Edit User",
+    "inviteTitle": "Invite User",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "roleHint": "Every user has exactly one role.",
+    "department": "Department",
+    "departmentOptional": "Optional",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "saveChanges": "Save Changes",
+    "sendInvite": "Send Invite",
+    "genericError": "Something went wrong. Try again.",
+    "saveFailed": "The change could not be saved."
+  },
+  "deactivateDialog": {
+    "title": "Deactivate {{name}}?",
+    "bodyBeforeStrong": "{{name}} will not be able to sign in, and",
+    "bodyStrong": "their active sessions end immediately",
+    "bodyAfterStrong": "— any device they are signed in on is signed out on its next request.",
+    "bodyFooter": "Their tickets and audit history stay attributed to them. You can reactivate the account later; they will need to sign in again.",
+    "cancel": "Cancel",
+    "working": "Working…",
+    "confirm": "Deactivate User",
+    "cannotDeactivate": "This user cannot be deactivated.",
+    "genericError": "Something went wrong. Try again."
+  },
+  "list": {
+    "title": "Users",
+    "subtitle_one": "{{count}} internal user",
+    "subtitle_other": "{{count}} internal users",
+    "subtitleWithDepartments_one": "{{count}} internal user across {{departments}} departments",
+    "subtitleWithDepartments_other": "{{count}} internal users across {{departments}} departments",
+    "auditLog": "Audit Log",
+    "settings": "Settings",
+    "inviteUser": "Invite User",
+    "filterRole": "Role",
+    "filterDepartment": "Department",
+    "filterStatus": "Status",
+    "searchPlaceholder": "Search users…",
+    "searchLabel": "Search users",
+    "emptyFilteredTitle": "No users match these filters",
+    "emptyFilteredBody": "No users match {{filters}}. Try a different filter or clear them.",
+    "resetFilters": "Reset filters",
+    "emptyTitle": "No users yet",
+    "emptyBody": "No internal users yet. Invite your first teammate to give them access.",
+    "caption": "Users"
+  },
+  "auditLog": {
+    "title": "Audit Log",
+    "subtitle": "Every sensitive action, with actor, action, target, and timestamp. Entries can never be edited or deleted.",
+    "backToUsers": "Back to Users",
+    "columns": {
+      "when": "WHEN",
+      "actor": "ACTOR",
+      "action": "ACTION",
+      "target": "TARGET",
+      "ip": "IP"
+    },
+    "noLongerUser": "(no longer a user)",
+    "filterActor": "Actor",
+    "anyActor": "Anyone",
+    "filterAction": "Action",
+    "from": "From",
+    "to": "To",
+    "clearFilters": "Clear filters",
+    "emptyFilteredTitle": "No entries match these filters",
+    "emptyFilteredBody": "No audit entries match the selected actor, action, or date range. Widen the range or clear the filters.",
+    "emptyTitle": "No audit entries yet",
+    "emptyBody": "Sensitive actions are recorded here as they happen — user changes, role changes, SLA rule changes, and configuration changes.",
+    "caption": "Audit log",
+    "rowLabel": "{{event}} by {{actor}}"
+  },
+  "settings": {
+    "title": "System Settings",
+    "subtitle": "Every change is validated before saving and recorded in the audit log.",
+    "backToUsers": "Back to Users",
+    "empty": "No configurable settings.",
+    "rangeBounds": "{{min}}–{{max}}",
+    "minOnly": "min {{min}}",
+    "reset": "Reset",
+    "saving": "Saving…",
+    "save": "Save Settings",
+    "noChanges": "No changes to save.",
+    "savedCount_one": "Saved {{count}} change.",
+    "savedCount_other": "Saved {{count}} changes.",
+    "saveFailed": "The change could not be saved.",
+    "genericError": "Something went wrong. Try again."
+  },
+  "schema": {
+    "roleRequired": "Select a role. Every user has exactly one.",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address"
+  },
+  "settingsSchema": {
+    "mustBeNumber": "{{label}} must be a number.",
+    "mustBeInteger": "{{label}} must be a whole number.",
+    "tooLow": "{{label}} cannot be lower than {{min}}.",
+    "tooHigh": "{{label}} cannot be higher than {{max}}."
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { useKbArticle } from '../hooks/useKbQueries';
 import { ArticleStatusBadge } from '../components/ArticleStatusBadge';
 import { ArticleToc } from '../components/ArticleToc';
@@ -19,6 +20,7 @@ import { formatArticleDate } from '../model/columns';
  * exists either way.
  */
 export const ArticleReaderPage: React.FC = () => {
+  const { t } = useT('knowledge');
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -47,13 +49,10 @@ export const ArticleReaderPage: React.FC = () => {
     if (status === 404) {
       return (
         <div className="kb-reader kb-reader-state">
-          <h1>Article not found</h1>
-          <p>
-            This article does not exist, or it has not been published yet. Browse the Knowledge Base to
-            find what you need.
-          </p>
+          <h1>{t('reader.notFoundTitle')}</h1>
+          <p>{t('reader.notFoundBody')}</p>
           <Link className="dt-btn dt-btn-primary fv" to="/knowledge-base">
-            Back to Knowledge Base
+            {t('reader.backToKb')}
           </Link>
         </div>
       );
@@ -61,10 +60,10 @@ export const ArticleReaderPage: React.FC = () => {
 
     return (
       <div className="kb-reader kb-reader-state">
-        <h1>Something went wrong</h1>
-        <p>This article could not be loaded.</p>
+        <h1>{t('reader.errorTitle')}</h1>
+        <p>{t('reader.errorBody')}</p>
         <button type="button" className="dt-btn dt-btn-primary fv" onClick={() => refetch()}>
-          Try again
+          {t('reader.tryAgain')}
         </button>
       </div>
     );
@@ -74,9 +73,9 @@ export const ArticleReaderPage: React.FC = () => {
 
   return (
     <article className="kb-reader">
-      <nav className="kb-breadcrumb" aria-label="Breadcrumb">
+      <nav className="kb-breadcrumb" aria-label={t('reader.breadcrumbLabel')}>
         <Link className="kb-breadcrumb-link fv" to="/knowledge-base">
-          Knowledge Base
+          {t('reader.kbLink')}
         </Link>
         {article.category && (
           <>
@@ -122,7 +121,7 @@ export const ArticleReaderPage: React.FC = () => {
                   className="dt-btn dt-btn-outline fv kb-reader-edit"
                   onClick={() => navigate(`/knowledge-base/${article.slug}/edit`)}
                 >
-                  Edit
+                  {t('reader.edit')}
                 </button>
               )}
             </div>
@@ -134,14 +133,13 @@ export const ArticleReaderPage: React.FC = () => {
             {/* The staleness signal agents rely on. The date is always LTR —
                 a numeral run must not reverse inside an RTL sentence. */}
             <p className="kb-reader-meta">
-              Last updated <span dir="ltr">{formatArticleDate(article.updated_at)}</span>
+              {t('reader.lastUpdated')} <span dir="ltr">{formatArticleDate(article.updated_at)}</span>
               {' · '}
-              <span dir="ltr">{article.read_minutes}</span> min read
+              <span dir="ltr">{article.read_minutes}</span> {t('reader.minRead')}
               {article.version_count > 0 && (
                 <>
                   {' · '}
-                  <span dir="ltr">{article.version_count}</span>{' '}
-                  {article.version_count === 1 ? 'revision' : 'revisions'}
+                  {t('reader.revisionCount', { count: article.version_count })}
                 </>
               )}
             </p>
@@ -166,8 +164,8 @@ export const ArticleReaderPage: React.FC = () => {
             />
           ) : (
             <p className="kb-reader-empty-body">
-              This article has no content yet.
-              {isEditor ? ' Edit it to add the guidance agents need.' : ''}
+              {t('reader.emptyBody')}
+              {isEditor ? ` ${t('reader.emptyBodyEditorHint')}` : ''}
             </p>
           )}
         </div>

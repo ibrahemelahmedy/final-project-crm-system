@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../../../i18n';
 import { useNotificationListParams } from '../hooks/useNotificationListParams';
 import { useNotificationsList, useMarkAllNotificationsRead, useMarkNotificationRead } from '../hooks/useNotifications';
 import { NotificationRow } from '../components/NotificationRow';
@@ -13,6 +14,7 @@ const PAGE_LOADING_ROWS = 6;
  * (brief.md's cross-cutting rule); the table is never fetched in full.
  */
 export function NotificationsPage() {
+  const { t } = useT('notifications');
   const navigate = useNavigate();
   const [params, setParams] = useNotificationListParams();
   const { data, isLoading, isError, refetch, isPlaceholderData } = useNotificationsList(
@@ -37,16 +39,16 @@ export function NotificationsPage() {
   return (
     <div className="notif-page">
       <div className="notif-page-header">
-        <h1 className="notif-page-title">Notifications</h1>
+        <h1 className="notif-page-title">{t('title')}</h1>
         <div className="notif-page-controls">
-          <div className="notif-filter-group" role="group" aria-label="Filter notifications">
+          <div className="notif-filter-group" role="group" aria-label={t('filterAriaLabel')}>
             <button
               type="button"
               className="notif-filter-btn fv"
               data-active={params.filter === 'all'}
               onClick={() => setParams({ filter: 'all' })}
             >
-              All
+              {t('filterAll')}
             </button>
             <button
               type="button"
@@ -54,7 +56,7 @@ export function NotificationsPage() {
               data-active={params.filter === 'unread'}
               onClick={() => setParams({ filter: 'unread' })}
             >
-              Unread
+              {t('filterUnread')}
             </button>
           </div>
           <button
@@ -63,7 +65,7 @@ export function NotificationsPage() {
             onClick={() => markAllRead.mutate()}
             disabled={!hasUnread || markAllRead.isPending}
           >
-            Mark all as read
+            {t('markAllRead')}
           </button>
         </div>
       </div>
@@ -89,10 +91,10 @@ export function NotificationsPage() {
               <circle cx="12" cy="12" r="9" />
               <path d="M12 8v5M12 16h.01" />
             </svg>
-            <div className="notif-error-title">Couldn't load notifications</div>
-            <div className="notif-error-body">Check your connection and try again.</div>
+            <div className="notif-error-title">{t('loadErrorTitle')}</div>
+            <div className="notif-error-body">{t('loadErrorBody')}</div>
             <button type="button" className="notif-retry-btn fv" onClick={() => refetch()}>
-              Retry
+              {t('retry')}
             </button>
           </div>
         )}
@@ -102,8 +104,8 @@ export function NotificationsPage() {
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0" />
             </svg>
-            <div className="notif-empty-title">You're all caught up</div>
-            <div className="notif-empty-body">No notifications right now — check back later.</div>
+            <div className="notif-empty-title">{t('emptyTitle')}</div>
+            <div className="notif-empty-body">{t('emptyBody')}</div>
           </div>
         )}
 

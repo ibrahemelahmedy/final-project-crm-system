@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Modal } from '../../../components/ui/Modal';
-import { ROLE_LABELS, USER_ROLES, type AdminUser } from '../model/adminUser';
-import { inviteUserSchema, type InviteUserFormValues } from '../model/userSchema';
+import { useT } from '../../../i18n';
+import { ROLE_LABEL_KEYS, USER_ROLES, type AdminUser } from '../model/adminUser';
+import { makeInviteUserSchema, type InviteUserFormValues } from '../model/userSchema';
 import { useInviteUser, useUpdateUser } from '../hooks/useUserMutations';
 
 function toFormValues(user?: AdminUser): InviteUserFormValues {
@@ -33,6 +34,8 @@ export const UserFormModal: React.FC<{
   onClose: () => void;
   onSaved?: (user: AdminUser) => void;
 }> = ({ open, user, onClose, onSaved }) => {
+  const { t } = useT('users');
+  const inviteUserSchema = useMemo(() => makeInviteUserSchema(t), [t]);
   const isEdit = Boolean(user);
   const {
     register,
@@ -58,7 +61,7 @@ export const UserFormModal: React.FC<{
 
   const handleServerError = (error: unknown) => {
     if (!axios.isAxiosError(error) || error.response?.status !== 422) {
-      setFormError('Something went wrong. Try again.');
+      setFormError(t('form.genericError'));
       return;
     }
     const payload = error.response.data ?? {};
@@ -77,7 +80,7 @@ export const UserFormModal: React.FC<{
     // A server error with no matching field — the last-Administrator rule
     // arrives on `role`, but anything else must still be visible rather than
     // vanish into a silent no-op.
-    if (!attached) setFormError(payload.message ?? 'The change could not be saved.');
+    if (!attached) setFormError(payload.message ?? t('form.saveFailed'));
   };
 
   const onSubmit = async (values: InviteUserFormValues) => {
@@ -94,22 +97,22 @@ export const UserFormModal: React.FC<{
   const titleId = isEdit ? 'edit-user-title' : 'invite-user-title';
 
   return (
-    <Modal open={open} onClose={onClose} titleId={titleId} title={isEdit ? 'Edit User' : 'Invite User'}>
+    <Modal open={open} onClose={onClose} titleId={titleId} title={isEdit ? t('form.editTitle') : t('form.inviteTitle')}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="form-field">
-          <label htmlFor="user-name">Name</label>
+          <label htmlFor="user-name">{t('form.name')}</label>
           <input id="user-name" {...register('name')} />
           {errors.name && <p className="form-error">{errors.name.message}</p>}
         </div>
 
         <div className="form-field">
-          <label htmlFor="user-email">Email</label>
+          <label htmlFor="user-email">{t('form.email')}</label>
           <input id="user-email" type="email" dir="ltr" {...register('email')} />
           {errors.email && <p className="form-error">{errors.email.message}</p>}
         </div>
 
         <div className="form-field">
-          <label htmlFor="user-role">Role</label>
+          <label htmlFor="user-role">{t('form.role')}</label>
           {/*
             No blank <option>. Every user has exactly one role, so there is no
             "unselected" value to offer — the select opens on a real role.
@@ -117,17 +120,17 @@ export const UserFormModal: React.FC<{
           <select id="user-role" {...register('role')}>
             {USER_ROLES.map((role) => (
               <option key={role} value={role}>
-                {ROLE_LABELS[role]}
+                {t(ROLE_LABEL_KEYS[role])}
               </option>
             ))}
           </select>
           {errors.role && <p className="form-error">{errors.role.message}</p>}
-          <p className="form-hint">Every user has exactly one role.</p>
+          <p className="form-hint">{t('form.roleHint')}</p>
         </div>
 
         <div className="form-field">
-          <label htmlFor="user-department">Department</label>
-          <input id="user-department" {...register('department')} placeholder="Optional" />
+          <label htmlFor="user-department">{t('form.department')}</label>
+          <input id="user-department" {...register('department')} placeholder={t('form.departmentOptional')} />
           {errors.department && <p className="form-error">{errors.department.message}</p>}
         </div>
 
@@ -139,10 +142,10 @@ export const UserFormModal: React.FC<{
 
         <div className="modal-footer modal-footer-end">
           <button type="button" className="dt-btn dt-btn-outline fv" onClick={onClose}>
-            Cancel
+            {t('form.cancel')}
           </button>
           <button type="submit" className="dt-btn dt-btn-primary fv" disabled={isSubmitting || isPending}>
-            {isSubmitting || isPending ? 'Saving…' : isEdit ? 'Save Changes' : 'Send Invite'}
+            {isSubmitting || isPending ? t('form.saving') : isEdit ? t('form.saveChanges') : t('form.sendInvite')}
           </button>
         </div>
       </form>

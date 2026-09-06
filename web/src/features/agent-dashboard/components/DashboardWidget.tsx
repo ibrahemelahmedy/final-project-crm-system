@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../../i18n';
 import type { WidgetState } from '../model/widgetState';
 
 export type { WidgetState } from '../model/widgetState';
@@ -36,6 +37,7 @@ export function DashboardWidget({
   children,
   className,
 }: Props) {
+  const { t } = useT('dashboard');
   return (
     <section
       className={`dw${tone === 'warning' ? ' dw-warning' : ''}${className ? ` ${className}` : ''}`}
@@ -45,7 +47,9 @@ export function DashboardWidget({
 
       {state === 'loading' && (
         <div className="dw-skeleton" role="status">
-          <span className="tq-sr-only">Loading {typeof title === 'string' ? title : 'widget'}…</span>
+          <span className="tq-sr-only">
+            {typeof title === 'string' ? t('widget.loadingTitled', { title }) : t('widget.loadingGeneric')}
+          </span>
           <span className="dw-skeleton-row" />
           <span className="dw-skeleton-row" />
           <span className="dw-skeleton-row" />
@@ -54,10 +58,10 @@ export function DashboardWidget({
 
       {state === 'error' && (
         <div className="dw-state dw-state-error" role="alert">
-          <p>{errorMessage ?? "This widget couldn't load."}</p>
+          <p>{errorMessage ?? t('widget.loadError')}</p>
           {onRetry && (
             <button type="button" className="dw-retry" onClick={onRetry}>
-              Try again
+              {t('widget.tryAgain')}
             </button>
           )}
         </div>

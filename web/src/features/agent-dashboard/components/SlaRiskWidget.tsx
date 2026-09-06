@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { SlaCell } from '../../tickets';
+import { useT } from '../../../i18n';
 import { useAgentSlaRisk } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -11,6 +12,7 @@ import { widgetState, emptyList } from '../model/widgetState';
  * computed here.
  */
 export function SlaRiskWidget() {
+  const { t } = useT('dashboard');
   const query = useAgentSlaRisk();
   const state = widgetState(query, emptyList);
   const tickets = query.data ?? [];
@@ -23,31 +25,31 @@ export function SlaRiskWidget() {
             <circle cx="12" cy="12" r="9" />
             <path d="M12 7v6l4 2" />
           </svg>
-          Approaching SLA Breach
+          {t('slaRisk.title')}
         </span>
       }
       tone="warning"
       state={state}
       onRetry={() => query.refetch()}
-      errorMessage="SLA risk couldn't load."
-      emptyMessage="Nothing at risk right now — every assigned ticket is within its SLA."
+      errorMessage={t('slaRisk.loadError')}
+      emptyMessage={t('slaRisk.empty')}
       emptyAction={
         <Link className="dw-empty-link" to="/tickets">
-          Review the full queue
+          {t('slaRisk.reviewQueue')}
         </Link>
       }
     >
       <ul className="sla-risk-list">
-        {tickets.map((t) => (
-          <li key={t.id}>
-            <Link to={`/tickets/${t.id}`} className="sla-risk-item">
+        {tickets.map((ticket) => (
+          <li key={ticket.id}>
+            <Link to={`/tickets/${ticket.id}`} className="sla-risk-item">
               <span className="sla-risk-subject">
                 <span dir="ltr" className="tq-ltr">
-                  {t.reference}
+                  {ticket.reference}
                 </span>{' '}
-                {t.subject}
+                {ticket.subject}
               </span>
-              <SlaCell sla={t.sla} />
+              <SlaCell sla={ticket.sla} />
             </Link>
           </li>
         ))}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useT } from '../../../i18n';
 import { useKbSearch } from '../hooks/useKbQueries';
 import { articleReference, type ArticleSummary } from '../model/article';
 
@@ -37,9 +38,11 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
 export const ArticlePickerPanel: React.FC<ArticlePickerPanelProps> = ({
   onInsert,
   onClose,
-  heading = 'Insert a Knowledge Base article',
+  heading,
   autoFocus = false,
 }) => {
+  const { t } = useT('knowledge');
+  const resolvedHeading = heading ?? t('picker.defaultHeading');
   const [term, setTerm] = useState('');
   const debounced = useDebouncedValue(term, 250);
   const { data, isFetching, isError, refetch } = useKbSearch(debounced);
@@ -57,23 +60,23 @@ export const ArticlePickerPanel: React.FC<ArticlePickerPanelProps> = ({
   return (
     <div className="kb-picker">
       <div className="kb-picker-head">
-        <h2 className="kb-picker-title">{heading}</h2>
+        <h2 className="kb-picker-title">{resolvedHeading}</h2>
         {onClose && (
-          <button type="button" className="dt-icon-btn fv" aria-label="Close article picker" onClick={onClose}>
+          <button type="button" className="dt-icon-btn fv" aria-label={t('picker.close')} onClick={onClose}>
             ✕
           </button>
         )}
       </div>
 
       <label className="tq-sr-only" htmlFor="kb-picker-search">
-        Search knowledge base articles
+        {t('picker.searchLabel')}
       </label>
       <input
         id="kb-picker-search"
         className="search-input kb-picker-input"
         type="search"
         autoFocus={autoFocus}
-        placeholder="Search articles, guides, and FAQs…"
+        placeholder={t('picker.searchPlaceholder')}
         value={term}
         onChange={(e) => setTerm(e.target.value)}
       />
@@ -81,20 +84,18 @@ export const ArticlePickerPanel: React.FC<ArticlePickerPanelProps> = ({
       {/* Result count is announced, so a screen-reader user is told the list
           changed rather than having to re-read it. */}
       <div className="tq-sr-only" role="status" aria-live="polite">
-        {hasQuery && !isFetching ? `${results.length} articles found` : ''}
+        {hasQuery && !isFetching ? t('picker.resultsFound', { count: results.length }) : ''}
       </div>
 
       {isError ? (
         <div className="kb-picker-state">
-          <p>Articles could not be loaded.</p>
+          <p>{t('picker.loadError')}</p>
           <button type="button" className="dt-btn dt-btn-outline fv" onClick={() => refetch()}>
-            Try again
+            {t('picker.tryAgain')}
           </button>
         </div>
       ) : !hasQuery ? (
-        <p className="kb-picker-state kb-picker-hint">
-          Type to search the Knowledge Base. Choosing a result inserts a link into your reply.
-        </p>
+        <p className="kb-picker-state kb-picker-hint">{t('picker.hint')}</p>
       ) : isFetching && results.length === 0 ? (
         <div className="kb-picker-list" aria-busy="true">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -105,10 +106,10 @@ export const ArticlePickerPanel: React.FC<ArticlePickerPanelProps> = ({
         // Never a blank list, and never a spinner that resolves to nothing —
         // the query is quoted back and a broader search is suggested.
         <div className="kb-picker-state">
-          <p className="kb-picker-empty-title">No articles match “{data?.query ?? debounced}”</p>
-          <p className="kb-picker-empty-body">
-            Try a broader search — fewer words, or a more general term.
+          <p className="kb-picker-empty-title">
+            {t('picker.noMatchTitle', { query: data?.query ?? debounced })}
           </p>
+          <p className="kb-picker-empty-body">{t('picker.noMatchBody')}</p>
         </div>
       ) : (
         <ul className="kb-picker-list">

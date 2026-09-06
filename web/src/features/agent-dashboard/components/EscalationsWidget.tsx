@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PriorityBadge } from '../../tickets';
-import { formatRelative } from '../../../i18n';
+import { useT, formatRelative } from '../../../i18n';
 import { useTeamEscalations } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -11,35 +11,36 @@ import { widgetState, emptyList } from '../model/widgetState';
  * to the ticket and Stories 04/05 own the action.
  */
 export function EscalationsWidget() {
+  const { t } = useT('dashboard');
   const query = useTeamEscalations();
   const state = widgetState(query, emptyList);
   const rows = query.data ?? [];
 
   return (
     <DashboardWidget
-      title="Current Escalations"
+      title={t('escalations.title')}
       state={state}
       onRetry={() => query.refetch()}
-      errorMessage="Escalations couldn't load."
-      emptyMessage="No active escalations. Tickets raised to you by an agent will appear here."
+      errorMessage={t('escalations.loadError')}
+      emptyMessage={t('escalations.empty')}
     >
       <ul className="escalation-list">
-        {rows.map((t) => (
-          <li key={t.id}>
-            <Link to={`/tickets/${t.id}`} className="escalation-item">
+        {rows.map((item) => (
+          <li key={item.id}>
+            <Link to={`/tickets/${item.id}`} className="escalation-item">
               <span className="escalation-main">
                 <span className="escalation-subject">
                   <span dir="ltr" className="tq-ltr">
-                    {t.reference}
+                    {item.reference}
                   </span>{' '}
-                  {t.subject}
+                  {item.subject}
                 </span>
                 <span className="escalation-meta">
-                  Escalated by {t.escalated_by_name ?? 'Unknown'}
-                  {t.escalated_at ? ` · ${formatRelative(t.escalated_at)}` : ''}
+                  {t('escalations.escalatedBy', { name: item.escalated_by_name ?? t('escalations.unknown') })}
+                  {item.escalated_at ? ` · ${formatRelative(item.escalated_at)}` : ''}
                 </span>
               </span>
-              <PriorityBadge priority={t.priority} label={t.priority_label} />
+              <PriorityBadge priority={item.priority} label={item.priority_label} />
             </Link>
           </li>
         ))}

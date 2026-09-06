@@ -1,5 +1,6 @@
 import { useReportRange } from '../hooks/useReportRange';
 import { useReportSummary } from '../hooks/useReportSummary';
+import { useT } from '../../../i18n';
 import { RangePicker } from '../components/RangePicker';
 import { TicketVolumeCard } from '../components/TicketVolumeCard';
 import { SlaComplianceCard } from '../components/SlaComplianceCard';
@@ -17,13 +18,14 @@ import type { ReportSummary } from '../model/report';
  * different, stale range. Five named cards — no metric sprawl, no sixth widget.
  */
 export function ReportsPage() {
+  const { t } = useT('reports');
   const { from, to } = useReportRange();
   const query = useReportSummary(from, to);
 
   return (
     <div className="rp-page">
       <header className="rp-head">
-        <h1 className="rp-title">Reports</h1>
+        <h1 className="rp-title">{t('title')}</h1>
         <RangePicker />
       </header>
 
@@ -31,9 +33,9 @@ export function ReportsPage() {
 
       {query.isError && (
         <div className="rp-state rp-state-error" role="alert">
-          <p>The report couldn&apos;t load.</p>
+          <p>{t('loadError')}</p>
           <button type="button" className="rp-retry" onClick={() => query.refetch()}>
-            Try again
+            {t('tryAgain')}
           </button>
         </div>
       )}
@@ -66,8 +68,9 @@ function Cards({ data }: { data: ReportSummary }) {
 }
 
 function LoadingState() {
+  const { t } = useT('reports');
   return (
-    <div className="rp-grid" role="status" aria-label="Loading report">
+    <div className="rp-grid" role="status" aria-label={t('loadingLabel')}>
       {Array.from({ length: 4 }).map((_, i) => (
         <div key={i} className="rp-card rp-card-skeleton">
           <span className="rp-skeleton-row" />
@@ -80,9 +83,10 @@ function LoadingState() {
 }
 
 function EmptyState() {
+  const { t } = useT('reports');
   return (
     <div className="rp-state rp-state-empty">
-      <p>No ticket activity in this date range yet. Pick a wider range to see report figures.</p>
+      <p>{t('emptyState')}</p>
     </div>
   );
 }

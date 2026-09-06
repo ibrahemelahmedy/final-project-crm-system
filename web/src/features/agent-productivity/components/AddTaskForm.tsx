@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { taskSchema, type TaskFormValues } from '../model/taskSchema';
+import { useT } from '../../../i18n';
+import { makeTaskSchema, type TaskFormValues } from '../model/taskSchema';
 import { useCreateTicketTask } from '../hooks/useTicketTasks';
 import { useMentionableUsers } from '../hooks/useMentionableUsers';
 import { useAuth } from '../../auth/AuthContext';
@@ -10,6 +11,8 @@ type Props = { ticketId: number; onDone: () => void; onCancel: () => void };
 
 /** The "New task" form (`10.WisalTicketTasks` · "Add task form" artboard). */
 export function AddTaskForm({ ticketId, onDone, onCancel }: Props) {
+  const { t } = useT('productivity');
+  const taskSchema = useMemo(() => makeTaskSchema(t), [t]);
   const { user } = useAuth();
   const { data: colleagues } = useMentionableUsers(ticketId, true);
   const createTask = useCreateTicketTask(ticketId);
@@ -34,34 +37,34 @@ export function AddTaskForm({ ticketId, onDone, onCancel }: Props) {
       });
       onDone();
     } catch {
-      setServerError('The task could not be saved. Try again.');
+      setServerError(t('addTask.saveFailed'));
     }
   });
 
   return (
     <form className="add-task-form" onSubmit={onSubmit}>
-      <p className="add-task-form-title">New task</p>
+      <p className="add-task-form-title">{t('addTask.title')}</p>
 
       <label className="add-task-field">
-        <span>Task</span>
+        <span>{t('addTask.taskLabel')}</span>
         <input
           type="text"
           className="fv"
-          placeholder="e.g. Call customer back on Thursday"
+          placeholder={t('addTask.placeholder')}
           {...register('title')}
         />
         {errors.title && <span className="add-task-error">{errors.title.message}</span>}
       </label>
 
       <label className="add-task-field">
-        <span>Due date &amp; time</span>
+        <span>{t('addTask.dueDateTime')}</span>
         <input type="datetime-local" className="fv" {...register('due_at')} />
       </label>
 
       <label className="add-task-field">
-        <span>Assignee</span>
+        <span>{t('addTask.assignee')}</span>
         <select className="fv" {...register('assignee_id', { valueAsNumber: true })}>
-          {user && <option value={user.id}>{user.name} (me)</option>}
+          {user && <option value={user.id}>{user.name} {t('addTask.me')}</option>}
           {colleagues?.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -74,10 +77,10 @@ export function AddTaskForm({ ticketId, onDone, onCancel }: Props) {
 
       <div className="add-task-actions">
         <button type="button" className="tq-btn-outline" onClick={onCancel}>
-          Cancel
+          {t('addTask.cancel')}
         </button>
         <button type="submit" className="tq-btn-primary" disabled={isSubmitting}>
-          Save task
+          {t('addTask.save')}
         </button>
       </div>
     </form>

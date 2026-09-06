@@ -1,3 +1,4 @@
+import { useT } from '../../../i18n';
 import { useAdminSummary } from '../hooks/useDashboardQueries';
 import { AdminEntryCard } from '../components/AdminEntryCard';
 
@@ -24,46 +25,50 @@ const logIcon = (
  * The audit-log card points at Story 08's `/users/audit-log` viewer.
  */
 export function AdminDashboardPage() {
+  const { t } = useT('dashboard');
   const summary = useAdminSummary();
   const s = summary.data;
   const err = summary.isError;
 
-  const count = (n: number | undefined, noun: string) =>
-    n === undefined ? null : `${n} ${noun}${n === 1 ? '' : 's'}`;
-
   return (
     <div className="dash-page">
       <header className="dash-head">
-        <h1 className="dash-title">Admin overview</h1>
-        <p className="dash-subtitle">Platform configuration and oversight</p>
+        <h1 className="dash-title">{t('admin.heading')}</h1>
+        <p className="dash-subtitle">{t('admin.subtitle')}</p>
       </header>
 
       <div className="admin-card-grid">
         <AdminEntryCard
           icon={usersIcon}
           tone="indigo"
-          title="User Management"
-          subtitle={count(s?.user_count, 'internal user')}
+          title={t('admin.userManagement')}
+          subtitle={s?.user_count === undefined ? null : t('admin.userCount', { count: s.user_count })}
           subtitleError={err}
-          cta="Manage users"
+          cta={t('admin.manageUsers')}
           to="/users"
         />
         <AdminEntryCard
           icon={shieldIcon}
           tone="green"
-          title="SLA Rule Configuration"
-          subtitle={count(s?.active_sla_rule_count, 'active rule')}
+          title={t('admin.slaRuleConfig')}
+          subtitle={
+            s?.active_sla_rule_count === undefined
+              ? null
+              : t('admin.slaRuleCount', { count: s.active_sla_rule_count })
+          }
           subtitleError={err}
-          cta="Configure rules"
+          cta={t('admin.configureRules')}
           to="/sla-rules"
         />
         <AdminEntryCard
           icon={logIcon}
           tone="amber"
-          title="Audit Log"
-          subtitle={count(s?.audit_log_count, 'recorded event')}
+          title={t('admin.auditLog')}
+          subtitle={
+            s?.audit_log_count === undefined ? null : t('admin.auditLogCount', { count: s.audit_log_count })
+          }
           subtitleError={err}
-          cta="View log"
+          cta={t('admin.viewLog')}
           // Repointed by Story 08, which owns the audit viewer route.
           to="/users/audit-log"
         />

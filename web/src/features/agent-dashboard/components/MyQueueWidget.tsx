@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PriorityBadge, SlaCell } from '../../tickets';
+import { useT } from '../../../i18n';
 import { useAgentQueue } from '../hooks/useDashboardQueries';
 import { DashboardWidget } from './DashboardWidget';
 import { widgetState, emptyList } from '../model/widgetState';
@@ -10,49 +11,50 @@ import { widgetState, emptyList } from '../model/widgetState';
  * `GET /api/dashboard/agent/queue`; owns its own query and four states.
  */
 export function MyQueueWidget() {
+  const { t } = useT('dashboard');
   const query = useAgentQueue();
   const state = widgetState(query, emptyList);
   const tickets = query.data ?? [];
 
   return (
     <DashboardWidget
-      title="My Queue"
+      title={t('myQueue.title')}
       state={state}
       onRetry={() => query.refetch()}
-      errorMessage="Your queue couldn't load."
-      emptyMessage="No tickets assigned to you yet — new work will show up here."
+      errorMessage={t('myQueue.loadError')}
+      emptyMessage={t('myQueue.empty')}
       emptyAction={
         <Link className="dw-empty-link" to="/tickets">
-          Browse the ticket queue
+          {t('myQueue.browseQueue')}
         </Link>
       }
     >
-      <div className="mq-table" role="table" aria-label="My queue">
+      <div className="mq-table" role="table" aria-label={t('myQueue.ariaLabel')}>
         <div className="mq-row mq-head" role="row">
-          <span role="columnheader">ID</span>
-          <span role="columnheader">SUBJECT</span>
-          <span role="columnheader">CUSTOMER</span>
-          <span role="columnheader">PRIORITY</span>
-          <span role="columnheader">SLA LEFT</span>
+          <span role="columnheader">{t('myQueue.columns.id')}</span>
+          <span role="columnheader">{t('myQueue.columns.subject')}</span>
+          <span role="columnheader">{t('myQueue.columns.customer')}</span>
+          <span role="columnheader">{t('myQueue.columns.priority')}</span>
+          <span role="columnheader">{t('myQueue.columns.slaLeft')}</span>
         </div>
-        {tickets.map((t) => (
-          <Link key={t.id} to={`/tickets/${t.id}`} className="mq-row mq-body" role="row">
+        {tickets.map((ticket) => (
+          <Link key={ticket.id} to={`/tickets/${ticket.id}`} className="mq-row mq-body" role="row">
             <span role="cell" className="mq-id">
               <span dir="ltr" className="tq-ltr">
-                {t.reference}
+                {ticket.reference}
               </span>
             </span>
             <span role="cell" className="mq-subject">
-              {t.subject}
+              {ticket.subject}
             </span>
             <span role="cell" className="mq-customer">
-              {t.customer?.name ?? '—'}
+              {ticket.customer?.name ?? '—'}
             </span>
             <span role="cell">
-              <PriorityBadge priority={t.priority} label={t.priority_label} />
+              <PriorityBadge priority={ticket.priority} label={ticket.priority_label} />
             </span>
             <span role="cell">
-              <SlaCell sla={t.sla} />
+              <SlaCell sla={ticket.sla} />
             </span>
           </Link>
         ))}

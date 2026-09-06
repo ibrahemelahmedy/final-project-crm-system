@@ -6,10 +6,10 @@ import { DataTableEmpty } from '../../../components/data-table/DataTableEmpty';
 import { DataTableError } from '../../../components/data-table/DataTableError';
 import { Pagination } from '../../../components/data-table/Pagination';
 import type { ColumnDef } from '../../../components/data-table/types';
+import { useT, formatDateTime } from '../../../i18n';
 import { useAuditLogParams } from '../hooks/useAuditLogParams';
 import { useAuditLogFacets, useAuditLogs } from '../hooks/useAuditLogs';
 import { FilterChip } from '../components/FilterChip';
-import { formatTimestamp } from '../model/relativeTime';
 import type { AuditLogEntry } from '../model/adminUser';
 
 /**
@@ -23,56 +23,60 @@ import type { AuditLogEntry } from '../model/adminUser';
  *
  * Pagination is server-side and mandatory — the log grows unbounded.
  */
-const auditColumns: ColumnDef<AuditLogEntry>[] = [
-  {
-    id: 'created_at',
-    header: 'WHEN',
-    width: '170px',
-    locked: true,
-    cell: (row) => <span dir="ltr">{formatTimestamp(row.created_at)}</span>,
-  },
-  {
-    id: 'actor',
-    header: 'ACTOR',
-    width: '1.4fr',
-    // A deleted actor keeps the retained email (audit_logs.user_id is
-    // nullOnDelete), which the resource already resolves into actor.name.
-    cell: (row) => (
-      <span className="audit-actor">
-        <span>{row.actor.name}</span>
-        {row.actor.id === null && <span className="audit-actor-note">(no longer a user)</span>}
-      </span>
-    ),
-  },
-  {
-    id: 'event',
-    header: 'ACTION',
-    width: '1.2fr',
-    cell: (row) => <span className="audit-event">{row.event_label}</span>,
-  },
-  {
-    id: 'target',
-    header: 'TARGET',
-    width: '1.4fr',
-    cell: (row) => (
-      <span style={{ color: 'var(--text-muted)' }}>
-        {row.target.label ?? (row.target.id !== null ? `#${row.target.id}` : '—')}
-      </span>
-    ),
-  },
-  {
-    id: 'ip',
-    header: 'IP',
-    width: '130px',
-    cell: (row) => (
-      <span style={{ color: 'var(--text-muted)' }} dir="ltr">
-        {row.ip_address ?? '—'}
-      </span>
-    ),
-  },
-];
+function makeAuditColumns(t: (key: string) => string): ColumnDef<AuditLogEntry>[] {
+  return [
+    {
+      id: 'created_at',
+      header: t('auditLog.columns.when'),
+      width: '170px',
+      locked: true,
+      cell: (row) => <span dir="ltr">{row.created_at ? formatDateTime(row.created_at) : '—'}</span>,
+    },
+    {
+      id: 'actor',
+      header: t('auditLog.columns.actor'),
+      width: '1.4fr',
+      // A deleted actor keeps the retained email (audit_logs.user_id is
+      // nullOnDelete), which the resource already resolves into actor.name.
+      cell: (row) => (
+        <span className="audit-actor">
+          <span>{row.actor.name}</span>
+          {row.actor.id === null && <span className="audit-actor-note">{t('auditLog.noLongerUser')}</span>}
+        </span>
+      ),
+    },
+    {
+      id: 'event',
+      header: t('auditLog.columns.action'),
+      width: '1.2fr',
+      cell: (row) => <span className="audit-event">{row.event_label}</span>,
+    },
+    {
+      id: 'target',
+      header: t('auditLog.columns.target'),
+      width: '1.4fr',
+      cell: (row) => (
+        <span style={{ color: 'var(--text-muted)' }}>
+          {row.target.label ?? (row.target.id !== null ? `#${row.target.id}` : '—')}
+        </span>
+      ),
+    },
+    {
+      id: 'ip',
+      header: t('auditLog.columns.ip'),
+      width: '130px',
+      cell: (row) => (
+        <span style={{ color: 'var(--text-muted)' }} dir="ltr">
+          {row.ip_address ?? '—'}
+        </span>
+      ),
+    },
+  ];
+}
 
 export const AuditLogPage: React.FC = () => {
+  const { t } = useT('users');
+  const auditColumns = useMemo(() => makeAuditColumns(t), [t]);
   const [params, setParams, isFiltered] = useAuditLogParams();
   const { data, isLoading, isError, refetch, isPlaceholderData } = useAuditLogs(params);
   const { data: facets } = useAuditLogFacets();
@@ -93,15 +97,12 @@ export const AuditLogPage: React.FC = () => {
     <div className="audit-log-page">
       <div className="page-title-row">
         <div>
-          <h1>Audit Log</h1>
-          <p className="page-subtitle">
-            Every sensitive action, with actor, action, target, and timestamp. Entries can never be edited or
-            deleted.
-          </p>
+          <h1>{t('auditLog.title')}</h1>
+          <p className="page-subtitle">{t('auditLog.subtitle')}</p>
         </div>
         <div className="page-title-actions">
           <Link to="/users" className="dt-btn dt-btn-outline fv">
-            Back to Users
+            {t('auditLog.backToUsers')}
           </Link>
         </div>
       </div>
@@ -109,15 +110,15 @@ export const AuditLogPage: React.FC = () => {
       <div className="toolbar-row">
         <div className="facet-row">
           <FilterChip
-            label="Actor"
+            label={t('auditLog.filterActor')}
             mode="single"
             options={actorOptions}
             selected={params.actor_id ? [String(params.actor_id)] : []}
-            emptySummary="Anyone"
+            emptySummary={t('auditLog.anyActor')}
             onChange={([actorId]) => setParams({ actor_id: actorId ? Number(actorId) : null })}
           />
           <FilterChip
-            label="Action"
+            label={t('auditLog.filterAction')}
             mode="multi"
             options={(facets?.events ?? []).map((e) => ({
               value: e.value,
@@ -128,7 +129,7 @@ export const AuditLogPage: React.FC = () => {
             onChange={(event) => setParams({ event })}
           />
           <label className="date-range-field">
-            <span>From</span>
+            <span>{t('auditLog.from')}</span>
             <input
               type="date"
               value={params.from}
@@ -137,7 +138,7 @@ export const AuditLogPage: React.FC = () => {
             />
           </label>
           <label className="date-range-field">
-            <span>To</span>
+            <span>{t('auditLog.to')}</span>
             <input
               type="date"
               value={params.to}
@@ -151,7 +152,7 @@ export const AuditLogPage: React.FC = () => {
               className="dt-btn dt-btn-outline dt-btn-sm fv"
               onClick={() => setParams({ actor_id: null, event: [], from: '', to: '', q: '' })}
             >
-              Clear filters
+              {t('auditLog.clearFilters')}
             </button>
           )}
         </div>
@@ -165,11 +166,11 @@ export const AuditLogPage: React.FC = () => {
         ) : rows.length === 0 ? (
           isFiltered ? (
             <DataTableEmpty
-              title="No entries match these filters"
-              body="No audit entries match the selected actor, action, or date range. Widen the range or clear the filters."
+              title={t('auditLog.emptyFilteredTitle')}
+              body={t('auditLog.emptyFilteredBody')}
               actions={[
                 {
-                  label: 'Clear filters',
+                  label: t('auditLog.clearFilters'),
                   variant: 'outline',
                   onClick: () => setParams({ actor_id: null, event: [], from: '', to: '', q: '' }),
                 },
@@ -177,8 +178,8 @@ export const AuditLogPage: React.FC = () => {
             />
           ) : (
             <DataTableEmpty
-              title="No audit entries yet"
-              body="Sensitive actions are recorded here as they happen — user changes, role changes, SLA rule changes, and configuration changes."
+              title={t('auditLog.emptyTitle')}
+              body={t('auditLog.emptyBody')}
             />
           )
         ) : (
@@ -187,14 +188,14 @@ export const AuditLogPage: React.FC = () => {
               rows={rows}
               columns={auditColumns}
               getRowId={(row) => row.id}
-              getRowLabel={(row) => `${row.event_label} by ${row.actor.name}`}
+              getRowLabel={(row) => t('auditLog.rowLabel', { event: row.event_label, actor: row.actor.name })}
               selectedIds={selectedIds}
               onSelectionChange={setSelectedIds}
               // Nothing on this page is sortable: the log is strictly newest
               // first, which is the only order an append-only trail has.
               sort={null}
               onSortChange={() => {}}
-              caption="Audit log"
+              caption={t('auditLog.caption')}
             />
             <Pagination
               currentPage={data?.meta.current_page ?? 1}

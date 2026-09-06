@@ -1,5 +1,6 @@
 import type { AgentsBlock } from '../model/report';
 import { formatMinutes } from '../model/report';
+import { useT } from '../../../i18n';
 import { ReportCard } from './ReportCard';
 
 /**
@@ -9,21 +10,22 @@ import { ReportCard } from './ReportCard';
  * make period totals stop reconciling — and it renders with a marker.
  */
 export function AgentPerformanceCard({ block }: { block: AgentsBlock }) {
+  const { t } = useT('reports');
   return (
     <ReportCard
-      title="Agent Performance"
+      title={t('agentPerformance.title')}
       available={block.available}
-      emptyMessage="No agent resolved a ticket in this date range."
+      emptyMessage={t('agentPerformance.empty')}
     >
       <table className="rp-agents">
         <thead>
           <tr>
-            <th scope="col">Agent</th>
+            <th scope="col">{t('agentPerformance.columns.agent')}</th>
             <th scope="col" className="rp-num">
-              Resolved
+              {t('agentPerformance.columns.resolved')}
             </th>
             <th scope="col" className="rp-num">
-              Avg. Response
+              {t('agentPerformance.columns.avgResponse')}
             </th>
           </tr>
         </thead>
@@ -32,7 +34,7 @@ export function AgentPerformanceCard({ block }: { block: AgentsBlock }) {
             <tr key={row.user_id}>
               <td>
                 {row.name}
-                {row.deactivated && <span className="rp-agent-inactive"> · deactivated</span>}
+                {row.deactivated && <span className="rp-agent-inactive"> {t('agentPerformance.deactivated')}</span>}
               </td>
               <td className="rp-num" dir="ltr">
                 {row.resolved}

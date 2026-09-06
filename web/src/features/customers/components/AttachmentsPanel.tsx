@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
+import { useT } from '../../../i18n';
 import {
   useCustomerAttachments,
   useDeleteCustomerAttachment,
@@ -14,13 +15,13 @@ import type { CustomerAttachment } from '../model/customer';
 const MAX_CLIENT_MB = 10;
 const ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'txt', 'csv', 'doc', 'docx', 'xls', 'xlsx'];
 
-function clientValidate(file: File): string | null {
+function clientValidate(file: File, t: (key: string, opts?: Record<string, unknown>) => string): string | null {
   const ext = file.name.split('.').pop()?.toLowerCase();
   if (!ext || !ALLOWED_EXTENSIONS.includes(ext)) {
-    return `That file type is not accepted. Allowed types: ${ALLOWED_EXTENSIONS.map((e) => e.toUpperCase()).join(', ')}.`;
+    return t('attachments.typeNotAccepted', { types: ALLOWED_EXTENSIONS.map((e) => e.toUpperCase()).join(', ') });
   }
   if (file.size > MAX_CLIENT_MB * 1024 * 1024) {
-    return `That file is too large. The limit is ${MAX_CLIENT_MB} MB.`;
+    return t('attachments.tooLarge', { limit: MAX_CLIENT_MB });
   }
   return null;
 }
@@ -30,6 +31,7 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
   canDeleteAny,
   currentUserId,
 }) => {
+  const { t } = useT('customers');
   const { data, isLoading, isError, refetch } = useCustomerAttachments(customerId);
   const upload = useUploadCustomerAttachment(customerId);
   const remove = useDeleteCustomerAttachment(customerId);
@@ -41,7 +43,7 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
   const handleFile = async (file: File | null) => {
     if (!file) return;
     setError(null);
-    const clientError = clientValidate(file);
+    const clientError = clientValidate(file, t);
     if (clientError) {
       setError(clientError);
       return;
@@ -51,9 +53,9 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 422) {
         const messages = err.response.data?.errors?.file;
-        setError(messages?.[0] ?? err.response.data?.message ?? 'That file could not be uploaded.');
+        setError(messages?.[0] ?? err.response.data?.message ?? t('attachments.uploadFailed'));
       } else {
-        setError('That file could not be uploaded.');
+        setError(t('attachments.uploadFailed'));
       }
     }
   };
@@ -71,8 +73,8 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
   };
 
   return (
-    <section className="profile-panel" aria-label="Attachments">
-      <h2>Attachments</h2>
+    <section className="profile-panel" aria-label={t('attachments.heading')}>
+      <h2>{t('attachments.heading')}</h2>
 
       <label
         className="dropzone"
@@ -91,7 +93,7 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M12 3v12 M7 10l5-5 5 5 M4 21h16" />
         </svg>
-        <span>Drag files here or click to browse</span>
+        <span>{t('attachments.dropzoneHint')}</span>
         <input
           ref={inputRef}
           type="file"
@@ -102,16 +104,16 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
 
       {error && <p className="form-error">{error}</p>}
 
-      {isLoading && <p className="dt-empty-body">Loading attachments…</p>}
+      {isLoading && <p className="dt-empty-body">{t('attachments.loading')}</p>}
       {isError && (
         <div>
-          <p className="dt-empty-body">Something went wrong loading attachments.</p>
+          <p className="dt-empty-body">{t('attachments.error')}</p>
           <button type="button" className="dt-btn dt-btn-outline fv" onClick={() => refetch()}>
-            Try again
+            {t('attachments.tryAgain')}
           </button>
         </div>
       )}
-      {!isLoading && !isError && (data?.data.length ?? 0) === 0 && <p className="dt-empty-body">No attachments yet.</p>}
+      {!isLoading && !isError && (data?.data.length ?? 0) === 0 && <p className="dt-empty-body">{t('attachments.empty')}</p>}
 
       <ul className="attachment-list">
         {data?.data.map((attachment) => {
@@ -120,10 +122,10 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
             <li key={attachment.id} className="attachment-row">
               <span className="attachment-name">{attachment.original_name}</span>
               <span className="attachment-meta">
-                {attachment.size_label} · {attachment.uploaded_by?.name ?? 'Unknown'}
+                {attachment.size_label} · {attachment.uploaded_by?.name ?? t('attachments.unknownUploader')}
               </span>
               <button type="button" className="dt-btn dt-btn-outline fv" onClick={() => download(attachment)}>
-                Download
+                {t('attachments.download')}
               </button>
               {canDelete && (
                 <button
@@ -131,7 +133,7 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
                   className="dt-btn dt-btn-danger-outline fv"
                   onClick={() => setPendingDelete(attachment)}
                 >
-                  Remove
+                  {t('attachments.remove')}
                 </button>
               )}
             </li>
@@ -142,9 +144,9 @@ export const AttachmentsPanel: React.FC<{ customerId: number; canDeleteAny: bool
       {pendingDelete && (
         <ConfirmDialog
           open
-          title={`Remove ${pendingDelete.original_name}?`}
-          body="This attachment will be permanently removed from the customer record."
-          confirmLabel="Remove"
+          title={t('attachments.removeConfirmTitle', { name: pendingDelete.original_name })}
+          body={t('attachments.removeConfirmBody')}
+          confirmLabel={t('attachments.remove')}
           tone="danger"
           isPending={remove.isPending}
           onCancel={() => setPendingDelete(null)}

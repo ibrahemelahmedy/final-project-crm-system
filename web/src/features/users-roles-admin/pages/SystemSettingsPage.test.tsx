@@ -164,7 +164,7 @@ describe('SystemSettingsPage', () => {
     await waitFor(() =>
       expect(vi.mocked(adminApi.updateSettings)).toHaveBeenCalledWith({ password_min_length: 14 })
     );
-    await screen.findByText('Saved 1 change(s).');
+    await screen.findByText('Saved 1 change.');
   });
 
   it('reports when nothing actually changed', async () => {

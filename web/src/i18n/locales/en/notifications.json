@@ -1,1 +1,15 @@
-{}
+{
+  "ariaLabel": "Notifications",
+  "title": "Notifications",
+  "markAllRead": "Mark all as read",
+  "loadErrorTitle": "Couldn't load notifications",
+  "loadErrorBody": "Check your connection and try again.",
+  "retry": "Retry",
+  "emptyTitle": "You're all caught up",
+  "emptyBody": "No notifications right now — check back later.",
+  "viewAll": "View all notifications",
+  "noLongerAvailable": "No longer available",
+  "filterAriaLabel": "Filter notifications",
+  "filterAll": "All",
+  "filterUnread": "Unread"
+}

@@ -1,4 +1,5 @@
 import { useAuth } from '../../auth/AuthContext';
+import { useT } from '../../../i18n';
 import { greeting } from '../model/greeting';
 import { useAgentSummary } from '../hooks/useDashboardQueries';
 import { StatTile } from '../components/StatTile';
@@ -13,6 +14,7 @@ import { QuickRepliesWidget } from '../components/QuickRepliesWidget';
  * then correct, not a bug.
  */
 export function AgentDashboardPage() {
+  const { t } = useT('dashboard');
   const { user } = useAuth();
   const summary = useAgentSummary();
   const s = summary.data;
@@ -20,26 +22,26 @@ export function AgentDashboardPage() {
   return (
     <div className="dash-page">
       <header className="dash-head">
-        <h1 className="dash-title">{greeting(user?.name ?? 'there')}</h1>
-        <p className="dash-subtitle">Here's what needs your attention today</p>
+        <h1 className="dash-title">{greeting(user?.name ?? 'there', t)}</h1>
+        <p className="dash-subtitle">{t('agent.subtitle')}</p>
       </header>
 
       <div className="stat-tile-row">
         <StatTile
-          label="Assigned to me"
+          label={t('agent.assignedToMe')}
           value={s?.assigned_count ?? 0}
           loading={summary.isPending}
           error={summary.isError}
         />
         <StatTile
-          label="Approaching SLA breach"
+          label={t('agent.approachingSlaBreach')}
           value={s?.sla_risk_count ?? 0}
           tone="warning"
           loading={summary.isPending}
           error={summary.isError}
         />
         <StatTile
-          label="Resolved today"
+          label={t('agent.resolvedToday')}
           value={s?.resolved_today_count ?? 0}
           tone="success"
           loading={summary.isPending}

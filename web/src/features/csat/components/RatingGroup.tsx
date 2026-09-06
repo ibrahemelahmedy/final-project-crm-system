@@ -1,5 +1,3 @@
-import type { CsatStrings } from '../model/csatStrings';
-
 /**
  * Story 13 — the 1–5 rating control, ported from the design export's
  * `.rating-group`. It is a REAL radio group: five `<input type="radio">` with
@@ -11,28 +9,29 @@ import type { CsatStrings } from '../model/csatStrings';
  * label, and an emoji, and selection is reflected by the radio's `checked`
  * state, not a colour class alone.
  */
+const RATINGS = [1, 2, 3, 4, 5] as const;
+
 export function RatingGroup({
   value,
   onChange,
   disabled = false,
   readOnly = false,
-  strings,
+  t,
 }: {
   value: number | null;
   onChange?: (rating: number) => void;
   disabled?: boolean;
   readOnly?: boolean;
-  strings: CsatStrings;
+  t: (key: string, opts?: Record<string, unknown>) => string;
 }) {
   return (
     <div
       className="csat-rating-group"
       role={readOnly ? 'group' : 'radiogroup'}
-      aria-label={strings.ratingGroupLabel}
+      aria-label={t('ratingGroupLabel')}
       data-readonly={readOnly || undefined}
     >
-      {strings.ratingOptions.map((label, i) => {
-        const rating = i + 1;
+      {RATINGS.map((rating) => {
         const selected = value === rating;
         return (
           <div className="csat-rating-option" key={rating} data-selected={selected || undefined}>
@@ -49,9 +48,9 @@ export function RatingGroup({
             )}
             <label htmlFor={readOnly ? undefined : `csat-r${rating}`} className="csat-rating-label">
               <span className="csat-rating-emoji" aria-hidden="true">
-                {strings.ratingEmojis[i]}
+                {t(`ratingEmoji.${rating}`)}
               </span>
-              {label}
+              {t(`rating.${rating}`)}
             </label>
           </div>
         );

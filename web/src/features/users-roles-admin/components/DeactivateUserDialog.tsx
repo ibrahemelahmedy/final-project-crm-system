@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Modal } from '../../../components/ui/Modal';
+import { useT } from '../../../i18n';
 import type { AdminUser } from '../model/adminUser';
 import { useDeactivateUser } from '../hooks/useUserMutations';
 
@@ -25,6 +26,7 @@ export const DeactivateUserDialog: React.FC<{
   onClose: () => void;
   onDeactivated?: (user: AdminUser) => void;
 }> = ({ open, user, onClose, onDeactivated }) => {
+  const { t } = useT('users');
   const cancelRef = useRef<HTMLButtonElement>(null);
   // The error is tagged with the user it belongs to rather than cleared by an
   // effect on `open` — a stale message must never appear over a DIFFERENT
@@ -59,10 +61,10 @@ export const DeactivateUserDialog: React.FC<{
       if (axios.isAxiosError(err) && err.response?.status === 422) {
         const payload = err.response.data ?? {};
         const firstFieldError = Object.values((payload.errors ?? {}) as Record<string, string[]>)[0]?.[0];
-        fail(firstFieldError ?? payload.message ?? 'This user cannot be deactivated.');
+        fail(firstFieldError ?? payload.message ?? t('deactivateDialog.cannotDeactivate'));
         return;
       }
-      fail('Something went wrong. Try again.');
+      fail(t('deactivateDialog.genericError'));
     }
   };
 
@@ -71,17 +73,14 @@ export const DeactivateUserDialog: React.FC<{
       open={open}
       onClose={onClose}
       titleId="deactivate-user-title"
-      title={`Deactivate ${user.name}?`}
+      title={t('deactivateDialog.title', { name: user.name })}
       width={420}
     >
       <p className="modal-confirm-body">
-        {user.name} will not be able to sign in, and <strong>their active sessions end immediately</strong> — any
-        device they are signed in on is signed out on its next request.
+        {t('deactivateDialog.bodyBeforeStrong', { name: user.name })}{' '}
+        <strong>{t('deactivateDialog.bodyStrong')}</strong> {t('deactivateDialog.bodyAfterStrong')}
       </p>
-      <p className="modal-confirm-body">
-        Their tickets and audit history stay attributed to them. You can reactivate the account later; they will
-        need to sign in again.
-      </p>
+      <p className="modal-confirm-body">{t('deactivateDialog.bodyFooter')}</p>
 
       {visibleError && (
         <p className="form-error" role="alert">
@@ -91,7 +90,7 @@ export const DeactivateUserDialog: React.FC<{
 
       <div className="modal-footer modal-footer-end">
         <button type="button" ref={cancelRef} className="dt-btn dt-btn-outline fv" onClick={onClose}>
-          Cancel
+          {t('deactivateDialog.cancel')}
         </button>
         <button
           type="button"
@@ -99,7 +98,7 @@ export const DeactivateUserDialog: React.FC<{
           disabled={deactivate.isPending}
           onClick={confirm}
         >
-          {deactivate.isPending ? 'Working…' : 'Deactivate User'}
+          {deactivate.isPending ? t('deactivateDialog.working') : t('deactivateDialog.confirm')}
         </button>
       </div>
     </Modal>

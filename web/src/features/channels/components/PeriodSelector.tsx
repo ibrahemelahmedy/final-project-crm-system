@@ -1,5 +1,6 @@
-import { CHANNEL_PERIODS, PERIOD_LABELS } from '../model/channel';
+import { CHANNEL_PERIODS, periodLabel } from '../model/channel';
 import { useChannelPeriod } from '../hooks/useChannelPeriod';
+import { useT } from '../../../i18n';
 
 /**
  * The segmented period control from the artboard. Writes the choice to the
@@ -7,10 +8,11 @@ import { useChannelPeriod } from '../hooks/useChannelPeriod';
  * card chrome — it follows the document direction and mirrors under RTL.
  */
 export function PeriodSelector() {
+  const { t } = useT('channels');
   const { period, setPeriod } = useChannelPeriod();
 
   return (
-    <div className="ch-periods" role="group" aria-label="Ticket count period">
+    <div className="ch-periods" role="group" aria-label={t('period.ariaLabel')}>
       {CHANNEL_PERIODS.map((option) => (
         <button
           key={option}
@@ -19,7 +21,7 @@ export function PeriodSelector() {
           aria-pressed={period === option}
           onClick={() => setPeriod(option)}
         >
-          {PERIOD_LABELS[option]}
+          {periodLabel(option, t)}
         </button>
       ))}
     </div>

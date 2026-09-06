@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useT } from '../../../i18n';
 import { useMentionableUsers } from '../hooks/useMentionableUsers';
 import type { MentionableUser } from '../model/mentionableUser';
 
@@ -21,6 +22,7 @@ export const MentionAutocomplete: React.FC<MentionAutocompleteProps> = ({
   onSelect,
   onDismiss,
 }) => {
+  const { t } = useT('productivity');
   const { data, isLoading } = useMentionableUsers(ticketId, true);
   const [activeIndex, setActiveIndex] = useState(0);
   // Reset the highlighted row during render when the query changes — the
@@ -63,8 +65,8 @@ export const MentionAutocomplete: React.FC<MentionAutocompleteProps> = ({
   if (!isLoading && matches.length === 0) return null;
 
   return (
-    <div className="mention-panel" role="listbox" aria-label="Mention a colleague">
-      <span className="mention-panel-label">COLLEAGUES</span>
+    <div className="mention-panel" role="listbox" aria-label={t('mention.ariaLabel')}>
+      <span className="mention-panel-label">{t('mention.colleagues')}</span>
       {isLoading ? (
         <span className="sk mention-skeleton" />
       ) : (
@@ -87,8 +89,8 @@ export const MentionAutocomplete: React.FC<MentionAutocompleteProps> = ({
         </ul>
       )}
       <div className="mention-panel-keys" aria-hidden="true">
-        <span>↑↓ navigate</span>
-        <span>Enter insert</span>
+        <span>{t('keyboard.navigate')}</span>
+        <span>{t('keyboard.insert')}</span>
       </div>
     </div>
   );
