@@ -7,6 +7,10 @@ escalations; Administrators own users, roles, SLA policy, integrations and the o
 branches, departments and branding. Everything ships in Arabic and English, right-to-left and
 left-to-right, light and dark.
 
+**Live:** [k1-wisal.vercel.app](https://k1-wisal.vercel.app) — sign in as `agent@wisal.test`,
+`lead@wisal.test` or `admin@wisal.test`, password `Password123!`, to see the three roles. Or run
+it locally in [about a minute](#1-run-it-in-60-seconds).
+
 This README is the project's documentation. It is written to be read start to finish: what the
 system does, how it is built, why it is built that way, how it was planned and verified, and
 where it is honestly incomplete. Every claim below points at the file that proves it.
@@ -17,6 +21,7 @@ where it is honestly incomplete. Every claim below points at the file that prove
 
 | Section | What you get |
 |---|---|
+| [Screens](#screens) | What it actually looks like — light, dark, Arabic RTL, admin |
 | [1. Run it in 60 seconds](#1-run-it-in-60-seconds) | Clone → migrate → seed → login |
 | [2. What was asked for, and what shipped](#2-what-was-asked-for-and-what-shipped) | The 12 requirement categories, each with a status and a reason, plus the assumptions taken |
 | [3. Architecture](#3-architecture) | Layers, request lifecycle, error handling, the deliberate structural decisions |
@@ -32,6 +37,51 @@ where it is honestly incomplete. Every claim below points at the file that prove
 | [13. Deployment](#13-deployment) | Vercel, Supabase, the one cron line |
 | [14. Repository map](#14-repository-map) | Where everything lives |
 | [ملخص بالعربية](#ملخص-بالعربية) | Arabic summary |
+
+---
+
+## Screens
+
+Captured from the running application against real seeded data — not mockups, and not the design
+exports (those live in [docs/design/references/](docs/design/references)). Every screen below is
+reachable in about a minute by following [section 1](#1-run-it-in-60-seconds).
+
+**Agent — the role-based home.** Assigned volume, SLA risk and the working queue, in one view.
+
+![Agent dashboard](docs/screenshots/02-agent-dashboard.png)
+
+**The ticket queue.** Priority, status, assignee and time-left-on-SLA as columns, with faceted
+filters and bulk actions.
+
+![Ticket queue](docs/screenshots/03-ticket-queue.png)
+
+**The conversation thread.** One multi-channel thread, the customer and SLA context beside it, and
+a composer that can insert a knowledge-base article or a saved reply — and switch between a public
+reply and an internal note.
+
+![Conversation thread](docs/screenshots/04-conversation-thread.png)
+
+**The same screen in dark mode.** Not a filter — a full token set; every surface, border and
+status colour is defined twice.
+
+![Conversation thread in dark mode](docs/screenshots/05-conversation-thread-dark.png)
+
+**Arabic, right-to-left.** The layout mirrors, the navigation and table move to the right, and
+server-sent status and priority labels come back in Arabic — the same screen, not a translated
+copy of it.
+
+![Ticket queue in Arabic, right to left](docs/screenshots/06-ticket-queue-arabic-rtl.png)
+
+**Administrator — SLA policy.** Response and resolution targets per priority, with the escalation
+each breach triggers. Editing a rule applies to future tickets only.
+
+![SLA rules administration](docs/screenshots/08-sla-rules-admin.png)
+
+**Administrator — reports.** Volume over time, SLA compliance, agent performance, channel mix and
+CSAT over a selectable range. The panels with no data in range render an explicit empty state
+rather than a zero.
+
+![Reports dashboard](docs/screenshots/07-reports-admin.png)
 
 ---
 
@@ -729,11 +779,10 @@ Two Vercel projects, one PostgreSQL database on Supabase.
   * * * * * php artisan schedule:run
   ```
 
-**Current state of the hosted environments**, checked on 2026-09-06: the API deployment is up —
-`https://wisal-crm-api.vercel.app/api/user` answers `401`, which is the correct response to an
-unauthenticated call. The SPA deployment at `wisal-crm-web.vercel.app` is **not currently
-serving** (Vercel `404: NOT_FOUND`); it needs a redeploy. Until it is back, run the frontend
-locally — [section 1](#1-run-it-in-60-seconds) takes about a minute.
+**Both environments are live**, verified on 2026-09-06: the SPA serves at
+[k1-wisal.vercel.app](https://k1-wisal.vercel.app) and its `/api/*` rewrite reaches the API
+deployment — an unauthenticated `GET /api/user` answers `401` and a seeded login answers `200`
+with a token. (An older `wisal-crm-web.vercel.app` URL is dead and should not be used.)
 
 Three deployment failures are already documented rather than rediscovered: bootstrap cache,
 API origin mismatch, and script-name routing —

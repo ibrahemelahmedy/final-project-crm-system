@@ -1,582 +1,408 @@
 # Story 16 — i18n String Extraction Retrofit: Complete WIS-11 Coverage (Story: WIS-17)
 
-> **Full-depth plan.** Every path, line number, and count below was verified against the working tree
-> on 2026-09-02. WIS-11 (Story 15) shipped the i18n **infrastructure** and migrated two feature
-> folders. This story closes the retrofit across the remaining eleven roots that
-> `web/scripts/i18n-allowlist.json`'s `_rootsNote` lists as pending.
->
-> **The intake's acceptance criteria are marked "draft — refine during planning."** They are refined
-> here, and the one place where two of them conflict is resolved explicitly in
-> **Decision 1**. Read that before anything else.
+> **Replan, 2026-09-06.** The first cut of this plan covered eleven pending roots. Two of them
+> — `src/components` (via `common`) and `src/features/tickets` (via `tickets` + `conversation`) —
+> and the whole of the checker-coverage work have since shipped. **This plan is scoped to what
+> is actually left: the nine remaining roots.** Every number below was re-measured against the
+> working tree on 2026-09-06, not carried over.
+
+---
 
 ## Prerequisites
 
-- **Story 15 / WIS-11 completed** ([`../internationalization/15-story-internationalization.md`](../internationalization/15-story-internationalization.md)).
-  Its machinery is **consumed, not redesigned** (intake, Dependencies):
-  - `web/src/i18n/instance.ts` (i18next 26, JSON v4 plurals, `missGuard`, `parseMissingKeyHandler`),
-    `web/src/i18n/index.ts` (`useT` at **:25–28**, `NAMESPACES`), `web/src/i18n/formatters.ts`
-    (`formatDate` / `formatDateTime` / `formatRelative` / `formatNumber`, `numberingSystem: 'latn'`).
-  - `web/src/app/providers/UiPreferencesContext.tsx` — `locale` source, `direction` derived (**:56, :64**),
-    `<html lang>`/`<html dir>` (**:93–94**), `setLocale` persists + PATCHes (**:117–129**).
-  - `web/src/lib/api.ts:43–52` — the `Accept-Language` interceptor.
-  - `web/scripts/check-no-literals.mjs` + `web/scripts/i18n-allowlist.json` + `npm run i18n:check`
-    (wired into `npm run lint` via `web/package.json`) + `web/src/i18n/noHardcodedStrings.test.ts`.
-  - `api/`: `users.locale`, `PATCH /api/user/preferences`, `SetLocale` at `api/bootstrap/app.php:38`,
-    `api/lang/{en,ar}/{auth,enums,passwords,sla,validation}.php`.
-  **Nothing in the list above changes in this story**, with the single narrow exception in Task 1.
-- **Stories 03–14 completed** — the code whose literals get extracted.
-- **Story 13** ([`../csat-collection/13-story-csat-collection.md`](../csat-collection/13-story-csat-collection.md))
-  — its public CSAT page has no signed-in user; its browser-detection rule survives this story verbatim.
-- **Baseline, measured 2026-09-02.** `npx vitest run` in `web/` → **64 files, 424 tests, all passing**.
-  `node scripts/check-no-literals.mjs` → passes over its 4 configured roots. Backend: ~10 `Customer*`
-  Pest tests fail on `main` independently of this work — that is the clean baseline, not a regression
-  from here.
+- **Story 15 (WIS-11) completed** — [`../internationalization/15-story-internationalization.md`](../internationalization/15-story-internationalization.md).
+  It shipped i18next, `useT`, the four `Intl` formatters, `UiPreferencesContext.locale`, the
+  `Accept-Language` interceptor, the Arabic font stack, `SetLocale`, `users.locale`, and
+  `web/scripts/check-no-literals.mjs`. This story **consumes** that machinery and redesigns none of it.
+- **The checker-coverage extension is already landed.** `check-no-literals.mjs` (348 lines) now scans
+  `.ts` as well as `.tsx`, carries an 18-entry `TARGET_ATTRS` set (**:36–55**), and emits four violation
+  kinds — `jsx-text`, `attr:<name>`, `object-literal`, `zod-message`. Decision 1(a)–(d) of the original
+  plan is **done**; do not redo it.
+- **Two roots are already migrated and must not be re-planned or re-touched:** `src/components`
+  (folded into `common`) and `src/features/tickets` (into `tickets`, with `components/thread/` in
+  `conversation`). `node scripts/check-no-literals.mjs` passes today over **171 files / 10 roots**.
+- **Coordinate with nothing.** Stories 17–20 (`portal`, `integrations`, `ai-assist`, `organization`)
+  each added their own root and shipped compliant. This story never has to retrofit them.
 
 ---
 
 ## Story Goal
 
-Move the hard-coded English literals in the eleven pending roots into the existing translation
-namespaces, following the pattern `src/features/auth` and `src/features/sla-rules` already established,
-and add each root to `web/scripts/i18n-allowlist.json`'s `roots` array as its migration completes.
-`roots` is the acceptance signal; `_rootsNote` is the pending list this story deletes.
+Move every remaining hard-coded user-facing literal out of nine feature folders and into the
+translation catalogues WIS-11 established, then add each folder to
+`web/scripts/i18n-allowlist.json`'s `roots` array — **the array is the acceptance signal, and a root
+joins it only when its literals are gone.**
 
-1. All **12** empty feature catalogues under `web/src/i18n/locales/{en,ar}/` are populated in both locales.
-2. All **11** pending roots are in `roots`, and the check passes with zero unlisted-literal violations.
-3. An Arabic screen in a migrated folder shows **no English** — which, per Decision 1, requires the
-   check to see three literal shapes it is currently blind to.
-4. New non-translatable tokens found during migration are added to `literals` / `patterns` **with a
-   reason**, never left unlisted.
+At the end of this story:
 
-**Explicitly out of scope**, per the intake and confirmed during planning:
+1. `roots` holds **19** entries — the 10 that pass today plus the nine below — and
+   `node scripts/check-no-literals.mjs` exits `0` over all of them.
+2. `_rootsNote`'s "Pending:" sentence is **deleted**, because nothing is pending.
+3. Nine catalogue pairs that ship as empty `{}` today (`customers`, `knowledge`, `notifications`,
+   `reports`, `users`, `dashboard`, `productivity`, `channels`, `csat` — in both `en` and `ar`) are
+   populated, and `catalogueParity.test.ts` passes against them.
+4. Every `Intl` / `toLocale*` call inside those nine folders is replaced by a `web/src/i18n` formatter,
+   so a language switch actually changes the rendered date, number, and relative time.
+5. Every naive `n === 1 ? … : …` pluralization inside those nine folders becomes a
+   `t(key, { count })` with all six Arabic CLDR forms.
 
-- **New translatable copy or features.** This is a retrofit of existing UI text only.
-- **Non-text RTL / layout defects.** WIS-11's existing surface.
-- **Backend English.** Only 6 of 143 PHP files under `api/app` call `__()`; 7 enums, 7 Request classes,
-  and several services return raw English that reaches an Arabic screen. **This is real and verified,
-  and it is not WIS-17.** The inventory is preserved in *Found during planning — outside this story*
-  below so it can be filed as its own tracker item.
-- **Rewiring every date/number through `web/src/i18n/formatters.ts`, and any new enforcement rule for
-  it.** Only the locale bugs *inside the eleven migrated folders* are fixed here (Task 3).
-- The four deferred categories (AI, Customer Portal, Integrations/ERP, Platform multi-tenant).
+**Not in scope:** new translatable copy; non-text RTL/layout defects (WIS-11's surface); the backend
+(**no file under `api/` is modified** — see *Found during planning*); and the two roots already shipped.
 
 ---
 
 ## Context — Read These Files First
 
-1. [`../internationalization/15-story-internationalization.md`](../internationalization/15-story-internationalization.md)
-   — **Shared contracts this story establishes** (key convention `namespace:screen.element`, the
-   namespace table) and **Decisions this story makes explicitly** (client-side `Intl`, Latin digits).
-   Inherited unchanged.
-2. `web/scripts/check-no-literals.mjs` — read end to end (154 lines). Both rules live in `scanSource`
-   (**:68–102**): `ts.isJsxText` at **:73**, and the attribute rule at **:78–93**. `TARGET_ATTRS`
-   (**:37**) is exactly `title`, `aria-label`, `placeholder`, `alt`. `collectFiles` (**:49–66**) takes
-   **`.tsx` only** (**:62**). `runCheck` (**:109–120**) reads `config.roots` — which is why the
-   allowlist file is the single control point and the intake can call `roots` the acceptance signal.
-3. `web/scripts/i18n-allowlist.json` — **lines 3–8** the four enforced roots; **line 9** the
-   `_rootsNote` pending list this story deletes; **lines 10–19** the exemptions, which grow (with
-   reasons) and never loosen.
-4. `web/src/i18n/index.ts:25–28` — `useT(ns)` pins a namespace and keeps `common` as fallback.
-   Components import from here and nowhere deeper.
-5. `web/src/i18n/catalogueParity.test.ts` — **:19** `AR_PLURAL_SUFFIXES`, **:23–25** `collapsePlurals`,
-   **:47–62** the six-form assertion. **This test passes today only because the twelve feature
-   catalogues are `{}`.** It becomes a real gate the moment they are populated.
-6. `web/src/i18n/locales/{en,ar}/sla.json` — the worked precedent for a populated namespace, including
-   `subtitle_{zero,one,two,few,many,other}` (`ar/sla.json:3–8`) and the nested `duration.minutes_*` block.
-7. `web/src/features/sla-rules/` — the worked precedent for a converted feature: `useT('sla')` at
-   `components/DurationField.tsx:28`, `SlaRuleCard.tsx:33`, `SlaRuleFormModal.tsx:52`,
-   `SlaRulesEmpty.tsx:10`, `SlaRulesError.tsx:10`, `pages/SlaRulesPage.tsx:23`. Its
-   `pages/SlaRulesPage.tsx:51` — `t('subtitle', { count: activeCount })` — is the **only correct
-   pluralization site in the codebase**. Copy that shape.
-8. `web/src/features/sla-rules/model/formatDuration.ts:31–43` — the precedent for localizing a `.ts`
-   module (`t` passed in). **Read its flaw:** `t` is optional, so **:42** keeps
-   `` `${value} ${singular}${value === 1 ? '' : 's'}` `` alive inside a migrated feature.
-9. `web/src/features/tickets/model/display.ts` — the archetype: label maps at **:21–27**, **:28–34**,
-   **:35–42**, **:44–50**, none of which any current rule can see.
-10. `web/src/features/csat/model/csatStrings.ts:1–8` — the file header instructs WIS-11 to absorb this
-    module **while keeping the browser-detection rule**. It was not absorbed. `detectCsatLocale`
-    (**:113–115**) and `csatDir` (**:117–119**) survive unchanged.
-11. `docs/design/brief.md` `## Internationalization` (**lines 199–206**) — RTL mirrors table **column
-    order**, relevant to every `columns.tsx` touched here.
-
-Run these before starting, to see the shape of the work:
-
-- `cd web && node scripts/check-no-literals.mjs src/features/tickets` — 91 violations, the largest root.
-- `cd web && node scripts/check-no-literals.mjs src/components src/features/customers …` — 396 total.
+1. `web/scripts/i18n-allowlist.json` — the whole file (44 lines). The `roots` array (**:3–14**) is what
+   this story grows; `_rootsNote` (**:15**) names the nine pending folders and is deleted at the end.
+   Note the three existing `patterns` — in particular the dotted-key pattern
+   `^[a-z][a-zA-Z0-9]*(\.[a-z][a-zA-Z0-9_]+)+$`, added by this story's first pass so a **key map**
+   (a `Record<Enum, string>` holding `'priority.low'`) does not itself trip the checker.
+2. `web/scripts/check-no-literals.mjs` — read `TARGET_ATTRS` (**:36–55**) and the four violation kinds.
+   **Read only; this story changes no rule.** Run it per-folder with an explicit path argument
+   (`node scripts/check-no-literals.mjs src/features/customers`) to see a folder's violations before
+   the root is added.
+3. `web/src/i18n/index.ts` — the entire public surface (49 lines). `useT(ns)` (**:26–29**) pins a
+   namespace and keeps `common` reachable as fallback; `formatDate` / `formatDateTime` /
+   `formatRelative` / `formatNumber` are re-exported at **:14**. **Components import from
+   `web/src/i18n` and nowhere deeper.**
+4. `web/src/i18n/formatters.ts` — the four signatures at **:26**, **:38**, **:62**, **:80**.
+   `formatRelative(value, now?)` already produces `just now` / `yesterday` / `in 3 days` via
+   `numeric: 'auto'`; several folders below hand-roll exactly this and their tables get deleted.
+5. `web/src/i18n/instance.ts` — `NAMESPACES` (**:42–60**, 17 entries). All nine namespaces this story
+   fills **already exist and are already registered**; you are populating files, not adding namespaces.
+6. `web/src/features/sla-rules/` — **the reference implementation.** Read
+   `model/formatDuration.ts` and `model/formatDuration.test.ts` together: the sentence-composing
+   function takes `t` as a parameter and the test drives it with
+   `i18n.getFixedT('en', 'sla')`. Every `model/*.ts` conversion below follows this exact shape.
+   Grep for `useT(` across `src/features/sla-rules/` for the six component call sites.
+7. `web/src/i18n/locales/en/common.json` and `.../ar/common.json` — already populated. Reuse
+   `actions.*`, `state.*`, and the `table.*` block (`table.selected_one` / `table.selected_other`,
+   `table.clearSelection`, `table.loadError`, …) rather than re-keying them per feature.
+8. `web/src/i18n/locales/ar/tickets.json` — the **plural precedent**. Grep for `_zero` to see the six
+   CLDR forms every count-bearing Arabic key must ship.
+9. `web/src/i18n/catalogueParity.test.ts` — the gate. `collapsePlurals` (**:24–26**) and
+   `AR_PLURAL_SUFFIXES` (**:22**) are why an Arabic count key missing `_two` / `_few` / `_many` fails CI.
 
 ---
 
-## Measured scope (verified 2026-09-02, not estimated)
+## Measured scope (verified 2026-09-06 by running the checker per folder)
 
-**Tier 1 — literals the *current* rules would flag once the roots are added: 396.**
+**488 violations across 165 non-test files in nine roots.** Migrate largest-first; one folder per commit.
 
-| Root | Violations | Target namespace |
-|---|---:|---|
-| `src/features/tickets` (excl. `components/thread/`) | 52 | `tickets` |
-| `src/features/tickets/components/thread/` | 39 | `conversation` |
-| `src/features/agent-productivity` | 63 | `productivity` |
-| `src/features/customers` | 57 | `customers` |
-| `src/features/knowledge-base` | 48 | `knowledge` |
-| `src/features/users-roles-admin` | 40 | `users` |
-| `src/features/agent-dashboard` | 24 | `dashboard` |
-| `src/features/reports` | 21 | `reports` |
-| `src/features/notifications` | 20 | `notifications` |
-| `src/components` (`data-table` 11 + `ui` 2) | 13 | `common` |
-| `src/features/channels` | 10 | `channels` |
-| `src/features/csat` | 9 | `csat` |
-| **Total** | **396** | |
+| Root | `jsx-text` | `attr:*` | `object-literal` | `zod-message` | Total | Namespace |
+|---|---|---|---|---|---|---|
+| `src/features/customers` | 49 | 32 | 6 | 2 | **89** | `customers` |
+| `src/features/users-roles-admin` | 45 | 26 | 9 | 3 | **83** | `users` |
+| `src/features/agent-productivity` | 60 | 12 | 0 | 4 | **76** | `productivity` |
+| `src/features/knowledge-base` | 46 | 16 | 8 | 4 | **74** | `knowledge` |
+| `src/features/agent-dashboard` | 21 | 28 | 0 | 0 | **49** | `dashboard` |
+| `src/features/csat` | 9 | 2 | 29 | 0 | **40** | `csat` |
+| `src/features/reports` | 14 | 13 | 3 | 0 | **30** | `reports` |
+| `src/features/channels` | 10 | 2 | 15 | 0 | **27** | `channels` |
+| `src/features/notifications` | 18 | 2 | 0 | 0 | **20** | `notifications` |
 
-**Two mappings the intake leaves implicit, pinned here.** There is no `web/src/features/conversation/`;
-the conversation thread is `web/src/features/tickets/components/thread/` (20 files) and owns the
-**`conversation`** namespace — so the intake's single `src/features/tickets` entry funds **two**
-catalogues. And `src/components` is shared chrome, so it extends **`common`** rather than gaining a
-namespace of its own.
-
-**Tier 2 — roughly 246 further literals that stay invisible even after the roots are added**, in three
-shapes. This is the evidence behind Decision 1.
-
-1. **`.ts` files are never opened** (`check-no-literals.mjs:62`): `tickets/model/display.ts:21–50`,
-   `tickets/model/columns.ts:28–36` (9 column labels), `channels/model/channel.ts:40–121` (14 labels +
-   help lines), `users-roles-admin/model/adminUser.ts:12–14`,
-   `users-roles-admin/model/relativeTime.ts:13,16,22`, `agent-productivity/model/dueStateLabel.ts:14–44`,
-   `agent-dashboard/model/greeting.ts:4`, `notifications/model/notificationTime.ts:16`,
-   `csat/model/csatStrings.ts:43–74`.
-2. **Prose in props outside `TARGET_ATTRS`** — `emptyMessage`, `errorMessage`, `body`, `caption`,
-   `confirmLabel`, `cta`, `label`, `heading`, `message`, `emptySummary`. **21** bare-literal instances,
-   e.g. `agent-dashboard/components/SlaRiskWidget.tsx:32–33`,
-   `reports/components/TicketVolumeCard.tsx:22,24`,
-   `users-roles-admin/pages/AuditLogPage.tsx:169,181,197`, `tickets/pages/TicketDetailPage.tsx:120`.
-3. **Ternaries and template literals in JSX expression containers**, which `scanSource` walks past
-   because it matches only `ts.isStringLiteral` initializers (**:81–89**). ~25 sites, e.g.
-   `users-roles-admin/components/StatusPill.tsx:9`, `tickets/components/SlaCell.tsx:36`,
-   `tickets/components/thread/ActivityList.tsx:8–20` (7 templated sentences),
-   `components/data-table/DataTable.tsx:89`, `components/data-table/ColumnMenu.tsx:23`.
-
-**Tier 3 — locale bugs inside the eleven folders** (Task 3; the enforcement rule for them is out of scope):
-
-- **21 direct `Intl` / `toLocale*` sites in 15 files. All 14 `Intl` constructions pass `undefined`** as
-  the locale, and **9 are module-level constants** — bound at import, unable to follow a language
-  switch: `users-roles-admin/model/relativeTime.ts:8,39`, `agent-productivity/model/dueStateLabel.ts:8,9`,
-  `notifications/model/notificationTime.ts:9`, `knowledge-base/model/columns.tsx:8`,
-  `customers/model/columns.tsx:8`, `customers/components/InteractionHistory.tsx:5`,
-  `customers/components/NotesPanel.tsx:4`.
-- `reports/model/report.ts:111` hard-codes `'en-US'` — that axis **never** becomes Arabic.
-- `csat/pages/CsatResponsePage.tsx:24` maps by hand to **`'ar-EG'`**, rendering **Eastern Arabic
-  numerals** — contradicting WIS-11's Latin-digits decision.
-- `reports/components/CsatCard.tsx:25,37` use `.toFixed(2)` — a hard-coded decimal separator.
-- **13 naive `count === 1` plural sites.** These are English string literals in components, so they are
-  Tier-1 work regardless (Task 4).
-- `web/src/i18n/formatters.ts` has **zero importers**; the only `formatDate` outside `src/i18n/` is a
-  local shadow at `csat/pages/CsatResponsePage.tsx:21`.
+**17 locale-broken formatting sites** and **8 naive plural sites** sit inside these folders; both
+lists are enumerated in Tasks 1 and 2 and are fixed as part of their owning folder's commit.
 
 ---
 
 ## Decisions this story makes explicitly
 
-**1 — AC1 and AC2 conflict under the current checker. Coverage is extended; the mechanism is not
-redesigned.**
+**1 — Label maps become KEY maps; sentence builders take a REQUIRED `t`.**
+A `Record<Enum, string>` of display labels becomes a `Record<Enum, string>` of **i18n keys**, and the
+component calls `t(MAP[value])`. Pure data stays pure data, and a static dotted key is exempted by the
+allowlist pattern already in place. A function that composes a sentence takes `t` as a **required**
+parameter — the shape `formatDuration(minutes, t)` established. **Required, not optional:** an optional
+`t` is exactly what kept an English default branch alive inside an already-migrated feature. Update
+call sites and tests; do **not** keep an English fallback branch "for tests" — tests use
+`i18n.getFixedT('en', ns)`, as `formatDuration.test.ts` already does.
 
-The intake's Dependencies say the check machinery is "consumed, not redesigned." Its AC1 asks for the
-eleven roots in `roots` with zero violations, and AC2 asks that an Arabic screen show no English. **Both
-cannot hold as the checker stands.** Adding all eleven roots today makes AC1 pass while ~246 literals —
-every `.ts` label map, every `emptyMessage`, every `'Active' : 'Inactive'` — render English on an
-Arabic screen. AC1 would certify AC2 false.
+**2 — Server `*_label` fields stay authoritative.** Client-side enum maps are **fallbacks** that become
+keys. They do not become the primary source, and no new client-side enum map is introduced. Where an
+enum's server `label()` returns raw English, that is **out of scope** — recorded below, not patched on
+the client.
 
-Resolution: **widen what the checker SEES; change no rule it applies.** The AST walk, the allowlist
-format, `runCheck`'s contract, the `npm run i18n:check` wiring, and the test that asserts it all stay
-exactly as WIS-11 built them. Three coverage extensions, and one rule that the first of them requires:
+**3 — Arabic plural keys are mandatory, and `catalogueParity.test.ts` is the gate.** Every
+count-bearing key ships `_zero` / `_one` / `_two` / `_few` / `_many` / `_other` in `ar` and
+`_one` / `_other` in `en`.
 
-- **(a) Scan `.ts` as well as `.tsx`** — `check-no-literals.mjs:62`.
-- **(b) Widen `TARGET_ATTRS`** (**:37**) with the prop names verified to carry prose.
-- **(c) Walk `ConditionalExpression` and `TemplateExpression`** inside JSX initializers and children,
-  instead of stopping at `ts.isStringLiteral` (**:81–89**).
-- **(d) One new rule, because (a) does nothing without it.** A `.ts` file contains no JSX, so the two
-  existing rules find **literally zero** in one — and the three `model/columns.tsx` files hold their
-  headers as object properties, not JSX. So (a) is inert unless the checker can see a **string-valued
-  property of an object literal**. That is rule (d), filtered by a prose test (contains a space, two or
-  more `\p{L}{2,}` runs, and none of `-` `_` `/` `.` `:` — which matches `'Live chat'` and skips
-  `'dt-btn dt-btn-primary fv'`), plus a name-based shortcut for single-word maps: every string-valued
-  property of an exported `const` whose identifier matches
-  `/(LABELS?|COPY|STRINGS|MESSAGES|OPTIONS|PRESENTATION)$/i`.
+**4 — Formatting fixes are scoped to these nine folders and add no enforcement.** The 17 sites break
+AC2 visibly on an Arabic screen, so they are fixed here by calling the formatters WIS-11 exports. **No
+`no-direct-Intl` checker rule is added**, and no audit of the rest of the tree is performed.
 
-  **This is a real addition and is called out as one.** It is the minimum that makes AC1 imply AC2. If
-  it is rejected in review, then AC2 must be struck from this story's Done Criteria rather than
-  silently certified by AC1.
+**5 — The CSAT public page keeps browser detection.** `detectCsatLocale`
+(`csat/model/csatStrings.ts:113–115`) remains the page's locale authority, **behaviourally unchanged**.
+Its strings move into the `csat` namespace; the page drives i18next with the detected locale and
+**never calls `setLocale`** — the page is public and has no signed-in user to persist a preference for.
 
-**Deliberately NOT added** (recorded, not done): a Zod-`message:` rule, and a `no-direct-Intl` rule.
-Zod messages are caught incidentally by rule (d) where they are prose; the ~22 in 7 schema files are
-migrated by hand in Task 5 either way. `no-direct-Intl` is out of scope per the formatting decision below.
-
-**2 — Label maps become KEY maps; sentence builders take a REQUIRED `t`.**
-
-- A `Record<Enum, string>` of display labels becomes a `Record<Enum, string>` of **i18n keys**; the
-  component calls `t(MAP[value])`. Pure data stays pure data, and the key is a static string rule (d)
-  can see.
-- A function that composes a sentence takes `t` as a **required** parameter — the shape
-  `formatDuration` established, but **required, not optional**. An optional `t` is exactly what kept
-  `formatDuration.ts:42`'s `value === 1 ? '' : 's'` alive inside a migrated feature. Update call sites
-  and tests; do not keep an English default branch "for tests."
-
-**3 — Server `*_label` fields stay authoritative.** `TicketResource` already ships
-`priority_label` / `status_label` / `channel_label` resolved through `api/lang/{en,ar}/enums.php`. The
-client maps at `tickets/model/display.ts:21–42` are **fallbacks**. They become keys; they do **not**
-become the primary source, and no new client-side enum map is introduced. Where an enum's server
-`label()` returns raw English, that is **out of scope** — recorded below, not patched on the client.
-
-**4 — Arabic plural keys are mandatory, and the parity test is the gate.**
-`catalogueParity.test.ts:47–62` already asserts all six CLDR forms whenever either locale defines
-`<base>_one` or `<base>_other`. It is vacuous today. Every count-bearing key extracted in Tasks 2 and 5
-ships `_zero`/`_one`/`_two`/`_few`/`_many`/`_other` in `ar` and `_one`/`_other` in `en`.
-
-**5 — Formatting fixes are scoped to the eleven folders and add no enforcement.** The 21 sites in
-Tier 3 sit inside the folders being migrated and visibly break AC2 on an Arabic screen, so they are
-fixed here by calling the formatters WIS-11 already exports. No `no-direct-Intl` rule is added, and no
-audit of the rest of the tree is performed — that is a separate concern.
-
-**6 — The CSAT public page keeps browser detection.** `detectCsatLocale`
-(`csatStrings.ts:113–115`) remains the page's locale authority, unchanged. Its strings move into the
-`csat` namespace and the page drives i18next with the detected locale.
+**6 — No new namespaces, no new allowlist rules expected.** All nine namespaces are registered in
+`instance.ts:42–60`. If migration turns up a genuinely non-translatable token (an icon glyph, an ISO
+code), add it to `literals` **with a reason** — per the intake's third acceptance criterion. Do not
+add a root to `roots` to silence a violation you have not actually migrated.
 
 ---
 
 ## Implementation tasks
 
-### 1 — Extend the checker's coverage, then fix the fallout in the four current roots
+### 1 — Fix the 17 locale-broken formatting sites
 
-**File: `web/scripts/check-no-literals.mjs`** — apply (a)–(d) from Decision 1. Keep both existing rules,
-`isAllowed` (**:39–47**), the allowlist format, and `runCheck`'s return shape (**:119**) unchanged, so
-`noHardcodedStrings.test.ts` and `npm run i18n:check` keep working untouched.
+Every one of these binds or hard-codes a locale, so an Arabic screen renders English-formatted dates
+and numbers. Nine are **module-level `const`s**, which bind at import and cannot follow a language
+switch even once the locale argument is correct — **each must become a per-call construction** through
+the shared formatters.
 
-**Validate rule (d) before wiring it in.** Run it over all of `web/src`, review every hit, and confirm
-each is a real literal or an allowlist entry with a reason. If it proves noisy, narrow its scope to
-`src/features/**/model/**` plus the exported-const shortcut — **do not delete it**, or extension (a) is
-inert and AC2 is unenforceable.
+| File | Line(s) | Defect | Replacement |
+|---|---|---|---|
+| `customers/components/InteractionHistory.tsx` | 5 | module `Intl.DateTimeFormat(undefined, …)` | `formatDate(iso, { day: 'numeric', month: 'short', year: 'numeric' })` |
+| `customers/components/NotesPanel.tsx` | 4 | module `Intl.DateTimeFormat` | `formatDate` with the same options |
+| `customers/model/columns.tsx` | 8 | module `Intl.DateTimeFormat` | `formatDate` |
+| `customers/components/CustomerFormModal.tsx` | 174 | `.toLocaleDateString()` | `formatDate` |
+| `knowledge-base/model/columns.tsx` | 8 | module `Intl.DateTimeFormat` | `formatDate` |
+| `notifications/model/notificationTime.ts` | 9 | module `Intl.DateTimeFormat` | `formatDate(iso, { day: 'numeric', month: 'short' })` |
+| `reports/model/report.ts` | 111 | **hard-coded `'en-US'`** | `formatDate(iso, { month: 'short', day: 'numeric' })` |
+| `users-roles-admin/model/relativeTime.ts` | 8 | module `Intl.RelativeTimeFormat` | `formatRelative` |
+| `users-roles-admin/model/relativeTime.ts` | 39 | module `Intl.DateTimeFormat` | `formatDateTime` |
+| `agent-productivity/model/dueStateLabel.ts` | 8 | module `Intl.DateTimeFormat` | `formatDate` |
+| `agent-productivity/model/dueStateLabel.ts` | 9 | module `Intl.RelativeTimeFormat` | `formatRelative` |
+| `agent-productivity/pages/QuickRepliesPage.tsx` | 136 | `.toLocaleDateString()` | `formatDate` |
+| `channels/components/ChannelCard.tsx` | 40 | `.toLocaleString()` on a number | `formatNumber` |
+| `csat/pages/CsatResponsePage.tsx` | 21–28 | local `formatDate` with **`'ar-EG'`** | `formatDateTime` — removes the Eastern-Arabic-numeral defect (WIS-11 pinned Latin digits, `numberingSystem: 'latn'`) |
 
-**File: `web/scripts/i18n-allowlist.json`** — add exemptions **with reasons** for what the new coverage
-legitimately catches: the SVG path data at `tickets/model/display.ts:7–13` (`CHANNEL_ICON_PATHS`), and
-the channel/category **slug** arrays at `agent-productivity/pages/QuickRepliesPage.tsx:13` and
-`components/QuickReplyEditModal.tsx:16` (API values — translate the display, never the value). Nothing
-is exempted because fixing it is tedious.
+**Delete, do not rewrite:**
 
-**Then fix what the new coverage exposes inside today's four roots** — the check must be green before
-Task 5 begins:
+- `users-roles-admin/model/relativeTime.ts` (53 lines) — `formatLastActive` (**:10**) and
+  `formatTimestamp` (**:48**) are `formatRelative` and `formatDateTime` with extra steps. Keep only
+  the `'Never'` branch, as a `users:` key.
+- `agent-productivity/model/dueStateLabel.ts` (53 lines) — the `today` / `yesterday` / `tomorrow` /
+  `now` table inside `dueStateLabel` (**:26**) is exactly what `formatRelative` with `numeric: 'auto'`
+  already produces. Delete the table; keep only the `Overdue ·` / `Due soon ·` / `Completed ·` frames
+  as `productivity:` keys, and give the function a required `t`.
+- **`'Just now'` is implemented twice** — `notifications/model/notificationTime.ts:11` and
+  `users-roles-admin/model/relativeTime.ts:10`. Both are `formatRelative`'s sub-minute output.
+  Delete both; do **not** create two keys for one string.
 
-- `web/src/features/sla-rules/model/formatDuration.ts:31–43` — make `t` **required**, delete the
-  English fallback at **:42** (Decision 2). Update `SlaRuleCard.tsx`, `DurationField.tsx`, and
-  `formatDuration.test.ts`.
-- `web/src/features/sla-rules/model/slaRuleSchema.ts:26,30` and `web/src/features/auth/loginSchema.ts`
-  — Zod messages to keys. **Both files sit in "guarded" roots and pass today**, which is the clearest
-  single proof that the roots array alone gives false confidence.
+### 2 — Fix the 8 naive plural sites
 
-### 2 — Extend `common` for shared chrome (`src/components`, 13 violations)
+Each becomes `t('<key>', { count: n })` with all six Arabic forms in `ar`.
 
-**File: `web/src/i18n/locales/{en,ar}/common.json`** — add a `table.*` block beside `actions.*` / `state.*`.
+| Site | Line | Key |
+|---|---|---|
+| `customers/components/FacetFilter.tsx` | 18 | `common:table.selected` — **already exists**, do not re-key |
+| `customers/pages/CustomersPage.tsx` | 103 | `customers:bulk.deleteConfirm` |
+| `knowledge-base/pages/ArticleReaderPage.tsx` | 144 | `knowledge:reader.revisionCount` |
+| `knowledge-base/pages/KnowledgeBaseIndexPage.tsx` | 328 | `knowledge:bulk.confirmCount` |
+| `reports/components/CsatCard.tsx` | 29 | `reports:csat.responseCount` |
+| `users-roles-admin/components/FilterChip.tsx` | 52 | `common:table.selected` — **already exists** |
+| `agent-dashboard/pages/AdminDashboardPage.tsx` | 32 | the generic `count(n, noun)` helper is **deleted** — a helper that pluralizes an arbitrary noun cannot be translated. Each caller gets its own key. |
+| `agent-dashboard/pages/TeamDashboardPage.tsx` | 29 | `dashboard:team.agents` |
 
-| Site | Key |
-|---|---|
-| `components/data-table/BulkActionBar.tsx:26,43` | `table.selected` (count-bearing → six `ar` forms), `table.clearSelection` |
-| `components/data-table/ColumnMenu.tsx:23,35` | `table.columns`, `table.columnMoved` (interpolates `{{column}}`; the `earlier`/`later` ternary becomes two keys) |
-| `components/data-table/DataTable.tsx:89,100` | `table.sortAscending` / `table.sortDescending`, `table.selectAllRows` |
-| `components/data-table/DataTableError.tsx:17,21` | reuse `state.errorTitle`, `actions.retry` |
-| `components/data-table/DataTableSkeleton.tsx:16` | reuse `state.loading` |
-| `components/data-table/Pagination.tsx:30,34,40,69` | `table.showingRange` — **one interpolated sentence**, not three fragments; `table.previousPage`, `table.nextPage` |
-| `components/ui/ConfirmDialog.tsx:34`, `Modal.tsx:98` | reuse `actions.cancel`, `actions.close` |
+### 3 — Feature extraction, largest first
 
-`DataTableEmpty.tsx` and `ConfirmDialog.tsx` take prose as props (`title`, `body`, `confirmLabel`) and
-stay presentational — the **callers** translate. That is why coverage extension (b) matters.
+For each folder: populate `web/src/i18n/locales/{en,ar}/<ns>.json`, convert components to `useT(ns)`,
+convert `model/*` per Decision 1, then **add the root to `roots` and re-run the check**.
+**One folder per commit** — 488 literals in one commit is unreviewable.
 
-Add `src/components` to `roots`.
+#### 3.1 `customers` (89) → `customers`
 
-### 3 — Fix the locale bugs inside the eleven folders
+`model/columns.tsx` (6 headers as object-literal properties) → key map. `model/customerSchema.ts`
+(2 `zod-message`) → Zod keys via required `t`. `components/AttachmentsPanel.tsx` (**:74–147** — 12
+violations including `attr:body` and `attr:confirmLabel` on the remove-confirm dialog),
+`CustomerFormModal.tsx` (**:105–207** — the `Edit Customer` / `Add Customer` title ternary at **:105**
+is two keys, not one), `InteractionHistory.tsx`, `NotesPanel.tsx`, `FacetFilter.tsx`,
+`pages/CustomersPage.tsx`.
 
-Call the formatters `web/src/i18n` already exports; `formatRelative` (`formatters.ts:62–78`) covers
-every relative case, `formatDate` / `formatDateTime` the rest via their `options` parameter.
+#### 3.2 `users-roles-admin` (83) → `users`
 
-| Delete / rewrite | Replacement |
-|---|---|
-| `tickets/model/display.ts:52–92` (`RELATIVE_UNITS`, `formatRelativeTime`, `formatAbsoluteTime`) | `formatRelative`, `formatDateTime` — **delete outright**, they are duplicates |
-| `users-roles-admin/model/relativeTime.ts:8,39` (module consts) | `formatRelative`, `formatDateTime` |
-| `agent-productivity/model/dueStateLabel.ts:8,9` (module consts) | `formatRelative`, `formatDate` |
-| `notifications/model/notificationTime.ts:9` (module const) | `formatDate` |
-| `knowledge-base/model/columns.tsx:8`, `customers/model/columns.tsx:8` | `formatDate` |
-| `customers/components/InteractionHistory.tsx:5`, `NotesPanel.tsx:4` | `formatDate` |
-| `tickets/components/thread/CustomerInfoCard.tsx:8`, `MessageList.tsx:21`, `MessageMeta.tsx:8` | `formatDate` / `formatDateTime` with options |
-| `agent-productivity/pages/QuickRepliesPage.tsx:136`, `customers/components/CustomerFormModal.tsx:174` | `formatDate` |
-| `channels/components/ChannelCard.tsx:40` (`.toLocaleString()`) | `formatNumber` |
-| `reports/model/report.ts:111` (**`'en-US'`**) | `formatDate(iso, { month: 'short', day: 'numeric' })` |
-| `reports/components/CsatCard.tsx:25,37` (`.toFixed(2)`) | `formatNumber(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 })` |
-| `csat/pages/CsatResponsePage.tsx:21–24` (local `formatDate`, **`'ar-EG'`**) | `formatDateTime` — removes the Eastern-Arabic-numeral defect |
+`model/adminUser.ts` role/status maps → key map. `model/userSchema.ts` (3 `zod-message`) → Zod keys.
+`model/columns.tsx` (7 headers) → keys. `model/relativeTime.ts` → deleted per Task 1, leaving only a
+`'Never'` key. `pages/AuditLogPage.tsx`, `pages/UsersPage.tsx`, `pages/SystemSettingsPage.tsx`,
+`components/StatusPill.tsx`, `UserFormModal.tsx`, `DeactivateUserDialog.tsx`, `FilterChip.tsx`.
 
-**Every module-level formatter constant must become a per-call construction.** Nine of these are
-`const` at module scope, so they bind the locale at import and cannot follow a language switch even
-once the locale argument is correct.
+#### 3.3 `agent-productivity` (76) → `productivity`
 
-### 4 — Fix the 13 naive plural sites
+Largest `jsx-text` count of any folder (60). `model/dueStateLabel.ts` reduced per Task 1.
+`model/quickReplySchema.ts` and `model/taskSchema.ts` (4 `zod-message`) → Zod keys.
+`pages/QuickRepliesPage.tsx`, `components/QuickReplyEditModal.tsx`, `TicketTasksPanel.tsx`.
 
-Each becomes `t('<key>', { count: n })` with all six Arabic forms.
+#### 3.4 `knowledge-base` (74) → `knowledge`
 
-| Site | Key |
-|---|---|
-| `agent-dashboard/pages/AdminDashboardPage.tsx:32` | the generic `count(n, noun)` helper is **deleted** — a helper that pluralizes an arbitrary noun cannot be translated; each caller gets its own key |
-| `agent-dashboard/pages/TeamDashboardPage.tsx:29` | `dashboard:team.agents` |
-| `tickets/pages/TicketQueuePage.tsx:131` | `tickets:queue.ticketCount` |
-| `tickets/components/BulkConfirmDialog.tsx:80,106` | `tickets:bulk.ticketCount`, `tickets:bulk.appliedCount` |
-| `tickets/components/thread/TicketMetaPanel.tsx:177` | `conversation:close.openTasksWarning` |
-| `knowledge-base/pages/KnowledgeBaseIndexPage.tsx:328` | `knowledge:bulk.confirmCount` |
-| `knowledge-base/pages/ArticleReaderPage.tsx:144` | `knowledge:reader.revisionCount` |
-| `customers/pages/CustomersPage.tsx:103,106` | `customers:bulk.deleteConfirm`, `customers:bulk.tierConfirm` |
-| `reports/components/CsatCard.tsx:29` | `reports:csat.responseCount` |
-| `sla-rules/model/formatDuration.ts:42` | deleted in Task 1 |
-| `tickets/components/FilterChip.tsx:21`, `customers/components/FacetFilter.tsx:18`, `users-roles-admin/components/FilterChip.tsx:52` | trailing `` `${selected.length} selected` `` → `common:table.selected` from Task 2 |
+`model/columns.tsx` (5 headers, 8 `object-literal`) → keys. `model/articleSchema.ts` (4 `zod-message`)
+→ Zod keys. `pages/KnowledgeBaseIndexPage.tsx` — the `BULK_COPY` map becomes keys, and the
+`${verb} ${n} article(s)?` template at **:328** becomes one interpolated plural key per verb, **never
+concatenated**. `ArticleEditorPage.tsx`, `ArticleReaderPage.tsx` (**:144**),
+`components/ArticlePickerPanel.tsx`.
 
-### 5 — Feature extraction, largest first
+#### 3.5 `agent-dashboard` (49) → `dashboard`
 
-For each feature: populate `web/src/i18n/locales/{en,ar}/<ns>.json`, convert components to `useT(ns)`,
-convert `model/*` per Decision 2, then **add the root to `roots` and re-run the check**. One feature per
-commit — a 396-literal single commit is unreviewable.
+28 of the 49 are `attr:*` — the five widgets' `title` / `errorMessage` / `emptyMessage` props, which
+the shared `DashboardWidget` takes as prose (per the `src/components` decision: the **caller**
+translates). `model/greeting.ts` (7 lines, `greeting()` at **:2**) → three time-of-day keys with a
+required `t`. `pages/AdminDashboardPage.tsx` (delete the `count` helper, **:32**),
+`AgentDashboardPage.tsx`, `TeamDashboardPage.tsx` (**:29**).
 
-1. **`tickets` (52) → `tickets`.** `model/display.ts:21–50` → key maps. `model/columns.ts:28–36` (9
-   labels) → keys. `model/newTicketSchema.ts:9–11`, `model/replySchema.ts:7` → Zod keys.
-   `components/SlaCell.tsx:36` (three-way ternary) → three keys. `components/FilterBar.tsx:16`,
-   `TicketQueueEmpty.tsx:33`, `NewTicketModal.tsx:95,266`, `BulkConfirmDialog.tsx:80,106,108`,
-   `pages/TicketDetailPage.tsx:120`.
-2. **`tickets/components/thread` (39) → `conversation`.** `ActivityList.tsx:8–20` — seven templated
-   event sentences; each becomes **one key with `{{who}}` / `{{value}}` interpolation**, never
-   concatenated. `TicketMetaPanel.tsx:18–21,62–65` option lists → keys. `ReplyComposer.tsx:178,235,265`,
-   `MessageList.tsx:43,59`, `MessageMeta.tsx:26`, `AssignedAgentCard.tsx:49,90`, `ThreadStates.tsx:61`.
-3. **`agent-productivity` (63) → `productivity`.** `model/dueStateLabel.ts:14–44` — the
-   `today`/`yesterday`/`tomorrow`/`now` table is exactly what `formatRelative` with `numeric: 'auto'`
-   already produces; delete the table and keep only the `Overdue ·` / `Due soon ·` / `Completed ·`
-   frames as keys. `model/{quickReply,task}Schema.ts` → Zod keys. `pages/QuickRepliesPage.tsx:194,197`,
-   `components/QuickReplyEditModal.tsx:58`, `TicketTasksPanel.tsx:23`.
-4. **`customers` (57) → `customers`.** `model/columns.tsx:18–61` (6 headers),
-   `model/customerSchema.ts:5,6,15`, `components/AttachmentsPanel.tsx:20,23,146,147`,
-   `CustomerFormModal.tsx:105,195,206,207`, `pages/CustomersPage.tsx:33,34,107,108,138–151,198–251`.
-5. **`knowledge-base` (48) → `knowledge`.** `model/columns.tsx:27–68` (5 headers),
-   `model/articleSchema.ts:13,14,23,24,28`, `pages/KnowledgeBaseIndexPage.tsx:29–31,36–49`
-   (`BULK_COPY` → keys), `:243,249,250,253,263,283,309`, `ArticleEditorPage.tsx:168`,
-   `ArticleReaderPage.tsx:144`, `components/ArticlePickerPanel.tsx:84`.
-6. **`users-roles-admin` (40) → `users`.** `model/adminUser.ts:11–15` → key map.
-   `model/relativeTime.ts:13,16,22` (`'Never'`, `'Just now'`) → keys. `model/userSchema.ts:12,16,17`,
-   `model/columns.tsx:22–104` (7 headers), `pages/AuditLogPage.tsx:29–65` (5 inline headers),
-   `:112–197`, `pages/UsersPage.tsx:27–30,40–42,146–228`, `components/StatusPill.tsx:9`,
-   `UserFormModal.tsx:97,145`, `DeactivateUserDialog.tsx:74,102`, `SystemSettingsPage.tsx:180`.
-7. **`agent-dashboard` (24) → `dashboard`.** `model/greeting.ts:4` → three keys. The five widgets'
-   `title` / `errorMessage` / `emptyMessage` props (`EscalationsWidget.tsx:20,23,24`,
-   `MyQueueWidget.tsx:19,22,23`, `QuickRepliesWidget.tsx:19,22,23`, `SlaRiskWidget.tsx:31,32,33`,
-   `WorkloadBalanceWidget.tsx:34,37,38`), `DashboardWidget.tsx:48`, `AdminDashboardPage.tsx:45–66`,
-   `AgentDashboardPage.tsx:29–42`, `TeamDashboardPage.tsx:39–52`.
-8. **`reports` (21) → `reports`.** The five `emptyMessage` props (`AgentPerformanceCard.tsx:16`,
-   `ChannelMixCard.tsx:14`, `CsatCard.tsx:21`, `SlaComplianceCard.tsx:16`, `TicketVolumeCard.tsx:22`),
-   `TicketVolumeCard.tsx:24` (chart `label`), `model/report.ts:96` (`formatMinutes`).
-9. **`notifications` (20) → `notifications`.** JSX chrome plus `model/notificationTime.ts:16`.
-10. **`channels` (10) → `channels`.** Almost entirely `model/channel.ts`: `PERIOD_LABELS:39–43`,
-    `STATUS_LABELS:54–59`, `CHANNEL_PRESENTATION:73–108` (5 labels + 5 help lines), the fallback at
-    **:121**. All become keys; `presentationFor` (**:117**) returns keys and the card calls `t`.
-11. **`csat` (9) → `csat`.** See Task 6.
+#### 3.6 `csat` (40) → `csat` — absorb the catalogue, keep browser detection
 
-**`'Just now'` is implemented twice** (`notifications/model/notificationTime.ts:16`,
-`users-roles-admin/model/relativeTime.ts:22`) and is what `formatRelative` with `numeric: 'auto'`
-returns for a sub-minute delta. Delete both; do not create two keys for one string.
+**File: `web/src/i18n/locales/{en,ar}/csat.json`** — port both halves of
+`csat/model/csatStrings.ts` (the `en` object at **:43**, the `ar` object below it). **The Arabic
+already exists and is good; it moves, it is not re-translated.** Function-valued members become
+interpolated keys: `requestLabel` (**:15**) → `request` with `{{number}}` / `{{subject}}`;
+`ratingSelected` (**:20**) → `{{label}}`; `submittedBody` (**:28**) → `{{number}}`; `submittedOn`
+(**:32**) → `{{date}}`. `ratingOptions` / `ratingEmojis` (**:18–19**) become indexed keys
+`rating.1`…`rating.5` — **arrays are not translatable units**, and the 29 `object-literal` violations
+in this folder are almost entirely these two arrays plus the two string objects.
 
-### 6 — Absorb the CSAT catalogue, keep browser detection
+**File: `web/src/features/csat/model/csatStrings.ts`** (123 lines) — reduce to `detectCsatLocale`
+(**:113–115**) and `csatDir` (**:117–119**), both **unchanged**. Delete `CsatStrings`, `CSAT_STRINGS`,
+`en`, `ar`. Update `csatStrings.test.ts` to cover detection only.
 
-**File: `web/src/i18n/locales/{en,ar}/csat.json`** — port both halves of `csat/model/csatStrings.ts`
-(`en` **:43–74**, `ar` **:76–105**). The Arabic already exists and is good; it **moves**, it is not
-re-translated. Function-valued members become interpolated keys: `requestLabel` (**:46**) → `request`
-with `{{number}}` / `{{subject}}`; `ratingSelected` (**:51**) → `{{label}}`; `submittedBody`
-(**:59**) → `{{number}}`; `submittedOn` (**:64**) → `{{date}}`. `ratingOptions` / `ratingEmojis`
-(**:49–50**) become indexed keys `rating.1`…`rating.5` — **arrays are not translatable units**.
+**File: `web/src/features/csat/pages/CsatResponsePage.tsx`** — the page sits **outside**
+`UiPreferencesProvider`, so drive i18next with the detected locale via a scoped `I18nextProvider`
+(re-exported from `web/src/i18n/index.ts:13`) or `i18n.getFixedT(detected, 'csat')`. Replace the
+`CSAT_STRINGS` import at **:6–11**. Delete the local `formatDate` (**:21–28**) per Task 1.
+**Do not call `setLocale`** — it would fire `PATCH /api/user/preferences` for a user who is not signed in.
 
-**File: `web/src/features/csat/model/csatStrings.ts`** — reduce to `detectCsatLocale` (**:113–115**)
-and `csatDir` (**:117–119**), both **unchanged**. Delete `CsatStrings`, `CSAT_STRINGS`, `en`, `ar`.
-Update `csatStrings.test.ts` to cover detection only.
+#### 3.7 `reports` (30) → `reports`
 
-**File: `web/src/features/csat/pages/CsatResponsePage.tsx`** — drive i18next with the detected locale
-(the page is public and sits outside `UiPreferencesProvider`) via a scoped `I18nextProvider` or
-`i18n.getFixedT(detected, 'csat')`. **Do not call `setLocale`** — that would fire
-`PATCH /api/user/preferences` (`UiPreferencesContext.tsx:126`) for a user who is not signed in. Delete
-the local `formatDate` (**:21–24**) per Task 3.
+The five cards' `emptyMessage` props (`AgentPerformanceCard.tsx`, `ChannelMixCard.tsx`, `CsatCard.tsx`,
+`SlaComplianceCard.tsx`, `TicketVolumeCard.tsx`) plus the chart `label`. `model/report.ts` — the
+`'en-US'` bug at **:111** per Task 1, and `formatMinutes` gets a required `t`. `CsatCard.tsx:29` per
+Task 2; the `.toFixed(2)` sites in `CsatCard.tsx` →
+`formatNumber(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 })`.
 
----
+#### 3.8 `channels` (27) → `channels`
 
-## Found during planning — outside this story
+15 of 27 are `object-literal`, almost entirely in `model/channel.ts` (126 lines): `PERIOD_LABELS`
+(**:39–43**), `STATUS_LABELS` (**:54–57**), and `CHANNEL_PRESENTATION` (**:73–**, 5 `label` + 5
+`helpLine` entries). All become keys; `statusLabel` (**:58**) and `presentationFor` return **keys**,
+and `components/ChannelCard.tsx` calls `t` on them. `ChannelCard.tsx:40` per Task 1.
 
-Verified, real, and **not WIS-17**. Preserved so it can be filed rather than rediscovered.
+#### 3.9 `notifications` (20) → `notifications`
 
-**Backend user-facing English.** Only **6 of 143** PHP files under `api/app` call `__()` / `trans()`,
-so an Arabic screen still receives English from the server:
+The smallest folder and entirely JSX chrome (18 `jsx-text`, 2 `attr:*`), plus
+`model/notificationTime.ts` reduced per Task 1.
 
-- **7 of 11 enums return raw English from `label()`** — `MessageVisibility.php:13–14`,
-  `NotificationType.php:23–26`, `TaskStatus.php:14–16`, `CustomerTier.php:14–16`,
-  `ArticleStatus.php:21–23`, `QuickReplyStatus.php:13–14`, and `app/Models/Ticket.php:55–62`
-  (`categoryLabel()`). The correct precedent already exists in
-  `app/Enums/{Channel,Priority,TicketStatus,UserRole}.php`.
-- **All 7 Request `messages()` overrides are unwrapped** — `StoreUserRequest.php:37–38`,
-  `UpdateUserRequest.php:41–42`, `StoreCustomerAttachmentRequest.php:30,31,33`,
-  `StoreCustomerRequest.php:37,57,75,88`, `UpdateCustomerRequest.php:40,63,83,96`,
-  `StoreTicketMessageRequest.php:30`, `IndexAuditLogRequest.php:40`, `UpdateSettingsRequest.php:52`.
-  `StoreCustomerRequest.php:88` / `UpdateCustomerRequest.php:96` hand-roll `'The given data was
-  invalid.'`, bypassing Laravel's already-translated default.
-- **Controllers / middleware / services** — `AuthenticatedSessionController.php:46` (**:35** directly
-  above already uses `trans('auth.failed')`), `ActiveUserOnly.php:33`, `CustomerController.php:185–186`
-  (`'A customer with this email already exists.'` exists in **three** places and should collapse to one
-  key), `TicketController.php:140` (an English frame around already-translated enum labels),
-  `UserAdminService.php:128,192`, `MentionResolver.php:39,45,51`, `Kb/ArticleWriter.php:170,174,178`,
-  `AuditTrail.php:78–91` (14 audit labels), `SystemSettings.php:34–66` (5 labels + 5 help lines).
-- **Persisted notification text freezes its locale at write time** — `SlaNotifier.php:28,39`,
-  `TicketMessageController.php:115`, `DispatchDueTaskReminders.php:49–50` write English **into the
-  database**, so a user who later switches to Arabic still sees those rows in English. The fix is to
-  store a key plus its interpolation payload and translate at render. **Translating at write time is
-  not a fix** — it produces permanently mixed-language notification lists.
-- `Exceptions/AuditLogIsAppendOnly.php:16` is developer-facing and should stay English.
+### 4 — Close the allowlist
 
-**Would need:** new `api/lang/{en,ar}/{messages,audit,settings}.php` with full parity, extensions to
-`api/tests/Feature/I18n/{CatalogueParityTest,EnumLabelLocaleTest,LocalizedValidationTest}.php`.
-
-**Two smaller items:**
-
-- `web/src/features/csat/api/csatPublicClient.ts:11` is a second Axios instance and **sends no
-  `Accept-Language`**, so server validation on the public CSAT endpoints answers in English on an
-  Arabic page. A language header is not a credential, so adding one does not weaken the deliberate
-  credential-free design documented at **:3–10**. Left out here because its value depends on the
-  backend work above.
-- A `no-direct-Intl` enforcement rule would stop Task 3's fixes from growing back. Not added, per
-  Decision 5.
+**File: `web/scripts/i18n-allowlist.json`** — with all nine folders migrated, `roots` holds 19 entries.
+**Delete the "Pending: …" sentence from `_rootsNote`** and reword the note to say the retrofit is
+complete. Any new `literals` entry added during migration must carry a `reason` — per the intake's
+third acceptance criterion, a non-translatable token is *documented*, not silently left unlisted.
 
 ---
 
 ## Edge Cases & Failure Modes
 
-- **The parity test goes from vacuous to binding.** `catalogueParity.test.ts` passes today only because
-  12 catalogues are `{}`. The first populated namespace with an `en`-only key fails it. That is
-  intended — **fix the catalogue, never relax the test**.
-- **Six-form Arabic plurals are easy to half-do.** `catalogueParity.test.ts:47–62` triggers on
-  `<base>_one` **or** `<base>_other` in **either** locale, so an `en`-only pair demands all six `ar`
-  forms immediately. Write all six when you write the English pair.
-- **Sentence fragments cannot be reassembled in Arabic.** `Pagination.tsx:30,34` renders
-  `Showing … of …` as three JSX pieces; `ActivityList.tsx:8–20` builds seven sentences by
-  concatenation. Each becomes **one key with named interpolation**. Per-fragment extraction passes the
-  check and produces word-salad in Arabic — the most likely way to get this story wrong.
-- **Module-level `Intl` constants bind the locale at import.** The nine in Tier 3 cannot follow a
-  switch even after the locale argument is fixed; they must become **calls**. A test that only switches
-  locale and re-renders will still read stale output if this is missed.
-- **`ar-EG` reintroduces Eastern Arabic numerals.** `CsatResponsePage.tsx:24` is the live instance.
-  `formatters.ts:24` supplies `numberingSystem: 'latn'`. Never pass a locale tag with an implicit
-  numbering system.
-- **The CSAT page must not write a preference.** It is public with no user; routing it through
-  `setLocale` would fire an unauthenticated `PATCH`.
-- **Zod messages inside "guarded" roots pass today.** `auth/loginSchema.ts` and
-  `sla-rules/model/slaRuleSchema.ts:26,30` are in enforced roots and invisible. Treat any "this root is
-  already done" claim as unverified until rule (d) lands.
-- **`slaRuleSchema.ts:26,30` are deliberately byte-identical to the server's messages** (docblock
-  **:5–9**). When they move to a catalogue the **English must stay byte-identical**; the Arabic side has
-  no server counterpart yet (that is in the out-of-scope section), so record the mismatch rather than
-  inventing a server key here.
-- **Category slugs are API values.** `['billing','account','technical','general']`
-  (`QuickRepliesPage.tsx:13`, `QuickReplyEditModal.tsx:16`) are sent to the server — translate the
-  display, never the value; allowlist the arrays.
-- **Genuine uncertainty — the false-positive rate of rule (d).** The heuristic was designed against the
-  literals inventoried here, not proven across the whole tree. Validate it as Task 1 specifies. If it
-  is narrowed to nothing, AC2 is unenforceable and must be struck rather than silently certified.
-- **Genuine uncertainty — whether the `conversation` split survives review.** The intake names
-  `src/features/tickets` once; this plan funds two namespaces from it. If review prefers one, the
-  thread's 39 literals go to `tickets` and the `conversation` catalogue stays empty — decide before
-  Task 5.2, not during.
-- **Backend baseline.** ~10 `Customer*` Pest tests fail on `main`. No backend source changes here, so
-  the count must be identical afterwards.
+- **A root added to `roots` before its literals move.** The check goes red for everyone, not just the
+  author. Enforced by ordering: migrate, run `node scripts/check-no-literals.mjs src/features/<f>`
+  until it exits `0`, *then* add the root, in the same commit.
+- **An Arabic count key missing a CLDR form.** `catalogueParity.test.ts` (**:22–26**) fails the build.
+  This is the intended gate — do not weaken it by dropping `_two` / `_few` / `_many`.
+- **A key present in `en` and absent in `ar`.** `missingKey.test.ts` asserts i18next falls back to the
+  English value **and** logs the miss via `getMissingKeyCount()`. An Arabic screen showing English is
+  therefore a quiet failure that only the counter catches — run the Arabic sweep in Verification.
+- **A module-level formatter left in place.** It binds the locale at import, so the first render after
+  a language switch is correct only by accident. Grep for `new Intl.` and `toLocale` across the nine
+  folders after Task 1; the result must be empty.
+- **A composed key.** `t('customers.' + kind)` is invisible to the checker and to any extraction tool.
+  Keys are static strings; a variable selects a **whole key** from a map, never a fragment.
+- **`ratingOptions` / `ratingEmojis` ported as JSON arrays.** i18next will resolve `t('rating')` to
+  `[object Object]`. They must be indexed keys `rating.1`…`rating.5`.
+- **The CSAT page writing a user preference.** If the page is wired through `setLocale` instead of a
+  scoped provider, an anonymous survey respondent fires `PATCH /api/user/preferences` and 401s. The
+  test at `CsatResponsePage.test.tsx` must assert no preference write.
+- **Zod schemas evaluated at module scope.** A schema built once at import with `t` captured freezes
+  its messages in the import-time language. Build the schema inside the component/hook, or pass `t`
+  at validation time.
+- **`'Just now'` de-duplicated to one key.** If both call sites are migrated independently, two keys
+  for one string ship and drift. Delete both implementations in the same commit.
+- **A `.ts` label map whose values are prose, not keys.** The `object-literal` rule flags it; the fix
+  is a key map (Decision 1), not an allowlist entry.
 
 ---
 
 ## Test Plan
 
-1. **`web/src/i18n/noHardcodedStrings.test.ts`** — extend the fixture assertions (**:22–28**) to cover
-   each coverage extension: a `.ts` label map, a non-`TARGET_ATTRS` prose prop, a ternary in a JSX
-   expression, and a template literal. Add fixtures beside
-   `web/src/i18n/__fixtures__/BareLiteral.fixture.tsx`. **The `runCheck()` assertion at `:12–20` is the
-   story's gate** — as roots are added it must stay green. This test is AC1.
-2. **`web/src/i18n/catalogueParity.test.ts`** — unchanged; it becomes meaningful automatically. Add one
-   case: **no `ar` value is byte-identical to its `en` counterpart**, with a documented exemption list
-   for values that legitimately match (`'Wisal'`, `'SMS'`). This catches copy-paste stubs, which is
-   the most likely way AC2 gets falsely certified.
-3. **Per-feature Arabic render tests** — for each of the eleven roots, one test that renders its main
-   screen under `ar` and asserts a known Arabic string appears and a known English one does not.
-   Match `web/src/features/sla-rules/pages/SlaRulesPage.test.tsx`. **This is AC2**; the check alone
-   cannot prove it.
-4. **`web/src/features/tickets/components/thread/ActivityList.test.tsx`** — the seven event sentences
-   render as whole sentences in `ar` with interpolated values in the right position.
-5. **Plural tests** — one parameterised test over the 13 keys from Task 4, asserting the `ar` output at
-   counts 0, 1, 2, 3, 11, 100 differs across the six categories.
-6. **`web/src/i18n/formatters.test.ts`** — add a case asserting a converted component re-renders with
-   an Arabic-formatted, **Latin-digit** date after `i18n.changeLanguage('ar')`. This is what would have
-   caught the module-level-constant bug.
-7. **`web/src/features/csat/model/csatStrings.test.ts`** — reduced to `detectCsatLocale` / `csatDir`.
-   **Behaviour must not change** — that is Story 13's contract.
-8. **`web/src/features/csat/pages/CsatResponsePage.test.tsx`** — with `navigator.language = 'ar-SA'` the
-   page renders Arabic **without** any `PATCH /api/user/preferences`, and the date renders with Latin digits.
-9. **Regression** — all 424 existing tests pass. Any test asserting an English literal that has moved to
-   a catalogue asserts the rendered value instead.
-10. **Backend regression** — `cd api && php artisan test`. No backend source changes, so the `Customer*`
-    failure count must be identical to baseline.
+1. **`web/src/i18n/catalogueParity.test.ts`** *(existing, unit)* — no edit required; it iterates
+   `NAMESPACES` and becomes non-vacuous as the nine catalogues fill. Must stay green after every folder.
+2. **`web/src/i18n/noHardcodedStrings.test.ts`** *(existing, unit)* — asserts `runCheck()` over
+   `config.roots`. Grows from 10 to 19 roots implicitly. **Do not** pass an explicit root list to
+   weaken it.
+3. **`web/src/features/csat/model/csatStrings.test.ts`** *(modify, unit)* — strip the `CSAT_STRINGS`
+   assertions; keep and extend `detectCsatLocale` coverage (`ar`, `ar-EG`, `en`, `en-GB`, `undefined`).
+4. **`web/src/features/csat/pages/CsatResponsePage.test.tsx`** *(modify, integration)* — render under
+   a scoped provider with `navigator.language = 'ar'`; assert Arabic copy renders, dates use **Latin
+   digits**, and **no `PATCH /api/user/preferences` request is issued**.
+5. **`web/src/features/users-roles-admin/model/relativeTime.test.ts`** and
+   **`web/src/features/agent-productivity/model/dueStateLabel.test.ts`** *(modify or delete, unit)* —
+   whatever survives Task 1's deletions is driven with `i18n.getFixedT('en', ns)`, matching
+   `sla-rules/model/formatDuration.test.ts`. Delete tests for deleted functions rather than keeping
+   them alive against a shim.
+6. **New per-namespace smoke test**, one per migrated folder, following the `formatDuration.test.ts`
+   shape: assert the folder's key-map values resolve to non-empty strings in **both** `en` and `ar`
+   via `i18n.getFixedT(locale, ns)` — this catches a key map pointing at a key nobody added.
+7. **Existing feature tests across the nine folders** *(regression)* — many assert on English strings
+   via `getByText('…')`. They must keep passing under the default `en` locale; where a string moved,
+   update the assertion to the catalogue value, **not** to a `t()` call inside the test.
 
 ---
 
 ## Verification Steps
 
-1. **Coverage extension lands first:** `cd web && node scripts/check-no-literals.mjs` — green over the
-   four original roots **under the extended coverage**, before any new root is added.
-2. **Rule (d) dry run:** `cd web && node scripts/check-no-literals.mjs src` — review every hit; each is
-   a real literal or an allowlist entry with a reason. Record the count in the PR.
-3. **AC1 — all eleven roots enforced:** `web/scripts/i18n-allowlist.json` `roots` contains all four
-   original plus the eleven pending roots, the `_rootsNote` at **line 9** is **deleted**, and
-   `cd web && npm run i18n:check` exits 0.
-4. **AC3 — every exemption justified:** every entry in `literals` / `patterns` has a `reason`.
-5. **No empty catalogues:** every file under `web/src/i18n/locales/{en,ar}/` is larger than 3 bytes.
-6. **No naive plurals:** `grep -rn "=== 1 ?" web/src --include=*.ts --include=*.tsx` → hits only in
-   non-linguistic contexts (`DataTable.tsx:141`, `TicketTable.tsx:52` zebra striping).
-7. **No stale locale in migrated folders:**
-   `grep -rn "Intl\.\|toLocaleString\|toLocaleDateString\|toLocaleTimeString" web/src --include=*.ts --include=*.tsx | grep -v "^web/src/i18n/"`
-   → zero hits outside tests, and `grep -rn "en-US\|ar-EG" web/src` → zero hits.
-8. **Frontend builds, lints, tests:** `cd web && npm run build && npm run lint && npx vitest run` —
-   all green; test count ≥ 424 plus the new suites.
-9. **Backend unchanged:** `cd api && php artisan test` — `Customer*` failure count equal to baseline.
-10. **AC2, manual, both locales:** `php artisan serve` + `npm run dev`. Switch to **AR** and walk every
-    migrated screen: tickets queue, ticket detail + thread, customers, knowledge base, users, audit log,
-    settings, dashboards, reports, channels, notifications. No English survives; dates and numbers use
-    **Latin digits**; plurals read correctly at 1/2/3/11; ticket numbers, emails, and URLs stay LTR.
-    **Server-sent validation messages will still be English** — that is the out-of-scope backend gap,
-    and it must be recorded in the PR so it is not mistaken for a miss here.
-11. **AC2, public CSAT:** open a survey link with the browser set to Arabic — the page is Arabic, no
-    `PATCH /user/preferences` fires, and the date shows Latin digits.
+1. **Per folder, before adding its root:**
+   `cd web && node scripts/check-no-literals.mjs src/features/<folder>` → exits `0`.
+2. **Backend builds:** unchanged — this story touches no PHP. See step 8.
+3. **After each folder's commit:** `cd web && npm run i18n:check` → reports a growing root count and
+   exits `0`.
+4. **Frontend runs:** `cd web && npx vitest run` → green, including `catalogueParity`, `missingKey`,
+   and `noHardcodedStrings`.
+5. **Frontend builds:** `cd web && npm run build` (`tsc -b && vite build`) → no type errors from the
+   `t`-parameter signature changes in `model/*`.
+6. **Lint:** `cd web && npm run lint` (`oxlint && npm run i18n:check`).
+7. **No stray formatters:**
+   `cd web && grep -rn "new Intl\.\|toLocaleDate\|toLocaleTime\|toLocaleString" src/features/{customers,knowledge-base,notifications,reports,users-roles-admin,agent-dashboard,agent-productivity,channels,csat} --include=*.ts --include=*.tsx | grep -v test`
+   → **no output**.
+8. **Regression:** `cd api && ./vendor/bin/phpunit` → still 419/419. This story modifies no PHP; run it
+   to prove that.
+9. **Arabic sweep (manual — this is AC2):** `cd web && npm run dev`, switch the header language to
+   العربية, and walk every screen in the nine folders — Customers, Users, Audit Log, System Settings,
+   Quick Replies, Tasks, Knowledge Base index/reader/editor, all three dashboards, Reports, Channels,
+   Notifications, and the public CSAT page (with `navigator.language` forced to `ar`). **No English
+   string may render**, and the browser console must log **no missing-key warnings**.
 
 ---
 
 ## Done Criteria
 
-Mapped to the intake's three acceptance criteria, refined per its "draft — refine during planning" note.
+- [ ] All nine roots — `customers`, `knowledge-base`, `notifications`, `reports`, `users-roles-admin`, `agent-dashboard`, `agent-productivity`, `channels`, `csat` — are present in `web/scripts/i18n-allowlist.json`'s `roots`, bringing it to **19** entries.
+- [ ] `npm run i18n:check` exits `0` with **zero** unlisted-literal violations across all 19 roots.
+- [ ] The `Pending: …` sentence is **deleted** from `_rootsNote`.
+- [ ] All 18 catalogue files under `web/src/i18n/locales/{en,ar}/` are populated; **none** still ships as `{}`.
+- [ ] Every new `literals` / `patterns` entry added during migration carries a `reason`.
+- [ ] `grep` for `new Intl.` / `toLocale*` across the nine folders returns nothing (17 sites fixed).
+- [ ] All 8 naive plural sites use `t(key, { count })`; every count-bearing `ar` key ships all six CLDR forms.
+- [ ] `'Just now'` exists as exactly one key; `relativeTime.ts` and `dueStateLabel.ts` no longer hand-roll relative time.
+- [ ] `csatStrings.ts` contains only `detectCsatLocale` and `csatDir`, both behaviourally unchanged; the CSAT page issues **no** preference write.
+- [ ] `npx vitest run` and `npm run build` are green; `catalogueParity.test.ts` is no longer vacuous.
+- [ ] Manual Arabic sweep of all nine folders shows no English text and no missing-key console warnings.
+- [ ] **No file under `api/` is modified**, and the PR states that Arabic screens still receive English server messages from the enums and services listed below until that work is filed and landed.
 
-**AC1 — the check covers all eleven roots and passes:**
+---
 
-- [ ] All eleven pending roots are in `web/scripts/i18n-allowlist.json` `roots`, and the `_rootsNote` pending list at line 9 is deleted.
-- [ ] `npm run i18n:check` and `npx vitest run` both exit 0 with zero unlisted-literal violations.
-- [ ] The checker's **coverage** is extended — `.ts` scanned, prose-carrying props added, ternary and template initializers walked, and the object-literal-property rule that makes `.ts` scanning meaningful — while its **mechanism** (AST walk, allowlist format, `runCheck` contract, `npm` wiring, the asserting test) is unchanged, each extension proven by a fixture.
+## Found during planning — outside this story
 
-**AC2 — an Arabic screen shows no English:**
+Verified, real, and **not WIS-17**. Recorded so it can be filed rather than rediscovered.
 
-- [ ] All 12 empty feature catalogues are populated in **both** locales; no catalogue file is `{}`.
-- [ ] Each of the eleven roots has a test that renders its main screen under `ar` and asserts Arabic present / English absent — AC2 is proven by test, not by the check passing.
-- [x] Composed sentences (`Pagination`'s "Showing … of …", the seven `ActivityList` events) are **single interpolated keys**, not concatenated fragments.
-- [ ] All 13 naive plural sites use `t(key, { count })`; every count-bearing key carries all six Arabic CLDR forms, proven by `catalogueParity.test.ts`.
-- [ ] No `ar` value is a byte-identical copy of its `en` counterpart outside the documented exemptions.
-- [ ] Inside the eleven folders: zero `Intl` / `toLocale*` calls outside `web/src/i18n/`, no module-level formatter constants, and no `'en-US'` or `'ar-EG'` — so dates and numbers follow the app locale and render Latin digits.
-- [ ] `csat/model/csatStrings.ts` is reduced to `detectCsatLocale` + `csatDir`, both behaviourally unchanged; the page renders Arabic from browser detection **without** issuing `PATCH /api/user/preferences`.
+- **The backend is largely unlocalised.** Only a small minority of PHP files under `api/app` call
+  `__()`. Several services return raw English that reaches an Arabic screen, and persisted
+  notification rows freeze their locale at write time — so changing the UI language does not
+  retranslate history. This needs its own tracker item; **Story 16 modifies no file under `api/`.**
+- **No `no-direct-Intl` checker rule exists.** Task 1 fixes the 17 sites inside these nine folders by
+  hand, but nothing prevents the 18th from being written tomorrow, here or in an already-migrated root.
+  A follow-up could add the rule now that the checker reads `.ts`.
+- **Presentational components in `src/components` still take prose as props.** That is the deliberate
+  decision from the `common` migration — the caller translates — but it means the checker's
+  `TARGET_ATTRS` list (**:36–55**) must grow by hand each time a new prose-carrying prop name is
+  introduced. A prop-naming convention (e.g. a `*Text` suffix) would make the list a pattern instead.
 
-**AC3 — exemptions are justified:**
-
-- [ ] Every `literals` / `patterns` entry carries a reason; nothing was exempted because fixing it was tedious; the SVG path data and API slug arrays are listed explicitly.
-
-**Scope integrity:**
-
-- [ ] No file under `api/` is modified. The backend English inventory is filed as its own tracker item, and the PR states plainly that Arabic screens still receive English server messages until it lands.
-- [x] Story 15's plan file is left **unmodified** — it is read-only history.
-- [x] `00-overview.md` and `00-index.md` updated with this story.
+**STOP HERE. Report to the user and wait for confirmation before proceeding.**

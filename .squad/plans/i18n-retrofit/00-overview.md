@@ -22,40 +22,51 @@ tracks that remainder by hand in a `_rootsNote` comment. Story 16 closes it.
 The intake states the acceptance signal precisely: **a folder joins `roots` only once its literals are
 fully migrated.** `roots` is the contract; `_rootsNote` is the list Story 16 deletes.
 
-**Measured on 2026-09-02, not estimated:**
+**Re-measured on 2026-09-06 after a partial ship — the story file was replanned to match.**
 
-- **12 of 14** frontend catalogues are still empty `{}` files.
-- **0** components outside `src/app`, `src/features/auth`, and `src/features/sla-rules` call `useT()`
-  (112 non-test `.tsx` files across the eleven pending roots).
-- **396** literals would be flagged once the eleven roots are added — and roughly **246 more** stay
-  invisible even then.
-- **21** direct `Intl` / `toLocale*` sites inside those folders; **all 14** `Intl` constructions pass
-  `undefined` as the locale, and **9 are module-level constants** that cannot follow a language switch.
-- **13** naive `count === 1` pluralization sites.
+Two of the original eleven roots have since landed: **`src/components`** (folded into `common`) and
+**`src/features/tickets`** (into `tickets`, with `components/thread/` in `conversation`). So has the
+whole of the checker-coverage work — `check-no-literals.mjs` now scans `.ts`, carries an 18-entry
+`TARGET_ATTRS` set, and emits four violation kinds (`jsx-text`, `attr:*`, `object-literal`,
+`zod-message`). `node scripts/check-no-literals.mjs` passes today over **171 files / 10 roots**.
 
-**The one conflict in the intake, resolved in the plan's Decision 1.** The intake's Dependencies say
-the check machinery is "consumed, not redesigned." Its AC1 asks for eleven roots with zero violations;
-its AC2 asks that an Arabic screen show no English. **Both cannot hold as the checker stands** — it
-never opens `.ts` files and inspects only four DOM attributes, so adding all eleven roots makes AC1
-pass while every `.ts` label map, `emptyMessage` prop, and `'Active' : 'Inactive'` ternary still
-renders English. AC1 would certify AC2 false.
+What is actually left, measured by running the checker per folder:
 
-Story 16 resolves this by **extending what the checker sees while changing no rule it applies**: scan
-`.ts`, widen the prose-carrying prop list, walk ternary and template initializers — plus one new
-object-literal-property rule, because a `.ts` file contains no JSX and scanning it is otherwise inert.
-The AST walk, allowlist format, `runCheck` contract, `npm run i18n:check` wiring, and the asserting
-test are untouched. If that rule is rejected in review, AC2 must be struck rather than silently
-certified by AC1.
+- **9** roots pending: `customers`, `knowledge-base`, `notifications`, `reports`, `users-roles-admin`,
+  `agent-dashboard`, `agent-productivity`, `channels`, `csat`.
+- **488** violations across **165** non-test files — from 89 (`customers`) down to 20 (`notifications`).
+- **9 of 18** frontend catalogues still ship as empty `{}` files.
+- **17** direct `Intl` / `toLocale*` sites inside those nine folders; **9 are module-level constants**
+  that bind the locale at import and cannot follow a language switch. Two of them —
+  `reports/model/report.ts:111` (`'en-US'`) and `csat/pages/CsatResponsePage.tsx:24` (`'ar-EG'`) —
+  hard-code a locale outright.
+- **8** naive `count === 1` pluralization sites.
 
-**Two mappings the intake leaves implicit, pinned by the plan:**
+**The story file is scoped to exactly this remainder.** It does not re-plan the two shipped roots.
+
+**The one conflict in the intake — resolved, and the resolution has shipped.** The intake's
+Dependencies say the check machinery is "consumed, not redesigned." Its AC1 asks for every root with
+zero violations; its AC2 asks that an Arabic screen show no English. **Both could not hold as the
+checker originally stood** — it never opened `.ts` files and inspected only four DOM attributes, so
+adding the roots would have made AC1 pass while every `.ts` label map, `emptyMessage` prop, and
+`'Active' : 'Inactive'` ternary still rendered English. AC1 would have certified AC2 false.
+
+That was resolved by **extending what the checker sees while changing no rule it applies**: scan
+`.ts`, widen the prose-carrying prop list, walk ternary and template initializers, plus one
+object-literal-property rule (a `.ts` file contains no JSX, so scanning it is otherwise inert). The
+AST walk, allowlist format, `runCheck` contract, `npm run i18n:check` wiring, and the asserting test
+were untouched. **This work is done** — the remaining plan consumes the extended checker and adds no
+rule of its own.
+
+**Two mappings the intake left implicit — both now settled and shipped:**
 
 1. There is no `web/src/features/conversation/`. The conversation thread is
-   `web/src/features/tickets/components/thread/` (20 files, 39 of the tickets tree's 91 violations) and
-   owns the **`conversation`** namespace — so the intake's single `src/features/tickets` entry funds
-   **two** catalogues, and the other 52 go to `tickets`.
+   `web/src/features/tickets/components/thread/`, and it owns the **`conversation`** namespace — so
+   the intake's single `src/features/tickets` entry funded **two** catalogues.
 2. `web/src/components/` is shared chrome (`data-table`, `ui`) and extends **`common`** rather than
    gaining a namespace. Its presentational components keep taking prose as props; the **callers**
-   translate.
+   translate. That is why the checker's `TARGET_ATTRS` list must grow by hand as new prose-carrying
+   prop names appear — recorded as a follow-up in the story file.
 
 **Contracts inherited from WIS-11, consumed and not redesigned:** the key convention
 `namespace:screen.element`; the catalogue layout `web/src/i18n/locales/<en|ar>/<namespace>.json`;
@@ -69,7 +80,7 @@ keeps `detectCsatLocale` **behaviourally unchanged** — the page must never wri
 
 **Out of scope, per the intake:** new translatable copy; non-text RTL/layout defects (WIS-11's
 surface); the four deferred categories. **And confirmed out of scope during planning: the backend.**
-Only 6 of 143 PHP files under `api/app` call `__()` — 7 enums, all 7 Request `messages()` overrides,
+Only **12 of 201** PHP files under `api/app` call `__()` (re-counted 2026-09-06) — the enums, the Request `messages()` overrides,
 and several services return raw English that reaches an Arabic screen, with persisted notification rows
 freezing their locale at write time. That inventory is verified and preserved in the story's
 *Found during planning — outside this story* section so it can be filed as its own tracker item.
