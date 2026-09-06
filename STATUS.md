@@ -1,0 +1,122 @@
+# Status
+
+One-page index. Keep this file **short forever** — it links out, it does not
+grow. Any new detail belongs in its own file under `docs/` or `.squad/`, never
+pasted in here. Update the "Current phase" line by replacing it, not
+appending to it.
+
+**How to use this in a new conversation:** ask Claude to read this file first.
+It links to everything else needed to reconstruct context — the product spec,
+the design system, and the planning state.
+
+**Reading the project itself?** Start at [README.md](README.md) — that is the
+full documentation: architecture, data model, API surface, security, testing,
+and how the project was planned and verified. This file is only the live state.
+
+---
+
+## Current phase
+
+**2026-09-06 — All 20 stories implemented, and the documentation is now published.**
+`docs/` and `STATUS.md` were excluded by `.gitignore` and had never been committed;
+that is fixed, and [README.md](README.md) was written as the project's documentation
+(Story WIS-21).
+
+Suites green on 2026-09-06: **500 API tests / 2,345 assertions (Pest)** and
+**546 web tests across 83 files (Vitest)**; `npm run lint` and `npm run build` clean.
+Run the API suite without `--parallel` unless the local Postgres user has `CREATEDB`.
+
+Remaining known gap: the **i18n retrofit** (WIS-17). Every catalogue exists in both
+languages and every server-sent `*_label` is localised, but the no-hard-coded-strings
+check is enforced on ten roots only — nine feature folders (`customers`,
+`knowledge-base`, `notifications`, `reports`, `users-roles-admin`, `agent-dashboard`,
+`agent-productivity`, `channels`, `csat`) still hold English literals.
+`web/scripts/i18n-allowlist.json` is the live list.
+
+## What this project is
+
+**Wisal** (وِصال) — a Customer Support / Helpdesk CRM (ticket-centric, like
+Zendesk/Freshdesk/Intercom), built as the deliverable for an AI-Assisted
+Full-Stack Engineering Assessment. Full spec: [docs/requirements/client-requirements-raw.md](docs/requirements/client-requirements-raw.md).
+
+## Stack
+
+Laravel 13 API (`api/`, PHP ^8.3) + React 19 / TypeScript SPA on Vite (`web/`).
+
+- **Database: PostgreSQL on Supabase** — `api/.env` runs `DB_CONNECTION=pgsql` against a
+  hosted Supabase instance. The SQLite fallback described in earlier revisions of this file
+  is no longer in use for development.
+- **Tests run on local PostgreSQL** — `api/phpunit.xml` targets `wisal_testing` on
+  `127.0.0.1:5432`. SQLite `:memory:` still works by exporting `DB_CONNECTION=sqlite`
+  and `DB_DATABASE=:memory:`, which is why every migration and every raw expression must
+  stay valid on **both** engines.
+- Local tooling: Laravel Herd (PHP 8.4 at `~/.config/herd/bin/php84/php.exe`), Node/npm.
+
+### Running it
+
+```bash
+cd api && php artisan serve --port=8000
+```
+
+```bash
+cd web && npm run dev
+```
+
+The SLA engine is a scheduled command, not a queued job — nothing drains the `jobs` table
+in this repo. Locally run `php artisan schedule:work`, or invoke it directly:
+
+```bash
+cd api && php artisan sla:evaluate
+```
+
+`--dry-run` reports without writing; `--backfill` stamps SLA targets on tickets created
+before Story 06 landed and is idempotent. In production this is one cron line:
+`* * * * * php artisan schedule:run`.
+
+## Design system — done
+
+Full token set (colors, priority, status, typography) and every core UI
+pattern built via Claude Design and reviewed screen-by-screen:
+[docs/design/brief.md](docs/design/brief.md) — the reference document itself.
+
+Screens, in `docs/design/references/`:
+
+| Folder | Covers |
+|---|---|
+| `0.Login/` | Login screen: default, loading, invalid-credentials, rate-limited |
+| `0.Dashboard/` | Role-based home: Agent, Team Lead, Admin dashboards |
+| `1.app-shell/` | Sidebar + header, the persistent shell every screen uses |
+| `2.ticket-queue/` | Full ticket list — filters, priority/status columns, bulk actions |
+| `3.Conversation Thread/` | Ticket detail — multi-channel message thread, AI-suggested reply |
+| `4.Data Table/` | Customers table + its empty/loading states |
+| `5.Modals/` | Create/edit forms and destructive-action confirmation |
+| `6.Knowledge/` | Knowledge Base index + article reading view |
+| `7.Admin Reports/` | Users, SLA Rules, Reports (charts) |
+
+Every batch was reviewed for: structural parity across light/dark/LTR/RTL,
+WCAG contrast (computed, not assumed), and a recurring bug pattern worth
+knowing about — a CSS class referenced in markup with no rule defined in
+`<style>` (`fv`/`fvd` for focus-visible, `sk` for skeletons). Always grep for
+this before trusting a new export.
+
+## Planning — squad-kit
+
+Workflow explained in [.squad/README.md](.squad/README.md). Live state:
+`squad status` and `squad list`, or [.squad/plans/00-index.md](.squad/plans/00-index.md).
+
+The index's **Depth** column records plan depth (`full` / `contract`) and flips to
+`implemented` via the `index-sync` Stop hook once a story's Done Criteria are all ticked.
+**Ticking those boxes is the project owner's step, not Claude's** — see the
+`feedback_plan_checkbox_ownership` memory.
+
+Three roles used consistently across every design screen: **Agent**,
+**Team Lead/Supervisor**, **Administrator**. Customer Portal login is
+explicitly out of scope — it is external/customer-facing and would be its own
+story.
+
+## Working agreement
+
+Claude guides — gives exact commands, prompts, and drafts to review — and
+only executes directly on an explicit go-ahead. Established after two
+corrections in this project. See the `feedback_execution_boundary` memory for
+the full rule.

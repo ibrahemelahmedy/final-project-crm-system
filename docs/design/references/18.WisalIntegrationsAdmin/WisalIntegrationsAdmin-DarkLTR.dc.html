@@ -1,0 +1,893 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .fv:focus-visible{outline:2px solid #818CF8;outline-offset:2px;border-radius:4px;}
+    .sk{background:linear-gradient(90deg,#2A2C33 25%,#33343D 37%,#2A2C33 63%);background-size:400% 100%;animation:skshimmer 1.4s ease-in-out infinite;}
+    @keyframes skshimmer{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
+    @keyframes wspin{to{transform:rotate(360deg);}}body{margin:0;background:#e7e9ee;}*{box-sizing:border-box;}</style>
+</helmet>
+<div style="width:100%;min-height:100vh;background:#e7e9ee;padding:64px;display:flex;flex-direction:column;gap:56px;font-family:'Inter',sans-serif;">
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · MIXED (PRIMARY)</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"></rect><rect x="4" y="14" width="16" height="6" rx="1.5"></rect><path d="M8 7h.01 M8 17h.01"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">ERP</span>
+              </div>
+              <span style="background:rgba(52,211,153,0.14);color:#34D399;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Sync customer and order records from your ERP system into Wisal tickets.</div>
+            <button class="fv" style="background:#202128;color:#A5B4FC;border:1px solid rgba(129,140,248,0.35);border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Configure</button>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#94A3B8;padding-top:10px;border-top:1px solid #2A2C33;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>Last synced 3 hours ago</div>
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Email</span>
+              </div>
+              <span style="background:rgba(52,211,153,0.14);color:#34D399;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Receive and send support tickets through a connected email inbox.</div>
+            <button class="fv" style="background:#202128;color:#A5B4FC;border:1px solid rgba(129,140,248,0.35);border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Configure</button>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#94A3B8;padding-top:10px;border-top:1px solid #2A2C33;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>Last synced 12 minutes ago</div>
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">SMS</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Send and receive customer replies over SMS.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 9 18.5z"></path><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">WhatsApp</span>
+              </div>
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">CONNECTION ERROR</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Handle customer conversations over WhatsApp Business.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Reconnect</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:11.5px;padding-top:10px;border-top:1px solid #2A2C33;"><span style="color:#F87171;font-weight:600;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>Last sync failed</span><a href="#" class="fv" style="color:#A5B4FC;font-weight:700;text-decoration:none;">View details</a></div>
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L4 12l5 6 M15 6l5 6-5 6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Custom API / Webhook</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Push and pull ticket data through a custom API endpoint.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · EMPTY</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"></rect><rect x="4" y="14" width="16" height="6" rx="1.5"></rect><path d="M8 7h.01 M8 17h.01"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">ERP</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Sync customer and order records from your ERP system into Wisal tickets.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Email</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Receive and send support tickets through a connected email inbox.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">SMS</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Send and receive customer replies over SMS.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 9 18.5z"></path><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">WhatsApp</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Handle customer conversations over WhatsApp Business.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L4 12l5 6 M15 6l5 6-5 6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Custom API / Webhook</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Push and pull ticket data through a custom API endpoint.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · CONNECT MODAL — IDLE</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"></rect><rect x="4" y="14" width="16" height="6" rx="1.5"></rect><path d="M8 7h.01 M8 17h.01"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">ERP</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Sync customer and order records from your ERP system into Wisal tickets.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Email</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Receive and send support tickets through a connected email inbox.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">SMS</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Send and receive customer replies over SMS.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 9 18.5z"></path><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">WhatsApp</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Handle customer conversations over WhatsApp Business.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L4 12l5 6 M15 6l5 6-5 6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Custom API / Webhook</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Push and pull ticket data through a custom API endpoint.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;background:rgba(2,4,10,0.6);display:flex;align-items:center;justify-content:center;">
+      <div style="width:480px;background:#1C1D24;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #2A2C33;">
+          <span style="font-size:15px;font-weight:700;color:#F1F5F9;">Connect ERP</span>
+          <button class="fv" aria-label="Close" style="width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:#94A3B8;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        </div>
+        <form style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label for="ep" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">Endpoint URL</label>
+            <input id="ep" type="text" placeholder="https://api.your-erp.com/v1" value="" style="height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#F1F5F9;font-family:inherit;background:#121317;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+                <label for="apikey" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">API key / secret</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input id="apikey" type="text" value="••••••••••••" readonly style="flex:1;height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#CBD5E1;background:#121317;font-family:inherit;">
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Reveal</button>
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Copy</button>
+                </div>
+              </div>
+          
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px;">
+            <button class="fv" type="button" style="background:#202128;color:#A5B4FC;border:1px solid rgba(129,140,248,0.35);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">Test connection</button>
+            <div style="display:flex;gap:10px;">
+              <button class="fv" type="button" style="background:transparent;color:#94A3B8;border:none;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+              <button class="fv" type="submit" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · CONNECT MODAL — TESTING</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"></rect><rect x="4" y="14" width="16" height="6" rx="1.5"></rect><path d="M8 7h.01 M8 17h.01"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">ERP</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Sync customer and order records from your ERP system into Wisal tickets.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Email</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Receive and send support tickets through a connected email inbox.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">SMS</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Send and receive customer replies over SMS.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 9 18.5z"></path><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">WhatsApp</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Handle customer conversations over WhatsApp Business.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L4 12l5 6 M15 6l5 6-5 6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Custom API / Webhook</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Push and pull ticket data through a custom API endpoint.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;background:rgba(2,4,10,0.6);display:flex;align-items:center;justify-content:center;">
+      <div style="width:480px;background:#1C1D24;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #2A2C33;">
+          <span style="font-size:15px;font-weight:700;color:#F1F5F9;">Connect ERP</span>
+          <button class="fv" aria-label="Close" style="width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:#94A3B8;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        </div>
+        <form style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label for="ep" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">Endpoint URL</label>
+            <input id="ep" type="text" placeholder="https://api.your-erp.com/v1" value="https://api.acme-erp.com/v1" style="height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#F1F5F9;font-family:inherit;background:#121317;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+                <label for="apikey" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">API key / secret</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input id="apikey" type="text" value="sk_live_••••••••wX9L" readonly style="flex:1;height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#CBD5E1;background:#121317;font-family:inherit;">
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Reveal</button>
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Copy</button>
+                </div>
+              </div>
+          
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px;">
+            <button class="fv" type="button" aria-disabled="true" style="background:#202128;color:#A5B4FC;opacity:.7;border:1px solid rgba(129,140,248,0.35);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:not-allowed;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" style="animation:wspin .8s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity=".3"></circle><path d="M21 12a9 9 0 0 0-9-9"></path></svg>Testing…</button>
+            <div style="display:flex;gap:10px;">
+              <button class="fv" type="button" style="background:transparent;color:#94A3B8;border:none;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+              <button class="fv" type="submit" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · CONNECT MODAL — TEST FAILED</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.5"></rect><rect x="4" y="14" width="16" height="6" rx="1.5"></rect><path d="M8 7h.01 M8 17h.01"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">ERP</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Sync customer and order records from your ERP system into Wisal tickets.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Email</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Receive and send support tickets through a connected email inbox.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">SMS</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Send and receive customer replies over SMS.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 9 18.5z"></path><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">WhatsApp</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Handle customer conversations over WhatsApp Business.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L4 12l5 6 M15 6l5 6-5 6"></path></svg></div>
+                <span style="font-size:14.5px;font-weight:700;color:#F1F5F9;">Custom API / Webhook</span>
+              </div>
+              <span style="background:#202128;color:#94A3B8;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 9px;">NOT CONNECTED</span>
+            </div>
+            <div style="font-size:12.5px;color:#94A3B8;line-height:1.5;flex:1;">Push and pull ticket data through a custom API endpoint.</div>
+            <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">Connect</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;background:rgba(2,4,10,0.6);display:flex;align-items:center;justify-content:center;">
+      <div style="width:480px;background:#1C1D24;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #2A2C33;">
+          <span style="font-size:15px;font-weight:700;color:#F1F5F9;">Connect ERP</span>
+          <button class="fv" aria-label="Close" style="width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:#94A3B8;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        </div>
+        <form style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label for="ep" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">Endpoint URL</label>
+            <input id="ep" type="text" placeholder="https://api.your-erp.com/v1" value="https://api.acme-erp.com/v1" style="height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#F1F5F9;font-family:inherit;background:#121317;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+                <label for="apikey" style="font-size:12.5px;font-weight:600;color:#CBD5E1;">API key / secret</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input id="apikey" type="text" value="sk_live_••••••••wX9L" readonly style="flex:1;height:38px;border-radius:8px;border:1px solid #475569;padding:0 12px;font-size:13px;color:#CBD5E1;background:#121317;font-family:inherit;">
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Reveal</button>
+                  <button class="fv" type="button" style="height:38px;padding:0 12px;border-radius:8px;border:1px solid #2A2C33;background:#202128;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;">Copy</button>
+                </div>
+              </div>
+          <div style="display:flex;gap:8px;background:rgba(248,113,113,0.14);border:1px solid rgba(248,113,113,0.35);border-radius:8px;padding:10px 12px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+                <span style="font-size:12.5px;color:#F87171;line-height:1.5;">Couldn't reach the endpoint. Check the URL and API key, then try again.</span>
+              </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px;">
+            <button class="fv" type="button" style="background:#202128;color:#A5B4FC;border:1px solid rgba(129,140,248,0.35);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">Test connection</button>
+            <div style="display:flex;gap:10px;">
+              <button class="fv" type="button" style="background:transparent;color:#94A3B8;border:none;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+              <button class="fv" type="submit" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">INTEGRATIONS &amp; ERP · LOADING</div>
+  <div style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'Inter',sans-serif;color:#F1F5F9;position:relative;">
+    <div style="width:260px;flex-shrink:0;background:#1C1D24;border-right:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="26" height="26"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:18px;font-weight:700;color:#F1F5F9;">Wisal</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>Tickets</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>Customers</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>Knowledge Base</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>Channels</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>Reports</div>
+      </div>
+
+      <div style="margin-top:18px;padding:0 12px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;">ADMIN</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>SLA Rules</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#475569;font-weight:500;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>Users</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z M12 11v4 M9.8 12.8h4.4"></path></svg>Integrations</div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:34px;height:34px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">SA</div>
+        <div style="display:flex;flex-direction:column;min-width:0;">
+          <span style="font-size:13px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+          <span style="font-size:11px;color:#94A3B8;">Senior Support Agent</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:68px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:14px;padding:0 24px;">
+        <div style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:#121317;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg>
+          <span style="font-size:13px;flex:1;">Search tickets, customers…</span>
+          <span style="font-size:11px;font-weight:600;color:#64748B;background:#1C1D24;border:1px solid #2A2C33;border-radius:4px;padding:2px 6px;">⌘K</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>New Ticket</button>
+        <div style="width:1px;height:24px;background:#2A2C33;"></div>
+        <button class="fv" aria-label="Toggle dark mode" title="Toggle dark mode" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="Switch language to Arabic" title="Switch language to Arabic" style="display:flex;align-items:center;gap:6px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>EN</button>
+        <button class="fv" aria-label="Notifications" title="Notifications" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">SR. AGENT</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#F1F5F9;">Integrations</div>
+          <div style="font-size:13px;color:#94A3B8;margin-top:2px;">Connect Wisal to your ERP and communication providers</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="sk" style="width:38px;height:38px;border-radius:8px;"></div><div class="sk" style="width:90px;height:16px;border-radius:5px;"></div></div>
+              <div class="sk" style="width:80px;height:20px;border-radius:6px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:70%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:100px;height:34px;border-radius:8px;"></div>
+          </div><div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="sk" style="width:38px;height:38px;border-radius:8px;"></div><div class="sk" style="width:90px;height:16px;border-radius:5px;"></div></div>
+              <div class="sk" style="width:80px;height:20px;border-radius:6px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:70%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:100px;height:34px;border-radius:8px;"></div>
+          </div><div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="sk" style="width:38px;height:38px;border-radius:8px;"></div><div class="sk" style="width:90px;height:16px;border-radius:5px;"></div></div>
+              <div class="sk" style="width:80px;height:20px;border-radius:6px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:70%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:100px;height:34px;border-radius:8px;"></div>
+          </div><div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="sk" style="width:38px;height:38px;border-radius:8px;"></div><div class="sk" style="width:90px;height:16px;border-radius:5px;"></div></div>
+              <div class="sk" style="width:80px;height:20px;border-radius:6px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:70%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:100px;height:34px;border-radius:8px;"></div>
+          </div><div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;"><div class="sk" style="width:38px;height:38px;border-radius:8px;"></div><div class="sk" style="width:90px;height:16px;border-radius:5px;"></div></div>
+              <div class="sk" style="width:80px;height:20px;border-radius:6px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:70%;height:11px;border-radius:4px;"></div>
+            <div class="sk" style="width:100px;height:34px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E12;font-family:'Inter',sans-serif;}*{box-sizing:border-box;}
+.fv:focus-visible{outline:2px solid #818CF8;outline-offset:2px;border-radius:4px;}
+.sk{background:linear-gradient(90deg,#1E2028 25%,#252730 37%,#1E2028 63%);background-size:400% 100%;animation:shim 1.4s ease infinite;border-radius:6px;}
+@keyframes shim{0%{background-position:100% 0}100%{background-position:0 0}}
+.nr{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid #2A2C33;cursor:pointer;}
+.nr:last-child{border-bottom:none;}
+.nr-u{background:rgba(129,140,248,0.07);}
+.nr-r{background:#121317;}
+.ni{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div style="padding:64px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;">
+
+<style>.lbl{font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:14px;}</style>
+
+<!-- ===== BELL STATES ===== -->
+<div>
+<div class="lbl">Bell states (no unread / 3 unread / 9+ unread)</div>
+<div style="display:flex;gap:24px;align-items:center;">
+  <!-- No unread -->
+  <button class="fv" aria-label="Notifications, no unread" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#1C1D24;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+  </button>
+  <!-- 3 unread -->
+  <button class="fv" aria-label="Notifications, 3 unread" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#1C1D24;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <span style="position:absolute;top:4px;right:3px;min-width:16px;height:16px;border-radius:999px;background:#F87171;border:2px solid #1C1D24;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">3</span>
+  </button>
+  <!-- 9+ unread -->
+  <button class="fv" aria-label="Notifications, more than 9 unread" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#1C1D24;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <span style="position:absolute;top:4px;right:1px;min-width:18px;height:16px;border-radius:999px;background:#F87171;border:2px solid #1C1D24;font-size:8.5px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">9+</span>
+  </button>
+</div>
+</div>
+
+<!-- ===== SUCCESS — panel open ===== -->
+<div>
+<div class="lbl">WisalNotifications-DarkLTR · Success (panel open)</div>
+<!-- App Shell Header strip -->
+<div style="width:1500px;background:#1C1D24;border:1px solid #2A2C33;border-radius:16px 16px 0 0;height:68px;display:flex;align-items:center;gap:14px;padding:0 24px;">
+  <svg viewBox="0 0 64 64" width="22" height="22"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"/><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"/></svg>
+  <span style="font-size:15px;font-weight:700;color:#F1F5F9;">Wisal</span>
+  <div style="flex:1;max-width:380px;display:flex;align-items:center;gap:8px;background:#252730;border:1px solid #2A2C33;border-radius:8px;padding:8px 12px;color:#64748B;font-size:13px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"/></svg>Search…</div>
+  <div style="flex:1;"></div>
+  <button class="fv" style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#121317;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New Ticket</button>
+  <div style="width:1px;height:24px;background:#2A2C33;"></div>
+  <!-- Theme toggle: sun (dark mode) -->
+  <button class="fv" style="width:36px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="5"/></svg></button>
+  <button class="fv" style="display:flex;align-items:center;gap:5px;height:36px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zM3.5 9h17M3.5 15h17M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"/></svg>EN</button>
+  <!-- Bell — active/open, 3 unread -->
+  <div style="position:relative;">
+    <button class="fv" aria-label="Notifications, 3 unread" aria-expanded="true" style="width:36px;height:36px;border-radius:8px;border:1.5px solid #818CF8;background:rgba(129,140,248,0.14);display:flex;align-items:center;justify-content:center;color:#818CF8;cursor:pointer;position:relative;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+      <span style="position:absolute;top:4px;right:3px;min-width:16px;height:16px;border-radius:999px;background:#F87171;border:2px solid rgba(129,140,248,0.14);font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">3</span>
+    </button>
+    <!-- Panel -->
+    <div role="dialog" aria-label="Notifications" style="position:absolute;top:calc(100% + 8px);right:0;width:380px;background:#1C1D24;border:1px solid #2A2C33;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.5);z-index:100;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #2A2C33;">
+        <span style="font-size:14px;font-weight:700;color:#F1F5F9;">Notifications</span>
+        <button class="fv" style="font-size:12px;font-weight:600;color:#818CF8;background:transparent;border:none;cursor:pointer;">Mark all as read</button>
+      </div>
+      <div role="list" style="max-height:380px;overflow-y:auto;">
+        <!-- SLA at risk — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:rgba(180,83,9,0.18);color:#FBBF24;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#818CF8;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#FBBF24;">SLA at risk</span><span style="font-size:11px;color:#64748B;margin-left:auto;">12 min ago</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#F1F5F9;line-height:1.45;">#4821 "Payment not going through" is approaching its resolution deadline.</div>
+          </div>
+        </div>
+        <!-- Mention — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:rgba(129,140,248,0.18);color:#818CF8;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#818CF8;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#818CF8;">Mention</span><span style="font-size:11px;color:#64748B;margin-left:auto;">35 min ago</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#F1F5F9;line-height:1.45;">James Rodriguez mentioned you in a note on #4819 "Can't access dashboard".</div>
+          </div>
+        </div>
+        <!-- Task reminder — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:rgba(5,150,105,0.18);color:#34D399;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M9 16l2 2 4-4"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#818CF8;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#34D399;">Task due</span><span style="font-size:11px;color:#64748B;margin-left:auto;">1 hr ago</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#F1F5F9;line-height:1.45;">Your task "Call customer back about declined payment" on #4821 is overdue.</div>
+          </div>
+        </div>
+        <!-- SLA breached — read -->
+        <div role="listitem" class="nr nr-r">
+          <div class="ni" style="background:rgba(185,28,28,0.18);color:#F87171;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="font-size:12px;font-weight:700;color:#F87171;">SLA breached</span><span style="font-size:11px;color:#64748B;margin-left:auto;">3 hr ago</span></div>
+            <div style="font-size:12.5px;font-weight:500;color:#94A3B8;line-height:1.45;">#4797 "Data export missing rows" missed its resolution deadline.</div>
+          </div>
+        </div>
+        <!-- Mention — read -->
+        <div role="listitem" class="nr nr-r">
+          <div class="ni" style="background:#252730;color:#64748B;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="font-size:12px;font-weight:700;color:#64748B;">Mention</span><span style="font-size:11px;color:#64748B;margin-left:auto;">Aug 24</span></div>
+            <div style="font-size:12.5px;font-weight:500;color:#94A3B8;line-height:1.45;">Riya Patel mentioned you in a note on #4781 "Account suspended in error".</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid #2A2C33;text-align:center;">
+        <a class="fv" href="#" style="font-size:12.5px;font-weight:600;color:#818CF8;text-decoration:none;">View all notifications</a>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding-left:6px;cursor:pointer;"><div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#121317;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">SA</div><div style="display:flex;flex-direction:column;"><span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">Sarah Ahmed</span><span style="font-size:10px;font-weight:700;color:#818CF8;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;">SR. AGENT</span></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"/></svg></div>
+</div>
+<div style="width:1500px;height:480px;background:#121317;border:1px solid #2A2C33;border-top:none;border-radius:0 0 16px 16px;display:flex;align-items:center;justify-content:center;color:#64748B;font-size:13px;">App Shell body content (Tickets, etc.)</div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div>
+<div class="lbl">Loading state</div>
+<div style="width:380px;background:#1C1D24;border:1px solid #2A2C33;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);overflow:hidden;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #2A2C33;"><span style="font-size:14px;font-weight:700;color:#F1F5F9;">Notifications</span><div class="sk" style="width:90px;height:14px;"></div></div>
+  <div style="display:flex;flex-direction:column;gap:0;">
+    <div class="nr nr-u"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:35%;height:11px;"></div><div class="sk" style="width:90%;height:12px;"></div></div></div>
+    <div class="nr nr-u"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:28%;height:11px;"></div><div class="sk" style="width:80%;height:12px;"></div></div></div>
+    <div class="nr nr-r"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:32%;height:11px;"></div><div class="sk" style="width:75%;height:12px;"></div></div></div>
+    <div class="nr nr-r"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:30%;height:11px;"></div><div class="sk" style="width:85%;height:12px;"></div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ===== EMPTY ===== -->
+<div>
+<div class="lbl">Empty state</div>
+<div style="width:380px;background:#1C1D24;border:1px solid #2A2C33;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);overflow:hidden;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #2A2C33;"><span style="font-size:14px;font-weight:700;color:#F1F5F9;">Notifications</span></div>
+  <div style="padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <div style="font-size:14px;font-weight:700;color:#F1F5F9;">You're all caught up</div>
+    <div style="font-size:12.5px;color:#64748B;line-height:1.5;">No notifications right now — check back later.</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== ERROR ===== -->
+<div>
+<div class="lbl">Error state</div>
+<div style="width:380px;background:#1C1D24;border:1px solid #2A2C33;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);overflow:hidden;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #2A2C33;"><span style="font-size:14px;font-weight:700;color:#F1F5F9;">Notifications</span></div>
+  <div style="padding:24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;background:rgba(185,28,28,0.12);margin:12px;border-radius:10px;border:1px solid rgba(248,113,113,0.2);">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+    <div style="font-size:13px;font-weight:700;color:#F87171;">Couldn't load notifications</div>
+    <div style="font-size:12px;color:#64748B;">Check your connection and try again.</div>
+    <button class="fv" style="border:1px solid rgba(248,113,113,0.3);background:#121317;color:#F87171;border-radius:8px;padding:7px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">Retry</button>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body></html>

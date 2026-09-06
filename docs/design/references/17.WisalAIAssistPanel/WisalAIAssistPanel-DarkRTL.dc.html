@@ -1,0 +1,911 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#e7e9ee;}*{box-sizing:border-box;}
+    .fv:focus-visible{outline:2px solid #818CF8;outline-offset:2px;border-radius:4px;}
+  .sk{background:linear-gradient(90deg,#2A2C33 25%,#33353F 37%,#2A2C33 63%);background-size:400% 100%;animation:skshimmer 1.4s ease-in-out infinite;}
+    @keyframes skshimmer{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
+  </style>
+</helmet>
+<div style="width:100%;min-height:100vh;background:#e7e9ee;padding:64px;display:flex;flex-direction:column;gap:56px;font-family:'Inter',sans-serif;">
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">TICKET #4821 · AI ASSIST PANEL · SUGGESTION READY (primary)</div>
+  <div dir="rtl" style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F1F5F9;">
+    <div style="width:230px;flex-shrink:0;background:#1C1D24;border-left:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="24" height="24"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:17px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>لوحة التحكم</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>التذاكر</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>العملاء</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>قاعدة المعرفة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>القنوات</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>التقارير</div>
+      </div>
+      <div style="margin-top:18px;padding:0 12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#64748B;">الإدارة</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>قواعد اتفاقية الخدمة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>المستخدمون</div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+        <div style="display:flex;flex-direction:column;min-width:0;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</span></div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:64px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:12px;padding:0 22px;">
+        <button style="display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#A5B4FC;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);"><path d="M15 6l-6 6 6 6"></path></svg>العودة إلى التذاكر</button>
+        <div style="width:1px;height:20px;background:#2A2C33;"></div>
+        <span style="font-size:14px;font-weight:700;direction:ltr;">#4821</span>
+        <span style="font-size:13.5px;color:#CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">تعذر إعادة تعيين كلمة المرور عبر البريد</span>
+        <div style="flex:1;"></div>
+        <button class="fv" aria-label="بحث" title="بحث" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg></button>
+        <button class="fv" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="التبديل إلى الإنجليزية" title="التبديل إلى الإنجليزية" style="display:flex;align-items:center;gap:6px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>ع</button>
+        <button class="fv" aria-label="الإشعارات" title="الإشعارات" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-right:4px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">سارة أحمد</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">وكيلة أول</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0;">
+        <!-- Thread -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #2A2C33;">
+          <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">أت</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:02 ص</span></div>
+                <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">مرحبًا بالفريق، أحاول منذ ساعة إعادة تعيين كلمة المرور، لكن رابط إعادة التعيين في البريد الإلكتروني يستمر بالإشارة إلى أنه منتهي الصلاحية. هل يمكنكم المساعدة؟</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-direction:row-reverse;">
+              <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:row-reverse;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:11 ص</span></div>
+                <div style="background:#818CF8;color:#1C1D24;border-radius:10px;border-top-left-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;font-weight:500;">مرحبًا أميليا، آسفة على ذلك! تنتهي صلاحية روابط إعادة التعيين بعد 15 دقيقة. لقد أرسلت لك رابطًا جديدًا للتو — يجب أن يصلك خلال دقيقة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg>
+              </div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:15 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">وصلني الرابط الجديد، شكرًا! انتقلت إلى واتساب لأنه أسرع بالنسبة لي. أعيد التعيين الآن 🙏</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(251,191,36,0.18);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16z M14.5 5.5l4 4"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><span style="font-size:10.5px;font-weight:700;color:#FBBF24;background:rgba(251,191,36,0.14);border-radius:4px;padding:1px 6px;">ملاحظة داخلية</span><span style="font-size:11px;color:#64748B;">22 أغسطس، 8:16 ص</span></div>
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#FDE68A;">يُظهر حساب العميلة 3 محاولات فاشلة لإعادة التعيين خلال آخر 24 ساعة — على الأرجح تأخير في تسليم البريد من جهة مزود خدمتها، وليس خطأً تقنياً. أسجل ذلك احتياطًا في حال تصعيدها للمشكلة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:24 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">تم كل شيء، سجّلت الدخول بنجاح. شكرًا على المساعدة السريعة!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div style="border-top:1px solid #2A2C33;padding:14px 22px;display:flex;flex-direction:column;gap:10px;">
+            <div style="background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="display:flex;align-items:center;gap:4px;background:#8B5CF6;color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;border-radius:5px;padding:2px 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>رد مقترح بالذكاء الاصطناعي</span>
+                <button class="fv" aria-label="إعادة إنشاء الاقتراح" title="إعادة إنشاء الاقتراح" style="background:transparent;border:none;color:#C4B5FD;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5 M20 20v-5h-5 M4.5 15a8 8 0 0 0 14 3.4 M19.5 9a8 8 0 0 0-14-3.4"></path></svg></button>
+              </div>
+              <div style="font-size:13px;line-height:1.6;color:#DDD6FE;">يسعدني أنه تم حل المشكلة يا أميليا! شكرًا لتأكيدك — لا تترددي في التواصل معنا إذا احتجت أي شيء آخر.</div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <button class="fv" style="background:#8B5CF6;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;">استخدام هذا الرد</button>
+                <button class="fv" style="background:transparent;color:#C4B5FD;border:none;font-size:12px;font-weight:700;cursor:pointer;padding:7px 4px;">تجاهل</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(52,211,153,0.14);color:#34D399;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3z"></path></svg>الرد عبر واتساب<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg></div>
+            </div>
+            <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:13px;color:#64748B;">اكتب ردًا…</div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:8px;">
+                <button style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#1C1D24;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">إرسال<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1C1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata panel -->
+        <div style="width:300px;flex-shrink:0;background:#1C1D24;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="display:flex;align-items:center;gap:4px;background:#8B5CF6;color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;border-radius:5px;padding:2px 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>AI</span>
+                <span style="font-size:11px;font-weight:700;color:#C4B5FD;letter-spacing:.03em;">ملخص التذكرة</span>
+              </div>
+              <button class="fv" aria-label="إعادة إنشاء الملخص" title="إعادة إنشاء الملخص" style="background:transparent;border:none;color:#C4B5FD;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5 M20 20v-5h-5 M4.5 15a8 8 0 0 0 14 3.4 M19.5 9a8 8 0 0 0-14-3.4"></path></svg></button>
+            </div>
+            <div style="font-size:12.5px;line-height:1.55;color:#DDD6FE;">لم تتمكن العميلة من إعادة تعيين كلمة المرور بعد انتهاء صلاحية الرابط؛ تم إرسال رابط جديد وأكملت العملية عبر واتساب. تشير ملاحظة داخلية إلى أن المحاولات الثلاث الفاشلة على الأرجح تأخير في تسليم البريد الإلكتروني وليست خطأً تقنياً. تم حل المشكلة الآن.</div>
+            <div style="font-size:10.5px;color:#A78BFA;">تم التلخيص قبل دقيقتين</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">تفاصيل التذكرة</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">عاجل</span>
+              <span style="background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">مفتوحة</span>
+            </div>
+            <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:#FCA5A5;font-weight:600;">خرق الاتفاقية خلال</span>
+              <span style="font-size:15px;font-weight:700;color:#F87171;direction:ltr;">12د</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوكيلة المسؤولة</div>
+            <div style="display:flex;align-items:center;gap:10px;background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:10px;">
+              <div style="width:30px;height:30px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;">سأ</div>
+              <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">سارة أحمد</div><div style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</div></div>
+              <button style="font-size:11px;font-weight:700;color:#A5B4FC;background:transparent;border:none;cursor:pointer;">إعادة الإسناد</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">العميلة</div>
+            <div style="background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">أت</div>
+                <div><div style="font-size:13px;font-weight:700;">أميليا تشين</div><div style="font-size:11px;color:#94A3B8;">عميلة منذ مارس 2023</div></div>
+              </div>
+              <div style="font-size:12px;color:#CBD5E1;display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #2A2C33;">
+                <span style="direction:ltr;">amelia.chen@northwind.io</span>
+                <span style="direction:ltr;">Northwind Retail Co.</span>
+                <span style="direction:ltr;">+1 (415) 555-0148</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوسوم</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">الوصول للحساب</span>
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">إعادة تعيين كلمة المرور</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">TICKET #4821 · AI ASSIST PANEL · GENERATING</div>
+  <div dir="rtl" style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F1F5F9;">
+    <div style="width:230px;flex-shrink:0;background:#1C1D24;border-left:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="24" height="24"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:17px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>لوحة التحكم</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>التذاكر</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>العملاء</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>قاعدة المعرفة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>القنوات</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>التقارير</div>
+      </div>
+      <div style="margin-top:18px;padding:0 12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#64748B;">الإدارة</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>قواعد اتفاقية الخدمة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>المستخدمون</div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+        <div style="display:flex;flex-direction:column;min-width:0;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</span></div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:64px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:12px;padding:0 22px;">
+        <button style="display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#A5B4FC;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);"><path d="M15 6l-6 6 6 6"></path></svg>العودة إلى التذاكر</button>
+        <div style="width:1px;height:20px;background:#2A2C33;"></div>
+        <span style="font-size:14px;font-weight:700;direction:ltr;">#4821</span>
+        <span style="font-size:13.5px;color:#CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">تعذر إعادة تعيين كلمة المرور عبر البريد</span>
+        <div style="flex:1;"></div>
+        <button class="fv" aria-label="بحث" title="بحث" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg></button>
+        <button class="fv" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="التبديل إلى الإنجليزية" title="التبديل إلى الإنجليزية" style="display:flex;align-items:center;gap:6px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>ع</button>
+        <button class="fv" aria-label="الإشعارات" title="الإشعارات" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-right:4px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">سارة أحمد</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">وكيلة أول</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0;">
+        <!-- Thread -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #2A2C33;">
+          <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">أت</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:02 ص</span></div>
+                <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">مرحبًا بالفريق، أحاول منذ ساعة إعادة تعيين كلمة المرور، لكن رابط إعادة التعيين في البريد الإلكتروني يستمر بالإشارة إلى أنه منتهي الصلاحية. هل يمكنكم المساعدة؟</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-direction:row-reverse;">
+              <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:row-reverse;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:11 ص</span></div>
+                <div style="background:#818CF8;color:#1C1D24;border-radius:10px;border-top-left-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;font-weight:500;">مرحبًا أميليا، آسفة على ذلك! تنتهي صلاحية روابط إعادة التعيين بعد 15 دقيقة. لقد أرسلت لك رابطًا جديدًا للتو — يجب أن يصلك خلال دقيقة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg>
+              </div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:15 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">وصلني الرابط الجديد، شكرًا! انتقلت إلى واتساب لأنه أسرع بالنسبة لي. أعيد التعيين الآن 🙏</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(251,191,36,0.18);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16z M14.5 5.5l4 4"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><span style="font-size:10.5px;font-weight:700;color:#FBBF24;background:rgba(251,191,36,0.14);border-radius:4px;padding:1px 6px;">ملاحظة داخلية</span><span style="font-size:11px;color:#64748B;">22 أغسطس، 8:16 ص</span></div>
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#FDE68A;">يُظهر حساب العميلة 3 محاولات فاشلة لإعادة التعيين خلال آخر 24 ساعة — على الأرجح تأخير في تسليم البريد من جهة مزود خدمتها، وليس خطأً تقنياً. أسجل ذلك احتياطًا في حال تصعيدها للمشكلة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:24 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">تم كل شيء، سجّلت الدخول بنجاح. شكرًا على المساعدة السريعة!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div style="border-top:1px solid #2A2C33;padding:14px 22px;display:flex;flex-direction:column;gap:10px;">
+            <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="sk" style="width:130px;height:16px;border-radius:5px;"></div>
+                <div class="sk" style="width:20px;height:20px;border-radius:5px;"></div>
+              </div>
+              <div class="sk" style="width:100%;height:11px;border-radius:4px;"></div>
+              <div class="sk" style="width:80%;height:11px;border-radius:4px;"></div>
+              <div style="display:flex;gap:10px;">
+                <div class="sk" style="width:110px;height:28px;border-radius:8px;"></div>
+                <div class="sk" style="width:70px;height:28px;border-radius:8px;"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(52,211,153,0.14);color:#34D399;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3z"></path></svg>الرد عبر واتساب<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg></div>
+            </div>
+            <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:13px;color:#64748B;">اكتب ردًا…</div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:8px;">
+                <button style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#1C1D24;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">إرسال<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1C1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata panel -->
+        <div style="width:300px;flex-shrink:0;background:#1C1D24;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="sk" style="width:70px;height:16px;border-radius:5px;"></div>
+              <div class="sk" style="width:20px;height:20px;border-radius:5px;"></div>
+            </div>
+            <div class="sk" style="width:100%;height:10px;border-radius:4px;"></div>
+            <div class="sk" style="width:92%;height:10px;border-radius:4px;"></div>
+            <div class="sk" style="width:60%;height:10px;border-radius:4px;"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">تفاصيل التذكرة</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">عاجل</span>
+              <span style="background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">مفتوحة</span>
+            </div>
+            <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:#FCA5A5;font-weight:600;">خرق الاتفاقية خلال</span>
+              <span style="font-size:15px;font-weight:700;color:#F87171;direction:ltr;">12د</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوكيلة المسؤولة</div>
+            <div style="display:flex;align-items:center;gap:10px;background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:10px;">
+              <div style="width:30px;height:30px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;">سأ</div>
+              <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">سارة أحمد</div><div style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</div></div>
+              <button style="font-size:11px;font-weight:700;color:#A5B4FC;background:transparent;border:none;cursor:pointer;">إعادة الإسناد</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">العميلة</div>
+            <div style="background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">أت</div>
+                <div><div style="font-size:13px;font-weight:700;">أميليا تشين</div><div style="font-size:11px;color:#94A3B8;">عميلة منذ مارس 2023</div></div>
+              </div>
+              <div style="font-size:12px;color:#CBD5E1;display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #2A2C33;">
+                <span style="direction:ltr;">amelia.chen@northwind.io</span>
+                <span style="direction:ltr;">Northwind Retail Co.</span>
+                <span style="direction:ltr;">+1 (415) 555-0148</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوسوم</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">الوصول للحساب</span>
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">إعادة تعيين كلمة المرور</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">TICKET #4821 · AI ASSIST PANEL · SUGGESTION USED</div>
+  <div dir="rtl" style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F1F5F9;">
+    <div style="width:230px;flex-shrink:0;background:#1C1D24;border-left:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="24" height="24"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:17px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>لوحة التحكم</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>التذاكر</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>العملاء</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>قاعدة المعرفة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>القنوات</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>التقارير</div>
+      </div>
+      <div style="margin-top:18px;padding:0 12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#64748B;">الإدارة</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>قواعد اتفاقية الخدمة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>المستخدمون</div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+        <div style="display:flex;flex-direction:column;min-width:0;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</span></div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:64px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:12px;padding:0 22px;">
+        <button style="display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#A5B4FC;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);"><path d="M15 6l-6 6 6 6"></path></svg>العودة إلى التذاكر</button>
+        <div style="width:1px;height:20px;background:#2A2C33;"></div>
+        <span style="font-size:14px;font-weight:700;direction:ltr;">#4821</span>
+        <span style="font-size:13.5px;color:#CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">تعذر إعادة تعيين كلمة المرور عبر البريد</span>
+        <div style="flex:1;"></div>
+        <button class="fv" aria-label="بحث" title="بحث" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg></button>
+        <button class="fv" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="التبديل إلى الإنجليزية" title="التبديل إلى الإنجليزية" style="display:flex;align-items:center;gap:6px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>ع</button>
+        <button class="fv" aria-label="الإشعارات" title="الإشعارات" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-right:4px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">سارة أحمد</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">وكيلة أول</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0;">
+        <!-- Thread -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #2A2C33;">
+          <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">أت</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:02 ص</span></div>
+                <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">مرحبًا بالفريق، أحاول منذ ساعة إعادة تعيين كلمة المرور، لكن رابط إعادة التعيين في البريد الإلكتروني يستمر بالإشارة إلى أنه منتهي الصلاحية. هل يمكنكم المساعدة؟</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-direction:row-reverse;">
+              <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:row-reverse;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:11 ص</span></div>
+                <div style="background:#818CF8;color:#1C1D24;border-radius:10px;border-top-left-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;font-weight:500;">مرحبًا أميليا، آسفة على ذلك! تنتهي صلاحية روابط إعادة التعيين بعد 15 دقيقة. لقد أرسلت لك رابطًا جديدًا للتو — يجب أن يصلك خلال دقيقة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg>
+              </div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:15 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">وصلني الرابط الجديد، شكرًا! انتقلت إلى واتساب لأنه أسرع بالنسبة لي. أعيد التعيين الآن 🙏</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(251,191,36,0.18);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16z M14.5 5.5l4 4"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><span style="font-size:10.5px;font-weight:700;color:#FBBF24;background:rgba(251,191,36,0.14);border-radius:4px;padding:1px 6px;">ملاحظة داخلية</span><span style="font-size:11px;color:#64748B;">22 أغسطس، 8:16 ص</span></div>
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#FDE68A;">يُظهر حساب العميلة 3 محاولات فاشلة لإعادة التعيين خلال آخر 24 ساعة — على الأرجح تأخير في تسليم البريد من جهة مزود خدمتها، وليس خطأً تقنياً. أسجل ذلك احتياطًا في حال تصعيدها للمشكلة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:24 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">تم كل شيء، سجّلت الدخول بنجاح. شكرًا على المساعدة السريعة!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div style="border-top:1px solid #2A2C33;padding:14px 22px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.35);border-radius:8px;padding:8px 12px;width:fit-content;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+              <span style="font-size:12px;color:#34D399;font-weight:600;">تم إدراج رد الذكاء الاصطناعي في حقل الكتابة — راجعه قبل الإرسال</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(52,211,153,0.14);color:#34D399;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3z"></path></svg>الرد عبر واتساب<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg></div>
+            </div>
+            <div style="background:#1C1D24;border:1.5px solid rgba(167,139,250,0.5);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:13px;color:#F1F5F9;line-height:1.5;">يسعدني أنه تم حل المشكلة يا أميليا! شكرًا لتأكيدك — لا تترددي في التواصل معنا إذا احتجت أي شيء آخر.</div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:8px;">
+                <button style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#1C1D24;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">إرسال<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1C1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata panel -->
+        <div style="width:300px;flex-shrink:0;background:#1C1D24;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="display:flex;align-items:center;gap:4px;background:#8B5CF6;color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;border-radius:5px;padding:2px 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>AI</span>
+                <span style="font-size:11px;font-weight:700;color:#C4B5FD;letter-spacing:.03em;">ملخص التذكرة</span>
+              </div>
+              <button class="fv" aria-label="إعادة إنشاء الملخص" title="إعادة إنشاء الملخص" style="background:transparent;border:none;color:#C4B5FD;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5 M20 20v-5h-5 M4.5 15a8 8 0 0 0 14 3.4 M19.5 9a8 8 0 0 0-14-3.4"></path></svg></button>
+            </div>
+            <div style="font-size:12.5px;line-height:1.55;color:#DDD6FE;">لم تتمكن العميلة من إعادة تعيين كلمة المرور بعد انتهاء صلاحية الرابط؛ تم إرسال رابط جديد وأكملت العملية عبر واتساب. تشير ملاحظة داخلية إلى أن المحاولات الثلاث الفاشلة على الأرجح تأخير في تسليم البريد الإلكتروني وليست خطأً تقنياً. تم حل المشكلة الآن.</div>
+            <div style="font-size:10.5px;color:#A78BFA;">تم التلخيص قبل دقيقتين</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">تفاصيل التذكرة</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">عاجل</span>
+              <span style="background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">مفتوحة</span>
+            </div>
+            <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:#FCA5A5;font-weight:600;">خرق الاتفاقية خلال</span>
+              <span style="font-size:15px;font-weight:700;color:#F87171;direction:ltr;">12د</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوكيلة المسؤولة</div>
+            <div style="display:flex;align-items:center;gap:10px;background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:10px;">
+              <div style="width:30px;height:30px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;">سأ</div>
+              <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">سارة أحمد</div><div style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</div></div>
+              <button style="font-size:11px;font-weight:700;color:#A5B4FC;background:transparent;border:none;cursor:pointer;">إعادة الإسناد</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">العميلة</div>
+            <div style="background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">أت</div>
+                <div><div style="font-size:13px;font-weight:700;">أميليا تشين</div><div style="font-size:11px;color:#94A3B8;">عميلة منذ مارس 2023</div></div>
+              </div>
+              <div style="font-size:12px;color:#CBD5E1;display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #2A2C33;">
+                <span style="direction:ltr;">amelia.chen@northwind.io</span>
+                <span style="direction:ltr;">Northwind Retail Co.</span>
+                <span style="direction:ltr;">+1 (415) 555-0148</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوسوم</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">الوصول للحساب</span>
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">إعادة تعيين كلمة المرور</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">TICKET #4821 · AI ASSIST PANEL · SUGGESTION DISMISSED</div>
+  <div dir="rtl" style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F1F5F9;">
+    <div style="width:230px;flex-shrink:0;background:#1C1D24;border-left:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="24" height="24"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:17px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>لوحة التحكم</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>التذاكر</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>العملاء</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>قاعدة المعرفة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>القنوات</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>التقارير</div>
+      </div>
+      <div style="margin-top:18px;padding:0 12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#64748B;">الإدارة</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>قواعد اتفاقية الخدمة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>المستخدمون</div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+        <div style="display:flex;flex-direction:column;min-width:0;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</span></div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:64px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:12px;padding:0 22px;">
+        <button style="display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#A5B4FC;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);"><path d="M15 6l-6 6 6 6"></path></svg>العودة إلى التذاكر</button>
+        <div style="width:1px;height:20px;background:#2A2C33;"></div>
+        <span style="font-size:14px;font-weight:700;direction:ltr;">#4821</span>
+        <span style="font-size:13.5px;color:#CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">تعذر إعادة تعيين كلمة المرور عبر البريد</span>
+        <div style="flex:1;"></div>
+        <button class="fv" aria-label="بحث" title="بحث" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg></button>
+        <button class="fv" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="التبديل إلى الإنجليزية" title="التبديل إلى الإنجليزية" style="display:flex;align-items:center;gap:6px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>ع</button>
+        <button class="fv" aria-label="الإشعارات" title="الإشعارات" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-right:4px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">سارة أحمد</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">وكيلة أول</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0;">
+        <!-- Thread -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #2A2C33;">
+          <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">أت</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:02 ص</span></div>
+                <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">مرحبًا بالفريق، أحاول منذ ساعة إعادة تعيين كلمة المرور، لكن رابط إعادة التعيين في البريد الإلكتروني يستمر بالإشارة إلى أنه منتهي الصلاحية. هل يمكنكم المساعدة؟</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-direction:row-reverse;">
+              <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:row-reverse;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:11 ص</span></div>
+                <div style="background:#818CF8;color:#1C1D24;border-radius:10px;border-top-left-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;font-weight:500;">مرحبًا أميليا، آسفة على ذلك! تنتهي صلاحية روابط إعادة التعيين بعد 15 دقيقة. لقد أرسلت لك رابطًا جديدًا للتو — يجب أن يصلك خلال دقيقة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg>
+              </div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:15 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">وصلني الرابط الجديد، شكرًا! انتقلت إلى واتساب لأنه أسرع بالنسبة لي. أعيد التعيين الآن 🙏</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(251,191,36,0.18);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16z M14.5 5.5l4 4"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><span style="font-size:10.5px;font-weight:700;color:#FBBF24;background:rgba(251,191,36,0.14);border-radius:4px;padding:1px 6px;">ملاحظة داخلية</span><span style="font-size:11px;color:#64748B;">22 أغسطس، 8:16 ص</span></div>
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#FDE68A;">يُظهر حساب العميلة 3 محاولات فاشلة لإعادة التعيين خلال آخر 24 ساعة — على الأرجح تأخير في تسليم البريد من جهة مزود خدمتها، وليس خطأً تقنياً. أسجل ذلك احتياطًا في حال تصعيدها للمشكلة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:24 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">تم كل شيء، سجّلت الدخول بنجاح. شكرًا على المساعدة السريعة!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div style="border-top:1px solid #2A2C33;padding:14px 22px;display:flex;flex-direction:column;gap:10px;">
+            <button class="fv" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px dashed #475569;color:#94A3B8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;width:fit-content;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#64748B"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>اقتراح رد</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(52,211,153,0.14);color:#34D399;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3z"></path></svg>الرد عبر واتساب<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg></div>
+            </div>
+            <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:13px;color:#64748B;">اكتب ردًا…</div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:8px;">
+                <button style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#1C1D24;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">إرسال<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1C1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata panel -->
+        <div style="width:300px;flex-shrink:0;background:#1C1D24;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="display:flex;align-items:center;gap:4px;background:#8B5CF6;color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;border-radius:5px;padding:2px 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>AI</span>
+                <span style="font-size:11px;font-weight:700;color:#C4B5FD;letter-spacing:.03em;">ملخص التذكرة</span>
+              </div>
+              <button class="fv" aria-label="إعادة إنشاء الملخص" title="إعادة إنشاء الملخص" style="background:transparent;border:none;color:#C4B5FD;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5 M20 20v-5h-5 M4.5 15a8 8 0 0 0 14 3.4 M19.5 9a8 8 0 0 0-14-3.4"></path></svg></button>
+            </div>
+            <div style="font-size:12.5px;line-height:1.55;color:#DDD6FE;">لم تتمكن العميلة من إعادة تعيين كلمة المرور بعد انتهاء صلاحية الرابط؛ تم إرسال رابط جديد وأكملت العملية عبر واتساب. تشير ملاحظة داخلية إلى أن المحاولات الثلاث الفاشلة على الأرجح تأخير في تسليم البريد الإلكتروني وليست خطأً تقنياً. تم حل المشكلة الآن.</div>
+            <div style="font-size:10.5px;color:#A78BFA;">تم التلخيص قبل دقيقتين</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">تفاصيل التذكرة</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">عاجل</span>
+              <span style="background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">مفتوحة</span>
+            </div>
+            <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:#FCA5A5;font-weight:600;">خرق الاتفاقية خلال</span>
+              <span style="font-size:15px;font-weight:700;color:#F87171;direction:ltr;">12د</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوكيلة المسؤولة</div>
+            <div style="display:flex;align-items:center;gap:10px;background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:10px;">
+              <div style="width:30px;height:30px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;">سأ</div>
+              <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">سارة أحمد</div><div style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</div></div>
+              <button style="font-size:11px;font-weight:700;color:#A5B4FC;background:transparent;border:none;cursor:pointer;">إعادة الإسناد</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">العميلة</div>
+            <div style="background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">أت</div>
+                <div><div style="font-size:13px;font-weight:700;">أميليا تشين</div><div style="font-size:11px;color:#94A3B8;">عميلة منذ مارس 2023</div></div>
+              </div>
+              <div style="font-size:12px;color:#CBD5E1;display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #2A2C33;">
+                <span style="direction:ltr;">amelia.chen@northwind.io</span>
+                <span style="direction:ltr;">Northwind Retail Co.</span>
+                <span style="direction:ltr;">+1 (415) 555-0148</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوسوم</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">الوصول للحساب</span>
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">إعادة تعيين كلمة المرور</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;letter-spacing:.03em;">TICKET #4821 · AI ASSIST PANEL · GENERATION FAILED</div>
+  <div dir="rtl" style="width:1600px;height:1000px;background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.4);display:flex;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F1F5F9;">
+    <div style="width:230px;flex-shrink:0;background:#1C1D24;border-left:1px solid #2A2C33;display:flex;flex-direction:column;padding:20px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 20px 10px;">
+        <svg viewBox="0 0 64 64" width="24" height="24"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:17px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>لوحة التحكم</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:600;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z M9 6v12"></path></svg>التذاكر</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.5-5 5-5s5 2 5 5 M17 11a3 3 0 1 0 0-6 M14 20c.3-2.5 2-4.3 4-4.7 M21 20c-.2-1.7-1-3-2.3-3.8"></path></svg>العملاء</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"></path></svg>قاعدة المعرفة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H8l-4 4z"></path></svg>القنوات</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10 M11 20V4 M17 20v-7"></path></svg>التقارير</div>
+      </div>
+      <div style="margin-top:18px;padding:0 12px;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#64748B;">الإدارة</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z M9.5 12l1.8 1.8L14.5 10"></path></svg>قواعد اتفاقية الخدمة</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94A3B8;font-weight:500;font-size:13.5px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.6"></circle><path d="M2.3 16c0-2.6 2.1-4.7 4.7-4.7s4.7 2.1 4.7 4.7"></path><circle cx="14.7" cy="7.4" r="2.2"></circle><path d="M12 11.6c.5-.15 1-.25 1.5-.25 2.3 0 4.2 1.9 4.2 4.2"></path></svg>المستخدمون</div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#202128;">
+        <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+        <div style="display:flex;flex-direction:column;min-width:0;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</span></div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="height:64px;flex-shrink:0;background:#1C1D24;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:12px;padding:0 22px;">
+        <button style="display:flex;align-items:center;gap:5px;background:transparent;border:none;color:#A5B4FC;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);"><path d="M15 6l-6 6 6 6"></path></svg>العودة إلى التذاكر</button>
+        <div style="width:1px;height:20px;background:#2A2C33;"></div>
+        <span style="font-size:14px;font-weight:700;direction:ltr;">#4821</span>
+        <span style="font-size:13.5px;color:#CBD5E1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">تعذر إعادة تعيين كلمة المرور عبر البريد</span>
+        <div style="flex:1;"></div>
+        <button class="fv" aria-label="بحث" title="بحث" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"></path></svg></button>
+        <button class="fv" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+        <button class="fv" aria-label="التبديل إلى الإنجليزية" title="التبديل إلى الإنجليزية" style="display:flex;align-items:center;gap:6px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;padding:0 10px;color:#94A3B8;cursor:pointer;font-size:12px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3.5 9h17M3.5 15h17 M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"></path></svg>ع</button>
+        <button class="fv" aria-label="الإشعارات" title="الإشعارات" style="width:34px;height:34px;border-radius:8px;border:1px solid #2A2C33;background:#121317;position:relative;display:flex;align-items:center;justify-content:center;color:#94A3B8;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7 M9.5 19a2.5 2.5 0 0 0 5 0"></path></svg>
+          <span style="position:absolute;top:5px;left:5px;width:7px;height:7px;border-radius:999px;background:#F87171;border:1.5px solid #1C1D24;"></span></button>
+        <div style="display:flex;align-items:center;gap:8px;padding-right:4px;cursor:pointer;">
+          <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div>
+          <div style="display:flex;flex-direction:column;">
+            <span style="font-size:12.5px;font-weight:600;color:#F1F5F9;">سارة أحمد</span>
+            <span style="font-size:10px;font-weight:700;color:#A5B4FC;background:rgba(129,140,248,0.14);border-radius:4px;padding:1px 5px;width:fit-content;">وكيلة أول</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0;">
+        <!-- Thread -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-left:1px solid #2A2C33;">
+          <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">أت</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:02 ص</span></div>
+                <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#CBD5E1;">مرحبًا بالفريق، أحاول منذ ساعة إعادة تعيين كلمة المرور، لكن رابط إعادة التعيين في البريد الإلكتروني يستمر بالإشارة إلى أنه منتهي الصلاحية. هل يمكنكم المساعدة؟</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-direction:row-reverse;">
+              <div style="width:32px;height:32px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">سأ</div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:row-reverse;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z M3 6l9 7 9-7"></path></svg><span style="font-size:11px;color:#64748B;">البريد الإلكتروني · 22 أغسطس، 8:11 ص</span></div>
+                <div style="background:#818CF8;color:#1C1D24;border-radius:10px;border-top-left-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;font-weight:500;">مرحبًا أميليا، آسفة على ذلك! تنتهي صلاحية روابط إعادة التعيين بعد 15 دقيقة. لقد أرسلت لك رابطًا جديدًا للتو — يجب أن يصلك خلال دقيقة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg>
+              </div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:15 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">وصلني الرابط الجديد، شكرًا! انتقلت إلى واتساب لأنه أسرع بالنسبة لي. أعيد التعيين الآن 🙏</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(251,191,36,0.18);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l11-11-4-4L4 16z M14.5 5.5l4 4"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">سارة أحمد (أنت)</span><span style="font-size:10.5px;font-weight:700;color:#FBBF24;background:rgba(251,191,36,0.14);border-radius:4px;padding:1px 6px;">ملاحظة داخلية</span><span style="font-size:11px;color:#64748B;">22 أغسطس، 8:16 ص</span></div>
+                <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#FDE68A;">يُظهر حساب العميلة 3 محاولات فاشلة لإعادة التعيين خلال آخر 24 ساعة — على الأرجح تأخير في تسليم البريد من جهة مزود خدمتها، وليس خطأً تقنياً. أسجل ذلك احتياطًا في حال تصعيدها للمشكلة.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:999px;background:rgba(52,211,153,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3zm7.5 18.6c-.3.9-1.7 1.7-2.4 1.8-.6.1-1.4.2-4.5-1-3.9-1.6-6.4-5.5-6.6-5.8-.2-.3-1.6-2.1-1.6-4s1-2.8 1.4-3.2c.3-.3.7-.5 1.1-.5h.8c.3 0 .6 0 .9.7.3.8 1.1 2.7 1.2 2.9.1.2.2.5 0 .7-.1.3-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.1.8-.1l1.1-1.3c.3-.3.5-.3.9-.2l2.5 1.2c.3.2.5.2.6.4.1.2.1 1-.2 1.9z"></path></svg></div>
+              <div style="max-width:70%;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12.5px;font-weight:700;">أميليا تشين</span><span style="font-size:11px;color:#64748B;">واتساب · 22 أغسطس، 8:24 ص</span></div>
+                <div style="background:rgba(52,211,153,0.14);border-radius:10px;border-top-right-radius:2px;padding:12px 14px;font-size:13px;line-height:1.6;color:#D1FAE5;">تم كل شيء، سجّلت الدخول بنجاح. شكرًا على المساعدة السريعة!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div style="border-top:1px solid #2A2C33;padding:14px 22px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+              <span style="font-size:12px;color:#94A3B8;">تعذر إنشاء اقتراح.</span>
+              <button class="fv" style="background:transparent;border:none;color:#A5B4FC;font-size:12px;font-weight:700;cursor:pointer;padding:0;">إعادة المحاولة</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;align-items:center;gap:5px;background:rgba(52,211,153,0.14);color:#34D399;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;"><svg width="13" height="13" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.3-2C11.3 28 13.6 29 16 29c7 0 13-6 13-13S23 3 16 3z"></path></svg>الرد عبر واتساب<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"></path></svg></div>
+            </div>
+            <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:13px;color:#64748B;">اكتب ردًا…</div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:8px;">
+                <button style="display:flex;align-items:center;gap:6px;background:#818CF8;color:#1C1D24;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:700;cursor:pointer;">إرسال<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1C1D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata panel -->
+        <div style="width:300px;flex-shrink:0;background:#1C1D24;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;">
+          <div style="background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.35);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="display:flex;align-items:center;gap:4px;background:#8B5CF6;color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;border-radius:5px;padding:2px 6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"></path></svg>AI</span>
+                <span style="font-size:11px;font-weight:700;color:#C4B5FD;letter-spacing:.03em;">ملخص التذكرة</span>
+              </div>
+              <button class="fv" aria-label="إعادة إنشاء الملخص" title="إعادة إنشاء الملخص" style="background:transparent;border:none;color:#C4B5FD;display:flex;align-items:center;justify-content:center;padding:2px;cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5 M20 20v-5h-5 M4.5 15a8 8 0 0 0 14 3.4 M19.5 9a8 8 0 0 0-14-3.4"></path></svg></button>
+            </div>
+            <div style="font-size:12.5px;line-height:1.55;color:#DDD6FE;">لم تتمكن العميلة من إعادة تعيين كلمة المرور بعد انتهاء صلاحية الرابط؛ تم إرسال رابط جديد وأكملت العملية عبر واتساب. تشير ملاحظة داخلية إلى أن المحاولات الثلاث الفاشلة على الأرجح تأخير في تسليم البريد الإلكتروني وليست خطأً تقنياً. تم حل المشكلة الآن.</div>
+            <div style="font-size:10.5px;color:#A78BFA;">تم التلخيص قبل دقيقتين</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">تفاصيل التذكرة</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="background:rgba(248,113,113,0.14);color:#F87171;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">عاجل</span>
+              <span style="background:rgba(129,140,248,0.14);color:#A5B4FC;font-weight:700;font-size:10.5px;border-radius:6px;padding:4px 8px;">مفتوحة</span>
+            </div>
+            <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:12px;color:#FCA5A5;font-weight:600;">خرق الاتفاقية خلال</span>
+              <span style="font-size:15px;font-weight:700;color:#F87171;direction:ltr;">12د</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوكيلة المسؤولة</div>
+            <div style="display:flex;align-items:center;gap:10px;background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:10px;">
+              <div style="width:30px;height:30px;border-radius:999px;background:#818CF8;color:#1C1D24;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;">سأ</div>
+              <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">سارة أحمد</div><div style="font-size:10.5px;color:#94A3B8;">وكيلة دعم أول</div></div>
+              <button style="font-size:11px;font-weight:700;color:#A5B4FC;background:transparent;border:none;cursor:pointer;">إعادة الإسناد</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">العميلة</div>
+            <div style="background:#202128;border:1px solid #2A2C33;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:999px;background:rgba(129,140,248,0.18);color:#A5B4FC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">أت</div>
+                <div><div style="font-size:13px;font-weight:700;">أميليا تشين</div><div style="font-size:11px;color:#94A3B8;">عميلة منذ مارس 2023</div></div>
+              </div>
+              <div style="font-size:12px;color:#CBD5E1;display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #2A2C33;">
+                <span style="direction:ltr;">amelia.chen@northwind.io</span>
+                <span style="direction:ltr;">Northwind Retail Co.</span>
+                <span style="direction:ltr;">+1 (415) 555-0148</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:8px;">الوسوم</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">الوصول للحساب</span>
+              <span style="background:#202128;color:#CBD5E1;font-size:11px;font-weight:600;border-radius:6px;padding:4px 8px;">إعادة تعيين كلمة المرور</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

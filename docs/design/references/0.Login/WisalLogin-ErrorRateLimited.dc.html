@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#e7e9ee;}*{box-sizing:border-box;}
+    .fv:focus-visible{outline:2px solid #4F46E5;outline-offset:2px;border-radius:4px;}
+  </style>
+</helmet>
+<div style="width:100%;min-height:100vh;background:#e7e9ee;padding:64px;display:flex;font-family:'Inter',sans-serif;">
+<!-- ===== LOGIN ARTBOARD: LIGHT + LTR (EN) · ERROR (RATE LIMITED) ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#334155;">WisalLogin-LightLTR · Error (rate-limited)</div>
+  <div style="width:1200px;height:800px;background:#F8FAFC;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,0.18);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;color:#0F172A;">
+    <div style="width:400px;display:flex;flex-direction:column;gap:24px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <svg viewBox="0 0 64 64" width="40" height="40"><circle cx="24" cy="32" r="14" fill="none" stroke="#4F46E5" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#4F46E5" stroke-width="7"></circle></svg>
+        <span style="font-size:22px;font-weight:700;">Wisal</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:18px;">
+        <div><div style="font-size:18px;font-weight:700;">Sign in</div><div style="font-size:13px;color:#64748B;margin-top:2px;">Use your Wisal work account</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12.5px;font-weight:600;color:#334155;">Email</label>
+          <input class="fv" type="email" value="sarah.ahmed@wisal.io" disabled style="border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;font-size:14px;color:#94A3B8;outline:none;background:#F8FAFC;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12.5px;font-weight:600;color:#334155;">Password</label>
+          <input class="fv" type="password" value="••••••••••" disabled style="border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;font-size:14px;color:#94A3B8;outline:none;background:#F8FAFC;">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;color:#DC2626;font-size:13px;font-weight:600;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5 M12 16h.01"></path></svg>
+          Too many attempts. Try again in 47 seconds.
+        </div>
+        <button class="fv" disabled style="background:#C7D2FE;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:not-allowed;">Sign in</button>
+      </div>
+      <div style="text-align:center;font-size:12px;color:#94A3B8;">Accounts are provisioned by your administrator</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

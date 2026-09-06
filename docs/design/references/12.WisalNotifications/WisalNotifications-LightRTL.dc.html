@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e7e9ee;font-family:'IBM Plex Sans Arabic',sans-serif;}*{box-sizing:border-box;}
+.fv:focus-visible{outline:2px solid #4F46E5;outline-offset:2px;border-radius:4px;}
+.sk{background:linear-gradient(90deg,#EEF0F3 25%,#F5F6F8 37%,#EEF0F3 63%);background-size:400% 100%;animation:shim 1.4s ease infinite;border-radius:6px;}
+@keyframes shim{0%{background-position:100% 0}100%{background-position:0 0}}
+.nr{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid #F1F5F9;cursor:pointer;}
+.nr:last-child{border-bottom:none;}
+.nr-u{background:#F5F7FF;}
+.nr-r{background:#fff;}
+.ni{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div style="padding:64px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;direction:rtl;">
+
+<style>.lbl{font-size:13px;font-weight:700;color:#334155;margin-bottom:14px;direction:ltr;}</style>
+
+<!-- ===== BELL STATES ===== -->
+<div>
+<div class="lbl">Bell states (no unread / 3 unread / 9+ unread)</div>
+<div style="display:flex;gap:24px;align-items:center;direction:ltr;">
+  <!-- No unread -->
+  <button class="fv" aria-label="الإشعارات، لا توجد غير مقروءة" style="width:36px;height:36px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+  </button>
+  <!-- 3 unread -->
+  <button class="fv" aria-label="الإشعارات، 3 غير مقروءة" style="width:36px;height:36px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <span style="position:absolute;top:4px;left:3px;min-width:16px;height:16px;border-radius:999px;background:#DC2626;border:2px solid #fff;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">3</span>
+  </button>
+  <!-- 9+ unread -->
+  <button class="fv" aria-label="الإشعارات، أكثر من 9 غير مقروءة" style="width:36px;height:36px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer;position:relative;">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <span style="position:absolute;top:4px;left:1px;min-width:18px;height:16px;border-radius:999px;background:#DC2626;border:2px solid #fff;font-size:8.5px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">9+</span>
+  </button>
+</div>
+</div>
+
+<!-- ===== SUCCESS — panel open ===== -->
+<div>
+<div class="lbl">WisalNotifications-LightRTL · Success (panel open)</div>
+<!-- App Shell Header strip -->
+<div style="width:1500px;background:#fff;border:1px solid #E2E8F0;border-radius:16px 16px 0 0;height:68px;display:flex;align-items:center;gap:14px;padding:0 24px;direction:rtl;">
+  <svg viewBox="0 0 64 64" width="22" height="22"><circle cx="24" cy="32" r="14" fill="none" stroke="#4F46E5" stroke-width="7"/><circle cx="42" cy="32" r="9" fill="none" stroke="#4F46E5" stroke-width="7"/></svg>
+  <span style="font-size:15px;font-weight:700;">وِصال</span>
+  <div style="flex:1;max-width:380px;display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 12px;color:#94A3B8;font-size:13px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.3-4.3"/></svg>بحث…</div>
+  <div style="flex:1;"></div>
+  <button class="fv" style="display:flex;align-items:center;gap:6px;background:#4F46E5;color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>تذكرة جديدة</button>
+  <div style="width:1px;height:24px;background:#E2E8F0;"></div>
+  <!-- Theme toggle: moon (light mode) -->
+  <button class="fv" style="width:36px;height:36px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></button>
+  <button class="fv" style="display:flex;align-items:center;gap:5px;height:36px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;padding:0 10px;color:#475569;cursor:pointer;font-size:12px;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zM3.5 9h17M3.5 15h17M12 3c2.3 2.5 3.5 5.7 3.5 9s-1.2 6.5-3.5 9c-2.3-2.5-3.5-5.7-3.5-9s1.2-6.5 3.5-9z"/></svg>ع</button>
+  <!-- Bell — active/open, 3 unread; dot at left in RTL -->
+  <div style="position:relative;">
+    <button class="fv" aria-label="الإشعارات، 3 غير مقروءة" aria-expanded="true" style="width:36px;height:36px;border-radius:8px;border:1.5px solid #4F46E5;background:#EEF2FF;display:flex;align-items:center;justify-content:center;color:#4F46E5;cursor:pointer;position:relative;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+      <span style="position:absolute;top:4px;left:3px;min-width:16px;height:16px;border-radius:999px;background:#DC2626;border:2px solid #EEF2FF;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;">3</span>
+    </button>
+    <!-- Panel — anchors left:0 in RTL -->
+    <div role="dialog" aria-label="الإشعارات" style="position:absolute;top:calc(100% + 8px);left:0;width:380px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,0.14);z-index:100;overflow:hidden;direction:rtl;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0;">
+        <span style="font-size:14px;font-weight:700;color:#0F172A;">الإشعارات</span>
+        <button class="fv" style="font-size:12px;font-weight:600;color:#4F46E5;background:transparent;border:none;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;">تحديد الكل كمقروء</button>
+      </div>
+      <div role="list" style="max-height:380px;overflow-y:auto;">
+        <!-- SLA at risk — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:#FFFBEB;color:#B45309;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 3"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#4F46E5;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#B45309;">اتفاقية الخدمة في خطر</span><span style="font-size:11px;color:#94A3B8;margin-right:auto;">منذ 12 د</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#0F172A;line-height:1.45;">التذكرة #4821 "تعذُّر إتمام الدفع" تقترب من موعد الحل النهائي.</div>
+          </div>
+        </div>
+        <!-- Mention — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:#EEF2FF;color:#4F46E5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#4F46E5;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#4F46E5;">إشارة</span><span style="font-size:11px;color:#94A3B8;margin-right:auto;">منذ 35 د</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#0F172A;line-height:1.45;">أشار إليك خالد الرشيد في ملاحظة على التذكرة #4819 "تعذُّر الوصول للوحة التحكم".</div>
+          </div>
+        </div>
+        <!-- Task reminder — unread -->
+        <div role="listitem" class="nr nr-u">
+          <div class="ni" style="background:#ECFDF5;color:#059669;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M9 16l2 2 4-4"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:999px;background:#4F46E5;flex-shrink:0;"></span><span style="font-size:12px;font-weight:700;color:#059669;">موعد مهمة</span><span style="font-size:11px;color:#94A3B8;margin-right:auto;">منذ ساعة</span></div>
+            <div style="font-size:12.5px;font-weight:600;color:#0F172A;line-height:1.45;">مهمتك "الاتصال بالعميل بشأن رفض الدفع" على التذكرة #4821 متأخرة.</div>
+          </div>
+        </div>
+        <!-- SLA breached — read -->
+        <div role="listitem" class="nr nr-r">
+          <div class="ni" style="background:#FEF2F2;color:#B91C1C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="font-size:12px;font-weight:700;color:#B91C1C;">اتفاقية الخدمة مخترقة</span><span style="font-size:11px;color:#94A3B8;margin-right:auto;">منذ 3 س</span></div>
+            <div style="font-size:12.5px;font-weight:500;color:#475569;line-height:1.45;">التذكرة #4797 "بيانات التصدير ناقصة" تجاوزت موعد الحل النهائي.</div>
+          </div>
+        </div>
+        <!-- Mention — read -->
+        <div role="listitem" class="nr nr-r">
+          <div class="ni" style="background:#F8FAFC;color:#94A3B8;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="font-size:12px;font-weight:700;color:#64748B;">إشارة</span><span style="font-size:11px;color:#94A3B8;margin-right:auto;direction:ltr;">Aug 24</span></div>
+            <div style="font-size:12.5px;font-weight:500;color:#475569;line-height:1.45;">أشارت إليك ريا باتل في ملاحظة على التذكرة #4781 "الحساب معلق بشكل خاطئ".</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid #E2E8F0;text-align:center;">
+        <a class="fv" href="#" style="font-size:12.5px;font-weight:600;color:#4F46E5;text-decoration:none;">عرض كل الإشعارات</a>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding-right:6px;cursor:pointer;"><div style="width:32px;height:32px;border-radius:999px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">سأ</div><div style="display:flex;flex-direction:column;"><span style="font-size:12.5px;font-weight:600;">سارة أحمد</span><span style="font-size:10px;font-weight:700;color:#4F46E5;background:#EEF2FF;border-radius:4px;padding:1px 5px;">وكيلة أول</span></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l7 7 7-7"/></svg></div>
+</div>
+<div style="width:1500px;height:480px;background:#F8FAFC;border:1px solid #E2E8F0;border-top:none;border-radius:0 0 16px 16px;display:flex;align-items:center;justify-content:center;color:#94A3B8;font-size:13px;">محتوى التطبيق (التذاكر، إلخ)</div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div>
+<div class="lbl">Loading state</div>
+<div style="width:380px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,0.1);overflow:hidden;direction:rtl;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0;"><span style="font-size:14px;font-weight:700;color:#0F172A;">الإشعارات</span><div class="sk" style="width:90px;height:14px;"></div></div>
+  <div style="display:flex;flex-direction:column;gap:0;">
+    <div class="nr nr-u"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:35%;height:11px;margin-right:auto;"></div><div class="sk" style="width:90%;height:12px;"></div></div></div>
+    <div class="nr nr-u"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:28%;height:11px;margin-right:auto;"></div><div class="sk" style="width:80%;height:12px;"></div></div></div>
+    <div class="nr nr-r"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:32%;height:11px;margin-right:auto;"></div><div class="sk" style="width:75%;height:12px;"></div></div></div>
+    <div class="nr nr-r"><div class="sk" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div class="sk" style="width:30%;height:11px;margin-right:auto;"></div><div class="sk" style="width:85%;height:12px;"></div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ===== EMPTY ===== -->
+<div>
+<div class="lbl">Empty state</div>
+<div style="width:380px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,0.1);overflow:hidden;direction:rtl;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0;"><span style="font-size:14px;font-weight:700;color:#0F172A;">الإشعارات</span></div>
+  <div style="padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+    <div style="font-size:14px;font-weight:700;color:#0F172A;">أنت على اطلاع تام</div>
+    <div style="font-size:12.5px;color:#64748B;line-height:1.5;">لا توجد إشعارات الآن — تحقق لاحقاً.</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== ERROR ===== -->
+<div>
+<div class="lbl">Error state</div>
+<div style="width:380px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,0.1);overflow:hidden;direction:rtl;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #E2E8F0;"><span style="font-size:14px;font-weight:700;color:#0F172A;">الإشعارات</span></div>
+  <div style="padding:24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;background:#FEF2F2;margin:12px;border-radius:10px;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+    <div style="font-size:13px;font-weight:700;color:#B91C1C;">تعذّر تحميل الإشعارات</div>
+    <div style="font-size:12px;color:#64748B;">تحقق من الاتصال وحاول مجدداً.</div>
+    <button class="fv" style="border:1px solid #FECACA;background:#fff;color:#B91C1C;border-radius:8px;padding:7px 16px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;">إعادة المحاولة</button>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body></html>

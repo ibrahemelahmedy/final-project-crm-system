@@ -9,8 +9,16 @@
 .next
 .turbo
 node_modules
-docs
-STATUS.md
+
+# docs/ and STATUS.md ARE published — they are the project documentation.
+# Only these specific items stay out of the public repository:
+#   - assessment/scoring material and personal interview prep (not ours to publish)
+#   - data.txt (live Jira API token + Supabase password in plaintext)
+#   - third-party programme PDFs and generated multi-MB junk
+docs/requirements/required-for-System-ERP/
+docs/requirements/المعمارية/
+docs/requirements/*.pdf
+~$*
 
 # Claude Code — أدوات العمل الداخلية (hooks، skills، commands)
 .claude/

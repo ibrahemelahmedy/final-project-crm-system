@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #DDE1E8; }
+    .wisal-input:focus-visible, .wisal-btn:focus-visible, .wisal-link:focus-visible, .wisal-toggle:focus-visible, .wisal-otp:focus-visible {
+      outline: 2px solid #4F46E5; outline-offset: 2px;
+    }
+    @keyframes wisal-spin { to { transform: rotate(360deg); } }
+  </style>
+</helmet>
+<div style="display:flex; flex-wrap:wrap; gap:40px; padding:48px; align-items:flex-start; font-family:Inter,sans-serif;">
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">1 — Idle, cooldown counting</div>
+  <div dir="rtl" data-screen-label="Step2 Idle" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:8px;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 1" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 2" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 3" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 4" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 5" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 6" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+            </div>
+          </fieldset>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">تحقّق</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">لم تستلم الرمز؟ <span style="color:#94A3B8; font-weight:600;">إعادة الإرسال خلال <span style="direction:ltr; display:inline-block;">0:47</span></span></div>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">2 — Submitting</div>
+  <div dir="rtl" data-screen-label="Step2 Submitting" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:8px;">
+              <input class="wisal-input wisal-otp" type="text" value="4" disabled aria-label="الخانة 1" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+              <input class="wisal-input wisal-otp" type="text" value="2" disabled aria-label="الخانة 2" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+              <input class="wisal-input wisal-otp" type="text" value="9" disabled aria-label="الخانة 3" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+              <input class="wisal-input wisal-otp" type="text" value="0" disabled aria-label="الخانة 4" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+              <input class="wisal-input wisal-otp" type="text" value="1" disabled aria-label="الخانة 5" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+              <input class="wisal-input wisal-otp" type="text" value="7" disabled aria-label="الخانة 6" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#334155; font-family:inherit; background:#F1F5F9;">
+            </div>
+          </fieldset>
+          <button type="submit" aria-disabled="true" style="height:44px; border-radius:6px; border:none; background:#4F46E5; opacity:0.75; color:#fff; font-size:14px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; cursor:not-allowed;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="animation:wisal-spin 0.8s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.35"></circle><path d="M21 12a9 9 0 0 0-9-9"></path></svg>
+            <span>جارٍ التحقّق…</span>
+          </button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">لم تستلم الرمز؟ <span style="color:#94A3B8; font-weight:600;">إعادة الإرسال خلال <span style="direction:ltr; display:inline-block;">0:22</span></span></div>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">3 — Error: wrong code</div>
+  <div dir="rtl" data-screen-label="Step2 Error Wrong" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:8px;">
+              <input class="wisal-input wisal-otp" type="text" value="4" aria-invalid="true" aria-describedby="otp-err" aria-label="الخانة 1" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" value="2" aria-invalid="true" aria-label="الخانة 2" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" value="9" aria-invalid="true" aria-label="الخانة 3" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" value="0" aria-invalid="true" aria-label="الخانة 4" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" value="1" aria-invalid="true" aria-label="الخانة 5" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" value="8" aria-invalid="true" aria-label="الخانة 6" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1.5px solid #DC2626; color:#0F172A; font-family:inherit;">
+            </div>
+            <div id="otp-err" style="display:flex; align-items:center; gap:6px; font-size:12px; color:#DC2626; font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex:none;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+              <span>رمز غير صحيح. تبقّى محاولتان.</span>
+            </div>
+          </fieldset>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">تحقّق</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">لم تستلم الرمز؟ <span style="color:#94A3B8; font-weight:600;">إعادة الإرسال خلال <span style="direction:ltr; display:inline-block;">0:31</span></span></div>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">4 — Error: code expired</div>
+  <div dir="rtl" data-screen-label="Step2 Error Expired" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <div role="alert" style="display:flex; gap:10px; padding:12px 14px; border-radius:6px; background:#FEF2F2; border:1px solid #FECACA;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+          <div style="font-size:13px; color:#7F1D1D; line-height:1.5;">انتهت صلاحية هذا الرمز. اطلب رمزًا جديدًا للمتابعة.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:8px;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 1" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 2" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 3" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 4" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 5" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+              <input class="wisal-input wisal-otp" type="text" disabled aria-label="الخانة 6" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #E2E8F0; color:#0F172A; font-family:inherit; background:#F8FAFC;">
+            </div>
+          </fieldset>
+          <button type="button" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">إرسال رمز جديد</button>
+        </form>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">5 — Resend available</div>
+  <div dir="rtl" data-screen-label="Step2 Resend Available" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:8px;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 1" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 2" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 3" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 4" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 5" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 6" style="width:48px; height:56px; text-align:center; font-size:20px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit;">
+            </div>
+          </fieldset>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">تحقّق</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">لم تستلم الرمز؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">إعادة إرسال الرمز</a></div>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">6 — Mobile width (375px), idle</div>
+  <div dir="rtl" data-screen-label="Step2 Mobile Idle" style="width:375px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column; font-family:'IBM Plex Sans Arabic',sans-serif;">
+    <header style="height:56px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:16px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:16px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button type="button" class="wisal-toggle" style="height:30px; display:flex; align-items:center; gap:5px; padding-inline:8px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:12px; font-weight:600; cursor:pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg><span>ع</span></button>
+        <button type="button" class="wisal-toggle" style="width:30px; height:30px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:24px 16px;">
+      <div style="width:100%; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:24px 20px; display:flex; flex-direction:column; gap:16px;">
+        <div>
+          <div style="font-size:19px; font-weight:700; color:#0F172A;">أدخل الرمز</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px;">تم إرسال الرمز إلى <span style="direction:ltr; display:inline-block;">j•••@example.com</span></div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <fieldset style="border:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+            <legend style="font-size:13px; font-weight:600; color:#334155; padding:0; margin-bottom:2px;">رمز مكوّن من 6 أرقام</legend>
+            <div style="display:flex; gap:6px;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 1" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 2" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 3" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 4" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 5" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+              <input class="wisal-input wisal-otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="الخانة 6" style="width:100%; height:52px; text-align:center; font-size:19px; font-weight:600; border-radius:6px; border:1px solid #CBD5E1; color:#0F172A; font-family:inherit; min-width:0;">
+            </div>
+          </fieldset>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">تحقّق</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">لم تستلم الرمز؟ <span style="color:#94A3B8; font-weight:600;">إعادة الإرسال خلال <span style="direction:ltr; display:inline-block;">0:47</span></span></div>
+        <div style="height:1px; background:#E2E8F0;"></div>
+        <div style="font-size:13px; color:#64748B; text-align:center;">بحاجة إلى مساعدة بدون حساب؟ <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">تصفح الأسئلة الشائعة</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

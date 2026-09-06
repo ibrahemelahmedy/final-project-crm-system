@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #DDE1E8; }
+    .wisal-input:focus-visible, .wisal-btn:focus-visible, .wisal-link:focus-visible, .wisal-toggle:focus-visible {
+      outline: 2px solid #4F46E5; outline-offset: 2px;
+    }
+    @keyframes wisal-spin { to { transform: rotate(360deg); } }
+  </style>
+</helmet>
+<div style="display:flex; flex-wrap:wrap; gap:40px; padding:48px; align-items:flex-start; font-family:Inter,sans-serif;">
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">1 — Idle</div>
+  <div dir="ltr" data-screen-label="Step1 Idle" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+          <span>EN</span>
+        </button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">Track your request</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px; line-height:1.5;">Enter your email or phone number and we'll send you a one-time code.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label for="ident" style="font-size:13px; font-weight:600; color:#334155;">Email or phone number</label>
+            <input id="ident" name="ident" type="text" class="wisal-input" placeholder="you@example.com or +1 555 010 1234" style="height:44px; border-radius:6px; border:1px solid #CBD5E1; padding-inline:12px; font-size:14px; color:#0F172A; font-family:inherit;">
+            <div style="font-size:12px; color:#64748B;">We accept email addresses or phone numbers with country code.</div>
+          </div>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Send code</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">Need help without an account? <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">Browse our FAQs</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">2 — Submitting</div>
+  <div dir="ltr" data-screen-label="Step1 Submitting" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+          <span>EN</span>
+        </button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">Track your request</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px; line-height:1.5;">Enter your email or phone number and we'll send you a one-time code.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label for="ident2" style="font-size:13px; font-weight:600; color:#334155;">Email or phone number</label>
+            <input id="ident2" name="ident" type="text" class="wisal-input" value="omar.farsi@example.com" disabled style="height:44px; border-radius:6px; border:1px solid #CBD5E1; padding-inline:12px; font-size:14px; color:#334155; font-family:inherit; background:#F1F5F9;">
+            <div style="font-size:12px; color:#64748B;">We accept email addresses or phone numbers with country code.</div>
+          </div>
+          <button type="submit" aria-disabled="true" style="height:44px; border-radius:6px; border:none; background:#4F46E5; opacity:0.75; color:#fff; font-size:14px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; cursor:not-allowed;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="animation:wisal-spin 0.8s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.35"></circle><path d="M21 12a9 9 0 0 0-9-9"></path></svg>
+            <span>Sending code…</span>
+          </button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">Need help without an account? <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">Browse our FAQs</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">3 — Error: invalid format</div>
+  <div dir="ltr" data-screen-label="Step1 Error Format" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+          <span>EN</span>
+        </button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">Track your request</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px; line-height:1.5;">Enter your email or phone number and we'll send you a one-time code.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label for="ident3" style="font-size:13px; font-weight:600; color:#334155;">Email or phone number</label>
+            <input id="ident3" name="ident" type="text" class="wisal-input" value="omar.farsi" aria-invalid="true" aria-describedby="ident3-err" style="height:44px; border-radius:6px; border:1.5px solid #DC2626; padding-inline:12px; font-size:14px; color:#0F172A; font-family:inherit;">
+            <div id="ident3-err" style="display:flex; align-items:center; gap:6px; font-size:12px; color:#DC2626; font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex:none;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+              <span>Enter a valid email address or phone number with country code.</span>
+            </div>
+          </div>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Send code</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">Need help without an account? <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">Browse our FAQs</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">4 — Error: no match found (generic banner)</div>
+  <div dir="ltr" data-screen-label="Step1 Error Generic" style="width:480px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column;">
+    <header style="height:60px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:20px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:17px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="wisal-toggle" style="height:32px; display:flex; align-items:center; gap:6px; padding-inline:10px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:13px; font-weight:600; cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+          <span>EN</span>
+        </button>
+        <button type="button" class="wisal-toggle" style="width:32px; height:32px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px;">
+      <div style="width:100%; max-width:360px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; gap:20px;">
+        <div>
+          <div style="font-size:20px; font-weight:700; color:#0F172A;">Track your request</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px; line-height:1.5;">Enter your email or phone number and we'll send you a one-time code.</div>
+        </div>
+        <div role="status" style="display:flex; gap:10px; padding:12px 14px; border-radius:6px; background:#FFFBEB; border:1px solid #FDE68A;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+          <div style="font-size:13px; color:#78350F; line-height:1.5;">If this matches a record, we've sent a code. Check your inbox or messages.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label for="ident4" style="font-size:13px; font-weight:600; color:#334155;">Email or phone number</label>
+            <input id="ident4" name="ident" type="text" class="wisal-input" value="nobody@example.com" style="height:44px; border-radius:6px; border:1px solid #CBD5E1; padding-inline:12px; font-size:14px; color:#0F172A; font-family:inherit;">
+            <div style="font-size:12px; color:#64748B;">We accept email addresses or phone numbers with country code.</div>
+          </div>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Send code</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">Need help without an account? <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">Browse our FAQs</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <div style="font:600 13px Inter,sans-serif; color:#475569;">5 — Mobile width (375px), idle</div>
+  <div dir="ltr" data-screen-label="Step1 Mobile Idle" style="width:375px; min-height:640px; background:#F8FAFC; border-radius:16px; overflow:hidden; box-shadow:0 12px 40px rgba(15,23,42,0.12); display:flex; flex-direction:column;">
+    <header style="height:56px; flex:none; display:flex; align-items:center; justify-content:space-between; padding-inline:16px; border-block-end:1px solid #E2E8F0; background:#FFFFFF;">
+      <div style="font-size:16px; font-weight:700; color:#0F172A;">Wisal</div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button type="button" class="wisal-toggle" style="height:30px; display:flex; align-items:center; gap:5px; padding-inline:8px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; font-size:12px; font-weight:600; cursor:pointer;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+          <span>EN</span>
+        </button>
+        <button type="button" class="wisal-toggle" style="width:30px; height:30px; border-radius:6px; border:1px solid #E2E8F0; background:#fff; color:#475569; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:24px 16px;">
+      <div style="width:100%; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:24px 20px; display:flex; flex-direction:column; gap:18px;">
+        <div>
+          <div style="font-size:19px; font-weight:700; color:#0F172A;">Track your request</div>
+          <div style="font-size:13px; color:#64748B; margin-top:4px; line-height:1.5;">Enter your email or phone number and we'll send you a one-time code.</div>
+        </div>
+        <form style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label for="ident5" style="font-size:13px; font-weight:600; color:#334155;">Email or phone number</label>
+            <input id="ident5" name="ident" type="text" class="wisal-input" placeholder="you@example.com" style="height:44px; border-radius:6px; border:1px solid #CBD5E1; padding-inline:12px; font-size:14px; color:#0F172A; font-family:inherit;">
+            <div style="font-size:12px; color:#64748B;">We accept email addresses or phone numbers with country code.</div>
+          </div>
+          <button type="submit" class="wisal-btn" style="height:44px; border-radius:6px; border:none; background:#4F46E5; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Send code</button>
+        </form>
+        <div style="font-size:13px; color:#64748B; text-align:center;">Need help without an account? <a href="#" class="wisal-link" style="color:#4F46E5; font-weight:600; text-decoration:none;">Browse our FAQs</a></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

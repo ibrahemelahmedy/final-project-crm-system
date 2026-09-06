@@ -1,0 +1,7 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wisal (وصال) mark — draft concept, to be refined visually in Stitch/Claude Design.
+       Two linked rings echo the Arabic waw's looping tail and read as a
+       universal "connection" glyph — one letterform, two readings. -->
+  <circle cx="24" cy="32" r="14" fill="none" stroke="#4F46E5" stroke-width="7"/>
+  <circle cx="42" cy="32" r="9" fill="none" stroke="#4F46E5" stroke-width="7"/>
+</svg>

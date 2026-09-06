@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas"></meta>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></link>
+<style>
+body{margin:0;background:#0D0E12;}*{box-sizing:border-box;}
+.fv:focus-visible{outline:2px solid #818CF8;outline-offset:2px;border-radius:4px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{animation:spin 0.8s linear infinite;}
+
+.rating-group{display:flex;gap:0;border:1px solid #2A2C33;border-radius:10px;overflow:hidden;}
+.rating-option{flex:1;position:relative;}
+.rating-option input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+.rating-option label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 8px;cursor:pointer;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;transition:background 0.1s;}
+.rating-option:last-child label{border-right:none;}
+.rating-option label:hover{background:#252730;}
+.rating-option input:checked+label{background:rgba(129,140,248,0.14);color:#818CF8;font-weight:700;}
+.rating-option input:checked+label .ri{color:#818CF8;}
+.rating-option input:focus-visible+label{outline:2px solid #818CF8;outline-offset:-2px;border-radius:4px;z-index:1;position:relative;}
+.ri{font-size:20px;line-height:1;}
+
+.ro-rating{display:flex;gap:0;border:1px solid #2A2C33;border-radius:10px;overflow:hidden;pointer-events:none;opacity:0.75;}
+.ro-opt{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;}
+.ro-opt:last-child{border-right:none;}
+.ro-opt.selected{background:rgba(129,140,248,0.14);color:#818CF8;font-weight:700;}
+
+.card{background:#1C1D24;border:1px solid #2A2C33;border-radius:16px;padding:40px 36px;display:flex;flex-direction:column;gap:24px;max-width:480px;width:100%;}
+.page-bg{background:#121317;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;background:#0D0E12;padding:64px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;font-family:'Inter',sans-serif;">
+
+<!-- ===== 1. IDLE ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Idle</div>
+  <div class="page-bg" style="width:680px;min-height:600px;color:#F1F5F9;">
+    <div class="card">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+        <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:15px;font-weight:700;color:#64748B;letter-spacing:.02em;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:center;">
+        <div style="font-size:26px;font-weight:800;color:#F1F5F9;">How did we do?</div>
+        <div style="font-size:13.5px;color:#64748B;">Request #4821 · "Payment not going through"</div>
+      </div>
+      <form style="display:flex;flex-direction:column;gap:20px;">
+        <fieldset style="border:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <legend style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:6px;width:100%;">Your rating <span style="color:#F87171;" aria-hidden="true">*</span></legend>
+          <div class="rating-group" role="group" aria-label="Rate your support experience from 1 to 5">
+            <div class="rating-option"><input type="radio" name="rating" id="r1" value="1"><label for="r1" class="fv"><span class="ri">😞</span>1 – Poor</label></div>
+            <div class="rating-option"><input type="radio" name="rating" id="r2" value="2"><label for="r2" class="fv"><span class="ri">😐</span>2 – Fair</label></div>
+            <div class="rating-option"><input type="radio" name="rating" id="r3" value="3"><label for="r3" class="fv"><span class="ri">🙂</span>3 – Okay</label></div>
+            <div class="rating-option"><input type="radio" name="rating" id="r4" value="4"><label for="r4" class="fv"><span class="ri">😊</span>4 – Good</label></div>
+            <div class="rating-option"><input type="radio" name="rating" id="r5" value="5"><label for="r5" class="fv"><span class="ri">🤩</span>5 – Great</label></div>
+          </div>
+        </fieldset>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="comment" style="font-size:13px;font-weight:700;color:#94A3B8;">Comment <span style="font-weight:400;color:#64748B;">(optional)</span></label>
+          <div style="font-size:12px;color:#64748B;margin-top:-2px;">Any detail helps us improve — a single word is fine.</div>
+          <textarea id="comment" class="fv" rows="4" placeholder="Tell us what went well or what could be better…" style="border:1px solid #2A2C33;border-radius:8px;padding:10px 12px;font-size:14px;color:#F1F5F9;font-family:'Inter',sans-serif;resize:vertical;outline:none;background:#252730;"></textarea>
+        </div>
+        <button type="submit" class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:13px;font-size:14.5px;font-weight:700;cursor:pointer;">Submit feedback</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2. RATING SELECTED (4 — Good) ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Rating selected</div>
+  <div class="page-bg" style="width:680px;min-height:600px;color:#F1F5F9;">
+    <div class="card">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+        <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:15px;font-weight:700;color:#64748B;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:center;">
+        <div style="font-size:26px;font-weight:800;">How did we do?</div>
+        <div style="font-size:13.5px;color:#64748B;">Request #4821 · "Payment not going through"</div>
+      </div>
+      <form style="display:flex;flex-direction:column;gap:20px;">
+        <fieldset style="border:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+          <legend style="font-size:13px;font-weight:700;color:#94A3B8;margin-bottom:6px;width:100%;">Your rating <span style="color:#F87171;" aria-hidden="true">*</span></legend>
+          <div style="display:flex;border:1px solid #2A2C33;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">😞</span>1 – Poor</div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">😐</span>2 – Fair</div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">🙂</span>3 – Okay</div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:800;color:#818CF8;border-right:1px solid #2A2C33;background:rgba(129,140,248,0.14);box-shadow:inset 0 0 0 2px #818CF8;position:relative;">
+              <span style="font-size:20px;">😊</span>4 – Good
+              <span style="position:absolute;top:6px;right:6px;width:14px;height:14px;border-radius:999px;background:#818CF8;display:flex;align-items:center;justify-content:center;"><svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#121317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"></path></svg></span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;background:#1C1D24;"><span style="font-size:20px;">🤩</span>5 – Great</div>
+          </div>
+          <div style="font-size:12px;color:#818CF8;font-weight:600;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>4 – Good selected</div>
+        </fieldset>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:13px;font-weight:700;color:#94A3B8;">Comment <span style="font-weight:400;color:#64748B;">(optional)</span></label>
+          <div style="font-size:12px;color:#64748B;">Any detail helps us improve — a single word is fine.</div>
+          <textarea rows="4" placeholder="Tell us what went well or what could be better…" style="border:1px solid #2A2C33;border-radius:8px;padding:10px 12px;font-size:14px;color:#F1F5F9;font-family:'Inter',sans-serif;resize:vertical;outline:none;background:#252730;"></textarea>
+        </div>
+        <button type="submit" class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:13px;font-size:14.5px;font-weight:700;cursor:pointer;">Submit feedback</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3. SUBMITTING ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Submitting</div>
+  <div class="page-bg" style="width:680px;min-height:600px;color:#F1F5F9;">
+    <div class="card" style="opacity:0.85;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+        <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:15px;font-weight:700;color:#64748B;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:center;">
+        <div style="font-size:26px;font-weight:800;">How did we do?</div>
+        <div style="font-size:13.5px;color:#64748B;">Request #4821 · "Payment not going through"</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;border:1px solid #2A2C33;border-radius:10px;overflow:hidden;pointer-events:none;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">😞</span>1 – Poor</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">😐</span>2 – Fair</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;border-right:1px solid #2A2C33;background:#1C1D24;"><span style="font-size:20px;">🙂</span>3 – Okay</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:800;color:#818CF8;border-right:1px solid #2A2C33;background:rgba(129,140,248,0.14);"><span style="font-size:20px;">😊</span>4 – Good</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;font-size:11.5px;font-weight:600;color:#94A3B8;background:#1C1D24;"><span style="font-size:20px;">🤩</span>5 – Great</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:700;color:#94A3B8;">Comment <span style="font-weight:400;color:#64748B;">(optional)</span></div>
+          <textarea rows="3" disabled="" style="border:1px solid #2A2C33;border-radius:8px;padding:10px 12px;font-size:14px;color:#64748B;font-family:'Inter',sans-serif;resize:none;outline:none;background:#252730;">The agent was helpful and quick to respond.</textarea>
+        </div>
+        <button disabled="" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:13px;font-size:14.5px;font-weight:700;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:10px;">
+          <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121317" stroke-width="2.5" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"></path></svg>Submitting…
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4. SUBMITTED (thank you) ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Submitted</div>
+  <div class="page-bg" style="width:680px;min-height:400px;color:#F1F5F9;">
+    <div class="card" style="align-items:center;text-align:center;gap:20px;">
+      <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+      <div style="width:60px;height:60px;border-radius:999px;background:rgba(5,150,105,0.18);color:#34D399;display:flex;align-items:center;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div>
+      <div><div style="font-size:24px;font-weight:800;color:#F1F5F9;">Thank you for your feedback</div><div style="font-size:14px;color:#64748B;margin-top:8px;line-height:1.65;">Your response for request #4821 has been recorded. It helps us keep improving.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 5. ALREADY ANSWERED ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Already answered</div>
+  <div class="page-bg" style="width:680px;min-height:600px;color:#F1F5F9;">
+    <div class="card">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+        <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:15px;font-weight:700;color:#64748B;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;">You've already responded</div>
+        <div style="font-size:13.5px;color:#64748B;">Request #4821 · "Payment not going through"</div>
+      </div>
+      <div style="background:#252730;border:1px solid #2A2C33;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:12px;font-weight:700;color:#64748B;letter-spacing:.04em;">YOUR RESPONSE</div>
+        <div class="ro-rating">
+          <div class="ro-opt"><span style="font-size:20px;">😞</span>1 – Poor</div>
+          <div class="ro-opt"><span style="font-size:20px;">😐</span>2 – Fair</div>
+          <div class="ro-opt"><span style="font-size:20px;">🙂</span>3 – Okay</div>
+          <div class="ro-opt selected"><span style="font-size:20px;">😊</span>4 – Good</div>
+          <div class="ro-opt"><span style="font-size:20px;">🤩</span>5 – Great</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:12px;font-weight:700;color:#64748B;letter-spacing:.04em;">COMMENT</div>
+          <div style="font-size:14px;color:#CBD5E1;line-height:1.65;">"The agent was helpful and quick to respond."</div>
+        </div>
+        <div style="font-size:12px;color:#64748B;">Submitted Aug 26, 2026</div>
+      </div>
+      <div style="font-size:13px;color:#64748B;text-align:center;">Your response has been recorded. Thank you.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6. LINK EXPIRED / INVALID ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Expired link</div>
+  <div class="page-bg" style="width:680px;min-height:360px;color:#F1F5F9;">
+    <div class="card" style="align-items:center;text-align:center;gap:20px;">
+      <svg viewBox="0 0 64 64" width="36" height="36"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+      <div style="width:56px;height:56px;border-radius:999px;background:#252730;color:#64748B;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6l3 3"></path></svg></div>
+      <div><div style="font-size:22px;font-weight:800;color:#F1F5F9;">This link is no longer active</div><div style="font-size:14px;color:#64748B;margin-top:8px;line-height:1.65;">Feedback links expire after 30 days. This one has passed that window — no action needed.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 7. MOBILE WIDTH ===== -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+  <div style="font-size:13px;font-weight:700;color:#94A3B8;">WisalCsatResponse-DarkLTR · Mobile (375px)</div>
+  <div class="page-bg" style="width:375px;min-height:640px;color:#F1F5F9;padding:24px 16px;border-radius:16px;">
+    <div style="background:#1C1D24;border:1px solid #2A2C33;border-radius:16px;padding:28px 20px;display:flex;flex-direction:column;gap:20px;width:100%;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
+        <svg viewBox="0 0 64 64" width="30" height="30"><circle cx="24" cy="32" r="14" fill="none" stroke="#818CF8" stroke-width="7"></circle><circle cx="42" cy="32" r="9" fill="none" stroke="#818CF8" stroke-width="7"></circle></svg>
+        <span style="font-size:13px;font-weight:700;color:#64748B;">Wisal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;text-align:center;">
+        <div style="font-size:22px;font-weight:800;">How did we do?</div>
+        <div style="font-size:12.5px;color:#64748B;">#4821 · "Payment not going through"</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:12.5px;font-weight:700;color:#94A3B8;">Your rating <span style="color:#F87171;">*</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="display:flex;align-items:center;gap:12px;border:1px solid #2A2C33;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:500;color:#94A3B8;background:#1C1D24;"><input type="radio" name="mrating" style="accent-color:#818CF8;width:16px;height:16px;"><span style="font-size:18px;">😞</span>1 – Poor</label>
+          <label style="display:flex;align-items:center;gap:12px;border:1px solid #2A2C33;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:500;color:#94A3B8;background:#1C1D24;"><input type="radio" name="mrating" style="accent-color:#818CF8;width:16px;height:16px;"><span style="font-size:18px;">😐</span>2 – Fair</label>
+          <label style="display:flex;align-items:center;gap:12px;border:1px solid #2A2C33;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:500;color:#94A3B8;background:#1C1D24;"><input type="radio" name="mrating" style="accent-color:#818CF8;width:16px;height:16px;"><span style="font-size:18px;">🙂</span>3 – Okay</label>
+          <label style="display:flex;align-items:center;gap:12px;border:1.5px solid #818CF8;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:700;color:#818CF8;background:rgba(129,140,248,0.14);"><input type="radio" name="mrating" checked="" style="accent-color:#818CF8;width:16px;height:16px;"><span style="font-size:18px;">😊</span>4 – Good</label>
+          <label style="display:flex;align-items:center;gap:12px;border:1px solid #2A2C33;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13.5px;font-weight:500;color:#94A3B8;background:#1C1D24;"><input type="radio" name="mrating" style="accent-color:#818CF8;width:16px;height:16px;"><span style="font-size:18px;">🤩</span>5 – Great</label>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label for="mc" style="font-size:12.5px;font-weight:700;color:#94A3B8;">Comment <span style="font-weight:400;color:#64748B;">(optional)</span></label>
+        <textarea id="mc" rows="3" placeholder="Any feedback…" style="border:1px solid #2A2C33;border-radius:8px;padding:10px 12px;font-size:14px;color:#F1F5F9;font-family:'Inter',sans-serif;resize:vertical;outline:none;width:100%;background:#252730;"></textarea>
+      </div>
+      <button class="fv" style="background:#818CF8;color:#121317;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Submit feedback</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</x-dc>
+</body>
+</html>
