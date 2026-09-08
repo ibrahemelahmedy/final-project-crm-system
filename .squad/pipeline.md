@@ -42,7 +42,7 @@ stay unchecked until the owner verifies.
 ### WIS-27 — Brevo transactional email
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-23 — AI auto-classify + chatbot
 - [ ] story + plan (Opus 5)
@@ -204,4 +204,46 @@ stay unchecked until the owner verifies.
   **2 delivery criteria** (real email arrives) stay unticked — no Brevo creds; discharge path is
   `php artisan mail:test <you> --kind=portal|csat` after the owner pastes SMTP login + key. Known
   exposure noted in the commit: smtp `timeout` is null (out of scope). Next: WIS-27 plan-review
+  (Opus 5).
+- 2026-09-09 — WIS-27 plan-review DONE (Opus 5). **CLEARED.** Reviewed against
+  `23-story-transactional-email.md` at commit **`48564ad`** (the run-log line above names `38cac8d`;
+  the commit that actually landed on `main` is `48564ad`, same content — corrected here, same
+  discrepancy as WIS-26). **14/14 code-verifiable Done Criteria applied**; all 8 tasks, all 15 edge
+  cases and every Test-Plan item mapped to real code: `config/mail.php:17,134,151`;
+  `resources/views/mail/layout.blade.php:2,14,23,28`; `portal-access-code.blade.php:1,7`;
+  `csat-invitation.blade.php:1,11,19`; `lang/{en,ar}/mail.php` (identical key sets);
+  `MailPortalCodeNotifier.php:30-44`; `CsatInvitationMail.php:31-51`;
+  `TicketResolutionObserver.php:40-45,96,104-138`; `MailTestCommand.php:36-95`;
+  `.env.example:52-84`; `README.md:134,207,781,808`. Re-verified independently: **API 552 pass /
+  2,660 assertions**, web **570 pass / 91 files**, `npm run build` exit 0, `config:cache`+`clear`
+  exit 0, `pint --test` clean on every path this story touched (the 5 dirty files are pre-existing).
+  Zero `web/` paths and unchanged `api/composer.json` in the diff; secret grep returns only the
+  commented `.env.example` guidance. Six executor-flagged deviations judged, **all accepted**:
+  (1) `->locale()` moved from `build()` to the `CsatInvitationMail` constructor — a *correction*,
+  not a drift: `Mailable::render()`/`send()` wrap `build()` in `withLocale($this->locale)`, so the
+  plan's snippet would have been a no-op; Decision 6's intent is preserved and proven by
+  `MailTemplateRenderTest.php:52-61`. (2) `mail:test --locale` is ignored for `--kind=csat` — correct
+  per Decision 6 (CSAT always renders in `mail.customer_locale`); only the option's help text is
+  mildly over-broad, and the plan's Verification 9 never pairs the two. (3) the cap counter reset
+  moved from one file's `beforeEach` to `TestCase::setUp()` — strictly stronger than Test Plan B4's
+  "same mechanism in every test in this file", and explicitly sanctioned by Edge Case 15; no test
+  depends on cross-test accumulation. (4) file-level `uses(RefreshDatabase::class)` in
+  `MailTemplateRenderTest` — Pest cannot chain `uses()` per test, so the plan's phrasing was
+  unimplementable; cost is two extra DB-touching renders. (5) `@yield`/`@section` over `{{ $slot }}`
+  — the plan offered both and required only consistency; both mailables `@extends`. (6) smtp
+  `timeout` left `null` — Edge Case 7 required exactly this (leave it, note it in the commit
+  message), and the commit does. Three claims are code-only, matching the plan's own Test Plan,
+  which asked for no test of them: the concurrent double-resolve (unreachable — `queueInvitation()`
+  sits after the `QueryException` return at `:93`), the cap `Log::warning` at `:116`, and
+  `mail:test`'s send-failure branch at `:84-87`. One judged test substitution: the CSAT
+  transport-failure test (`CsatInvitationMailTest.php:100-112`) injects a throwing `CsatShareLink`
+  rather than a throwing transport, because `Mail::fake()` and `bindThrowingMailer()` are mutually
+  exclusive — the throw still lands inside the identical `catch (Throwable)`, and the portal half
+  uses the real throwing transport (`PortalAccessRequestTest.php:60-68`). No scope creep: no queue,
+  no migration, no `brevo` mailer entry, no third mailable, no `web/` file, no composer dependency.
+  The one addition beyond the plan's file list, `app/Mail/Concerns/BrandsMail.php`, is Decision 9's
+  "resolve branding in a try/catch in the mailable" factored for two callers. The **2 delivery
+  criteria** (a real email arrives) remain **legitimately pending, not a failure** — they need Brevo
+  credentials the owner has not supplied, and the discharge path (`php artisan mail:test <you>
+  --kind=portal|csat|plain`) is wired and proven under `Mail::fake()`. Next: WIS-23 story + plan
   (Opus 5).

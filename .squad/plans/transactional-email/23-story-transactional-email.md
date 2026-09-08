@@ -764,29 +764,29 @@ The only stateful change is configuration:
 
 Code-verifiable (dischargeable in this story, with no Brevo account):
 
-- [ ] `MAIL_MAILER=log` remains the committed default in `api/.env.example`; a fresh clone sends
+- [x] `MAIL_MAILER=log` remains the committed default in `api/.env.example`; a fresh clone sends
       nothing, needs no account, and `mail:test` warns and still exits `0`. *(Jira criterion 3.)*
-- [ ] Both templates render with `dir="rtl"` + `lang="ar"` under `ar` and `dir="ltr"` + `lang="en"`
+- [x] Both templates render with `dir="rtl"` + `lang="ar"` under `ar` and `dir="ltr"` + `lang="en"`
       under `en`; the 6-digit code stays inside an LTR span in both. *(Jira criterion 4, by test.)*
-- [ ] No credential, SMTP key, login or real address appears in any committed file;
+- [x] No credential, SMTP key, login or real address appears in any committed file;
       `git grep` (Verification 7) is clean. *(Jira criterion 5.)*
-- [ ] A portal code request sends exactly one `PortalAccessCodeMail` whose rendered body contains
+- [x] A portal code request sends exactly one `PortalAccessCodeMail` whose rendered body contains
       the 6-digit code. *(Jira criterion 1, code half.)*
-- [ ] Resolving a ticket sends exactly one `CsatInvitationMail` to the ticket's customer, carrying
+- [x] Resolving a ticket sends exactly one `CsatInvitationMail` to the ticket's customer, carrying
       the signed feedback URL. *(Jira criterion 2, code half.)*
-- [ ] A rolled-back resolve sends nothing (`CsatCreationTest.php:60` + `Mail::assertNothingSent()`).
-- [ ] A re-resolve while a survey is outstanding, and a concurrent double-resolve, each send zero
+- [x] A rolled-back resolve sends nothing (`CsatCreationTest.php:60` + `Mail::assertNothingSent()`).
+- [x] A re-resolve while a survey is outstanding, and a concurrent double-resolve, each send zero
       additional emails.
-- [ ] A customer with a null email gets no email on either path, and neither request errors.
-- [ ] A transport failure logs and does not change the portal `202` or the resolve `200`.
-- [ ] A bulk resolve past `mail.csat.max_per_request` still creates every survey and logs the skips.
-- [ ] `php artisan mail:test` exists, prints the mailer / from-address / locale before sending, and
+- [x] A customer with a null email gets no email on either path, and neither request errors.
+- [x] A transport failure logs and does not change the portal `202` or the resolve `200`.
+- [x] A bulk resolve past `mail.csat.max_per_request` still creates every survey and logs the skips.
+- [x] `php artisan mail:test` exists, prints the mailer / from-address / locale before sending, and
       reports an SMTP failure as one console line.
-- [ ] `README.md` documents the Brevo setup under "1. Run it in 60 seconds" and under
+- [x] `README.md` documents the Brevo setup under "1. Run it in 60 seconds" and under
       "13. Deployment", and the two "no real Email send-and-receive" claims (`:190`, `:766`) are
       corrected to say **outbound is live, inbound is not**.
-- [ ] `api/composer.json` is unchanged and `git diff --name-only` shows zero `web/` paths.
-- [ ] The full API suite is green (533 + new).
+- [x] `api/composer.json` is unchanged and `git diff --name-only` shows zero `web/` paths.
+- [x] The full API suite is green (533 + new).
 
 Owner-verifiable (need the Brevo account; leave unticked until the owner reports):
 
