@@ -3,10 +3,21 @@
 namespace Tests;
 
 use App\Models\User;
+use App\Observers\TicketResolutionObserver;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Story 23 (WIS-27). The observer's per-request CSAT-invitation cap
+        // counter is a process static; reset it so one test's resolves never
+        // count against the next test's cap.
+        TicketResolutionObserver::resetInvitationCounter();
+    }
+
     /**
      * Authenticate the next requests as the bearer of $token.
      *

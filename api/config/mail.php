@@ -115,4 +115,40 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Customer-Facing Locale (Story 23 / WIS-27, Decision 6)
+    |--------------------------------------------------------------------------
+    |
+    | `customers` has no locale column, so a mail sent outside a customer's own
+    | request — the CSAT invitation, fired when an AGENT resolves a ticket —
+    | has no honest per-recipient locale to read. It renders in this one
+    | instead. The portal access code does NOT use this: that mail is sent
+    | inside the customer's own portal request, where App::getLocale() is
+    | their own choice.
+    |
+    | The real fix is a `customers.locale` column. That is a later story.
+    |
+    */
+
+    'customer_locale' => env('MAIL_CUSTOMER_LOCALE', env('APP_LOCALE', 'en')),
+
+    /*
+    |--------------------------------------------------------------------------
+    | CSAT Invitation (Story 23 / WIS-27, Decision 5)
+    |--------------------------------------------------------------------------
+    |
+    | POST /api/tickets/bulk resolves up to 100 tickets in ONE transaction and
+    | every one of them mints a survey. Mail here is synchronous — there is no
+    | queue worker in this repository — so an uncapped bulk resolve would put
+    | 100 sequential SMTP round-trips inside one HTTP request. Past this cap
+    | the survey is still created and the agent-facing share link still works;
+    | only the email is skipped, and the skip is logged.
+    |
+    */
+
+    'csat' => [
+        'max_per_request' => (int) env('MAIL_CSAT_MAX_PER_REQUEST', 10),
+    ],
+
 ];

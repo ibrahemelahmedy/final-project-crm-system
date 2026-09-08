@@ -4,6 +4,11 @@ use App\Exceptions\AssistUnavailableException;
 use App\Services\Ai\AssistGenerator;
 use App\Services\Ai\AssistResult;
 use App\Services\IntegrationConnectionTester;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\RawMessage;
 use Tests\TestCase;
 
 // Unit tests that touch Eloquent models/factories (e.g. QuickReplyRendererTest)
@@ -92,6 +97,30 @@ function bindAssistGenerator(string $content = 'Generated content.'): object
     app()->instance(AssistGenerator::class, $fake);
 
     return $fake;
+}
+
+/**
+ * Story 23 (WIS-27). Points the default mailer at a Symfony transport that
+ * throws on every send, so a test can prove a transport failure is caught and
+ * neither 500s the portal request nor fails the ticket resolve.
+ */
+function bindThrowingMailer(): void
+{
+    Mail::extend('throwing', fn () => new class implements TransportInterface
+    {
+        public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+        {
+            throw new RuntimeException('simulated SMTP failure');
+        }
+
+        public function __toString(): string
+        {
+            return 'throwing';
+        }
+    });
+
+    config(['mail.default' => 'throwing']);
+    app('mail.manager')->forgetMailers();
 }
 
 /** The always-throws fake, for exercising the `failed` shape from the first call. */

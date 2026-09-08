@@ -34,6 +34,7 @@ file, not this column, when the two disagree.
 | 20 | organization-settings | [organization-settings/00-overview.md](organization-settings/00-overview.md) | Organization Settings — Branches, Departments & Branding (Category 12, remainder) | WIS-20 | **implemented** |
 | 21 | seed-data-realism | [seed-data-realism/00-overview.md](seed-data-realism/00-overview.md) | Realistic Seed Data — Genuine Tickets, Threads & Timelines | WIS-25 | **implemented** |
 | 22 | ai-provider-seam | [ai-provider-seam/00-overview.md](ai-provider-seam/00-overview.md) | Free AI Provider Behind the AssistGenerator Seam (Gemini / Groq) | WIS-26 | full |
+| 23 | transactional-email | [transactional-email/00-overview.md](transactional-email/00-overview.md) | Real Transactional Email — Brevo SMTP for Portal Codes and CSAT | WIS-27 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -85,6 +86,13 @@ already cite it.
         22 ai-provider-seam ── depends on 19 (the seam) and 18 (the outbound-HTTP pattern).
                               Adds a second AssistGenerator implementation and a provider registry
                               in config/ai.php; no schema, no endpoint, no frontend. Blocks WIS-23.
+
+        23 transactional-email ── depends on 17 (the portal OTP mailer + the only Blade template),
+                              13 (CsatSurvey, the resolution observer, the signed share link),
+                              20 (OrganizationBranding = the only "brand" there is) and 15 (locales).
+                              No schema, no endpoint, no frontend. Gives the app a real SMTP
+                              transport, one shared branded mail layout, and the CSAT invitation
+                              email that never existed. Blocks nothing.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

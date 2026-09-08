@@ -40,8 +40,8 @@ stay unchecked until the owner verifies.
 - [x] plan-review (Opus 5)
 
 ### WIS-27 — Brevo transactional email
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### WIS-23 — AI auto-classify + chatbot
@@ -150,3 +150,58 @@ stay unchecked until the owner verifies.
   by design** — they need a live free key the owner has not supplied; the discharge path
   (`php artisan ai:smoke --kind=summary|reply`) is wired and proven under `Http::fake()`/fake
   generator, so this is pending, not a failure. Next: WIS-27 story + plan (Opus 5).
+- 2026-09-09 — WIS-27 story + plan DONE (Opus 5). Created:
+  `.squad/stories/transactional-email/WIS-27/intake.md`,
+  `.squad/plans/transactional-email/23-story-transactional-email.md` (full depth),
+  `.squad/plans/transactional-email/00-overview.md`; row 23 + a dependency-spine entry added to
+  `.squad/plans/00-index.md`. Design: Brevo over the framework's **stock `smtp` mailer** — five
+  `.env` lines, **no new composer dependency**, no `brevo` entry in `config/mail.php`;
+  `MAIL_MAILER=log` stays the committed default (and is the one-line kill switch); one hand-written
+  `resources/views/mail/layout.blade.php` (markdown mailables rejected — their components are
+  LTR-hardcoded and unpublished here) shared by a rewritten portal-code template and a **new**
+  `CsatInvitationMail`; `php artisan mail:test {recipient} --kind=portal|csat|plain` is the owner's
+  discharge path, modelled on `ai:smoke`. **Key findings for the execute agent:** (1) the Jira
+  Context is **wrong** — there is no CSAT mailer, `api/app/Mail/` holds one file and `grep "Mail::"
+  api/app` returns exactly one hit, so Done Criterion 2 is a *new feature*, not a re-wiring;
+  (2) `TicketResolutionObserver` runs **inside** the resolving transaction
+  (`TicketController.php:179-180`, `:211-241`), so the invitation must be deferred with
+  `DB::afterCommit` or a rolled-back resolve emails the customer — `CsatCreationTest.php:60` gains
+  the `Mail::assertNothingSent()` that proves it; (3) the **opposite** ordering on the portal path is
+  already correct and load-bearing — `PortalAccess.php:76` sends *after* commit on purpose, so the
+  fix there is a `catch (Throwable)` in `MailPortalCodeNotifier`, because an escaping SMTP 550 would
+  500 only for identifiers that matched a real customer, i.e. an enumeration oracle;
+  (4) `POST /api/tickets/bulk` takes **100 ids** (`BulkTicketActionRequest.php:19`) in one
+  transaction and there is **no queue worker**, hence a `mail.csat.max_per_request` cap (default 10)
+  that skips emails, never surveys; (5) `customers` has **no locale column** — `mail.customer_locale`
+  is the recorded compromise for the CSAT path and a `customers.locale` migration is deferred;
+  (6) **five** test files already `Mail::fake()`, four assertions in
+  `PortalAccessRequestTest.php` (`:20,:46,:57,:73`) pin `PortalAccessCodeMail`'s class name and its
+  `public readonly string $code` constructor — keep both; (7) `phpunit.xml:60` already sets
+  `MAIL_MAILER=array`, so no test can send regardless; (8) the seeder creates tickets with their
+  final status in one `create()` and `CsatSurvey` rows directly (`TicketScenarioSeeder.php:137-142,
+  :486`), so the `updated`-only observer never fires on `migrate:fresh --seed` — verify, don't trust.
+  `.squad` files left uncommitted for the execute agent, matching WIS-25/26. Next: WIS-27 execute
+  (Sonnet 5), attaching only `23-story-transactional-email.md`.
+- 2026-09-09 — WIS-27 execute DONE (Sonnet 5), commit `38cac8d`. Brevo over the stock `smtp` mailer
+  — no new composer dep, `MAIL_MAILER=log` still the committed default. New shared
+  `resources/views/mail/layout.blade.php` (branded, RTL-correct, inline styles); portal-code
+  template rewritten to `@extends` it (keeps `<span dir="ltr">{{ $code }}</span>`); new
+  `CsatInvitationMail` + `lang/{en,ar}/mail.php`; `config/mail.php` gains `customer_locale` and
+  `csat.max_per_request` (default 10). CSAT invitation sent via `DB::afterCommit` in
+  `TicketResolutionObserver`, only on the created-a-survey path, per-request cap via a process
+  static reset in `TestCase::setUp`, `catch (Throwable)` + log at both send sites (portal notifier
+  too). New `php artisan mail:test {recipient} --kind=portal|csat|plain --locale=`. README Run-it +
+  Deployment + the two "no real Email" claims updated. Tests: 3 new files
+  (`MailTemplateRenderTest`, `CsatInvitationMailTest`, `MailTestCommandTest`), `CsatCreationTest`
+  (+`Mail::assertNothingSent()` on the rollback test) and `PortalAccessRequestTest` (+202-when-
+  transport-throws) extended with every existing assertion intact; `bindThrowingMailer()` added to
+  `Pest.php`. Results: API **552 pass / 2,660 assertions** (was 533); web **570 pass / 91 files**,
+  `lint` clean (pre-existing warnings only), `build` clean, `i18n:check` clean; pint clean on
+  touched paths; `config:cache`/`clear` exit 0; `migrate:fresh --seed` sends **zero** emails
+  (Edge Case 13 verified); `mail:test` with `log` warns + exits 0 + writes the body to the log.
+  `git diff --name-only` shows **zero** `web/` files and **unchanged** `api/composer.json`. Secret
+  grep clean (only the commented `.env.example` guidance). Code Done Criteria all discharged; the
+  **2 delivery criteria** (real email arrives) stay unticked — no Brevo creds; discharge path is
+  `php artisan mail:test <you> --kind=portal|csat` after the owner pastes SMTP login + key. Known
+  exposure noted in the commit: smtp `timeout` is null (out of scope). Next: WIS-27 plan-review
+  (Opus 5).

@@ -131,6 +131,21 @@ no messages on purpose — that is the empty state, not an accident.
 confirm the provider answers. `AI_PROVIDER=anthropic` uses the paid Claude path instead. With no key
 set, the cards do not render and nothing errors.
 
+**Sending real email.** Out of the box mail goes to `storage/logs/laravel.log` and no account is
+needed — a fresh clone works. Two emails leave the app once a transport is configured: the portal
+access code and the CSAT invitation sent when a ticket is resolved. To send for real, create a free
+[Brevo](https://www.brevo.com) account, verify a sender address, generate an **SMTP key** (not your
+account password), then in `api/.env` set `MAIL_MAILER=smtp`, `MAIL_HOST=smtp-relay.brevo.com`,
+`MAIL_PORT=587`, `MAIL_USERNAME` (your Brevo SMTP login), `MAIL_PASSWORD` (the SMTP key) and
+`MAIL_FROM_ADDRESS` (the verified address). Then:
+
+```bash
+cd api && php artisan config:clear && php artisan mail:test you@example.com
+```
+
+`mail:test` prints the resolved mailer, from-address and locale before sending and reports an SMTP
+failure as one line. `--kind=portal|csat|plain` and `--locale=en|ar` pick what is sent.
+
 The SLA engine is a scheduled command, not a queued job — nothing drains the `jobs` table in
 this repository. Run it directly, or run the scheduler:
 
@@ -189,7 +204,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 8 | Customer Portal | ✅ Done | `web/src/features/portal`, OTP access codes (`PortalAccess.php`), separate auth from staff | WIS-16 |
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
-| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — the admin surface to connect, configure, test and monitor. No live provider wiring; that is per-provider engineering | WIS-19 |
+| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — the admin surface to connect, configure, test and monitor. Outbound transactional email is live (Brevo SMTP, WIS-27); inbound email, WhatsApp and SMS send-and-receive are still not wired — that is per-provider engineering | WIS-19, WIS-27 |
 | 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20 |
 
 Twenty stories were specified, planned and implemented (WIS-1 … WIS-20). Their specifications
@@ -763,8 +778,9 @@ worse than the gap.
 - **Some plans are still at `contract` depth.** The index marks them. They are implemented, but
   the plan file was never regenerated at full depth afterwards.
 - **Integrations are a configuration surface only.** Connect, configure, test and monitor —
-  no live ERP field mapping, no real WhatsApp/SMS/Email send-and-receive. This is a stated
-  scope boundary (WIS-19), not an oversight.
+  no live ERP field mapping, no real WhatsApp/SMS send-and-receive, no inbound email. Outbound
+  transactional email *is* live over Brevo SMTP (WIS-27) — portal codes and CSAT invitations. The
+  rest is a stated scope boundary (WIS-19), not an oversight.
 - **AI features are partial.** Summary and suggested reply are built; auto-classification and a
   customer-facing chatbot are not. The provider behind them is selectable (`AI_PROVIDER`), so the
   feature runs on a free tier — see [1. Run it in 60 seconds](#1-run-it-in-60-seconds).
@@ -788,7 +804,10 @@ Two Vercel projects, one PostgreSQL database on Supabase.
   client-side routes working on refresh.
 - **Environment** — the API needs the standard Laravel keys plus the database credentials; the
   SPA needs `VITE_API_URL` (defaulting to `http://localhost:8000/api`, see
-  [web/src/lib/api.ts](web/src/lib/api.ts)). No secret is committed to this repository.
+  [web/src/lib/api.ts](web/src/lib/api.ts)). No secret is committed to this repository. For real
+  email delivery the API also needs the `MAIL_*` block (`MAIL_MAILER=smtp` plus the Brevo host,
+  port, username, SMTP key and a **provider-verified** `MAIL_FROM_ADDRESS`); with `MAIL_MAILER`
+  unset the deployment silently logs mail instead of sending it.
 - **Scheduled work** — one cron line is the whole story:
 
   ```

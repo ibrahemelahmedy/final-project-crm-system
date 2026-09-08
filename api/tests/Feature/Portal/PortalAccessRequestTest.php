@@ -57,6 +57,17 @@ it('writes no new row on a second request inside the cooldown', function () {
     Mail::assertSent(PortalAccessCodeMail::class, 1);
 });
 
+it('still answers 202 and writes the code row when the mail transport throws', function () {
+    bindThrowingMailer();
+    $customer = Customer::factory()->create(['email' => 'throws@example.com']);
+
+    $this->postJson('/api/portal/access/request', ['identifier' => 'throws@example.com'])
+        ->assertStatus(202)
+        ->assertJsonPath('sent', true);
+
+    expect(PortalAccessCode::where('customer_id', $customer->id)->count())->toBe(1);
+});
+
 it('supersedes the prior code when a request lands outside the cooldown', function () {
     Mail::fake();
     Customer::factory()->create(['email' => 'resend@example.com']);

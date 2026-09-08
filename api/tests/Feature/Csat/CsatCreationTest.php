@@ -6,8 +6,11 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
+
+beforeEach(fn () => Mail::fake());
 
 function resolveTicket(User $actor, Ticket $ticket): void
 {
@@ -71,4 +74,5 @@ it('leaves no survey when the resolving transaction rolls back', function () {
     }
 
     expect(CsatSurvey::where('ticket_id', $ticket->id)->count())->toBe(0);
+    Mail::assertNothingSent();
 });

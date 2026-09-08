@@ -6,6 +6,7 @@ use App\Mail\PortalAccessCodeMail;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 /**
  * Story 17 (WIS-16, Customer Portal). The shipped PortalCodeNotifier
@@ -25,6 +26,20 @@ class MailPortalCodeNotifier implements PortalCodeNotifier
             return;
         }
 
-        Mail::to($customer->email)->send(new PortalAccessCodeMail($code));
+        try {
+            Mail::to($customer->email)->send(new PortalAccessCodeMail($code));
+        } catch (Throwable $e) {
+            // Story 23 (WIS-27), Decision 7. The code row is already committed
+            // (PortalAccess::requestCode sends AFTER the transaction,
+            // deliberately). Letting an SMTP 550 escape would 500 the request
+            // for identifiers that matched a real customer and 202 for those
+            // that did not — an enumeration oracle. Log and swallow.
+            // NEVER log $code.
+            Log::error('Portal access code email failed to send.', [
+                'customer_id' => $customer->id,
+                'exception' => $e::class,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }
