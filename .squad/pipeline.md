@@ -37,7 +37,7 @@ stay unchecked until the owner verifies.
 ### WIS-26 — free AI provider seam
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-27 — Brevo transactional email
 - [ ] story + plan (Opus 5)
@@ -127,3 +127,26 @@ stay unchecked until the owner verifies.
   3/4/5 + `.env.example`/README discharged by test; Criteria 1 & 2 (live summary + reply
   card on a real free key) stay unticked — owner runs `php artisan ai:smoke --kind=summary`
   and `--kind=reply` after pasting `GROQ_API_KEY`/`GEMINI_API_KEY`. Next: WIS-26 plan-review (Opus 5).
+- 2026-09-09 — WIS-26 plan-review DONE (Opus 5). **CLEARED.** Reviewed against
+  `22-story-ai-provider-seam.md` at commit **`3110c28`** (the run-log line above names `d1915f6`;
+  the commit that actually landed on `main` is `3110c28`, same content — corrected here). Every
+  task, edge case and Test-Plan item mapped to real code: `config/ai.php:13-35,37,41-43,50,74,77`;
+  `OpenAiCompatibleAssistGenerator.php:49-54,57-61,63,68-70,72-77,82`;
+  `AppServiceProvider.php:65,67-88` (lazy `Client` singleton kept, `bind` not `singleton`);
+  `AiSmokeCommand.php:23,27-72`; `.env.example:67-84`; README `:128-133,:188,:768-770`. Independently
+  re-verified: `php artisan test` **533 pass / 2,609 assertions**; web **570 pass**, `lint` +
+  `i18n:check` clean, `build` exit 0, **zero** `web/` files and unchanged `api/composer.json` in the
+  diff; `pint --test` clean on touched paths; `config:cache` then `config:clear` both exit 0;
+  `AI_PROVIDER=nonsense` → `config('ai.enabled')` `false` and `UnavailableAssistGenerator` with no
+  throw. Four execute-flagged items judged: (1) Context item 9's "nine files" is a **plan-text
+  miscount** — the grep returns 10, the 10th being `tests/Unit/AssistTranscriptTest.php:19,36` whose
+  `ai.transcript_*` keys are preserved and which Test Plan D item 5 already covers; no gap. (2) The
+  two new files correctly omit `RefreshDatabase` — neither touches the database, and the plan
+  specifies it. (3) Test 9's `not->toContain('.')` is **vacuous** (the default `Str::limit` suffix is
+  `…`, not `.`), but its sibling `strlen(...) === 64` at
+  `OpenAiCompatibleAssistGeneratorTest.php:141` does prove suffix suppression — Decision 6 is
+  genuinely covered; cosmetic nit only. (4) `ai:smoke`'s extra `ticket: #id (kind)` line is an
+  accepted superset. Done Criteria 3-8 ticked in the plan file. **Criteria 1 and 2 remain unticked
+  by design** — they need a live free key the owner has not supplied; the discharge path
+  (`php artisan ai:smoke --kind=summary|reply`) is wired and proven under `Http::fake()`/fake
+  generator, so this is pending, not a failure. Next: WIS-27 story + plan (Opus 5).
