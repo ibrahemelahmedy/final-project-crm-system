@@ -125,6 +125,12 @@ so the queue opens on three breached and three at-risk tickets rather than sixty
 CSAT surveys attach only to tickets that were genuinely resolved. Two Open tickets are seeded with
 no messages on purpose — that is the empty state, not an accident.
 
+**Turning AI Assist on.** The summary and suggested-reply cards are off until a key is present. Set
+`AI_PROVIDER` in `api/.env` to `groq` or `gemini` — both have a free tier — paste the matching
+`GROQ_API_KEY` / `GEMINI_API_KEY`, run `php artisan config:clear`, then `php artisan ai:smoke` to
+confirm the provider answers. `AI_PROVIDER=anthropic` uses the paid Claude path instead. With no key
+set, the cards do not render and nothing errors.
+
 The SLA engine is a scheduled command, not a queued job — nothing drains the `jobs` table in
 this repository. Run it directly, or run the scheduler:
 
@@ -179,7 +185,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 4 | Agent Dashboard | ✅ Done | `web/src/features/agent-dashboard`, `api/app/Services/DashboardMetrics.php` | WIS-9 |
 | 5 | SLA & Automation | ✅ Done | `api/app/Services/SlaClock.php`, `api/app/Console/Commands/EvaluateSlaCommand.php`, `TicketAssigner.php` | WIS-6 |
 | 6 | Knowledge Base | ✅ Done | `web/src/features/knowledge-base`, `api/app/Services/Kb`, versioned articles | WIS-5 |
-| 7 | AI Features | ⚠️ Partial | Ticket summary and suggested reply, `api/app/Services/Ai` + `web/src/features/ai-assist`. Auto-classification and a chatbot are not built | WIS-18 |
+| 7 | AI Features | ⚠️ Partial | Ticket summary and suggested reply, `api/app/Services/Ai` + `web/src/features/ai-assist`. Provider-selectable via `AI_PROVIDER` — `anthropic` (paid), `groq` or `gemini` (free tiers), same seam. Auto-classification and a chatbot are not built | WIS-18, WIS-26 |
 | 8 | Customer Portal | ✅ Done | `web/src/features/portal`, OTP access codes (`PortalAccess.php`), separate auth from staff | WIS-16 |
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
@@ -760,7 +766,8 @@ worse than the gap.
   no live ERP field mapping, no real WhatsApp/SMS/Email send-and-receive. This is a stated
   scope boundary (WIS-19), not an oversight.
 - **AI features are partial.** Summary and suggested reply are built; auto-classification and a
-  customer-facing chatbot are not.
+  customer-facing chatbot are not. The provider behind them is selectable (`AI_PROVIDER`), so the
+  feature runs on a free tier — see [1. Run it in 60 seconds](#1-run-it-in-60-seconds).
 - **Channels are read-only.** Every message is tagged with its channel and the overview screen
   reports honestly that live ingestion is not in this release.
 - **Test execution is environment-sensitive.** Windows Application Control has blocked PHP

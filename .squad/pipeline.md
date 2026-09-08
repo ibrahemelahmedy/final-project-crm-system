@@ -35,8 +35,8 @@ stay unchecked until the owner verifies.
 - [x] plan-review (Opus 5)
 
 ### WIS-26 — free AI provider seam
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### WIS-27 — Brevo transactional email
@@ -94,3 +94,36 @@ stay unchecked until the owner verifies.
   customer messages with a null `first_response_at` — the code replaces rather than drops the agent
   turn to hold `turns`, and an assigned-but-not-yet-answered ticket is an honest state that breaks no
   count. Done Criteria ticked in `21-story-seed-data-realism.md`. Next: WIS-26 story + plan (Opus 5).
+- 2026-09-09 — WIS-26 story + plan DONE (Opus 5). Created:
+  `.squad/stories/ai-provider-seam/WIS-26/intake.md`,
+  `.squad/plans/ai-provider-seam/22-story-ai-provider-seam.md` (full depth),
+  `.squad/plans/ai-provider-seam/00-overview.md`; row 22 + a dependency-spine entry added to
+  `.squad/plans/00-index.md`. Design: **one** `OpenAiCompatibleAssistGenerator` (Laravel `Http`,
+  **no new composer package**) serves both Groq and Gemini — base URL + model + key are constructor
+  args from a new `config('ai.providers')` registry; `AI_PROVIDER` selects, `ai.enabled` follows the
+  selected entry's key, and an unknown provider name disables the feature rather than throwing (a
+  config file that throws breaks `artisan config:cache`). Key findings for the execute agent:
+  (1) **all nine** seam-touching test files set `config(['ai.enabled' => …])` at runtime and bind a
+  fake via `api/tests/Pest.php` — none reads `ai.key` or opens a socket, so `Pest.php` and all nine
+  stay untouched; (2) `ai_assist_artifacts.model` is **`string(64)`** — the returned model id must be
+  clamped or `updateOrCreate` throws a `QueryException`, i.e. a **500** instead of the `failed` card;
+  (3) the frontend needs **zero** changes — `enabled` from `TicketAssistController:30` is the only
+  gate; (4) a new `php artisan ai:smoke` command is how the owner ticks the two key-dependent Done
+  Criteria after pasting a free key. `.squad` files left uncommitted for the execute agent, matching
+  WIS-25. Next: WIS-26 execute (Sonnet 5), attaching only `22-story-ai-provider-seam.md`.
+- 2026-09-09 — WIS-26 execute DONE (Sonnet 5), commit `d1915f6`. New
+  `OpenAiCompatibleAssistGenerator` (Http facade, no SDK) serves Groq + Gemini via
+  constructor args from a `config('ai.providers')` registry; `config/ai.php` rebuilt as a
+  provider registry (`provider`, `providers`, `temperature` added; `transcript_*` kept in
+  place); `AppServiceProvider` binds by `config('ai.provider')` via `match`, unknown provider
+  → `UnavailableAssistGenerator` (no throw). New `php artisan ai:smoke` command,
+  `.env.example` provider block (`AI_PROVIDER=groq` default), README 3 anchors updated.
+  3 new test files (23 tests): `OpenAiCompatibleAssistGeneratorTest`,
+  `AssistProviderBindingTest`, `AiSmokeCommandTest`. `api/tests/Pest.php` and the 9 seam
+  tests untouched. Results: API 533 pass / 2,609 assertions (was 510); web 570 pass, lint
+  clean, build clean; pint clean on touched paths; `config:cache`/`clear` exits 0;
+  `AI_PROVIDER=nonsense` → `enabled` false + `UnavailableAssistGenerator`. `git diff
+  --name-only` shows ZERO files under `web/`, no `api/composer.json` change. Done Criteria
+  3/4/5 + `.env.example`/README discharged by test; Criteria 1 & 2 (live summary + reply
+  card on a real free key) stay unticked — owner runs `php artisan ai:smoke --kind=summary`
+  and `--kind=reply` after pasting `GROQ_API_KEY`/`GEMINI_API_KEY`. Next: WIS-26 plan-review (Opus 5).

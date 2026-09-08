@@ -10,6 +10,7 @@ use App\Policies\CustomerPolicy;
 use App\Policies\ReportPolicy;
 use App\Services\Ai\AnthropicAssistGenerator;
 use App\Services\Ai\AssistGenerator;
+use App\Services\Ai\OpenAiCompatibleAssistGenerator;
 use App\Services\Ai\UnavailableAssistGenerator;
 use App\Services\HttpIntegrationTester;
 use App\Services\IntegrationConnectionTester;
@@ -55,16 +56,36 @@ class AppServiceProvider extends ServiceProvider
         // instead, so no test ever makes a real outbound request.
         $this->app->bind(IntegrationConnectionTester::class, HttpIntegrationTester::class);
 
-        // Story 19 (WIS-18): the AI provider seam. Bound to the unavailable
-        // implementation when no key is configured, so an unconfigured
-        // deployment degrades to "no cards" instead of a 500 on every ticket
-        // open. Resolved lazily, like ArticleSearch above — nothing may read
-        // config or open a connection while the container boots.
+        // Story 19 (WIS-18) / Story 22 (WIS-26): the AI provider seam, now
+        // selected by `AI_PROVIDER`. Bound to the unavailable implementation
+        // when no key is configured OR the provider name is unknown, so a
+        // misconfigured deployment degrades to "no cards" instead of a 500 on
+        // every ticket open. Resolved lazily, like ArticleSearch above —
+        // nothing may read config or open a connection while the container boots.
         $this->app->singleton(Client::class, fn () => new Client(apiKey: (string) config('ai.key')));
 
-        $this->app->bind(AssistGenerator::class, fn ($app) => config('ai.enabled')
-            ? $app->make(AnthropicAssistGenerator::class)
-            : $app->make(UnavailableAssistGenerator::class));
+        $this->app->bind(AssistGenerator::class, function ($app) {
+            if (! config('ai.enabled')) {
+                return $app->make(UnavailableAssistGenerator::class);
+            }
+
+            $name = (string) config('ai.provider');
+            $config = config('ai.providers.'.$name);
+
+            return match ($name) {
+                'anthropic' => $app->make(AnthropicAssistGenerator::class),
+                'groq', 'gemini' => new OpenAiCompatibleAssistGenerator(
+                    provider: $name,
+                    baseUrl: (string) ($config['base_url'] ?? ''),
+                    apiKey: (string) ($config['key'] ?? ''),
+                    model: (string) ($config['model'] ?? ''),
+                ),
+                // Unreachable while `enabled` is derived from the same map
+                // (config/ai.php), but a runtime config() override in a test
+                // can reach it. Never throw here.
+                default => $app->make(UnavailableAssistGenerator::class),
+            };
+        });
     }
 
     /**
