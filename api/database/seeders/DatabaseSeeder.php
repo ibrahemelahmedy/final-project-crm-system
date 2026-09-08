@@ -2,20 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Channel;
 use App\Enums\CustomerTier;
 use App\Enums\Priority;
-use App\Enums\TicketStatus;
 use App\Enums\UserRole;
 use App\Models\Branch;
-use App\Models\CsatSurvey;
 use App\Models\Customer;
 use App\Models\Department;
 use App\Models\SlaRule;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
-use App\Services\SlaClock;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -228,110 +224,15 @@ class DatabaseSeeder extends Seeder
         // Enough rows to genuinely exercise pagination (three pages at 25/page).
         Customer::factory()->count(40)->create();
 
-        // Seed tickets for agent1
-        $threadedTicket = Ticket::create([
-            'subject' => 'Cannot access email integration',
-            'customer_id' => $namedCustomers[0]->id,
-            'status' => TicketStatus::Open->value,
-            'priority' => Priority::High->value,
-            'category' => 'technical',
-            'channel' => Channel::Email->value,
-            'assigned_to' => $agent1->id,
-            'created_by' => $agent1->id,
-        ]);
-
-        $mixedChannelTicket = Ticket::create([
-            'subject' => 'Billing inquiry for subscription upgrade',
-            'customer_id' => $namedCustomers[1]->id,
-            'status' => TicketStatus::Pending->value,
-            'priority' => Priority::Normal->value,
-            'category' => 'billing',
-            'channel' => Channel::Email->value,
-            'assigned_to' => $agent1->id,
-            'created_by' => $agent1->id,
-        ]);
-
-        // Seed tickets for agent2
-        Ticket::create([
-            'subject' => 'Password reset issue on mobile app',
-            'customer_id' => $namedCustomers[2]->id,
-            'status' => TicketStatus::Open->value,
-            'priority' => Priority::Urgent->value,
-            'category' => 'account',
-            'channel' => Channel::Chat->value,
-            'assigned_to' => $agent2->id,
-            'created_by' => $agent2->id,
-        ]);
-
-        Ticket::create([
-            'subject' => 'Feature request: Export reports to CSV',
-            'customer_id' => $namedCustomers[3]->id,
-            'status' => TicketStatus::Closed->value,
-            'priority' => Priority::Low->value,
-            'category' => 'feature_request',
-            'channel' => Channel::WebForm->value,
-            'assigned_to' => $agent2->id,
-            'created_by' => $agent2->id,
-        ]);
-
-        // Enough further tickets to make server-side pagination visibly real
-        // at 25/page and exercise the "..." in the pagination footer.
-        Ticket::factory()->count(20)->assignedTo($agent1)->create();
-        Ticket::factory()->count(20)->assignedTo($agent2)->create();
-        Ticket::factory()->count(20)->unassigned()->create();
-
-        // Story 06 — stamp SLA targets on every seeded ticket so a fresh
-        // database shows real countdowns instead of four dashes. Backdate the
-        // urgent one past its target so the breached state is visible without
-        // waiting four hours.
-        $threadedTicket->forceFill(['created_at' => now()->subHours(6)])->save();
-
-        $clock = app(SlaClock::class);
-        foreach (Ticket::all() as $seeded) {
-            $clock->applyTo($seeded);
-            $seeded->save();
-        }
-
-        // Story 05 — seeded conversation threads. Mixed author types AND
-        // channels so GET /api/tickets/{id}/messages demonstrably returns one
-        // continuous multi-channel list, and the "Load earlier messages" path
-        // is reachable on at least one ticket.
-        $this->seedThread($threadedTicket, $agent1, [
-            [Channel::Email, false], [Channel::Email, true],
-        ], extra: 32);
-
-        $this->seedThread($mixedChannelTicket, $agent1, [
-            [Channel::Email, false],
-            [Channel::Whatsapp, false],
-            [Channel::Email, true],
-        ]);
-
-        // agent2's closed CSV ticket stays with zero messages — the Empty state.
-
         // Story 09 — Knowledge Base categories and articles, including the
         // draft, Arabic, and scripted-body rows the manual verification steps
         // depend on.
         $this->call(KnowledgeBaseSeeder::class);
 
-        // Story 13 — CSAT surveys so the Reports CSAT widget shows a real
-        // average and the agent ticket-detail panel has something to render.
-        // One outstanding, the rest answered across a spread of ratings and
-        // both seeded agents.
-        $resolvedTickets = Ticket::query()->whereIn('assigned_to', [$agent1->id, $agent2->id])->take(9)->get();
-        $ratings = [5, 4, 4, 3, 5, 2, 4, 5, null];
-        foreach ($resolvedTickets as $i => $ticket) {
-            $rating = $ratings[$i] ?? 4;
-            CsatSurvey::create([
-                'ticket_id' => $ticket->id,
-                'resolution_cycle' => 1,
-                'resolved_by' => $ticket->assigned_to,
-                'resolved_at' => now()->subDays($i + 1),
-                'rating' => $rating,
-                'comment' => $rating !== null && $i % 2 === 0 ? 'The agent was helpful and quick to respond.' : null,
-                'responded_at' => $rating === null ? null : now()->subDays($i),
-                'expires_at' => now()->subDays($i + 1)->addDays(30),
-            ]);
-        }
+        // Story 21 (WIS-25) — 64 realistic tickets with coherent threads, a
+        // six-week timeline and SLA state recomputed from the real created date.
+        // See TicketScenarioSeeder's docblock for what is deliberately seeded.
+        $this->call(TicketScenarioSeeder::class);
 
         // Reconcile every customer's last_contact_at with the threads seeded above.
         foreach (Customer::all() as $customer) {
@@ -342,37 +243,6 @@ class DatabaseSeeder extends Seeder
             if ($latest !== null) {
                 $customer->forceFill(['last_contact_at' => $latest])->save();
             }
-        }
-    }
-
-    /**
-     * @param  array<int, array{0: Channel, 1: bool}>  $turns  [channel, isAgent]
-     */
-    private function seedThread(Ticket $ticket, User $agent, array $turns, int $extra = 0): void
-    {
-        $at = now()->subDays(3);
-
-        $write = function (Channel $channel, bool $isAgent) use ($ticket, $agent, &$at) {
-            $at = $at->copy()->addMinutes(fake()->numberBetween(7, 90));
-
-            TicketMessage::create([
-                'ticket_id' => $ticket->id,
-                'author_type' => $isAgent ? TicketMessage::AUTHOR_AGENT : TicketMessage::AUTHOR_CUSTOMER,
-                'user_id' => $isAgent ? $agent->id : null,
-                'customer_id' => $isAgent ? null : $ticket->customer_id,
-                'channel' => $channel->value,
-                'body' => fake()->paragraph(),
-                'created_at' => $at,
-                'updated_at' => $at,
-            ]);
-        };
-
-        for ($i = 0; $i < $extra; $i++) {
-            $write(Channel::Email, $i % 2 === 1);
-        }
-
-        foreach ($turns as [$channel, $isAgent]) {
-            $write($channel, $isAgent);
         }
     }
 }

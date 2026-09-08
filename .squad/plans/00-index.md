@@ -32,6 +32,7 @@ file, not this column, when the two disagree.
 | 19 | ai-assist-panel | [ai-assist-panel/00-overview.md](ai-assist-panel/00-overview.md) | AI Assist — Ticket Summary & Suggested Reply (Category 7, partial) | WIS-18 | **implemented** |
 | 18 | integrations-erp | [integrations-erp/00-overview.md](integrations-erp/00-overview.md) | Integrations & ERP — Admin Connection Management (Category 11) | WIS-19 | **implemented** |
 | 20 | organization-settings | [organization-settings/00-overview.md](organization-settings/00-overview.md) | Organization Settings — Branches, Departments & Branding (Category 12, remainder) | WIS-20 | **implemented** |
+| 21 | seed-data-realism | [seed-data-realism/00-overview.md](seed-data-realism/00-overview.md) | Realistic Seed Data — Genuine Tickets, Threads & Timelines | WIS-25 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -75,6 +76,10 @@ already cite it.
         19 ai-assist-panel ── depends on 04·05·10·15, coordinates with 16
                               (fills the slot 05 reserved and left empty; a leaf — nothing
                                depends on it, and it is the first PAID outbound call)
+
+        21 seed-data-realism ── depends on 04·05·06·09·13·14 (data only; no schema, no endpoint,
+                              no frontend). Rewrites what `migrate:fresh --seed` produces and
+                              nothing else.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

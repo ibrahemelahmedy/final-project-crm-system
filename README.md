@@ -116,6 +116,15 @@ creates one account per role, all with the password `Password123!`:
 | `admin@wisal.test` | Administrator | Users, SLA rules, integrations, organisation settings |
 | `disabled@wisal.test` | Agent (deactivated) | The `active` middleware refusing a valid token |
 
+**What the seed contains.** 64 tickets, not filler: 40 authored support scenarios (subjects and
+opening messages written in both English and Arabic) spread over the last six weeks, each with a
+thread whose shape follows its status — an Open ticket's last message is from the customer, a
+Pending ticket's is the agent asking for something, and every Resolved or Closed ticket carries
+the agent's resolution message. SLA targets are recomputed from each ticket's real creation date,
+so the queue opens on three breached and three at-risk tickets rather than sixty identical ones.
+CSAT surveys attach only to tickets that were genuinely resolved. Two Open tickets are seeded with
+no messages on purpose — that is the empty state, not an accident.
+
 The SLA engine is a scheduled command, not a queued job — nothing drains the `jobs` table in
 this repository. Run it directly, or run the scheduler:
 
@@ -131,11 +140,11 @@ the SLA story landed, and is idempotent.
 Nothing here asks to be taken on trust. These five commands reproduce the claims that matter:
 
 ```bash
-cd api && vendor/bin/pest                 # 500 tests, 2,345 assertions
+cd api && vendor/bin/pest                 # 510 tests, 2,563 assertions
 ```
 
 ```bash
-cd web && npm run test                    # 546 tests across 83 files
+cd web && npm run test                    # 570 tests across 91 files
 ```
 
 ```bash

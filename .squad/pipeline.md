@@ -1,0 +1,81 @@
+# Autonomous build pipeline — WIS-22..27
+
+Owner authorised **full autonomy** for these six stories on 2026-09-09: squad
+story + plan (Opus 5), execute (Sonnet 5), then `/plan-review` (Opus 5) — each
+phase in a fresh agent context, one story fully through all phases before the
+next starts. No per-file approval gate for `.squad/**` on these six.
+
+If a session runs out of tokens, a fresh session resumes from the first
+unchecked box below. Keys (Groq/Gemini for WIS-26, Brevo for WIS-27) are
+supplied by the owner; the execute phase builds the adapter + config + tests
+with a fake, and real-key wiring is a final step once the owner pastes them.
+
+**Known limit:** WIS-22 / WIS-23 / WIS-24 have Done-Criteria that need external
+accounts and live webhooks (WhatsApp Business, an SMS provider, a real ERP).
+The execute agent builds code + unit tests against fakes and records exactly
+what external setup the owner must still do; end-to-end "real inbound" criteria
+stay unchecked until the owner verifies.
+
+## Order (dependency-aware)
+
+| # | Story | Why here |
+|---|---|---|
+| 1 | **WIS-25** realistic seed data | pure code, unblocks the demo |
+| 2 | **WIS-26** free AI provider seam | unblocks WIS-23 |
+| 3 | **WIS-27** Brevo transactional email | small, independent |
+| 4 | **WIS-23** AI auto-classify + chatbot | needs WIS-26 |
+| 5 | **WIS-24** integration data sync | large, mock-ERP |
+| 6 | **WIS-22** live channel ingestion | largest, most external deps |
+
+## Progress
+
+### WIS-25 — realistic seed data
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-26 — free AI provider seam
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-27 — Brevo transactional email
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-23 — AI auto-classify + chatbot
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-24 — integration data sync
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-22 — live channel ingestion
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+## Run log
+
+- 2026-09-09 — pipeline created; starting WIS-25 story + plan.
+- 2026-09-09 — WIS-25 story + plan DONE (Opus 5). Created:
+  `.squad/stories/seed-data-realism/WIS-25/intake.md`,
+  `.squad/plans/seed-data-realism/21-story-seed-data-realism.md` (full depth),
+  `.squad/plans/seed-data-realism/00-overview.md`; row 21 added to `.squad/plans/00-index.md`.
+  Key finding for the execute agent: **no test in `api/tests` runs the seeder** (grep for
+  `DatabaseSeeder`/`->seed(`/`Seeder::class` returns zero), so nothing existing needs updating —
+  the plan adds one new test file instead. Next: WIS-25 execute (Sonnet 5), attaching only
+  `21-story-seed-data-realism.md`.
+- 2026-09-09 — WIS-25 execute DONE (Sonnet 5), commit `6b79983`. New TicketScenarioSeeder +
+  3 data files replace the 60 filler tickets with 64 authored cases; TicketFactory de-lorem'd;
+  SeededDataRealismTest (10 tests) added. API 510 pass / 2,563 assertions, web 570 pass, api
+  pint clean on touched paths. `migrate:fresh --seed` sanity: 64 tickets (20/12/14/18),
+  channels email 30 / chat 14 / web_form 9 / whatsapp 8 / sms 3, oldest 42d, 2 no-message
+  Open rows, open verdicts 3 breached / 3 at-risk, 2 finished breached, CSAT 12 (1 null),
+  0 future messages, longest thread 36, 35 distinct created-days. Pre-existing (not WIS-25):
+  `web` `npm run build` fails on __i18nArabicSweep TS6133 from commit 8791a4b; repo-wide
+  `pint --test` dirty. Next: WIS-25 plan-review (Opus 5).

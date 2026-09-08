@@ -15,14 +15,37 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TicketFactory extends Factory
 {
+    /** Realistic subjects for FACTORY tickets (tests). The seeder does not use this factory. */
+    private const SUBJECTS = [
+        'Login fails after the latest update',
+        'Invoice does not match the agreed plan',
+        'Attachment upload times out',
+        'Request to add a new team member',
+        'Notification emails are delayed',
+        'Export finishes but the file is empty',
+        'Chat widget does not load on mobile',
+        'Question about the renewal date',
+        'Duplicate ticket created by the email connector',
+        'Report totals differ from the dashboard',
+        'Two-factor prompt appears on every sign-in',
+        'Request to change the billing contact',
+    ];
+
+    private const OPENINGS = [
+        'This started this morning and is affecting the whole team. Can you take a look?',
+        'We noticed the problem yesterday. It is not urgent but we would like it resolved this week.',
+        'Following up on the previous conversation — the issue is still happening.',
+        'Could you confirm whether this is expected behaviour or something on our side?',
+    ];
+
     /**
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'subject' => fake()->sentence(6),
-            'description' => fake()->paragraph(),
+            'subject' => fake()->randomElement(self::SUBJECTS),
+            'description' => fake()->randomElement(self::OPENINGS),
             'customer_id' => Customer::factory(),
             'status' => fake()->randomElement(TicketStatus::cases())->value,
             'priority' => fake()->randomElement(Priority::cases())->value,
