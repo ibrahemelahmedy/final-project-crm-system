@@ -32,7 +32,7 @@ stay unchecked until the owner verifies.
 ### WIS-25 — realistic seed data
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-26 — free AI provider seam
 - [ ] story + plan (Opus 5)
@@ -79,3 +79,18 @@ stay unchecked until the owner verifies.
   0 future messages, longest thread 36, 35 distinct created-days. Pre-existing (not WIS-25):
   `web` `npm run build` fails on __i18nArabicSweep TS6133 from commit 8791a4b; repo-wide
   `pint --test` dirty. Next: WIS-25 plan-review (Opus 5).
+- 2026-09-09 — WIS-25 plan-review DONE (Opus 5). **10/10 Done Criteria applied**; all 11 tasks and
+  every Edge Case mapped to `file:line`; all 10 planned tests present and passing; no scope creep
+  (both commits touch only `.squad/`, `README.md`, `api/database/`, and the one new test file).
+  Re-verified independently: API 510 pass / 2,563 assertions, web 570 pass / 91 files, and — correcting
+  the execute run-log above — **`web` builds clean**: `npm run build` and `npx tsc -b --force` both
+  exit 0, `npm run lint` + `i18n:check` clean. `pint --test` is dirty on 30 pre-existing files, none
+  of them touched by WIS-25. Four judged deviations, all accepted: (1) `Priority` import kept in
+  `DatabaseSeeder` — plan Task 9 contradicts itself, the kept SLA-rules block uses it 4×, removing it
+  would break the file; (2) the outstanding CSAT survey landed on D-05 (23d) not C-05 — the plan's
+  binding property, `expires_at` in the future, holds with a stable ~7-day margin; (3) D-01's
+  36-message thread came from the generic planner (turn 2 is `agent_ack` not `agent_update`) — every
+  property of the outlier is preserved, `next_cursor` non-null; (4) A-14 (`turns: 2`) ends on two
+  customer messages with a null `first_response_at` — the code replaces rather than drops the agent
+  turn to hold `turns`, and an assigned-but-not-yet-answered ticket is an honest state that breaks no
+  count. Done Criteria ticked in `21-story-seed-data-realism.md`. Next: WIS-26 story + plan (Opus 5).

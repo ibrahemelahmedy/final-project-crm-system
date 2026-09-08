@@ -724,15 +724,15 @@ The one non-obvious risk: **a live demo database is not re-seeded by this change
 
 ## Done Criteria
 
-- [ ] No lorem-ipsum subject or body anywhere in seeded data — `SeededDataRealismTest` test 2 passes, and `grep -rn "fake()->paragraph\|fake()->sentence\|fake()->text\|realText" api/database/seeders/` returns nothing.
-- [ ] Every Closed ticket has a resolving agent message and a non-null `resolved_at`; every Open ticket with messages ends on a customer message; every Pending ticket ends on an agent message — test 3.
-- [ ] Ticket and message timestamps span at least 40 days across at least 25 distinct days, and no message is dated in the future — test 6.
-- [ ] `GET /api/channels/overview?period=90d` as an Administrator returns per-channel counts equal to the actual per-channel ticket counts, totalling 64 — test 7.
-- [ ] CSAT surveys exist only on Resolved/Closed tickets, 12 of them, one deliberately outstanding — test 5.
-- [ ] Exactly two seeded tickets have no messages, and both are Open — test 3.
-- [ ] SLA targets are anchored on each ticket's real `created_at`, producing 3 breached and 3 at-risk running tickets and 2 missed-on-close tickets — test 4.
-- [ ] `cd api && vendor/bin/pest` is green; `cd web && npm run test` is green and unmodified.
-- [ ] `README.md` section 1 carries the "What the seed contains" paragraph, and the test-count line at `:135` matches the real output.
-- [ ] `api/database/seeders/DatabaseSeeder.php` no longer calls `Ticket::factory()`, and its private `seedThread()` helper is gone.
+- [x] No lorem-ipsum subject or body anywhere in seeded data — `SeededDataRealismTest` test 2 passes, and `grep -rn "fake()->paragraph\|fake()->sentence\|fake()->text\|realText" api/database/seeders/` returns nothing.
+- [x] Every Closed ticket has a resolving agent message and a non-null `resolved_at`; every Open ticket with messages ends on a customer message; every Pending ticket ends on an agent message — test 3.
+- [x] Ticket and message timestamps span at least 40 days across at least 25 distinct days, and no message is dated in the future — test 6.
+- [x] `GET /api/channels/overview?period=90d` as an Administrator returns per-channel counts equal to the actual per-channel ticket counts, totalling 64 — test 7.
+- [x] CSAT surveys exist only on Resolved/Closed tickets, 12 of them, one deliberately outstanding — test 5.
+- [x] Exactly two seeded tickets have no messages, and both are Open — test 3.
+- [x] SLA targets are anchored on each ticket's real `created_at`, producing 3 breached and 3 at-risk running tickets and 2 missed-on-close tickets — test 4.
+- [x] `cd api && vendor/bin/pest` is green; `cd web && npm run test` is green and unmodified.
+- [x] `README.md` section 1 carries the "What the seed contains" paragraph, and the test-count line at `:135` matches the real output.
+- [x] `api/database/seeders/DatabaseSeeder.php` no longer calls `Ticket::factory()`, and its private `seedThread()` helper is gone.
 
 **STOP HERE. Report to the user and wait for confirmation before proceeding to Story 22.**
