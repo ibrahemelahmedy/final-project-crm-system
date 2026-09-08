@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

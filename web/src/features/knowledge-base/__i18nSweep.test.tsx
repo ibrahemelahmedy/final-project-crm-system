@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -8,7 +7,7 @@ import { ArticleReaderPage } from './pages/ArticleReaderPage';
 import { ArticleEditorPage } from './pages/ArticleEditorPage';
 import * as kbApi from './api/kbApi';
 import { KbHarness } from './testUtils';
-import { agentUser, adminUser, categoriesFixture, makePage, makeSummary, makeArticle } from './testFixtures';
+import { agentUser, adminUser, categoriesFixture, makePage, makeArticle } from './testFixtures';
 
 vi.mock('../../lib/api', async () => {
   const actual = await vi.importActual('../../lib/api');
