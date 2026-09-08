@@ -70,7 +70,7 @@ stay unchecked until the owner verifies.
   `DatabaseSeeder`/`->seed(`/`Seeder::class` returns zero), so nothing existing needs updating —
   the plan adds one new test file instead. Next: WIS-25 execute (Sonnet 5), attaching only
   `21-story-seed-data-realism.md`.
-- 2026-09-09 — WIS-25 execute DONE (Sonnet 5), commit `6b79983`. New TicketScenarioSeeder +
+- 2026-09-09 — WIS-25 execute DONE (Sonnet 5), commit `87ef4ef`. New TicketScenarioSeeder +
   3 data files replace the 60 filler tickets with 64 authored cases; TicketFactory de-lorem'd;
   SeededDataRealismTest (10 tests) added. API 510 pass / 2,563 assertions, web 570 pass, api
   pint clean on touched paths. `migrate:fresh --seed` sanity: 64 tickets (20/12/14/18),
