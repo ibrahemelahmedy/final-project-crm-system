@@ -38,6 +38,7 @@ stay unchecked until the owner verifies.
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
 - [x] plan-review (Opus 5)
+- [x] live key wired — Groq free tier, `ai:smoke` summary + reply both pass (2026-09-09)
 
 ### WIS-27 — Brevo transactional email
 - [x] story + plan (Opus 5)
@@ -247,3 +248,10 @@ stay unchecked until the owner verifies.
   credentials the owner has not supplied, and the discharge path (`php artisan mail:test <you>
   --kind=portal|csat|plain`) is wired and proven under `Mail::fake()`. Next: WIS-23 story + plan
   (Opus 5).
+- 2026-09-09 — WIS-26 live key wired. Owner supplied a Groq free-tier key; put `AI_PROVIDER=groq` +
+  `GROQ_API_KEY` + `GROQ_MODEL=openai/gpt-oss-120b` in `api/.env` (gitignored). The plan's default
+  `GROQ_MODEL` (`llama-3.3-70b-versatile`) 404s on current Groq accounts — that id is being retired —
+  so `config/ai.php` and `.env.example` now default to `openai/gpt-oss-120b` (commit references
+  WIS-26). `php artisan ai:smoke --kind=summary` and `--kind=reply` both return real completions;
+  WIS-26 Done Criteria 1 & 2 ticked in `22-story-ai-provider-seam.md`. AI Assist cards now live in
+  the running app. `--filter=Ai` suite: 98 pass / 322 assertions.

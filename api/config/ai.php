@@ -22,7 +22,9 @@ $providers = [
     // Free tier. OpenAI-compatible; served by OpenAiCompatibleAssistGenerator.
     'groq' => [
         'key' => env('GROQ_API_KEY'),
-        'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+        // gpt-oss-120b is on every current Groq tier; the older llama-3.3
+        // ids are being retired and 404 on newer accounts.
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-120b'),
         'base_url' => env('GROQ_BASE_URL', 'https://api.groq.com/openai/v1'),
     ],
 
