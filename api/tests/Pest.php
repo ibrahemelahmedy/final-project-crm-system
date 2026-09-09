@@ -4,6 +4,8 @@ use App\Exceptions\AssistUnavailableException;
 use App\Services\Ai\AssistGenerator;
 use App\Services\Ai\AssistResult;
 use App\Services\IntegrationConnectionTester;
+use App\Services\Integrations\OutboundUrlGuard;
+use App\Services\Integrations\OutboundUrlVerdict;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\SentMessage;
@@ -31,6 +33,27 @@ function bindIntegrationTester(bool $ok, ?string $error = null): void
         public function test(string $endpointUrl, ?string $secret): array
         {
             return ['ok' => $this->ok, 'status' => $this->ok ? 200 : null, 'error' => $this->error];
+        }
+    });
+}
+
+/**
+ * Story 25 (WIS-24). Binds an allowing (or refusing) OutboundUrlGuard so a
+ * sync test never depends on live DNS — the real DnsOutboundUrlGuard calls
+ * gethostbyname(), and IntegrationFactory's endpoint is a `.test` host that
+ * does not resolve. The guard's OWN tests bind nothing and keep the real one.
+ */
+function bindOutboundUrlGuard(bool $allow = true, ?string $error = null): void
+{
+    app()->bind(OutboundUrlGuard::class, fn () => new class($allow, $error) implements OutboundUrlGuard
+    {
+        public function __construct(private bool $allow, private ?string $error) {}
+
+        public function validate(string $url): OutboundUrlVerdict
+        {
+            return $this->allow
+                ? OutboundUrlVerdict::pass('93.184.216.34')
+                : OutboundUrlVerdict::fail($this->error ?? 'integrations.error.blocked_host');
         }
     });
 }

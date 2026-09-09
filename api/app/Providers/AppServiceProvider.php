@@ -5,6 +5,7 @@ namespace App\Providers;
 use Anthropic\Client;
 use App\Models\CustomerAttachment;
 use App\Models\Ticket;
+use App\Observers\IntegrationEventObserver;
 use App\Observers\TicketClassificationObserver;
 use App\Observers\TicketResolutionObserver;
 use App\Policies\CustomerPolicy;
@@ -15,6 +16,8 @@ use App\Services\Ai\OpenAiCompatibleAssistGenerator;
 use App\Services\Ai\UnavailableAssistGenerator;
 use App\Services\HttpIntegrationTester;
 use App\Services\IntegrationConnectionTester;
+use App\Services\Integrations\DnsOutboundUrlGuard;
+use App\Services\Integrations\OutboundUrlGuard;
 use App\Services\Kb\ArticleSearch;
 use App\Services\Kb\LikeArticleSearch;
 use App\Services\Kb\PostgresArticleSearch;
@@ -56,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
         // outbound HTTP prober here; every test in the suite binds a fake
         // instead, so no test ever makes a real outbound request.
         $this->app->bind(IntegrationConnectionTester::class, HttpIntegrationTester::class);
+
+        // Story 25 (WIS-24): the SSRF gate, now its own service so the sync engine
+        // and the reachability probe share ONE implementation. Tests bind an
+        // allowing fake via bindOutboundUrlGuard(); the guard's own tests keep this.
+        $this->app->bind(OutboundUrlGuard::class, DnsOutboundUrlGuard::class);
 
         // Story 19 (WIS-18) / Story 22 (WIS-26): the AI provider seam, now
         // selected by `AI_PROVIDER`. Bound to the unavailable implementation
@@ -117,5 +125,11 @@ class AppServiceProvider extends ServiceProvider
         // Story 24 (WIS-23): propose category + priority on create. Writes ONLY
         // the ai_suggested_* columns — never category/priority (Decision 4).
         Ticket::observe(TicketClassificationObserver::class);
+
+        // Story 25 (WIS-24): enqueue outbound integration events. Registered LAST on
+        // purpose — TicketResolutionObserver has already created this cycle's
+        // CsatSurvey by the time this runs, and the resolved event_id includes the
+        // cycle number.
+        Ticket::observe(IntegrationEventObserver::class);
     }
 }

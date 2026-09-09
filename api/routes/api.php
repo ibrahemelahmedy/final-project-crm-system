@@ -6,13 +6,14 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\BrandingController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\IntegrationController;
+use App\Http\Controllers\Admin\IntegrationSyncController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChannelOverviewController;
+use App\Http\Controllers\CsatSurveyController;
 use App\Http\Controllers\CustomerAttachmentController;
 use App\Http\Controllers\CustomerBulkController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\CsatSurveyController;
 use App\Http\Controllers\CustomerNoteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kb\KbArticleController;
@@ -23,8 +24,8 @@ use App\Http\Controllers\MentionableUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationBrandingController;
 use App\Http\Controllers\Portal\PortalAccessController;
-use App\Http\Controllers\Portal\PortalFaqController;
 use App\Http\Controllers\Portal\PortalChatController;
+use App\Http\Controllers\Portal\PortalFaqController;
 use App\Http\Controllers\Portal\PortalRequestController;
 use App\Http\Controllers\Portal\PortalSessionController;
 use App\Http\Controllers\QuickReplyController;
@@ -45,7 +46,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('throttle:login')
     ->name('login');
-
 
 // `active` (App\Http\Middleware\ActiveUserOnly) is on the WHOLE authenticated
 // group, so every endpoint in the app inherits it — that is what makes a
@@ -218,6 +218,19 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::put('/integrations/{type}', [IntegrationController::class, 'save']);
         Route::post('/integrations/{type}/test', [IntegrationController::class, 'test']);
         Route::delete('/integrations/{type}', [IntegrationController::class, 'destroy']);
+
+        // ---- Integration data sync (Story 25, WIS-24) ------------------
+        //
+        // {type} is the ONLY route parameter in this block, deliberately.
+        // AdminAuthorizationTest::adminRoutes() substitutes exactly four
+        // placeholders ({user}, {type}, {branch}, {department}); a fifth would
+        // produce a literal "{run}" in the URL, 404 before the administrator gate
+        // could 403, and fail the suite for the wrong reason.
+        Route::put('/integrations/{type}/sync-config', [IntegrationSyncController::class, 'updateConfig']);
+        Route::get('/integrations/{type}/sync-runs', [IntegrationSyncController::class, 'runs']);
+        Route::post('/integrations/{type}/sync', [IntegrationSyncController::class, 'run']);
+        Route::get('/integrations/{type}/outbox', [IntegrationSyncController::class, 'outbox']);
+        Route::post('/integrations/{type}/outbox/retry', [IntegrationSyncController::class, 'retryOutbox']);
 
         // ---- Organization (Story 20, WIS-20) ---------------------------
         //

@@ -68,6 +68,9 @@ class AuditTrail
 
     public const INTEGRATION_TEST_FAILED = 'integration.test_failed';
 
+    /** Story 25 (WIS-24). Changing what data moves is as sensitive as connecting. */
+    public const INTEGRATION_SYNC_CONFIG_CHANGED = 'integration.sync_config_changed';
+
     /** Story 20 (WIS-20). Branches, departments, and the branding override. */
     public const BRANCH_CHANGED = 'branch.changed';
 
@@ -97,6 +100,7 @@ class AuditTrail
             self::INTEGRATION_UPDATED,
             self::INTEGRATION_DISCONNECTED,
             self::INTEGRATION_TEST_FAILED,
+            self::INTEGRATION_SYNC_CONFIG_CHANGED,
             self::BRANCH_CHANGED,
             self::DEPARTMENT_CHANGED,
             self::BRANDING_CHANGED,
@@ -124,6 +128,7 @@ class AuditTrail
             self::INTEGRATION_UPDATED => 'Integration updated',
             self::INTEGRATION_DISCONNECTED => 'Integration disconnected',
             self::INTEGRATION_TEST_FAILED => 'Integration test failed',
+            self::INTEGRATION_SYNC_CONFIG_CHANGED => 'Integration sync configured',
             self::BRANCH_CHANGED => 'Branch changed',
             self::DEPARTMENT_CHANGED => 'Department changed',
             self::BRANDING_CHANGED => 'Branding changed',

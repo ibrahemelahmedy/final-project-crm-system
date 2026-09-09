@@ -46,6 +46,19 @@ class IntegrationResource extends JsonResource
             'last_checked_at' => $model?->last_checked_at?->toJSON(),
             'last_check_failed_at' => $model?->last_check_failed_at?->toJSON(),
             'last_error_key' => $model?->last_error,
+            // Story 25 (WIS-24).
+            'sync' => [
+                'inbound_enabled' => (bool) $model?->inbound_enabled,
+                'inbound_url' => $model?->inbound_url,
+                'inbound_field_map' => (object) ($model?->inbound_field_map ?? []),
+                'conflict_rules' => (object) ($model?->conflict_rules ?? []),
+                'last_inbound_sync_at' => $model?->last_inbound_sync_at?->toJSON(),
+                'outbound_enabled' => (bool) $model?->outbound_enabled,
+                'outbound_url' => $model?->outbound_url,
+                'outbound_events' => array_values((array) ($model?->outbound_events ?? [])),
+                'last_outbound_sync_at' => $model?->last_outbound_sync_at?->toJSON(),
+                'dead_letter_count' => $model === null ? 0 : (int) ($model->dead_letter_count ?? 0),
+            ],
         ];
     }
 }

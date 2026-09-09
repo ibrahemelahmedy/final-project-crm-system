@@ -35,7 +35,8 @@ file, not this column, when the two disagree.
 | 21 | seed-data-realism | [seed-data-realism/00-overview.md](seed-data-realism/00-overview.md) | Realistic Seed Data — Genuine Tickets, Threads & Timelines | WIS-25 | **implemented** |
 | 22 | ai-provider-seam | [ai-provider-seam/00-overview.md](ai-provider-seam/00-overview.md) | Free AI Provider Behind the AssistGenerator Seam (Gemini / Groq) | WIS-26 | **implemented** |
 | 23 | transactional-email | [transactional-email/00-overview.md](transactional-email/00-overview.md) | Real Transactional Email — Brevo SMTP for Portal Codes and CSAT | WIS-27 | full |
-| 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | full |
+| 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | **implemented** |
+| 25 | integration-data-sync | [integration-data-sync/00-overview.md](integration-data-sync/00-overview.md) | Integration Data Sync — Inbound Customer Pull & Outbound Event Push (Category 11 completion) | WIS-24 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -101,6 +102,19 @@ already cite it.
                               auto-classification on create and the portal chatbot. Three
                               migrations, four new endpoints, one new portal screen. A leaf —
                               nothing depends on it.
+
+        25 integration-data-sync ── depends on 18 (the integrations table and the ONE SSRF-guarded
+                              outbound HTTP path, which it extracts rather than copies), 03
+                              (customers = the inbound write target, through the model so the
+                              email/phone mutators still hold), 04 and 13 (the three outbound event
+                              sources — note CsatSurveyController fires no model event), 06
+                              (routes/console.php, the only scheduled-command precedent and the
+                              file that states the no-queue-worker constraint) and 23·24 (the two
+                              DB::afterCommit deferral patterns). Finishes Category 11: a scheduled
+                              customer pull with a field map and per-field conflict rules, plus a
+                              persistent outbox with backoff and dead-letter. Four migrations, five
+                              new admin endpoints (all with `{type}` as their only parameter), four
+                              new frontend panels. A leaf — nothing depends on it.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\Integrations\OutboundUrlGuard;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -13,39 +14,25 @@ use Throwable;
  * An authenticated Administrator supplying a URL the server then fetches is
  * the textbook SSRF shape, so every guard below runs BEFORE a socket opens.
  * Do not weaken or skip one.
+ *
+ * Story 25 (WIS-24): the four guards that used to live inline here now live
+ * in OutboundUrlGuard, so the sync engine runs the SAME code. Behaviour,
+ * error keys and return shape are unchanged — IntegrationSsrfTest passes
+ * untouched, which is the proof the extraction was faithful.
  */
 class HttpIntegrationTester implements IntegrationConnectionTester
 {
+    public function __construct(private readonly OutboundUrlGuard $guard) {}
+
     public function test(string $endpointUrl, ?string $secret): array
     {
-        $parts = parse_url($endpointUrl);
-        $scheme = $parts['scheme'] ?? null;
-        $host = $parts['host'] ?? null;
+        $verdict = $this->guard->validate($endpointUrl);
 
-        // 1. Scheme guard. http, file, gopher, ftp — all rejected before any
-        // DNS resolution.
-        if ($scheme !== 'https' || $host === null) {
-            return ['ok' => false, 'status' => null, 'error' => 'integrations.error.scheme'];
+        if (! $verdict->ok) {
+            return ['ok' => false, 'status' => null, 'error' => $verdict->error];
         }
 
-        // 2. SSRF guard. Reject a bare-IP host and a hostname with no dot
-        // (localhost, container names) outright, then resolve and reject a
-        // private, loopback, link-local, or reserved address.
-        if (! str_contains($host, '.') && ! str_contains($host, ':')) {
-            return ['ok' => false, 'status' => null, 'error' => 'integrations.error.blocked_host'];
-        }
-
-        $ip = filter_var($host, FILTER_VALIDATE_IP) ? $host : gethostbyname($host);
-
-        if ($ip === $host && ! filter_var($host, FILTER_VALIDATE_IP)) {
-            // gethostbyname() returns the input unchanged when resolution
-            // fails.
-            return ['ok' => false, 'status' => null, 'error' => 'integrations.error.unreachable'];
-        }
-
-        if (! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return ['ok' => false, 'status' => null, 'error' => 'integrations.error.blocked_host'];
-        }
+        $host = parse_url($endpointUrl, PHP_URL_HOST);
 
         // 3. One real request. HEAD first; a 405/501 (method not supported)
         // gets one GET retry — some endpoints reject HEAD outright.

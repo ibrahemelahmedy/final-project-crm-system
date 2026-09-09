@@ -30,6 +30,14 @@
             fake.
         -->
         <env name="AI_CLASSIFY_ENABLED" value="false"/>
+        <!--
+            Story 25 (WIS-24): the outbound event enqueue fires from Ticket::created,
+            Ticket::updated and CsatSurveyController@store — three of the busiest
+            paths in the suite. OFF by default so no existing test starts writing
+            integration_outbox rows; the sync test files opt back in with
+            config(['integrations.sync.enabled' => true]) and Http::fake().
+        -->
+        <env name="INTEGRATION_SYNC_ENABLED" value="false"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>

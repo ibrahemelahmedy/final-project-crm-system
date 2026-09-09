@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\User;
 use App\Observers\TicketClassificationObserver;
 use App\Observers\TicketResolutionObserver;
+use App\Services\Integrations\IntegrationEvents;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -21,6 +22,9 @@ abstract class TestCase extends BaseTestCase
         // Story 24 (WIS-23). Same rationale — the classification observer's
         // per-request cap counter is a process static.
         TicketClassificationObserver::resetClassificationCounter();
+
+        // Story 25 (WIS-24). Same rationale — the inline-delivery cap is a process static.
+        IntegrationEvents::resetInlineCounter();
     }
 
     /**

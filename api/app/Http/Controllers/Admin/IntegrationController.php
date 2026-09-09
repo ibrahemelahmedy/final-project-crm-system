@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\IntegrationStatus;
 use App\Enums\IntegrationType;
+use App\Enums\OutboxStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveIntegrationRequest;
 use App\Http\Requests\TestIntegrationRequest;
@@ -39,7 +40,10 @@ class IntegrationController extends Controller
     {
         $this->authorize('viewAny', Integration::class);
 
-        $rows = Integration::query()->get()->keyBy(fn (Integration $i) => $i->type->value);
+        $rows = Integration::query()
+            ->withCount(['outboxMessages as dead_letter_count' => fn ($q) => $q->where('status', OutboxStatus::Dead->value)])
+            ->get()
+            ->keyBy(fn (Integration $i) => $i->type->value);
 
         return IntegrationResource::collection(
             collect(IntegrationType::cases())

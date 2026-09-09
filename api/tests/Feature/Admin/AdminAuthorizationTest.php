@@ -74,6 +74,12 @@ it('registers at least the eleven contracted admin endpoints', function () {
         ->toContain('PUT /api/admin/integrations/erp')
         ->toContain('POST /api/admin/integrations/erp/test')
         ->toContain('DELETE /api/admin/integrations/erp')
+        // Story 25 (WIS-24).
+        ->toContain('PUT /api/admin/integrations/erp/sync-config')
+        ->toContain('GET /api/admin/integrations/erp/sync-runs')
+        ->toContain('POST /api/admin/integrations/erp/sync')
+        ->toContain('GET /api/admin/integrations/erp/outbox')
+        ->toContain('POST /api/admin/integrations/erp/outbox/retry')
         ->toContain('GET /api/admin/branches')
         ->toContain('POST /api/admin/branches')
         ->toContain('PATCH /api/admin/branches/'.$this->branch->id)

@@ -3,6 +3,8 @@
 use App\Enums\CsatSurveyState;
 use App\Enums\TicketStatus;
 use App\Models\CsatSurvey;
+use App\Models\Integration;
+use App\Models\IntegrationOutboxMessage;
 use App\Models\Ticket;
 use App\Models\TicketEvent;
 use App\Models\TicketMessage;
@@ -10,6 +12,7 @@ use App\Models\User;
 use App\Services\SlaClock;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 
 uses(RefreshDatabase::class);
 
@@ -17,6 +20,26 @@ uses(RefreshDatabase::class);
 // design — kept to one file.
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
+});
+
+it('performs zero outbound requests and writes zero outbox rows (WIS-24)', function () {
+    // The seeder ran in beforeEach above. No integration is ever seeded
+    // (IntegrationFactory's docblock), so IntegrationEvents::record() returns
+    // after one query regardless of the INTEGRATION_SYNC_ENABLED flag — proven
+    // here by the row counts, not by trusting the reasoning (WIS-27/WIS-23
+    // both ran this same class of check).
+    expect(Integration::count())->toBe(0);
+    expect(IntegrationOutboxMessage::count())->toBe(0);
+});
+
+it('re-seeding with the sync flag explicitly ON still sends nothing (no integration row to enqueue against)', function () {
+    config(['integrations.sync.enabled' => true]);
+    Http::fake();
+
+    Ticket::factory()->create(); // fires the same Ticket::created observer the seeder's tickets do
+
+    expect(IntegrationOutboxMessage::count())->toBe(0);
+    Http::assertNothingSent();
 });
 
 it('seeds exactly 64 tickets with the designed status mix', function () {

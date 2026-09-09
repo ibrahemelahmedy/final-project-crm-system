@@ -18,7 +18,20 @@ class Customer extends Model
     /** @use HasFactory<CustomerFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'email', 'phone', 'company', 'tier', 'last_contact_at', 'created_by'];
+    /**
+     * `integration_id` / `external_id` are set explicitly by CustomerPuller
+     * with Customer::create([...]) — no HTTP FormRequest ever validates them
+     * (StoreCustomerRequest / UpdateCustomerRequest do not list them and
+     * CustomerController uses $request->only([...])), so no mass-assignment
+     * path from a request exists despite them being fillable.
+     *
+     * A row with integration_id IS NULL and a non-null external_id is a
+     * historical marker from a disconnected integration (nullOnDelete).
+     */
+    protected $fillable = [
+        'name', 'email', 'phone', 'company', 'tier', 'last_contact_at', 'created_by',
+        'integration_id', 'external_id', 'external_synced_at',
+    ];
 
     /**
      * Mirrors the customers.tier DB default. Without it, a create() that omits
@@ -32,7 +45,13 @@ class Customer extends Model
         return [
             'tier' => CustomerTier::class,
             'last_contact_at' => 'datetime',
+            'external_synced_at' => 'datetime',
         ];
+    }
+
+    public function integration(): BelongsTo
+    {
+        return $this->belongsTo(Integration::class);
     }
 
     /**
@@ -145,10 +164,10 @@ class Customer extends Model
         $escape = " escape '\\'";
 
         return $query->where(fn (Builder $q) => $q
-            ->whereRaw("name like ?".$escape, [$like])
-            ->orWhereRaw("email like ?".$escape, [$like])
-            ->orWhereRaw("company like ?".$escape, [$like])
-            ->orWhereRaw("phone_normalized like ?".$escape, [$like]));
+            ->whereRaw('name like ?'.$escape, [$like])
+            ->orWhereRaw('email like ?'.$escape, [$like])
+            ->orWhereRaw('company like ?'.$escape, [$like])
+            ->orWhereRaw('phone_normalized like ?'.$escape, [$like]));
     }
 
     public function notes(): HasMany

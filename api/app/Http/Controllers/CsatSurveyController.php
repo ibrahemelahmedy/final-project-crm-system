@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CsatSurveyState;
+use App\Enums\IntegrationEvent;
 use App\Http\Requests\StoreCsatResponseRequest;
 use App\Http\Resources\CsatSurveyResource;
 use App\Http\Resources\TicketCsatResource;
 use App\Models\CsatSurvey;
 use App\Models\Ticket;
 use App\Services\CsatShareLink;
+use App\Services\Integrations\IntegrationEvents;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -77,6 +79,16 @@ class CsatSurveyController extends Controller
 
             if ($affected > 0) {
                 $survey->refresh();
+
+                // Story 25 (WIS-24). A query-builder update() fires NO model event, so a
+                // CsatSurvey observer would never see this. The enqueue lives here, inside
+                // the same transaction, guarded by $affected so a re-submitted link enqueues
+                // nothing.
+                app(IntegrationEvents::class)->record(
+                    IntegrationEvent::CsatSubmitted,
+                    'csat.submitted:'.$survey->uuid,
+                    fn () => ['data' => IntegrationEvents::csatPayload($survey)],
+                );
             }
         });
 

@@ -51,8 +51,8 @@ stay unchecked until the owner verifies.
 - [x] plan-review (Opus 5)
 
 ### WIS-24 — integration data sync
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### WIS-22 — live channel ingestion
@@ -354,3 +354,210 @@ stay unchecked until the owner verifies.
   (covered by the live seeder run instead); and the commit adds **no CSS**, so
   `portal-chat-citations*` and `classification-ai*` render unstyled (cosmetic).
   Next: WIS-24 story + plan (Opus 5).
+- 2026-09-09 — WIS-24 story + plan DONE (Opus 5) — **resumed run**: a prior story+plan agent was
+  killed after writing the files but before updating `00-index.md` or the pipeline. This run read
+  the existing `.squad/stories/integration-data-sync/WIS-24/intake.md` (526 lines, Jira-fetched
+  2026-09-09T04:39Z — title/description/6 Done Criteria verbatim, 18 "Extra notes" findings),
+  `.squad/plans/integration-data-sync/00-overview.md` (100 lines) and
+  `.squad/plans/integration-data-sync/25-story-integration-data-sync.md` (**1947 lines**, full
+  depth: 12 Decisions, 57 tasks — 45 backend / 12 frontend — 28 edge cases, a 14-section Test Plan
+  A–N, Migration/Rollback, 10 Verification Steps, 12 Done Criteria), **re-verified the load-bearing
+  groundings against live code**, corrected two drifted citations, then added row 25 + a
+  dependency-spine entry to `.squad/plans/00-index.md`. Nothing was overwritten.
+  **Decisions, in brief:** (1) **extract, don't copy** — `HttpIntegrationTester::test()`
+  (`api/app/Services/HttpIntegrationTester.php:20-48`) welds the scheme check, dotless-host check,
+  `gethostbyname()` and `FILTER_FLAG_NO_PRIV_RANGE|NO_RES_RANGE` check inline and then immediately
+  probes, so there is no way to ask "is this URL safe?" without a HEAD; Done Criterion 5 ("the
+  **existing** guard") therefore requires pulling those four checks into
+  `App\Services\Integrations\{OutboundUrlGuard,DnsOutboundUrlGuard}` with `HttpIntegrationTester`
+  delegating, keeping the four `integrations.error.*` keys byte-identical because
+  `IntegrationSsrfTest.php` and both `integrations.json` catalogues pin them. (2) Outbound delivery
+  is a **persistent outbox row written inside the business transaction** (a rollback takes the event
+  with it), an inline best-effort attempt via `DB::afterCommit` + `app()->terminating()`, and a
+  scheduled `sync:flush-outbox` drain that is the actual guarantee — inline is an optimisation.
+  (3) Retries are **persisted** (`attempts` + `next_attempt_at` + a retryable/permanent split:
+  408/429/5xx/transport retry, every other 3xx/4xx and every guard rejection dead-letters at once),
+  not Guzzle's in-process `->retry()`, because an N-attempt ladder spanning hours cannot live inside
+  one request. (4) Idempotency = a unique `(integration_id, event_id)` on the outbox and a
+  **zero-write** no-op inbound (a second identical pull does not even touch `external_synced_at`, so
+  `updated_at` is provably unchanged). (5) Field map + conflict rules are **two JSON columns on
+  `integrations`**, not a table, with a **closed** `SyncFieldMap::FIELDS` set (`name, email, phone,
+  company, tier` + `external_id` as the key) — a remote record is never splatted into `fill()`.
+  (6) **"Last-write-wins vs Wisal-wins" is redefined as authority, not chronology** — a remote
+  `updated_at` is untrustworthy (unknown timezone, clock skew, may be absent), so `remote_wins`
+  always overwrites and `wisal_wins` only fills a null; on create the rule is moot. (7) Pagination is
+  driven by **our** page counter against **our** validated base URL, bounded by `max_pages` —
+  following a `links.next` from the response body would re-open SSRF from inside untrusted data
+  *after* the guard passed. (8) The two sync URLs get their **own absolute https columns** rather
+  than paths joined onto `endpoint_url`, so each is guard-validated independently at send time.
+  (9) One `sync_runs` table for both directions with the per-direction counter meanings documented
+  in exactly one docblock. (10) Every test drives `Http::fake()`; happy paths bind a guard fake.
+  (11) Sync error strings stay **i18n keys resolved in the SPA** (WIS-19's convention — there is no
+  `api/lang/*/integrations.php`). (12) "Run now" is synchronous and hard-capped; no background
+  trigger.
+  **Key findings for the execute agent (all re-verified live this run):**
+  (a) `grep -rn "Http::" api/app` returns **exactly two** hits today —
+  `HttpIntegrationTester.php:53` and `Services/Ai/OpenAiCompatibleAssistGenerator.php:34`, neither
+  using `->retry()`. There is **no** backoff helper to reuse; after this story the grep must return
+  **three**, and a fourth is a defect.
+  (b) **`CsatSurveyController@store` fires NO Eloquent model event** — confirmed at
+  `api/app/Http/Controllers/CsatSurveyController.php:56-82`: it writes with a query-builder
+  `CsatSurvey::query()->whereKey(...)->whereNull('responded_at')->update([...])` inside
+  `DB::transaction`, with the `if ($affected > 0)` branch at `:78`. `CsatSurvey::observe(...)` would
+  never fire. `csat.submitted` **must** be an explicit enqueue inside that closure guarded by
+  `$affected > 0`. This is the single most likely mis-implementation in the story.
+  (c) **`gethostbyname()` in the real guard makes DNS a hidden test dependency.**
+  `IntegrationFactory` writes `https://api.example-erp.test/v1`
+  (`api/database/factories/IntegrationFactory.php:31`) and `.test` does not resolve, so a happy-path
+  sync test against it would be rejected with `integrations.error.unreachable` **before**
+  `Http::fake()` ever saw the request. Hence Task 41's `bindOutboundUrlGuard()` in
+  `api/tests/Pest.php` (modelled on `bindIntegrationTester()`, confirmed at `:25-36`), and Task 42's
+  new factory states pointing at a **resolvable** `https://api.example.com/...`. The guard's own
+  tests (§H) and `SyncSsrfTest` (§G) bind nothing and keep the real implementation.
+  (d) **`AdminAuthorizationTest::adminRoutes()` substitutes exactly four placeholders** — confirmed
+  at `api/tests/Feature/Admin/AdminAuthorizationTest.php:49-53`: `{user}`, `{type}`, `{branch}`,
+  `{department}`. A new admin route with a fifth (`{run}`, `{message}`) yields a literal `{run}` in
+  the URL → 404 instead of 403 → the suite fails for the wrong reason. **Every** new endpoint must
+  live under `/api/admin/integrations/{type}/...` with `{type}` as its only parameter.
+  (e) **No queue worker, and `api/phpunit.xml:71` forces `QUEUE_CONNECTION=sync`** — nothing
+  implements `ShouldQueue`, nothing runs `queue:work`. "Async" cannot mean queued; the outbox +
+  scheduled drain *is* the async mechanism.
+  (f) `customers` carries **two raw partial unique indexes** created with `DB::statement`
+  (`api/database/migrations/2026_08_27_111743_create_customers_table.php:33-34`, deliberately valid
+  on pgsql **and** sqlite). The `(integration_id, external_id)` constraint follows that precedent —
+  a plain `unique()` would collide with soft-deleted rows. Relatedly, the inbound write **must go
+  through the model**: `Customer::setEmailAttribute`/`setPhoneAttribute` are mutators that derive
+  `phone_normalized`, and a query-builder `upsert()` bypasses them and corrupts it. Expect
+  `QueryException` on a duplicate arriving from the ERP and count the row **failed with a reason** —
+  never abort the run.
+  (g) `POST /api/tickets/bulk` resolves up to **100** tickets in one transaction
+  (`BulkTicketActionRequest.php:19`). Enqueuing 100 outbox rows is fine; 100 synchronous POSTs is
+  not — hence a per-process cap on **inline attempts only** (`INTEGRATION_OUTBOX_INLINE_MAX=5`); the
+  enqueue is never capped or events vanish. Counter reset goes in `Tests\TestCase::setUp()` beside
+  the two already there (confirmed at `api/tests/TestCase.php:12-24`).
+  (h) `ApiContractTest.php:226-233` uses `assertJsonStructure`, which is **not** exact, so folding
+  sync fields into `IntegrationResource` will not break it and no separate GET endpoint is needed —
+  but §K extends that test anyway so the shape is locked rather than merely tolerated;
+  `assertJsonMissingPath('data.0.secret')` at `:235` keeps guarding the secret.
+  (i) **`web/src/i18n/locales/en/integrations.json:4` currently promises the opposite of this
+  story** — verified: the `notice` string still ends *"…is not enabled in this release."* It must be
+  rewritten in **both** `en` and `ar` (`catalogueParity.test.ts` demands identical key sets) and
+  every new string must come from a catalogue (`npm run lint` runs
+  `web/scripts/check-no-literals.mjs`). The same claim sits at `README.md:214` (Category 11 table
+  row) and `README.md:787` ("Integrations are a configuration surface only"), plus the endpoint
+  table at `README.md:454`.
+  (j) **Never store `$e->getMessage()`** in `sync_runs` or the outbox — WIS-19's rule at
+  `HttpIntegrationTester.php:60-64` is that a transport exception message can embed the
+  `Authorization` header. Never log the pull payload either (customer PII).
+  (k) `migrate:fresh --seed` must still perform **zero** outbound requests and write **zero** outbox
+  rows — `IntegrationFactory` has no seeder entry on purpose, and Task 39 adds
+  `INTEGRATION_SYNC_ENABLED=false` to `api/phpunit.xml` beside `AI_CLASSIFY_ENABLED` (confirmed at
+  `:32`) so the three busiest paths in the suite stay quiet; sync tests opt back in with
+  `config(['integrations.sync.enabled' => true])`.
+  (l) There is deliberately **no** Empty component in the integrations feature today
+  (`IntegrationsPage.tsx:18-22` explains why) — a run-history list genuinely needs one, and all four
+  async states are specified for it.
+  **Mock-ERP posture:** unlike WIS-26 (needed a live AI key) and WIS-27 (needs Brevo SMTP creds for
+  its two delivery criteria), **all six of WIS-24's Done Criteria are code-verifiable with
+  `Http::fake()`** — every criterion describes *our* behaviour toward an HTTP endpoint (pagination
+  and upsert, the field map's effect, the retry/backoff/dead-letter state machine, the counters, the
+  guard), and the fake can express a sequence of five 500s followed by a 200. **No external ERP
+  account, no live webhook receiver, and no owner-pasted credential is required to tick any
+  criterion.** What the owner must still do for *true* end-to-end sync against a real ERP is
+  therefore configuration, not a blocked criterion: (1) in Admin → Integrations → ERP, set the
+  inbound collection URL and the outbound receiver URL as absolute `https://` URLs on a
+  **publicly-resolvable, non-private** host — the guard rejects bare IPs, dotless hosts, plain
+  `http`, and anything resolving into a private/reserved range, so a LAN or `localhost` ERP will be
+  refused by design; (2) paste the ERP's bearer token as the integration secret (it is stored
+  `encrypted` and only ever leaves as `secret_last_four`); (3) author the field map so the ERP's
+  record shape maps onto the closed `name/email/phone/company/tier` set plus `external_id`, and pick
+  `remote_wins`/`wisal_wins` per field; (4) ensure a scheduler is actually running
+  (`php artisan schedule:work`, or the cron entry) — the pull and the outbox drain are scheduled
+  commands, and nothing drains without it; (5) if the ERP's payload is not a JSON array of records
+  under a configurable key, a **vendor adapter is explicitly out of scope** and is the deliberate
+  follow-up recorded in `00-overview.md`. The shipped manual evidence recipe is
+  `php artisan sync:pull-customers --dry-run` and `php artisan sync:flush-outbox`, modelled on
+  `ai:smoke` / `mail:test` — evidence, not a Done Criterion.
+  **Two citation drifts corrected in the plan this run:** `api/phpunit.xml:61` → `:71` for
+  `QUEUE_CONNECTION=sync`, and Task 39's "`AI_CLASSIFY_ENABLED` block at `:20–30`" → the line at
+  `:32`. Every other spot-checked grounding held exactly (the guard body, the CSAT controller, the
+  four route placeholders, the two raw partial indexes, `IntegrationFactory:31`, the `notice`
+  string, README 214/454/787, `Pest.php:25-36`, `TestCase.php:12-24`).
+  Size: ~35 new backend files, **4 migrations**, 5 new admin endpoints, 2 new artisan commands,
+  ~12 new/edited frontend files, 14 test sections. `.squad` files left uncommitted for the execute
+  agent, matching WIS-25/26/27/23. Next: WIS-24 execute (Sonnet 5), attaching only
+  `25-story-integration-data-sync.md`.
+- 2026-09-09 — WIS-24 execute DONE (Sonnet 5). Implemented the full plan: 4 migrations
+  (`sync_runs`, `integration_outbox`, nine sync columns on `integrations`, three external-ref
+  columns + one raw partial unique index on `customers`); the `OutboundUrlGuard` /
+  `DnsOutboundUrlGuard` extraction from `HttpIntegrationTester` (Decision 1) with
+  `IntegrationSsrfTest.php` passing **completely unedited** — the regression proof the extraction
+  was faithful; `OutboundHttpClient` as the one class in the story that opens a socket, guarded at
+  send time on every call; the outbox pattern (`IntegrationEvents` enqueue seam,
+  `IntegrationEventObserver` on `Ticket`, the `CsatSurveyController` enqueue site,
+  `OutboxDispatcher`'s retry/backoff/dead-letter state machine); `CustomerPuller` (pagination by our
+  own counter, `SyncFieldMap`'s whitelist + conflict-rule resolution, zero-write idempotency);
+  `sync:pull-customers` and `sync:flush-outbox` console commands registered in
+  `api/routes/console.php` beside `sla:evaluate`; `IntegrationSyncController`'s five admin routes
+  plus `SaveIntegrationSyncRequest`; the `AuditTrail::INTEGRATION_SYNC_CONFIG_CHANGED` constant; and
+  the full frontend — `SyncSettingsPanel`, `FieldMapEditor`, `SyncRunHistory` (+`SyncRunRow`,
+  `SyncRunErrors`, `SyncRunSkeleton`, `SyncEmpty`), `DeadLetterPanel`, a three-tab
+  `IntegrationModal` (Connection · Sync · History, URL-addressable, `role="tablist"` with arrow-key
+  navigation), the dead-letter chip and last-pull line on `IntegrationCard`, five new API functions,
+  five new hooks, and the `en`/`ar` `integrations.json` catalogues (new `sync.*` and `sync.error.*`
+  blocks, `notice` rewritten to state what now moves).
+  **Two deviations from the plan's literal code, both correctness fixes found during testing:**
+  (1) `IntegrationEvents::record()`'s third parameter is a `Closure`, not a pre-built array — the
+  plan's sample call built the envelope (`IntegrationEvents::ticketPayload($ticket)`, which
+  `loadMissing('customer:id,name,email,external_id')`s) as a plain PHP argument, which evaluates
+  **before** `record()`'s `config('integrations.sync.enabled')` early-return runs. With
+  `INTEGRATION_SYNC_ENABLED=false` for the whole suite (Task 39), that meant every single
+  `Ticket::created` still ran a column-restricted relation load that then poisoned the SAME model
+  instance's cached `customer` relation for the rest of that test — caught by
+  `ClassificationPromptTest`'s "customer tier" assertion regressing from a clean baseline run.
+  Deferring the payload to a closure invoked only after every early-return guard passes restores the
+  "OFF touches nothing outside this feature" guarantee the flag exists for, and `ticketPayload()`'s
+  `loadMissing` was also widened from a column-restricted select to the full relation as defence in
+  depth. (2) `CustomerPuller`'s per-record create/update is wrapped in its own `DB::transaction()`
+  (a Postgres SAVEPOINT, since `RefreshDatabase`'s wrapping transaction is already open) before the
+  existing `catch (QueryException)` — without it, a duplicate-email violation on PostgreSQL leaves
+  the whole test transaction aborted ("current transaction is aborted, commands ignored until end of
+  transaction block"), so the very next statement (finishing the `sync_runs` row) throws too. The
+  same guard was added around `IntegrationEvents`' outbox insert for the same reason. Neither
+  deviation changes any observable behaviour the plan specifies — Decision 3's outcome table,
+  Decision 4's idempotency guarantee, and every Done Criterion are unaffected.
+  **One factory correction:** the plan's `IntegrationFactory::inbound()`/`outbound()` states specify
+  `https://api.example.com/...` as "a resolvable host" for tests that keep the real
+  `DnsOutboundUrlGuard`; `api.example.com` does not actually resolve (only the bare `example.com`
+  does, confirmed with `nslookup` in this environment) — changed both states to
+  `https://example.com/...`.
+  Results: API `php artisan test` **703 pass / 3208 assertions**, 0 fail (was 616/2900 pre-story;
+  +87 tests across 12 new files + 5 extended). `./vendor/bin/pint --test` clean on every touched
+  path (new files clean; ran `pint` once to auto-fix formatting on a handful of touched files before
+  the final `--test` pass, all functional-neutral). Web `npx vitest run` **599 pass / 97 files** (was
+  580/93; +19 tests across 6 new/extended files), `tsc -b` clean, `npm run lint` clean (pre-existing
+  warnings only, none in new files), `npm run build` OK, `catalogueParity.test.ts` passes (identical
+  `en`/`ar` key sets), `node scripts/check-no-literals.mjs` clean. `php artisan migrate` →
+  `migrate:rollback --step=4` → `migrate` clean; `config:cache`/`config:clear` clean;
+  `schedule:list` shows `sync:flush-outbox` every five minutes and `sync:pull-customers` hourly
+  beside `sla:evaluate`/`tasks:dispatch-due-reminders`; `migrate:fresh --seed` → 64 tickets, **0**
+  `IntegrationOutboxMessage` rows, **0** `Integration` rows (no seeder entry, by design), confirmed
+  by row count, not by trusting the reasoning. `grep -rn "Http::" api/app` → exactly three hits
+  (`HttpIntegrationTester.php`, `OpenAiCompatibleAssistGenerator.php`, `OutboundHttpClient.php`).
+  Secret sweep (`grep -rn "sk_test_\|->secret" api/app/Services/Integrations api/app/Http/Resources`)
+  → only `OutboundHttpClient`'s `withToken`/HMAC use and `IntegrationResource`'s
+  `secret_last_four`. No new `composer.json`/`package.json` dependency;
+  `api/tests/Feature/Admin/IntegrationSsrfTest.php` untouched (`git diff --stat` empty).
+  **11/11 Done Criteria ticked** in `25-story-integration-data-sync.md` — every one is
+  `Http::fake()`-verifiable and none required an owner-provided live ERP credential, matching the
+  plan's mock-ERP posture note. **What the owner must still supply for true end-to-end sync against
+  a real ERP** (configuration, not a blocked criterion, per the plan's own framing): (1) a
+  publicly-resolvable `https://` inbound/outbound URL pair in Admin → Integrations → ERP → Sync — a
+  LAN or `localhost` ERP is refused by the guard by design; (2) the ERP's bearer token as the
+  integration secret; (3) a field map from the ERP's actual record shape onto
+  `name/email/phone/company/tier` + `external_id`, with a `remote_wins`/`wisal_wins` choice per
+  field; (4) a running scheduler (`php artisan schedule:work` or the cron entry) — the pull and the
+  outbox drain do nothing without one; (5) if the ERP's collection response is not a bare JSON array
+  or a `{"data": [...]}` object, a vendor adapter is out of scope by design (Decision 7). Manual
+  evidence recipe, not a Done Criterion: `php artisan sync:pull-customers --dry-run` against any
+  public JSON list endpoint. Next: WIS-24 plan-review (Opus 5).

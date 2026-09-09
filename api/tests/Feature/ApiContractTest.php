@@ -1,6 +1,21 @@
 <?php
 
+use App\Enums\IntegrationType;
+use App\Enums\UserRole;
+use App\Models\AuditLog;
+use App\Models\Branch;
+use App\Models\Customer;
+use App\Models\Department;
+use App\Models\Integration;
+use App\Models\KbArticle;
+use App\Models\KbCategory;
+use App\Models\PortalSession;
+use App\Models\SlaRule;
+use App\Models\Ticket;
+use App\Models\User;
+use App\Services\AuditTrail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 
 uses(RefreshDatabase::class);
 
@@ -35,8 +50,8 @@ it('sets security headers on every API response', function () {
 });
 
 it('exposes the status transition map on GET /api/tickets/meta', function () {
-    $user = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::TeamLead,
+    $user = User::factory()->create([
+        'role' => UserRole::TeamLead,
         'is_active' => true,
     ]);
     $token = $user->createToken('spa')->plainTextToken;
@@ -51,17 +66,17 @@ it('exposes the status transition map on GET /api/tickets/meta', function () {
 });
 
 it('locks the response shape of every dashboard widget endpoint (Story 07)', function () {
-    \App\Models\SlaRule::factory()->forPriority('normal', 1440, 80)->create();
+    SlaRule::factory()->forPriority('normal', 1440, 80)->create();
 
-    $admin = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Administrator,
+    $admin = User::factory()->create([
+        'role' => UserRole::Administrator,
         'is_active' => true,
     ]);
-    $agent = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Agent,
+    $agent = User::factory()->create([
+        'role' => UserRole::Agent,
         'is_active' => true,
     ]);
-    \App\Models\Ticket::factory()->create([
+    Ticket::factory()->create([
         'assigned_to' => $admin->id,
         'status' => 'open',
         'priority' => 'normal',
@@ -91,8 +106,8 @@ it('locks the response shape of every dashboard widget endpoint (Story 07)', fun
 });
 
 it('locks the Channels overview response shape inside auth:sanctum (Story 14)', function () {
-    $user = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Agent,
+    $user = User::factory()->create([
+        'role' => UserRole::Agent,
         'is_active' => true,
     ]);
 
@@ -107,9 +122,9 @@ it('locks the Channels overview response shape inside auth:sanctum (Story 14)', 
 });
 
 it('adds department, initials, and last_login_at to UserResource without renaming a key (Story 08)', function () {
-    $user = \App\Models\User::factory()->create([
+    $user = User::factory()->create([
         'name' => 'Sarah Ahmed',
-        'role' => \App\Enums\UserRole::TeamLead,
+        'role' => UserRole::TeamLead,
         'department' => 'Support Ops',
         'is_active' => true,
         'last_login_at' => now(),
@@ -130,9 +145,9 @@ it('adds department, initials, and last_login_at to UserResource without renamin
 });
 
 it('adds branch_id, branch_name, department_id, department_name to UserResource without renaming department (Story 20)', function () {
-    $branch = \App\Models\Branch::factory()->create(['name' => 'Downtown HQ']);
-    $department = \App\Models\Department::factory()->create(['branch_id' => $branch->id, 'name' => 'Billing']);
-    $user = \App\Models\User::factory()->create([
+    $branch = Branch::factory()->create(['name' => 'Downtown HQ']);
+    $department = Department::factory()->create(['branch_id' => $branch->id, 'name' => 'Billing']);
+    $user = User::factory()->create([
         'department' => 'Support Ops',
         'branch_id' => $branch->id,
         'department_id' => $department->id,
@@ -156,18 +171,18 @@ it('adds branch_id, branch_name, department_id, department_name to UserResource 
 });
 
 it('locks the response shape of the users, audit-log, and settings endpoints (Story 08)', function () {
-    $admin = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Administrator,
+    $admin = User::factory()->create([
+        'role' => UserRole::Administrator,
         'department' => 'Platform',
         'is_active' => true,
     ]);
     $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
 
-    \App\Models\AuditLog::create([
+    AuditLog::create([
         'user_id' => $admin->id,
-        'event' => \App\Services\AuditTrail::USER_CREATED,
+        'event' => AuditTrail::USER_CREATED,
         'email' => $admin->email,
-        'context' => \App\Services\AuditTrail::target('user', $admin->id, $admin->name),
+        'context' => AuditTrail::target('user', $admin->id, $admin->name),
         'created_at' => now(),
     ]);
 
@@ -214,13 +229,13 @@ it('locks the response shape of the users, audit-log, and settings endpoints (St
 });
 
 it('locks the response shape of the integrations endpoint and never leaks the secret (Story 18)', function () {
-    $admin = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Administrator,
+    $admin = User::factory()->create([
+        'role' => UserRole::Administrator,
         'is_active' => true,
     ]);
     $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
 
-    \App\Models\Integration::factory()->create(['type' => \App\Enums\IntegrationType::Erp->value]);
+    Integration::factory()->create(['type' => IntegrationType::Erp->value]);
 
     $response = $this->withHeaders($auth)->getJson('/api/admin/integrations')
         ->assertOk()
@@ -228,14 +243,21 @@ it('locks the response shape of the integrations endpoint and never leaks the se
             'data' => [[
                 'type', 'label_key', 'status', 'endpoint_url',
                 'secret_last_four', 'last_checked_at', 'last_check_failed_at', 'last_error_key',
+                // Story 25 (WIS-24).
+                'sync' => [
+                    'inbound_enabled', 'inbound_url', 'inbound_field_map', 'conflict_rules',
+                    'last_inbound_sync_at', 'outbound_enabled', 'outbound_url', 'outbound_events',
+                    'last_outbound_sync_at', 'dead_letter_count',
+                ],
             ]],
         ]);
 
     $response->assertJsonMissingPath('data.0.secret');
+    $response->assertJsonMissingPath('data.0.sync.secret');
 });
 
 it('keeps the public CSAT routes outside auth:sanctum and gated by signed + throttle:csat (Story 13)', function () {
-    $routes = collect(\Illuminate\Support\Facades\Route::getRoutes()->getRoutes())
+    $routes = collect(Route::getRoutes()->getRoutes())
         ->filter(fn ($r) => in_array($r->getName(), ['csat.show', 'csat.store'], true));
 
     expect($routes)->toHaveCount(2);
@@ -251,12 +273,12 @@ it('keeps the public CSAT routes outside auth:sanctum and gated by signed + thro
 it('locks the Knowledge Base response shapes (Story 09)', function () {
     // The ticket-side ArticlePickerPanel and any later "suggested solutions"
     // story consume KbArticleSummaryResource. Its shape cannot drift silently.
-    $editor = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Administrator,
+    $editor = User::factory()->create([
+        'role' => UserRole::Administrator,
         'is_active' => true,
     ]);
-    $category = \App\Models\KbCategory::factory()->named('Account & Access')->create();
-    $article = \App\Models\KbArticle::factory()->create([
+    $category = KbCategory::factory()->named('Account & Access')->create();
+    $article = KbArticle::factory()->create([
         'title' => 'Contract article',
         'body' => "Intro.\n\n## A section\n\nMore text.",
         'kb_category_id' => $category->id,
@@ -323,7 +345,7 @@ it('gates every portal route with a portal limiter or the portal guard, never au
     $checked = 0;
     $publicLimiters = ['throttle:portal-access', 'throttle:portal-verify'];
 
-    foreach (\Illuminate\Support\Facades\Route::getRoutes() as $route) {
+    foreach (Route::getRoutes() as $route) {
         if (! str_starts_with($route->uri(), 'api/portal/')) {
             continue;
         }
@@ -344,11 +366,11 @@ it('gates every portal route with a portal limiter or the portal guard, never au
 
 it('locks the response shape of GET /api/tickets/{ticket}/ai-assist (Story 19)', function () {
     config(['ai.enabled' => false]);
-    $agent = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Agent,
+    $agent = User::factory()->create([
+        'role' => UserRole::Agent,
         'is_active' => true,
     ]);
-    $ticket = \App\Models\Ticket::factory()->assignedTo($agent)->create();
+    $ticket = Ticket::factory()->assignedTo($agent)->create();
     $token = $agent->createToken('spa')->plainTextToken;
 
     $response = $this->asToken($token)->getJson("/api/tickets/{$ticket->id}/ai-assist");
@@ -359,8 +381,8 @@ it('locks the response shape of GET /api/tickets/{ticket}/ai-assist (Story 19)',
 
 it('locks the response shape of GET /api/portal/chat (Story 24)', function () {
     config(['ai.enabled' => true, 'ai.chat.enabled' => true]);
-    $customer = \App\Models\Customer::factory()->create();
-    \App\Models\PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
+    $customer = Customer::factory()->create();
+    PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
 
     $response = $this->asToken('shape-chat-token')->getJson('/api/portal/chat');
 
@@ -370,8 +392,8 @@ it('locks the response shape of GET /api/portal/chat (Story 24)', function () {
 
 it('locks the response shape of POST /api/portal/chat/messages (Story 24)', function () {
     config(['ai.enabled' => true, 'ai.chat.enabled' => true]);
-    $customer = \App\Models\Customer::factory()->create();
-    \App\Models\PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
+    $customer = Customer::factory()->create();
+    PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
     bindAssistGenerator('{"answer":"x","citations":[],"refused":false}');
 
     $response = $this->asToken('shape-chat-token')
@@ -382,14 +404,14 @@ it('locks the response shape of POST /api/portal/chat/messages (Story 24)', func
 });
 
 it('locks the response shape of the branches, departments, and branding endpoints (Story 20)', function () {
-    $admin = \App\Models\User::factory()->create([
-        'role' => \App\Enums\UserRole::Administrator,
+    $admin = User::factory()->create([
+        'role' => UserRole::Administrator,
         'is_active' => true,
     ]);
     $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
 
-    $branch = \App\Models\Branch::factory()->create();
-    \App\Models\Department::factory()->create(['branch_id' => $branch->id]);
+    $branch = Branch::factory()->create();
+    Department::factory()->create(['branch_id' => $branch->id]);
 
     $this->withHeaders($auth)->getJson('/api/admin/branches')
         ->assertOk()

@@ -4268,10 +4268,97 @@ body {
 .intg-modal-footer { display: flex; align-items: center; gap: 8px; }
 .intg-modal-footer-spacer { flex-grow: 1; }
 
+/* ---- Integration data sync (Story 25 / WIS-24) ------------------------- */
+
+.intg-card-dead-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--danger-fg);
+  background: var(--prio-urgent-bg);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-inline-start: 6px;
+}
+
+.intg-tabstrip { display: flex; gap: 4px; border-bottom: 1px solid var(--border-subtle); margin-block-end: 14px; }
+.intg-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.intg-tab-active { color: var(--text-main); border-block-end-color: var(--accent, var(--text-main)); }
+.intg-tab:disabled { color: var(--text-disabled, var(--text-muted)); cursor: not-allowed; opacity: 0.6; }
+
+.intg-sync-panel { display: flex; flex-direction: column; gap: 18px; }
+.intg-sync-section { display: flex; flex-direction: column; gap: 10px; }
+.intg-sync-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.intg-sync-section-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin: 0; }
+.intg-toggle { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-main); }
+
+.intg-fieldmap { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.intg-fieldmap th { text-align: start; font-weight: 600; color: var(--text-muted); padding-block-end: 6px; }
+.intg-fieldmap td { padding: 4px 6px 4px 0; vertical-align: middle; }
+.intg-fieldmap-field { font-weight: 600; color: var(--text-main); white-space: nowrap; }
+
+.intg-outbound-events { display: flex; flex-direction: column; gap: 6px; border: none; padding: 0; margin: 0; }
+.intg-outbound-events legend { font-size: 12.5px; font-weight: 600; color: var(--text-main); padding: 0; margin-block-end: 4px; }
+
+.intg-run-history { display: flex; flex-direction: column; gap: 10px; }
+.intg-run-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.intg-run-row { border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 12px; }
+.intg-run-row-main { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; }
+.intg-run-direction { font-weight: 700; }
+.intg-run-direction-label { font-weight: 600; color: var(--text-main); }
+.intg-run-time, .intg-run-trigger, .intg-run-duration { color: var(--text-muted); }
+.intg-run-counters {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 11.5px;
+}
+.intg-run-counters dt { color: var(--text-muted); }
+.intg-run-counters dd { margin: 0; font-weight: 700; color: var(--text-main); }
+.intg-run-error-key { font-size: 12px; color: var(--danger-fg); margin: 6px 0 0; }
+.intg-run-toggle { margin-block-start: 8px; }
+.intg-run-errors { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.intg-run-error-row { display: flex; gap: 8px; font-size: 11.5px; color: var(--text-muted); }
+.intg-run-error-id { font-weight: 600; color: var(--text-main); }
+.intg-run-skeleton { block-size: 90px; border-radius: 10px; margin-block-end: 10px; }
+.intg-run-pager { display: flex; align-items: center; gap: 10px; justify-content: center; font-size: 12px; color: var(--text-muted); }
+
+.intg-dead-panel { display: flex; flex-direction: column; gap: 10px; margin-block-start: 18px; }
+.intg-dead-banner {
+  background: var(--prio-urgent-bg);
+  color: var(--danger-fg);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0;
+}
+.intg-dead-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.intg-dead-row { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-muted); }
+.intg-dead-event-id { font-weight: 600; color: var(--text-main); }
+
 /* Story 04's breakpoint, reused — not a second one. */
 @media (max-width: 900px) {
   .intg-grid { grid-template-columns: 1fr; }
   .intg-secret-row { flex-wrap: wrap; }
+  .intg-run-counters { grid-template-columns: repeat(2, 1fr); }
+  .intg-run-row-main { gap: 6px; }
+  .intg-fieldmap, .intg-fieldmap thead, .intg-fieldmap tbody, .intg-fieldmap th, .intg-fieldmap td, .intg-fieldmap tr {
+    display: block;
+    width: 100%;
+  }
+  .intg-fieldmap thead { display: none; }
+  .intg-fieldmap tr { margin-block-end: 10px; }
 }
 
 /* ==========================================================================

@@ -24,6 +24,18 @@ function integration(overrides: Partial<Integration> = {}): Integration {
     last_checked_at: null,
     last_check_failed_at: null,
     last_error_key: null,
+    sync: {
+      inbound_enabled: false,
+      inbound_url: null,
+      inbound_field_map: {},
+      conflict_rules: {},
+      last_inbound_sync_at: null,
+      outbound_enabled: false,
+      outbound_url: null,
+      outbound_events: [],
+      last_outbound_sync_at: null,
+      dead_letter_count: 0,
+    },
     ...overrides,
   };
 }
@@ -92,5 +104,21 @@ describe('IntegrationsPage', () => {
 
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('Connect ERP')).toBeInTheDocument();
+  });
+
+  it('shows the dead-letter chip on a card when its count is non-zero (WIS-24)', async () => {
+    get.mockResolvedValue({
+      data: {
+        data: [
+          integration({ type: 'erp', status: 'connected', sync: { ...integration().sync, dead_letter_count: 4 } }),
+          ...FIVE_TYPES.slice(1),
+        ],
+      },
+    });
+    renderPage();
+
+    const cards = await screen.findAllByRole('article');
+    expect(within(cards[0]).getByText('4 failed deliveries')).toBeInTheDocument();
+    expect(within(cards[1]).queryByText(/failed deliveries/)).not.toBeInTheDocument();
   });
 });

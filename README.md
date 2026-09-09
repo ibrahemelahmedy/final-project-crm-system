@@ -163,6 +163,20 @@ cd api && php artisan sla:evaluate
 `--dry-run` reports without writing. `--backfill` stamps SLA targets on tickets created before
 the SLA story landed, and is idempotent.
 
+The integration data sync engine (WIS-24) is the same shape — synchronous, scheduled commands,
+no queue:
+
+```bash
+cd api && php artisan sync:pull-customers --dry-run
+cd api && php artisan sync:flush-outbox
+```
+
+`sync:pull-customers` pulls from every inbound-enabled, connected integration of `--type`
+(default `erp`); `--dry-run` fetches and reports without writing a customer or a `sync_runs` row.
+`sync:flush-outbox` attempts delivery of every due outbound message, retried with backoff and
+dead-lettered after `INTEGRATION_OUTBOX_MAX_ATTEMPTS` (default 5). Both are registered in
+`api/routes/console.php` alongside `sla:evaluate`.
+
 ### Check this README against the code
 
 Nothing here asks to be taken on trust. These five commands reproduce the claims that matter:
@@ -211,7 +225,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 8 | Customer Portal | ✅ Done | `web/src/features/portal`, OTP access codes (`PortalAccess.php`), separate auth from staff | WIS-16 |
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
-| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — the admin surface to connect, configure, test and monitor. Outbound transactional email is live (Brevo SMTP, WIS-27); inbound email, WhatsApp and SMS send-and-receive are still not wired — that is per-provider engineering | WIS-19, WIS-27 |
+| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — connect, configure, test and monitor, plus a data sync engine: a scheduled inbound pull maps and upserts ERP customer records, and outbound ticket/CSAT events are delivered through a persistent outbox with retry and dead-lettering (`api/app/Services/Integrations`, `sync:pull-customers`, `sync:flush-outbox`). Outbound transactional email is live (Brevo SMTP, WIS-27); inbound email, WhatsApp and SMS send-and-receive are still not wired — that is per-provider engineering | WIS-19, WIS-24, WIS-27 |
 | 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20 |
 
 Twenty stories were specified, planned and implemented (WIS-1 … WIS-20). Their specifications
@@ -452,6 +466,7 @@ guard rather than by controller so the protection on any endpoint is readable at
 | Audit | `GET /audit-logs`, `/audit-logs/facets` |
 | Settings | `GET`/`PATCH /settings` |
 | Integrations | `GET /integrations`, `PUT`/`DELETE /integrations/{type}`, `POST /integrations/{type}/test` |
+| Integration data sync | `PUT /integrations/{type}/sync-config`, `GET /integrations/{type}/sync-runs`, `POST /integrations/{type}/sync`, `GET /integrations/{type}/outbox`, `POST /integrations/{type}/outbox/retry` |
 | Organisation | `/branches`, `/departments`, `/branding` (+ logo upload / delete) |
 
 Response shaping is done by API Resources
@@ -784,10 +799,15 @@ worse than the gap.
   [docs/debugging/009-i18n-retrofit-gap.md](docs/debugging/009-i18n-retrofit-gap.md).
 - **Some plans are still at `contract` depth.** The index marks them. They are implemented, but
   the plan file was never regenerated at full depth afterwards.
-- **Integrations are a configuration surface only.** Connect, configure, test and monitor —
-  no live ERP field mapping, no real WhatsApp/SMS send-and-receive, no inbound email. Outbound
-  transactional email *is* live over Brevo SMTP (WIS-27) — portal codes and CSAT invitations. The
-  rest is a stated scope boundary (WIS-19), not an oversight.
+- **Integrations move real data on two paths, everything else is still a stated boundary.** A
+  scheduled pull (`sync:pull-customers`) maps and upserts ERP customer records with an
+  admin-configured field map and conflict rule; ticket-created, ticket-resolved and CSAT-submitted
+  events are queued to a durable outbox and delivered with retry and dead-lettering
+  (`sync:flush-outbox`) (WIS-24). Every outbound request — the reachability probe and the sync
+  engine alike — goes through one SSRF-guarded HTTP client. No real WhatsApp/SMS send-and-receive
+  and no inbound email exist; outbound transactional email *is* live over Brevo SMTP (WIS-27) —
+  portal codes and CSAT invitations. Per-provider message send/receive remains a stated scope
+  boundary (WIS-19), not an oversight.
 - **AI grounding is lexical, not semantic.** The chatbot retrieves KB context through the existing
   `ArticleSearch` contract (Postgres full-text / `LIKE`), not embeddings or a vector store, and
   `kb_articles` has no `locale` column — the answer language is driven by the request locale, not by

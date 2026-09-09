@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\IntegrationEvent;
 use App\Enums\IntegrationStatus;
 use App\Enums\IntegrationType;
 use App\Models\Integration;
@@ -45,6 +46,47 @@ class IntegrationFactory extends Factory
             'last_checked_at' => null,
             'last_check_failed_at' => now()->subMinutes(10),
             'last_error' => 'integrations.error.unreachable',
+        ]);
+    }
+
+    /**
+     * Story 25 (WIS-24). Inbound sync configured against a resolvable public
+     * host, so a test that keeps the real guard still gets past DNS.
+     */
+    public function inbound(array $map = [], array $rules = []): static
+    {
+        return $this->state(fn () => [
+            'inbound_enabled' => true,
+            'inbound_url' => 'https://example.com/customers',
+            'inbound_field_map' => $map ?: [
+                'external_id' => 'id',
+                'name' => 'attributes.display_name',
+                'email' => 'contact.email',
+                'phone' => 'contact.phone',
+                'company' => 'account.name',
+                'tier' => 'segment',
+            ],
+            'conflict_rules' => $rules ?: [
+                'name' => 'remote_wins',
+                'email' => 'remote_wins',
+                'phone' => 'wisal_wins',
+                'company' => 'remote_wins',
+                'tier' => 'wisal_wins',
+            ],
+        ]);
+    }
+
+    /** Outbound configured for all three events. */
+    public function outbound(array $events = []): static
+    {
+        return $this->state(fn () => [
+            'outbound_enabled' => true,
+            'outbound_url' => 'https://example.com/hooks/wisal',
+            'outbound_events' => $events ?: [
+                IntegrationEvent::TicketCreated->value,
+                IntegrationEvent::TicketResolved->value,
+                IntegrationEvent::CsatSubmitted->value,
+            ],
         ]);
     }
 }

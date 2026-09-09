@@ -45,6 +45,16 @@ export function IntegrationCard({ integration, onOpen }: Props) {
       {integration.status === 'error' && (
         <p className="intg-card-audit intg-card-audit-error">{t('audit.lastCheckFailed')}</p>
       )}
+
+      {integration.sync.inbound_enabled && integration.sync.last_inbound_sync_at && (
+        <p className="intg-card-audit">
+          {t('sync.lastPull', { when: formatRelative(integration.sync.last_inbound_sync_at) })}
+        </p>
+      )}
+
+      {integration.sync.dead_letter_count > 0 && (
+        <span className="intg-card-dead-chip">{t('sync.deadLetters', { count: integration.sync.dead_letter_count })}</span>
+      )}
     </article>
   );
 }

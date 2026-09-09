@@ -1,7 +1,7 @@
 {
   "title": "Integrations",
   "subtitle": "Connect Wisal to your ERP and communication providers",
-  "notice": "Saving a connection stores its configuration and checks that the endpoint is reachable. Sending and receiving messages through these providers is not enabled in this release.",
+  "notice": "Saving a connection stores its configuration and checks that the endpoint is reachable. A connected ERP can also pull customer records in and push ticket and CSAT events out, on the Sync tab. Sending and receiving messages per provider (email, SMS, WhatsApp) is not enabled in this release.",
   "status": {
     "not_connected": "NOT CONNECTED",
     "connected": "CONNECTED",
@@ -56,5 +56,119 @@
     "title": "Disconnect {{type}}?",
     "body": "The stored endpoint and API key for {{type}} are deleted. This cannot be undone.",
     "confirm": "Disconnect"
+  },
+  "sync": {
+    "tab": {
+      "connection": "Connection",
+      "sync": "Sync",
+      "history": "History"
+    },
+    "connectFirst": "Connect the integration first.",
+    "loading": "Loading…",
+    "running": "Running…",
+    "durationSeconds": "{{count}}s",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "pageOf": "Page {{page}} of {{total}}",
+    "showErrors": "Show {{count}} errors",
+    "hideErrors": "Hide errors",
+    "attempts": "{{count}} attempts",
+    "inbound": {
+      "title": "Inbound: pull customers",
+      "enable": "Enable inbound sync",
+      "url": "Collection endpoint URL",
+      "urlPlaceholder": "https://api.your-erp.com/customers"
+    },
+    "outbound": {
+      "title": "Outbound: push events",
+      "enable": "Enable outbound sync",
+      "url": "Receiver URL",
+      "urlPlaceholder": "https://your-app.com/webhooks/wisal",
+      "events": "Events to send"
+    },
+    "event": {
+      "ticket.created": "Ticket created",
+      "ticket.resolved": "Ticket resolved",
+      "csat.submitted": "CSAT response submitted"
+    },
+    "fieldMap": {
+      "wisalField": "Wisal field",
+      "remotePath": "Remote path",
+      "conflictRule": "Conflict rule",
+      "remotePathFor": "Remote path for {{field}}",
+      "conflictRuleFor": "Conflict rule for {{field}}",
+      "pathPlaceholder": "e.g. attributes.display_name",
+      "externalIdRequired": "A remote path for the external id is required to enable inbound sync.",
+      "field": {
+        "external_id": "External ID",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "company": "Company",
+        "tier": "Tier"
+      },
+      "rule": {
+        "remote_wins": "Remote wins",
+        "wisal_wins": "Wisal wins"
+      }
+    },
+    "runNow": "Run now",
+    "runningNow": "Running…",
+    "ranNow": "Imported {{created}} created, {{updated}} updated, {{skipped}} unchanged, {{failed}} failed.",
+    "lastPull": "Last pull {{when}}",
+    "deadLetters": "{{count}} failed deliveries",
+    "retryAll": "Retry all",
+    "retryAllConfirmTitle": "Retry all failed deliveries?",
+    "retryAllConfirmBody": "Every failed message is reset to pending. The next scheduled drain (within five minutes) attempts delivery again.",
+    "direction": {
+      "inbound": "Inbound",
+      "outbound": "Outbound"
+    },
+    "trigger": {
+      "scheduled": "Scheduled",
+      "manual": "Manual"
+    },
+    "status": {
+      "running": "RUNNING",
+      "success": "SUCCESS",
+      "partial": "PARTIAL",
+      "failed": "FAILED"
+    },
+    "counter": {
+      "inbound": {
+        "read": "Received",
+        "created": "Created",
+        "updated": "Updated",
+        "skipped": "Unchanged",
+        "failed": "Rejected"
+      },
+      "outbound": {
+        "read": "Picked up",
+        "created": "Delivered",
+        "updated": "—",
+        "skipped": "Deferred",
+        "failed": "Dead-lettered"
+      }
+    },
+    "empty": {
+      "title": "No runs yet",
+      "body": "Nothing has run for this integration yet. A scheduled run or Run now populates this history."
+    },
+    "error": {
+      "not_configured": "Inbound sync is not configured for this integration.",
+      "bad_payload": "The endpoint returned a response Wisal could not read.",
+      "payload_too_large": "The endpoint's response was too large to process.",
+      "missing_external_id": "The record had no external id and was skipped.",
+      "missing_name": "The record had no name and was skipped.",
+      "duplicate": "The record's email or phone matched an existing customer and was skipped.",
+      "bad_tier": "The record's tier was not recognised; it was imported with the default tier.",
+      "bad_email": "The record's email was not valid and was left blank.",
+      "rejected": "The receiver rejected the request.",
+      "max_attempts": "Delivery failed after every retry.",
+      "no_endpoint": "No receiver URL is configured.",
+      "integration_gone": "The integration was disconnected before this message could be delivered.",
+      "transient": "The receiver returned a temporary error; it will be retried.",
+      "unreachable": "The request could not be sent; it will be retried."
+    }
   }
 }
