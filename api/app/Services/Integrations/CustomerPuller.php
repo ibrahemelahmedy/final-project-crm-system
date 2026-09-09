@@ -82,10 +82,15 @@ class CustomerPuller
                 'per_page' => $pageSize,
             ]);
 
+            // `break`, never `return`, on every mid-loop failure: the run's
+            // counters are only flushed after the loop, and a page-2 failure
+            // that follows a page-1 import must still report the records it
+            // actually read (Decision 9 — the history is accurate or it is
+            // useless). `fail()` has already pinned the status to Failed.
             if (! $response->ok) {
                 $this->fail($run, $response->errorKey);
 
-                return;
+                break;
             }
 
             $decoded = json_decode((string) $response->body, true);
@@ -93,7 +98,7 @@ class CustomerPuller
             if (! is_array($decoded)) {
                 $this->fail($run, 'integrations.sync.error.bad_payload');
 
-                return;
+                break;
             }
 
             $records = array_is_list($decoded) ? $decoded : ($decoded['data'] ?? null);
@@ -101,7 +106,7 @@ class CustomerPuller
             if (! is_array($records) || ! array_is_list($records)) {
                 $this->fail($run, 'integrations.sync.error.bad_payload');
 
-                return;
+                break;
             }
 
             if (count($records) === 0) {

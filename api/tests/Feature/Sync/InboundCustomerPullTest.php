@@ -192,3 +192,27 @@ it('a --dry-run invocation writes no customer and no SyncRun', function () {
     expect(Customer::count())->toBe(0);
     expect(SyncRun::count())->toBe(0);
 });
+
+// Plan-review regression (Decision 9 / Done Criterion 4): a run that fails on
+// page 2 must still report the records page 1 actually read. `records_read` is
+// flushed after the loop, so the mid-loop failure sites must `break`, not
+// `return`, or the history shows created > 0 alongside read = 0.
+it('reports records_read for pages already consumed when a later page fails the run', function () {
+    $integration = Integration::factory()->inbound()->create();
+
+    Http::fakeSequence()
+        ->push([
+            remoteRecord('ext-1', 'Alice A', 'alice@example.com'),
+            remoteRecord('ext-2', 'Bob B', 'bob@example.com'),
+        ])
+        ->push('<html>not json</html>', 200);
+
+    $run = app(CustomerPuller::class)->pull($integration, SyncRunTrigger::Scheduled);
+
+    expect($run->status->value)->toBe('failed');
+    expect($run->error_key)->toBe('integrations.sync.error.bad_payload');
+    expect($run->records_created)->toBe(2);
+    // The bug this pins: read must not be 0 while created is 2.
+    expect($run->records_read)->toBe(2);
+    expect($run->finished_at)->not->toBeNull();
+});

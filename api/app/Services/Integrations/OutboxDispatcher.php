@@ -56,7 +56,16 @@ class OutboxDispatcher
 
         $maxAttempts = (int) config('integrations.sync.outbound.max_attempts');
 
-        if (! $response->retryable) {
+        // Edge case 2. A guard rejection is permanent EXCEPT for
+        // `integrations.error.unreachable`: gethostbyname() returning the host
+        // unchanged is a DNS blip, and a DNS blip is transient. Every other
+        // guard verdict (scheme, blocked_host) is a configuration error that
+        // will not self-heal, so it dead-letters immediately. This is the one
+        // guard verdict that is not permanent — do not treat them all alike.
+        $retryable = $response->retryable
+            || $response->errorKey === 'integrations.error.unreachable';
+
+        if (! $retryable) {
             $message->status = OutboxStatus::Dead;
             $message->failed_at = now();
             $message->last_error_key = $response->errorKey;

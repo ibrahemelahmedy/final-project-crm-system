@@ -188,3 +188,43 @@ it('POST /outbox/retry resets dead rows to pending and returns requeued', functi
     expect($response->json('requeued'))->toBe(3);
     expect(IntegrationOutboxMessage::where('status', 'pending')->where('attempts', 0)->count())->toBe(3);
 });
+
+// Plan-review regression (Edge case 2): a guard rejection is permanent EXCEPT
+// `integrations.error.unreachable` — gethostbyname() failing is a DNS blip and
+// a DNS blip is transient. Every other guard verdict dead-letters at once.
+it('treats a guard unreachable verdict as retryable, unlike every other guard rejection', function () {
+    bindOutboundUrlGuard(false, 'integrations.error.unreachable');
+
+    $integration = Integration::factory()->outbound()->create();
+    $message = IntegrationOutboxMessage::factory()->for($integration)->create();
+
+    Http::fake();
+
+    Artisan::call('sync:flush-outbox');
+    $message->refresh();
+
+    expect($message->status)->toBe(OutboxStatus::Pending);
+    expect($message->attempts)->toBe(1);
+    expect($message->last_error_key)->toBe('integrations.error.unreachable');
+    expect($message->next_attempt_at)->not->toBeNull();
+    expect($message->failed_at)->toBeNull();
+    Http::assertNothingSent();
+});
+
+it('still dead-letters a blocked_host guard verdict immediately', function () {
+    bindOutboundUrlGuard(false, 'integrations.error.blocked_host');
+
+    $integration = Integration::factory()->outbound()->create();
+    $message = IntegrationOutboxMessage::factory()->for($integration)->create();
+
+    Http::fake();
+
+    Artisan::call('sync:flush-outbox');
+    $message->refresh();
+
+    expect($message->status)->toBe(OutboxStatus::Dead);
+    expect($message->attempts)->toBe(1);
+    expect($message->last_error_key)->toBe('integrations.error.blocked_host');
+    expect($message->failed_at)->not->toBeNull();
+    Http::assertNothingSent();
+});
