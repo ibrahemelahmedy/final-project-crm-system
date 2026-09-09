@@ -48,7 +48,7 @@ stay unchecked until the owner verifies.
 ### WIS-23 — AI auto-classify + chatbot
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-24 — integration data sync
 - [ ] story + plan (Opus 5)
@@ -331,3 +331,26 @@ stay unchecked until the owner verifies.
   --question="Why am I being logged out repeatedly?"` → grounded answer citing
   `why-am-i-being-logged-out-repeatedly`. New files pint-clean; the 4 pre-existing pint-dirty files
   touched here gained no new violations. Next: WIS-23 plan-review (Opus 5).
+- 2026-09-09 — WIS-23 **plan-review PASSED (Opus 5)**. All 24 tasks, 28 edge cases and both new test
+  surfaces mapped to `file:line`; **6/6 Done Criteria ticked** in
+  `.squad/plans/ai-customer-intelligence/24-story-ai-customer-intelligence.md`. Independent re-runs:
+  api **616 pass / 2902 assertions**, web **580 pass / 93 files**, `npm run lint` + `npm run build`
+  clean, `pint --test` clean on touched paths, migrate/rollback --step=3/migrate + config:cache/clear
+  all exit 0. Re-verified live: `migrate:fresh --seed` → 64 tickets, **0 classified** with
+  `ai.classify.enabled=true` and the real Groq key present; `route:list` shows **no `auth:sanctum`**
+  on any `portal/chat*` route; `AssistGenerator` seam unchanged (no `generateJson`); `JsonAnswer::parse`
+  fuzzed with 8 malformed inputs — never throws; no composer/npm dependency added.
+  Two review fixes committed: (a) Test A12 / Edge Case 8 was tautological — it read `updated_at`
+  *after* the HTTP create had already classified, so it compared the pinned value with itself;
+  rewritten to age `updated_at` and call `TicketClassifier` directly, and mutation-checked (swapping
+  the pin for `now()` fails it). (b) Test Plan **L67 was missing entirely** — added
+  `web/src/features/tickets/components/thread/ClassificationCard.test.tsx` (5 tests: null, differs +
+  percentage, matches-so-renders-nothing, needs-triage + Dismiss, Apply firing `updateTicket` with
+  both fields).
+  Recorded deviations, none blocking: `TicketClassificationObserver:52` guards on
+  `runningInConsole() && ! runningUnitTests()` (not the plan's bare `runningInConsole()`) plus a
+  `$processed` id-set, with `AI_CLASSIFY_ENABLED=false` added to `api/phpunit.xml` as its companion —
+  purpose preserved and verified live; test J62 does not bind a fake or assert `timesCalled === 0`
+  (covered by the live seeder run instead); and the commit adds **no CSS**, so
+  `portal-chat-citations*` and `classification-ai*` render unstyled (cosmetic).
+  Next: WIS-24 story + plan (Opus 5).

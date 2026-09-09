@@ -1956,12 +1956,12 @@ including the WIS-18 cards — which is the bigger hammer.
 
 Copied verbatim from the Jira issue's "Done criteria" block.
 
-- [ ] A new ticket gets a category/priority proposal; agent override is respected and audited.
-- [ ] Low confidence => no field change, ticket flagged for triage.
-- [ ] Portal chatbot answers a KB-covered question with a citation.
-- [ ] "Talk to a person" creates a ticket with the full transcript attached.
-- [ ] Rate limit + token ceiling enforced and tested.
-- [ ] Provider failure degrades gracefully — classification is skipped, chatbot shows an unavailable state.
+- [x] A new ticket gets a category/priority proposal; agent override is respected and audited.
+- [x] Low confidence => no field change, ticket flagged for triage.
+- [x] Portal chatbot answers a KB-covered question with a citation.
+- [x] "Talk to a person" creates a ticket with the full transcript attached.
+- [x] Rate limit + token ceiling enforced and tested.
+- [x] Provider failure degrades gracefully — classification is skipped, chatbot shows an unavailable state.
 
 **All six are code-verifiable with the fake generator** — unlike WIS-26 and WIS-27, none needs an
 external account or a live key. The mapping:

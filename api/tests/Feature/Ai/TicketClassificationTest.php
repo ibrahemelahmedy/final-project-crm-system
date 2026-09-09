@@ -9,6 +9,7 @@ use App\Models\TicketEvent;
 use App\Models\User;
 use App\Services\Ai\AssistGenerator;
 use App\Services\Ai\AssistResult;
+use App\Services\Ai\TicketClassifier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -183,12 +184,26 @@ it('holds the per-request classification cap', function () {
 it('does not move updated_at when classifying', function () {
     bindAssistGenerator('{"category":"technical","priority":"urgent","confidence":0.92}');
 
+    // Create WITHOUT classifying, then age updated_at, so the assertion below
+    // can actually observe a bump. Reading updated_at after an HTTP create that
+    // already classified would compare the pinned value with itself.
+    config(['ai.classify.enabled' => false]);
     createTicketViaApi();
-    $ticket = Ticket::latest('id')->first();
-    $before = $ticket->updated_at;
+    config(['ai.classify.enabled' => true]);
 
-    expect($ticket->fresh()->ai_classified_at)->not->toBeNull()
-        ->and($ticket->fresh()->updated_at->equalTo($before))->toBeTrue();
+    $ticket = Ticket::latest('id')->first();
+    Ticket::query()->whereKey($ticket->id)->toBase()->update(['updated_at' => now()->subDays(3)]);
+
+    $stale = $ticket->fresh();
+    $pinned = $stale->updated_at;
+
+    expect(app(TicketClassifier::class)->classify($stale))->toBeTrue();
+
+    $after = $ticket->fresh();
+
+    expect($after->ai_classified_at)->not->toBeNull()
+        ->and($pinned->lt(now()->subHour()))->toBeTrue()
+        ->and($after->updated_at->equalTo($pinned))->toBeTrue();
 });
 
 it('clamps the classification model id to 64 characters', function () {
