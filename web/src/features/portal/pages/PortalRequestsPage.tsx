@@ -44,6 +44,12 @@ export const PortalRequestsPage: React.FC = () => {
         </Link>
       </div>
 
+      <p className="portal-footer-note" style={{ textAlign: 'start' }}>
+        <Link to="/portal/chat" className="portal-link">
+          {t('chat.title')}
+        </Link>
+      </p>
+
       <PortalTabs />
 
       {query.isPending && <PortalSkeleton label={t('requests.loading')} />}

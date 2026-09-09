@@ -27,6 +27,9 @@ class Ticket extends Model
         'resolution_due_at', 'sla_at_risk_at', 'escalate_at',
         'sla_paused_at', 'sla_paused_minutes',
         'sla_at_risk_notified_at', 'sla_breached_notified_at', 'escalated_at',
+        // Story 24 (WIS-23) — the AI classification proposal. Never category/priority.
+        'ai_suggested_category', 'ai_suggested_priority', 'ai_confidence', 'ai_classified_at',
+        'ai_classification_model', 'needs_triage',
     ];
 
     protected function casts(): array
@@ -48,6 +51,11 @@ class Ticket extends Model
             'sla_breached_notified_at' => 'datetime',
             'escalated_at' => 'datetime',
             'sla_paused_minutes' => 'integer',
+            // Story 24 (WIS-23). `float`, NOT `decimal:2` — the decimal cast
+            // returns a string and pgsql returns numeric as a string over PDO.
+            'ai_classified_at' => 'datetime',
+            'ai_confidence' => 'float',
+            'needs_triage' => 'boolean',
         ];
     }
 
@@ -122,6 +130,7 @@ class Ticket extends Model
             ->when($filters['priority'] ?? null, fn ($q, $v) => $q->whereIn('priority', $v))
             ->when($filters['channel'] ?? null, fn ($q, $v) => $q->whereIn('channel', $v))
             ->when($filters['category'] ?? null, fn ($q, $v) => $q->whereIn('category', $v))
+            ->when($filters['needs_triage'] ?? null, fn ($q) => $q->where('needs_triage', true))
             ->when($filters['customer_id'] ?? null, fn ($q, $v) => $q->whereIn('customer_id', $v))
             ->when($filters['q'] ?? null, fn ($q, $v) => $q->where('subject', 'like', '%'.$v.'%'))
             ->when($filters['assigned_to'] ?? null, function ($q, $v) {
@@ -137,6 +146,12 @@ class Ticket extends Model
                     }
                 });
             });
+    }
+
+    /** Story 24 (WIS-23). Tickets the AI could not classify confidently. */
+    public function scopeNeedsTriage(Builder $query): Builder
+    {
+        return $query->where('needs_triage', true);
     }
 
     public function scopeSorted(Builder $query, ?string $sort): Builder

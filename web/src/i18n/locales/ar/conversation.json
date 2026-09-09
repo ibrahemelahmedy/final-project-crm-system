@@ -106,5 +106,14 @@
     "inserted": "تم إدراج رد الذكاء الاصطناعي في حقل الكتابة — راجعه قبل الإرسال",
     "failed": "تعذر إنشاء اقتراح.",
     "generating": "جارٍ الإنشاء…"
+  },
+  "classification": {
+    "suggested": "يقترح الذكاء الاصطناعي {{category}} · {{priority}}",
+    "apply": "تطبيق",
+    "dismiss": "تجاهل",
+    "confidence": "بثقة {{percent}}%",
+    "needsTriage": "بحاجة إلى فرز",
+    "notConfident": "لم يكن المساعد واثقًا بما يكفي لاقتراح أي شيء.",
+    "applying": "جارٍ التطبيق…"
   }
 }

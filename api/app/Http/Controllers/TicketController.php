@@ -47,6 +47,8 @@ class TicketController extends Controller
             'customer_id' => $request->array('customer_id'),
             'assigned_to' => $request->array('assigned_to'),
             'q' => $request->string('q')->trim()->value() ?: null,
+            // Story 24 (WIS-23): the queue's "needs triage" facet.
+            'needs_triage' => $request->boolean('needs_triage') ?: null,
         ];
 
         $tickets = Ticket::query()
@@ -129,6 +131,13 @@ class TicketController extends Controller
     {
         $this->authorize('update', $ticket);
         $data = $request->validated();
+
+        // Story 24 (WIS-23), Decision 4. A human touching either classified
+        // field IS the triage decision — whether they applied the suggestion
+        // or typed their own. Ticket::booted() already audits the change.
+        if (array_key_exists('category', $data) || array_key_exists('priority', $data)) {
+            $data['needs_triage'] = false;
+        }
 
         $wasFinished = null;
         $next = null;

@@ -77,4 +77,63 @@ return [
 
     // Per-message character clamp inside the transcript.
     'transcript_chars' => (int) env('AI_ASSIST_TRANSCRIPT_CHARS', 2000),
+
+    /*
+     * Story 24 (WIS-23) — auto-classification. Runs from
+     * TicketClassificationObserver on Ticket::created, deferred with
+     * DB::afterCommit + app()->terminating() so the creating request never
+     * waits on the provider.
+     */
+    'classify' => [
+        'enabled' => (bool) env('AI_CLASSIFY_ENABLED', true),
+
+        // Below this, the suggestion is DISCARDED and the ticket is flagged
+        // needs_triage. Never applied automatically at any confidence —
+        // see Decision 4.
+        'min_confidence' => (float) env('AI_CLASSIFY_MIN_CONFIDENCE', 0.6),
+
+        // Description clamp inside the classify prompt.
+        'max_chars' => (int) env('AI_CLASSIFY_MAX_CHARS', 2000),
+
+        // Per-process cap, mirroring mail.csat.max_per_request. There is no
+        // queue worker, so an importer creating N tickets would otherwise do
+        // N synchronous provider calls in one process.
+        'max_per_request' => (int) env('AI_CLASSIFY_MAX_PER_REQUEST', 3),
+    ],
+
+    /*
+     * Story 24 (WIS-23) — the Customer Portal chatbot. Grounded ONLY on
+     * published KB articles; guardrails are enforced in PortalChatbot, not
+     * by the model.
+     */
+    'chat' => [
+        'enabled' => (bool) env('AI_CHAT_ENABLED', true),
+
+        // Customer + assistant rows combined, per conversation.
+        'max_messages' => (int) env('AI_CHAT_MAX_MESSAGES', 20),
+
+        // Provider-reported prompt+completion tokens, accumulated per
+        // conversation. A provider that reports 0 never trips this.
+        'max_tokens_per_conversation' => (int) env('AI_CHAT_MAX_TOKENS', 12000),
+
+        'max_question_chars' => (int) env('AI_CHAT_MAX_QUESTION_CHARS', 1000),
+
+        // Top-N published articles fed into the CONTEXT block, and the
+        // per-article character clamp.
+        'grounding_articles' => (int) env('AI_CHAT_GROUNDING_ARTICLES', 4),
+        'grounding_chars' => (int) env('AI_CHAT_GROUNDING_CHARS', 1500),
+
+        // Newest N stored messages replayed into the transcript.
+        'history_turns' => (int) env('AI_CHAT_HISTORY_TURNS', 8),
+
+        'rate_per_minute' => (int) env('AI_CHAT_RATE_PER_MINUTE', 8),
+        'rate_per_day' => (int) env('AI_CHAT_RATE_PER_DAY', 100),
+
+        // DECLARED, NOT YET APPLIED. OpenAiCompatibleAssistGenerator reads
+        // config('ai.timeout') (30s) at :39 and owns the HTTP budget; giving
+        // one call a different budget needs a seam change this story
+        // deliberately rejected (Decision 1). Do not mutate ai.timeout at
+        // runtime to fake it.
+        'timeout' => (int) env('AI_CHAT_TIMEOUT', 20),
+    ],
 ];

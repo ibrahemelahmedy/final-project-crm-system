@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Priority;
 use App\Models\Ticket;
 use App\Services\SlaClock;
 use Illuminate\Http\Request;
@@ -22,6 +23,21 @@ class TicketResource extends JsonResource
             'priority_label' => $this->priority->label(),
             'category' => $this->category,
             'category_label' => Ticket::categoryLabel($this->category),
+            // Story 24 (WIS-23). null when the ticket was never classified
+            // (provider failure or the feature off) — which is distinct from
+            // classified-but-ambiguous, where `suggestion` is null and
+            // `needs_triage` is true.
+            'ai_classification' => $this->ai_classified_at === null ? null : [
+                'suggested_category' => $this->ai_suggested_category,
+                'suggested_category_label' => $this->ai_suggested_category
+                    ? Ticket::categoryLabel($this->ai_suggested_category) : null,
+                'suggested_priority' => $this->ai_suggested_priority,
+                'suggested_priority_label' => $this->ai_suggested_priority
+                    ? Priority::from($this->ai_suggested_priority)->label() : null,
+                'confidence' => $this->ai_confidence,
+                'needs_triage' => (bool) $this->needs_triage,
+                'classified_at' => $this->ai_classified_at,
+            ],
             'channel' => $this->channel->value,
             'channel_label' => $this->channel->label(),
             'customer' => $this->customer ? [

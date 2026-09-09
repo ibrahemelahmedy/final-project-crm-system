@@ -65,6 +65,17 @@ return Application::configure(basePath: dirname(__DIR__))
                 Limit::perMinute(6)->by('ai-user:'.($request->user()?->id ?? $request->ip())),
                 Limit::perDay(200)->by('ai-user:'.($request->user()?->id ?? $request->ip())),
             ]);
+
+            // Story 24 (WIS-23): the portal chatbot's own limiter, keyed on
+            // the portal bearer token like `portal` — never on the IP alone,
+            // or one household NAT would share a budget. It NESTS inside
+            // `throttle:portal` (60/min); both apply.
+            RateLimiter::for('portal-chat', fn (Request $request) => [
+                Limit::perMinute((int) config('ai.chat.rate_per_minute'))
+                    ->by('portal-chat:'.($request->bearerToken() ?? $request->ip())),
+                Limit::perDay((int) config('ai.chat.rate_per_day'))
+                    ->by('portal-chat:'.($request->bearerToken() ?? $request->ip())),
+            ]);
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {

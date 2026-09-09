@@ -85,6 +85,11 @@ export async function bulkTickets(payload: BulkPayload): Promise<BulkResult> {
   return data;
 }
 
+/** Story 24 (WIS-23). Dismiss the AI classification suggestion (Decision 4). */
+export async function dismissClassification(id: number): Promise<void> {
+  await api.delete(`/tickets/${id}/ai-classification`);
+}
+
 export async function fetchTicketEvents(id: number): Promise<{ data: TicketEvent[] }> {
   const { data } = await api.get(`/tickets/${id}/events`);
   return data;

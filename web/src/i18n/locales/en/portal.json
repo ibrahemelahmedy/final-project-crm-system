@@ -109,5 +109,27 @@
     "publishedOn": "Published {{date}}",
     "signIn": "Track an existing request"
   },
+  "chat": {
+    "title": "Ask the assistant",
+    "intro": "Ask a question and the assistant will answer from our help articles.",
+    "placeholder": "Type your question…",
+    "send": "Send",
+    "sending": "Sending…",
+    "you": "You",
+    "assistant": "Assistant",
+    "sources": "Sources",
+    "empty": "No messages yet. Ask a question to get started.",
+    "loading": "Loading the assistant…",
+    "error": "We couldn't load the assistant.",
+    "unavailable": "The assistant is unavailable right now. You can still send this to a person.",
+    "ended": "This conversation has reached its limit. A member of the team can take it from here.",
+    "rateLimited": "You're sending messages a little too fast. Please wait a moment and try again.",
+    "talkToPerson": "Talk to a person",
+    "escalating": "Creating a request…",
+    "escalated": "We've created a request with your conversation.",
+    "escalateEmpty": "Ask a question first, or submit a request instead.",
+    "remaining": "{{count}} messages left in this conversation",
+    "backToRequests": "Back to my requests"
+  },
   "toggleTo": "العربية"
 }

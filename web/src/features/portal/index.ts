@@ -6,4 +6,5 @@ export { PortalHistoryPage } from './pages/PortalHistoryPage';
 export { PortalNewRequestPage } from './pages/PortalNewRequestPage';
 export { PortalRequestDetailPage } from './pages/PortalRequestDetailPage';
 export { PortalFaqPage } from './pages/PortalFaqPage';
+export { PortalChatPage } from './pages/PortalChatPage';
 export { PortalArticlePage } from './pages/PortalArticlePage';

@@ -2,6 +2,7 @@
 
 use App\Enums\UserRole;
 use App\Models\Customer;
+use App\Models\KbArticle;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
@@ -63,4 +64,54 @@ it('reports a provider failure as a non-zero exit', function () {
     bindFailingAssistGenerator();
 
     $this->artisan('ai:smoke')->assertExitCode(1);
+});
+
+/**
+ * Story 24 (WIS-23), Test Plan K. --kind=classify|chat, both read-only.
+ */
+it('prints the parsed classification and writes nothing (--kind=classify)', function () {
+    config(['ai.enabled' => true]);
+
+    $agent = User::factory()->create(['role' => UserRole::Agent, 'is_active' => true]);
+    $ticket = Ticket::factory()->assignedTo($agent)->create();
+    $customer = Customer::factory()->create();
+    TicketMessage::factory()->for($ticket)->create([
+        'author_type' => TicketMessage::AUTHOR_CUSTOMER,
+        'customer_id' => $customer->id,
+        'user_id' => null,
+        'body' => 'The billing page is broken.',
+        'visibility' => 'public',
+    ]);
+
+    bindAssistGenerator('{"category":"technical","priority":"high","confidence":0.8}');
+
+    $this->artisan('ai:smoke --kind=classify')
+        ->expectsOutputToContain('parsed:')
+        ->assertExitCode(0);
+
+    expect($ticket->fresh()->ai_classified_at)->toBeNull();
+});
+
+it('prints the article count and parsed answer (--kind=chat)', function () {
+    config(['ai.enabled' => true]);
+
+    KbArticle::factory()->create([
+        'title' => 'Password reset guide',
+        'slug' => 'password-reset-guide',
+        'body' => 'Use the reset link to reset your password.',
+    ]);
+
+    bindAssistGenerator('{"answer":"Use the reset link.","citations":["password-reset-guide"],"refused":false}');
+
+    $this->artisan('ai:smoke --kind=chat --question="reset password"')
+        ->expectsOutputToContain('grounding articles: 1')
+        ->expectsOutputToContain('parsed:')
+        ->assertExitCode(0);
+});
+
+it('fails without --question for --kind=chat', function () {
+    config(['ai.enabled' => true]);
+    bindAssistGenerator('x');
+
+    $this->artisan('ai:smoke --kind=chat')->assertExitCode(1);
 });

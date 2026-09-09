@@ -41,6 +41,7 @@ import {
   PortalRequestDetailPage,
   PortalFaqPage,
   PortalArticlePage,
+  PortalChatPage,
 } from './features/portal';
 
 export default function App() {
@@ -78,6 +79,8 @@ export default function App() {
                   <Route path="requests/new" element={<PortalNewRequestPage />} />
                   <Route path="requests/:ticketId" element={<PortalRequestDetailPage />} />
                   <Route path="history" element={<PortalHistoryPage />} />
+                  {/* Story 24 (WIS-23): the customer chatbot. */}
+                  <Route path="chat" element={<PortalChatPage />} />
                 </Route>
               </Route>
 

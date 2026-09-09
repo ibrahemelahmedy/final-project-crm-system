@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateTicket } from '../api/ticketsApi';
+import { dismissClassification, updateTicket } from '../api/ticketsApi';
 import { ticketKeys } from '../api/queryKeys';
 import type { TicketStatus } from '../model/ticket';
 
 type AttributePatch = Partial<{
   status: TicketStatus;
   priority: string;
+  // Story 24 (WIS-23): applying an AI classification suggestion patches both
+  // category and priority through this same path (Decision 4).
+  category: string;
   assigned_to: number | null;
 }>;
 
@@ -28,5 +31,18 @@ export function useTicketAttributeMutation(ticketId: number) {
       queryClient.invalidateQueries({ queryKey: ticketKeys.all });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
+  });
+}
+
+/**
+ * Story 24 (WIS-23). Dismiss the AI classification suggestion. Invalidates
+ * `ticketKeys.all` per the index's one-keying-scheme rule.
+ */
+export function useDismissClassification(ticketId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => dismissClassification(ticketId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ticketKeys.all }),
   });
 }

@@ -159,3 +159,15 @@ it('seeds internal notes and multi-channel threads', function () {
     });
     expect($mixed->count())->toBeGreaterThanOrEqual(2);
 });
+
+// Story 24 (WIS-23), Edge Case 1. migrate:fresh --seed must fire ZERO
+// provider calls: the console guard skips it, and even here the terminating
+// callback the observer would register never runs during $this->seed().
+it('performs zero AI classifications during seeding', function () {
+    // The seeder already ran in beforeEach with the real config (a live Groq
+    // key is in api/.env). If the console guard in TicketClassificationObserver
+    // had let a single terminate through, a ticket row would carry
+    // ai_classified_at — none does.
+    expect(Ticket::whereNotNull('ai_classified_at')->count())->toBe(0)
+        ->and(Ticket::where('needs_triage', true)->count())->toBe(0);
+});

@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\User;
+use App\Observers\TicketClassificationObserver;
 use App\Observers\TicketResolutionObserver;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -16,6 +17,10 @@ abstract class TestCase extends BaseTestCase
         // counter is a process static; reset it so one test's resolves never
         // count against the next test's cap.
         TicketResolutionObserver::resetInvitationCounter();
+
+        // Story 24 (WIS-23). Same rationale — the classification observer's
+        // per-request cap counter is a process static.
+        TicketClassificationObserver::resetClassificationCounter();
     }
 
     /**

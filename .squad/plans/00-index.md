@@ -33,8 +33,9 @@ file, not this column, when the two disagree.
 | 18 | integrations-erp | [integrations-erp/00-overview.md](integrations-erp/00-overview.md) | Integrations & ERP — Admin Connection Management (Category 11) | WIS-19 | **implemented** |
 | 20 | organization-settings | [organization-settings/00-overview.md](organization-settings/00-overview.md) | Organization Settings — Branches, Departments & Branding (Category 12, remainder) | WIS-20 | **implemented** |
 | 21 | seed-data-realism | [seed-data-realism/00-overview.md](seed-data-realism/00-overview.md) | Realistic Seed Data — Genuine Tickets, Threads & Timelines | WIS-25 | **implemented** |
-| 22 | ai-provider-seam | [ai-provider-seam/00-overview.md](ai-provider-seam/00-overview.md) | Free AI Provider Behind the AssistGenerator Seam (Gemini / Groq) | WIS-26 | full |
+| 22 | ai-provider-seam | [ai-provider-seam/00-overview.md](ai-provider-seam/00-overview.md) | Free AI Provider Behind the AssistGenerator Seam (Gemini / Groq) | WIS-26 | **implemented** |
 | 23 | transactional-email | [transactional-email/00-overview.md](transactional-email/00-overview.md) | Real Transactional Email — Brevo SMTP for Portal Codes and CSAT | WIS-27 | full |
+| 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -93,6 +94,13 @@ already cite it.
                               No schema, no endpoint, no frontend. Gives the app a real SMTP
                               transport, one shared branded mail layout, and the CSAT invitation
                               email that never existed. Blocks nothing.
+
+        24 ai-customer-intelligence ── depends on 19 (the seam), 22 (a free provider), 04 (ticket
+                              creation + ticket_events), 09 (KB search), 17 (the portal identity)
+                              and 23 (the DB::afterCommit observer pattern). Finishes Category 7:
+                              auto-classification on create and the portal chatbot. Three
+                              migrations, four new endpoints, one new portal screen. A leaf —
+                              nothing depends on it.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

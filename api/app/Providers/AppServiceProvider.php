@@ -5,6 +5,7 @@ namespace App\Providers;
 use Anthropic\Client;
 use App\Models\CustomerAttachment;
 use App\Models\Ticket;
+use App\Observers\TicketClassificationObserver;
 use App\Observers\TicketResolutionObserver;
 use App\Policies\CustomerPolicy;
 use App\Policies\ReportPolicy;
@@ -112,5 +113,9 @@ class AppServiceProvider extends ServiceProvider
         // to Resolved. Story 04 transitions inline with no event, so this is a
         // model observer, not an event subscriber.
         Ticket::observe(TicketResolutionObserver::class);
+
+        // Story 24 (WIS-23): propose category + priority on create. Writes ONLY
+        // the ai_suggested_* columns — never category/priority (Decision 4).
+        Ticket::observe(TicketClassificationObserver::class);
     }
 }

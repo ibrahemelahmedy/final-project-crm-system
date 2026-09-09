@@ -24,6 +24,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationBrandingController;
 use App\Http\Controllers\Portal\PortalAccessController;
 use App\Http\Controllers\Portal\PortalFaqController;
+use App\Http\Controllers\Portal\PortalChatController;
 use App\Http\Controllers\Portal\PortalRequestController;
 use App\Http\Controllers\Portal\PortalSessionController;
 use App\Http\Controllers\QuickReplyController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SlaRuleController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TicketAssistController;
+use App\Http\Controllers\TicketClassificationController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketMessageController;
 use App\Http\Controllers\TicketQuickReplyController;
@@ -84,6 +86,11 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     // Dismiss sits outside the throttle group deliberately — dismissing
     // costs nothing, and a 429 on Dismiss would strand the card on screen.
     Route::delete('/tickets/{ticket}/ai-assist/reply', [TicketAssistController::class, 'dismiss']);
+
+    // Story 24 (WIS-23): dismiss an AI classification suggestion. No
+    // throttle:ai-assist — it makes no provider call. Applying a suggestion is
+    // PATCH /api/tickets/{ticket}, not a route here (Decision 4).
+    Route::delete('/tickets/{ticket}/ai-classification', [TicketClassificationController::class, 'destroy']);
 
     // ---- SLA Rules (Story 06) -----------------------------------------
     //
@@ -313,6 +320,15 @@ Route::prefix('portal')->middleware(['portal', 'throttle:portal'])->group(functi
     Route::post('/requests', [PortalRequestController::class, 'store'])->name('portal.requests.store');
     Route::get('/requests/{ticket}', [PortalRequestController::class, 'show'])->name('portal.requests.show');
     Route::post('/requests/{ticket}/messages', [PortalRequestController::class, 'reply'])->name('portal.requests.reply');
+
+    // Story 24 (WIS-23): the customer chatbot. Inside the existing
+    // ['portal', 'throttle:portal'] group — never a public route — so
+    // ApiContractTest's portal-route gate stays green. The message route
+    // additionally carries throttle:portal-chat (8/min + 100/day).
+    Route::get('/chat', [PortalChatController::class, 'show'])->name('portal.chat.show');
+    Route::post('/chat/messages', [PortalChatController::class, 'store'])
+        ->middleware('throttle:portal-chat')->name('portal.chat.store');
+    Route::post('/chat/escalate', [PortalChatController::class, 'escalate'])->name('portal.chat.escalate');
 });
 
 // ---- CSAT public response surface (Story 13 / WIS-14) ----------------

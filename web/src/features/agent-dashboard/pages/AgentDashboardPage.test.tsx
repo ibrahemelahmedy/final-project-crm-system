@@ -42,6 +42,7 @@ function makeTicket(overrides: Partial<Ticket> = {}): Ticket {
     closed_at: null,
     created_at: '2026-08-28T08:00:00.000000Z',
     updated_at: '2026-08-28T08:00:00.000000Z',
+    ai_classification: null,
     ...overrides,
   };
 }

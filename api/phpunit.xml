@@ -20,6 +20,16 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <!--
+            Story 24 (WIS-23): the Ticket::created classification observer would
+            otherwise fire a live Groq call (api/.env carries a real key) on the
+            terminate of every ticket-creating feature test. The suite must pass
+            with the FAKE generator and never depend on the live key, so the
+            feature is OFF by default here; the classification/chat test files
+            opt back in with config(['ai.classify.enabled' => true]) and bind a
+            fake.
+        -->
+        <env name="AI_CLASSIFY_ENABLED" value="false"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>

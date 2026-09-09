@@ -1,5 +1,10 @@
 import { portalClient } from './portalClient';
 import type {
+  PortalChatEscalation,
+  PortalChatReply,
+  PortalChatView,
+} from '../model/portalChat';
+import type {
   PortalArticle,
   PortalCustomer,
   PortalPaginated,
@@ -68,6 +73,24 @@ export function replyToPortalRequest(ticketId: number | string, body: string) {
 
 export function fetchPortalFaq(params: { q?: string; category?: string[] } = {}) {
   return portalClient.get<PortalPaginated<PortalArticle>>('/portal/faq', { params }).then((r) => r.data);
+}
+
+// ---- Story 24 (WIS-23): the customer chatbot. All on portalClient. --------
+
+export function fetchPortalChat() {
+  return portalClient.get<PortalChatView>('/portal/chat').then((r) => r.data);
+}
+
+export function sendPortalChatMessage(body: string) {
+  return portalClient
+    .post<PortalChatReply>('/portal/chat/messages', { body })
+    .then((r) => r.data);
+}
+
+export function escalatePortalChat() {
+  return portalClient
+    .post<PortalChatEscalation>('/portal/chat/escalate')
+    .then((r) => r.data);
 }
 
 export function fetchPortalArticle(slug: string) {

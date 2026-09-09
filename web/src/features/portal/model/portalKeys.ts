@@ -11,4 +11,5 @@ export const portalKeys = {
   request: (id: number | string) => [...portalKeys.all, 'request', id] as const,
   faq: (params: Record<string, unknown> = {}) => [...portalKeys.all, 'faq', params] as const,
   article: (slug: string) => [...portalKeys.all, 'article', slug] as const,
+  chat: () => [...portalKeys.all, 'chat'] as const,
 };

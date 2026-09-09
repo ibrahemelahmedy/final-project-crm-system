@@ -102,5 +102,14 @@
     "inserted": "AI reply inserted into composer — review before sending",
     "failed": "Couldn't generate a suggestion.",
     "generating": "Generating…"
+  },
+  "classification": {
+    "suggested": "AI suggests {{category}} · {{priority}}",
+    "apply": "Apply",
+    "dismiss": "Dismiss",
+    "confidence": "{{percent}}% confident",
+    "needsTriage": "Needs triage",
+    "notConfident": "The assistant wasn't confident enough to suggest anything.",
+    "applying": "Applying…"
   }
 }

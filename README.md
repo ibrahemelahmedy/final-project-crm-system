@@ -131,6 +131,13 @@ no messages on purpose — that is the empty state, not an accident.
 confirm the provider answers. `AI_PROVIDER=anthropic` uses the paid Claude path instead. With no key
 set, the cards do not render and nothing errors.
 
+The same key powers two more AI surfaces (WIS-23): every new ticket gets an AI category/priority
+*proposal* in its thread's Classification card (the agent applies it with one click — nothing is
+written automatically), and signed-in portal customers get a KB-grounded assistant at
+`/portal/chat` with a "Talk to a person" button that opens a real ticket carrying the transcript.
+Watch both happen live with `php artisan ai:smoke --kind=classify` and
+`php artisan ai:smoke --kind=chat --question="Why am I being logged out repeatedly?"`.
+
 **Sending real email.** Out of the box mail goes to `storage/logs/laravel.log` and no account is
 needed — a fresh clone works. Two emails leave the app once a transport is configured: the portal
 access code and the CSAT invitation sent when a ticket is resolved. To send for real, create a free
@@ -200,7 +207,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 4 | Agent Dashboard | ✅ Done | `web/src/features/agent-dashboard`, `api/app/Services/DashboardMetrics.php` | WIS-9 |
 | 5 | SLA & Automation | ✅ Done | `api/app/Services/SlaClock.php`, `api/app/Console/Commands/EvaluateSlaCommand.php`, `TicketAssigner.php` | WIS-6 |
 | 6 | Knowledge Base | ✅ Done | `web/src/features/knowledge-base`, `api/app/Services/Kb`, versioned articles | WIS-5 |
-| 7 | AI Features | ⚠️ Partial | Ticket summary and suggested reply, `api/app/Services/Ai` + `web/src/features/ai-assist`. Provider-selectable via `AI_PROVIDER` — `anthropic` (paid), `groq` or `gemini` (free tiers), same seam. Auto-classification and a chatbot are not built | WIS-18, WIS-26 |
+| 7 | AI Features | ✅ Done | Ticket summary and suggested reply (`web/src/features/ai-assist`), auto-classification on ticket create (proposal only, agent applies with one click — `TicketClassificationObserver`, `TicketClassifier`) and a KB-grounded Customer Portal chatbot with "Talk to a person" escalation (`PortalChatbot`, `/portal/chat`). Provider-selectable via `AI_PROVIDER` — `anthropic` (paid), `groq` or `gemini` (free tiers), same seam | WIS-18, WIS-26, WIS-23 |
 | 8 | Customer Portal | ✅ Done | `web/src/features/portal`, OTP access codes (`PortalAccess.php`), separate auth from staff | WIS-16 |
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
@@ -781,9 +788,12 @@ worse than the gap.
   no live ERP field mapping, no real WhatsApp/SMS send-and-receive, no inbound email. Outbound
   transactional email *is* live over Brevo SMTP (WIS-27) — portal codes and CSAT invitations. The
   rest is a stated scope boundary (WIS-19), not an oversight.
-- **AI features are partial.** Summary and suggested reply are built; auto-classification and a
-  customer-facing chatbot are not. The provider behind them is selectable (`AI_PROVIDER`), so the
-  feature runs on a free tier — see [1. Run it in 60 seconds](#1-run-it-in-60-seconds).
+- **AI grounding is lexical, not semantic.** The chatbot retrieves KB context through the existing
+  `ArticleSearch` contract (Postgres full-text / `LIKE`), not embeddings or a vector store, and
+  `kb_articles` has no `locale` column — the answer language is driven by the request locale, not by
+  filtering articles. A `kb_articles.locale` migration and semantic retrieval are deliberate
+  deferrals. The provider behind every AI surface is selectable (`AI_PROVIDER`), so the feature runs
+  on a free tier — see [1. Run it in 60 seconds](#1-run-it-in-60-seconds).
 - **Channels are read-only.** Every message is tagged with its channel and the overview screen
   reports honestly that live ingestion is not in this release.
 - **Test execution is environment-sensitive.** Windows Application Control has blocked PHP

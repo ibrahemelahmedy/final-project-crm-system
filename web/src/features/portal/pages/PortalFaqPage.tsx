@@ -89,6 +89,11 @@ export const PortalFaqPage: React.FC = () => {
         ))}
 
       <p className="portal-footer-note">
+        <Link to="/portal/chat" className="portal-link">
+          {t('chat.title')}
+        </Link>
+      </p>
+      <p className="portal-footer-note">
         <Link to="/portal" className="portal-link">
           {t('faq.signIn')}
         </Link>

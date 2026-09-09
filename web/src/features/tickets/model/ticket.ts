@@ -19,6 +19,17 @@ export type TicketSla = {
 export type TicketParty = { id: number; name: string };
 export type TicketAssignee = { id: number; name: string; initials: string };
 
+/** Story 24 (WIS-23). null on the ticket when it was never classified. */
+export type TicketAiClassification = {
+  suggested_category: string | null;
+  suggested_category_label: string | null;
+  suggested_priority: TicketPriority | null;
+  suggested_priority_label: string | null;
+  confidence: number | null;
+  needs_triage: boolean;
+  classified_at: string;
+};
+
 export type Ticket = {
   id: number;
   /** "#4821" — built server-side so the SPA never string-builds it. */
@@ -42,6 +53,7 @@ export type Ticket = {
   closed_at: string | null;
   created_at: string;
   updated_at: string;
+  ai_classification: TicketAiClassification | null;
 };
 
 /**

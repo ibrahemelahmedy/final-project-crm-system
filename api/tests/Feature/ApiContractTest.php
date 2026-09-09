@@ -357,6 +357,30 @@ it('locks the response shape of GET /api/tickets/{ticket}/ai-assist (Story 19)',
     expect(array_keys($response->json()))->toEqualCanonicalizing(['enabled', 'summary', 'suggestion']);
 });
 
+it('locks the response shape of GET /api/portal/chat (Story 24)', function () {
+    config(['ai.enabled' => true, 'ai.chat.enabled' => true]);
+    $customer = \App\Models\Customer::factory()->create();
+    \App\Models\PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
+
+    $response = $this->asToken('shape-chat-token')->getJson('/api/portal/chat');
+
+    $response->assertOk();
+    expect(array_keys($response->json()))->toEqualCanonicalizing(['enabled', 'conversation', 'messages']);
+});
+
+it('locks the response shape of POST /api/portal/chat/messages (Story 24)', function () {
+    config(['ai.enabled' => true, 'ai.chat.enabled' => true]);
+    $customer = \App\Models\Customer::factory()->create();
+    \App\Models\PortalSession::factory()->for($customer)->withToken('shape-chat-token')->create();
+    bindAssistGenerator('{"answer":"x","citations":[],"refused":false}');
+
+    $response = $this->asToken('shape-chat-token')
+        ->postJson('/api/portal/chat/messages', ['body' => 'anything at all here']);
+
+    $response->assertOk();
+    expect(array_keys($response->json()))->toEqualCanonicalizing(['state', 'conversation', 'message']);
+});
+
 it('locks the response shape of the branches, departments, and branding endpoints (Story 20)', function () {
     $admin = \App\Models\User::factory()->create([
         'role' => \App\Enums\UserRole::Administrator,
