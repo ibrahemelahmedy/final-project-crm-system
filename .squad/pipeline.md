@@ -46,8 +46,8 @@ stay unchecked until the owner verifies.
 - [x] plan-review (Opus 5)
 
 ### WIS-23 — AI auto-classify + chatbot
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### WIS-24 — integration data sync
@@ -255,3 +255,79 @@ stay unchecked until the owner verifies.
   WIS-26). `php artisan ai:smoke --kind=summary` and `--kind=reply` both return real completions;
   WIS-26 Done Criteria 1 & 2 ticked in `22-story-ai-provider-seam.md`. AI Assist cards now live in
   the running app. `--filter=Ai` suite: 98 pass / 322 assertions.
+- 2026-09-09 — WIS-23 story + plan DONE (Opus 5). Created:
+  `.squad/stories/ai-customer-intelligence/WIS-23/intake.md`,
+  `.squad/plans/ai-customer-intelligence/24-story-ai-customer-intelligence.md` (full depth),
+  `.squad/plans/ai-customer-intelligence/00-overview.md`; row 24 + a dependency-spine entry added to
+  `.squad/plans/00-index.md`. **Decisions, in brief:** (1) **no seam change** — `generate(system,
+  transcript)` stays frozen; both new kinds demand ONE JSON object in the system prompt and a new
+  `App\Services\Ai\JsonAnswer::parse()` decodes it defensively (fence strip + first-`{`/last-`}` +
+  `json_decode`, never throws). A `generateJson()` method would touch 3 implementations, 2 fakes in
+  `Pest.php` and 11 test files, and provider JSON modes are not portable (Groq has
+  `response_format`, the Anthropic SDK path does not). (2) Classification fires from a new
+  `TicketClassificationObserver::created()` via `DB::afterCommit` **+** `app()->terminating()` —
+  `afterCommit` because `TicketController@store:91` is outside a transaction while
+  `PortalRequestController::store():107` is inside one; `terminating` because it runs after
+  `$response->send()` and IS exercised by feature tests (`MakesHttpRequests.php:642` calls
+  `$kernel->terminate`). Two hard guards: `runningInConsole()` (else `migrate:fresh --seed` fires 64
+  provider calls) and a `max_per_request` process cap copied from WIS-27. (3) Storage is **six
+  nullable columns on `tickets`** + `needs_triage` + an index, not `ai_assist_artifacts` — that table
+  is `unique(ticket_id,kind)` over a TEXT `content` with a `generated_by` FK and a required `locale`,
+  and the queue must *filter* on needs-triage. `ai_confidence` is cast **`float`, not `decimal:2`**
+  (the decimal cast returns a string, and pgsql returns numeric as a string over PDO).
+  (4) "Never override a human value" = classification **never writes `category`/`priority`** —
+  `StoreTicketRequest:24-25` makes both **required** and `PortalRequestController:118` hard-codes
+  `Priority::Normal`, so there is no default/null state to fill; the alternative design is
+  impossible in this repo. Applying is one click through the existing `PATCH /api/tickets/{id}`,
+  which already writes `category_changed`/`priority_changed` to `ticket_events` via
+  `Ticket::booted():206` — Done Criterion 1's "audited" is discharged by existing code and is
+  asserted, not rebuilt. Only a `DELETE /api/tickets/{id}/ai-classification` dismiss endpoint is
+  added. (5) Three distinguishable outcomes: confident (>= 0.6) stores the suggestion;
+  low-confidence / unparseable / invalid enum stores NO suggestion + `needs_triage`; provider failure
+  writes **nothing** (`ai_classified_at` stays null). The write is a base-builder update with
+  `updated_at` pinned, so a background classification never reorders the queue. (6) Chat state =
+  `portal_chat_conversations` + `portal_chat_messages`, keyed on **`portal_session_id`** (sign-out
+  ends the conversation and its ceiling), token counters accumulated from `AssistResult`'s own
+  reported counts. (7) Grounding = `PortalFaqController::index()`'s published-only pair
+  (`status='published'` AND `published_at IS NOT NULL`) composed with `ArticleSearch::apply()`,
+  top 4 × 1500 chars; `scopeVisibleTo()` is FORBIDDEN (it is the staff boundary and takes a `?User`);
+  **zero matches short-circuits the provider entirely** and returns the canned refusal;
+  model-returned slugs are intersected with the offered set before becoming `[{id,slug,title}]`
+  citations. (8) Guardrails all in `config('ai.chat.*')`/`config('ai.classify.*')`: 20 messages,
+  12 000 tokens, 1000-char question, 4 articles, 8 history turns, a `portal-chat` limiter at 8/min +
+  100/day keyed on the bearer token, `min_confidence` 0.6, `classify.max_per_request` 3.
+  (9) All new portal routes join the **existing** `['portal','throttle:portal']` group —
+  `ApiContractTest.php:322-343` walks every `api/portal/*` route and fails anything carrying
+  `auth:sanctum` or lacking a portal gate, so a public chat route would break the suite. (10) Chat
+  answers **200 with a `state`** (`ok|refused|unavailable|ended`), not the AI-Assist 503 — the chat
+  screen is the whole page and a 503 trips `portalClient`'s error path into a dead end;
+  `rate_limited` is the framework's 429 and the SPA maps the status itself.
+  **Key findings for the execute agent:** (a) `kb_articles` has **no `locale` column** — filtering
+  grounding by the portal locale is impossible and is not attempted; only the answer language is
+  steered from the prompt (same shape as WIS-27's `customers.locale` finding). (b) On the test/dev
+  connection `ArticleSearch` resolves to **`PostgresArticleSearch`** (`AppServiceProvider:42-45`
+  picks by driver, `phpunit.xml:52-58` is pgsql), so the `search_vector` path is what the suite
+  exercises. (c) `QUEUE_CONNECTION=database` but **nothing runs `queue:work`** — a dispatched job
+  would sit in `jobs` forever; "async" cannot mean queued. (d) Escalation creates a ticket, which
+  fires the classification observer and therefore **consumes a queued `respondWith()` response on
+  the same fake** — the most likely test-authoring mistake in the story (Edge Case 21).
+  (e) `api/tests/Pest.php` needs **no change** — `respondWith()` already queues arbitrary JSON
+  strings; only `TestCase::setUp()` gains one counter reset. **All six Done Criteria are
+  code-verifiable with the fake** — unlike WIS-26/27, none needs a live key or an external account;
+  the live Groq key only powers the manual `ai:smoke --kind=classify|chat` evidence recipe. Size:
+  ~17 new backend files, 3 migrations, 4 new endpoints, ~12 new frontend files, ~68 planned tests.
+  `.squad` files left uncommitted for the execute agent, matching WIS-25/26/27. Next: WIS-23 execute
+  (Sonnet 5), attaching only `24-story-ai-customer-intelligence.md`.
+- 2026-09-09 — WIS-23 execute DONE (Sonnet 5) — **resumed run**: a prior execute agent was killed
+  after implementing but before testing/committing; this run assessed the uncommitted tree, found
+  every backend/frontend task already implemented and green, finished the only gap (Task 20 —
+  `api/.env.example` Story-24 sub-block + three README anchors), and committed. Commit `6a008f9`
+  (code + `.squad` files) and the pipeline tick. Results: API `php artisan test` **616 pass / 2900
+  assertions**, 0 fail; web `575 pass` (92 files), `npm run lint` clean (pre-existing warnings only),
+  `npm run build` OK. `migrate:fresh --seed` → 64 tickets, **0 classified** (runningInConsole guard;
+  zero provider calls). Migrate/rollback --step=3/migrate cycle clean; `config:cache`/`config:clear`
+  clean. Live evidence with the Groq key: `ai:smoke --kind=classify` →
+  `{"category":"feature_request","priority":"low","confidence":0.96}`; `ai:smoke --kind=chat
+  --question="Why am I being logged out repeatedly?"` → grounded answer citing
+  `why-am-i-being-logged-out-repeatedly`. New files pint-clean; the 4 pre-existing pint-dirty files
+  touched here gained no new violations. Next: WIS-23 plan-review (Opus 5).
