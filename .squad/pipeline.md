@@ -53,7 +53,7 @@ stay unchecked until the owner verifies.
 ### WIS-24 — integration data sync
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-22 — live channel ingestion
 - [ ] story + plan (Opus 5)
@@ -561,3 +561,61 @@ stay unchecked until the owner verifies.
   or a `{"data": [...]}` object, a vendor adapter is out of scope by design (Decision 7). Manual
   evidence recipe, not a Done Criterion: `php artisan sync:pull-customers --dry-run` against any
   public JSON list endpoint. Next: WIS-24 plan-review (Opus 5).
+- 2026-09-09 — WIS-24 plan-review **CLEARED** (Opus 5) — **11/11 Done Criteria verified**
+  (the plan has eleven, not twelve; nothing legitimately stays open). Every criterion, task, edge
+  case and Test Plan section was mapped to real code with `file:line` evidence rather than accepted
+  from the execute agent's self-report, and every verification step was re-run independently.
+  **Two genuine defects found and fixed — commit `5aacfa6`**, each with a regression test proven to
+  fail without its fix (verified by stashing the fixes and re-running: `0 is identical to 2`, and
+  `Dead` vs `Pending`). Neither was covered by any existing test.
+  (1) **Edge Case 2 was not implemented at all.** `OutboundResponse::blocked()` is documented
+  "always permanent", so a guard `integrations.error.unreachable` verdict dead-lettered on attempt
+  1 — but the plan is explicit that this is *"the one guard verdict that is not permanent… encode
+  it explicitly in `OutboxDispatcher` step 6 rather than treating every guard failure alike"*,
+  because `gethostbyname()` returning the host unchanged is a DNS blip and a DNS blip is transient.
+  A transient nameserver failure was permanently dead-lettering real customer events. Fixed in
+  `OutboxDispatcher.php` (retryable when `errorKey === 'integrations.error.unreachable'`), plus a
+  second test pinning that `blocked_host`/`scheme` still dead-letter immediately so the fix cannot
+  over-correct into retrying a genuine SSRF rejection.
+  (2) **`records_read` was lost on a mid-run failure.** `CustomerPuller::run()` flushes
+  `records_read` only after the page loop, but the three mid-loop failure sites used `return` where
+  Task 23 step 3 says **`break`** — so a run that failed on page 2 after importing page 1 reported
+  `records_read = 0` alongside `records_created = 2`. Decision 9 and Done Criterion 4 require the
+  history to be accurate; changed to `break` with a comment saying why.
+  **Independent re-verification numbers:** API `php artisan test` **706 pass / 3224 assertions**,
+  0 fail (executor reported 703/3208 — the delta is my 3 new tests / 16 assertions). Web
+  `npx vitest run` **599 pass / 97 files**, 0 fail (matches). `npm run build` exit 0; `npm run lint`
+  clean (5 pre-existing warnings, none in new files); `node scripts/check-no-literals.mjs` clean
+  across 350 files / 19 roots. `pint --test` clean on `app/Services/Integrations` and
+  `tests/Feature/Sync`; the 27 dirty files it reports are all pre-existing and **none** is
+  WIS-24-touched. `migrate` → `migrate:rollback --step=4` → `migrate` all exit 0.
+  `config:cache`/`config:clear` clean. `schedule:list` shows `sync:flush-outbox` `*/5` and
+  `sync:pull-customers` hourly beside `sla:evaluate`. `grep -rn "Http::" api/app` → exactly three
+  files. Secret sweep clean. Zero `composer.json`/`package.json`/lockfile diff.
+  `api/tests/Feature/Admin/IntegrationSsrfTest.php` confirmed **byte-unchanged** via
+  `git diff --name-only`.
+  **The executor's four flagged deviations, judged:** (a) the `record()` **Closure payload** is a
+  *correct* fix and faithful to the plan's intent — the plan's literal sample evaluates
+  `ticketPayload()` before `record()`'s `enabled` early-return, so a `loadMissing` ran on every
+  `Ticket::created` even with the flag off, defeating exactly the "OFF touches nothing outside this
+  feature" guarantee Task 39 exists for; (b) the **nested-transaction savepoints** in
+  `CustomerPuller`/`IntegrationEvents` are necessary, not cosmetic — on PostgreSQL a unique
+  violation aborts the whole transaction, so without them Edge Case 10's "one bad row never aborts a
+  run" would be false; (c) the **`api.example.com` → `example.com`** factory change is correct,
+  confirmed independently with `nslookup` (the former is NXDOMAIN, the latter resolves — the plan
+  asked for "a resolvable host" and named one that isn't); (d) the **guard extraction** is faithful —
+  four checks moved verbatim in the same order with the same keys, `IntegrationSsrfTest.php` passes
+  unedited, and the four `integrations.error.*` catalogue entries are **byte-identical** in both
+  `en` and `ar` (the new keys landed in a separate nested `sync.error` block, confirmed by diffing
+  the top-level `error` block against `39e37c4~1`). Also spot-confirmed the two items the story+plan
+  phase flagged as likeliest mis-implementations: **`CsatSurveyController@store`'s explicit enqueue
+  IS implemented** (`:87-91`, inside the existing transaction, in the `$affected > 0` branch, after
+  `refresh()`), and **route params are consistent** — only `{type}` across all five new routes, no
+  fifth placeholder added to `AdminAuthorizationTest::adminRoutes()`, and all five routes appended
+  to the contracted-endpoint list.
+  **Scope creep:** one cosmetic item only. `ApiContractTest.php` picked up a whole-file FQCN→import
+  normalization (~90 of its 102 diff lines) from the executor's `pint` auto-fix pass, where §K says
+  "extend, do **not** restructure". Behaviour-neutral, linter-driven, and reverting it would fight
+  pint — recorded rather than reverted; the substantive §K additions (the `sync` structure keys and
+  `assertJsonMissingPath('data.0.sync.secret')`) are exactly as specified. Nothing else in the diff
+  falls outside the plan. Next: WIS-22 story + plan (Opus 5).
