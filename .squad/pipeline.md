@@ -487,7 +487,7 @@ stay unchecked until the owner verifies.
   ~12 new/edited frontend files, 14 test sections. `.squad` files left uncommitted for the execute
   agent, matching WIS-25/26/27/23. Next: WIS-24 execute (Sonnet 5), attaching only
   `25-story-integration-data-sync.md`.
-- 2026-09-09 — WIS-24 execute DONE (Sonnet 5). Implemented the full plan: 4 migrations
+- 2026-09-09 — WIS-24 execute DONE (Sonnet 5), commit `39e37c4`. Implemented the full plan: 4 migrations
   (`sync_runs`, `integration_outbox`, nine sync columns on `integrations`, three external-ref
   columns + one raw partial unique index on `customers`); the `OutboundUrlGuard` /
   `DnsOutboundUrlGuard` extraction from `HttpIntegrationTester` (Decision 1) with
