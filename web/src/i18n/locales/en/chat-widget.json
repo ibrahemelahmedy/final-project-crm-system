@@ -1,0 +1,38 @@
+{
+  "title": "Chat with us",
+  "loading": "Connecting…",
+  "error": {
+    "title": "We couldn't start this chat",
+    "body": "Please reload this page and try again.",
+    "retry": "Retry"
+  },
+  "ended": {
+    "title": "This chat has ended",
+    "body": "Your session is no longer active.",
+    "startNew": "Start a new chat"
+  },
+  "empty": {
+    "title": "Say hello",
+    "body": "Introduce yourself below to start a conversation."
+  },
+  "identify": {
+    "heading": "Before we start, who are you talking to us as?",
+    "nameLabel": "Your name",
+    "emailLabel": "Your email",
+    "submit": "Start chat",
+    "submitting": "Starting…",
+    "error": "Enter your name and a valid email to continue."
+  },
+  "transcript": {
+    "ariaLabel": "Conversation",
+    "you": "You",
+    "agent": "Agent",
+    "system": "System"
+  },
+  "composer": {
+    "label": "Message",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "sending": "Sending…"
+  }
+}

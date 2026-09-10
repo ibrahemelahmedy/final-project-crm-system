@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Ticket;
 use App\Models\TicketEvent;
 use App\Models\TicketMessage;
+use App\Services\Channels\ChannelOutbox;
 use App\Services\MentionResolver;
 use App\Services\NotificationDispatcher;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -45,6 +46,7 @@ class TicketMessageController extends Controller
         Ticket $ticket,
         MentionResolver $mentionResolver,
         NotificationDispatcher $dispatcher,
+        ChannelOutbox $outbox,
     ): JsonResponse {
         $visibility = MessageVisibility::from($request->validated('visibility', MessageVisibility::Public->value));
         $mentionIds = $request->validated('mentions', []);
@@ -105,6 +107,12 @@ class TicketMessageController extends Controller
 
             return $message;
         });
+
+        // Story 26 (WIS-22), Decision 8. The ONLY enqueue site — this is the one place
+        // in api/app that writes an agent-authored message from a request. Guards
+        // (feature flag, public-only, deliverable channel, connected channel, resolvable
+        // recipient) all live in ChannelOutbox::enqueue(); this call site stays one line.
+        $outbox->enqueue($message, fn () => ChannelOutbox::replyPayload($message, $ticket));
 
         // Dispatched after commit — a mention notification for a message
         // that failed to persist would be a false alert.

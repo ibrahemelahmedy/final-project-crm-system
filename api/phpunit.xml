@@ -38,6 +38,14 @@
             config(['integrations.sync.enabled' => true]) and Http::fake().
         -->
         <env name="INTEGRATION_SYNC_ENABLED" value="false"/>
+        <!--
+            Story 26 (WIS-22): the outbound delivery enqueue fires from
+            TicketMessageController@store — one of the busiest paths in the suite — and
+            ingestion writes tickets. OFF by default so no existing thread test starts
+            writing channel_outbound_messages; the channel test files opt back in with
+            config(['channels.enabled' => true]).
+        -->
+        <env name="CHANNELS_ENABLED" value="false"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>

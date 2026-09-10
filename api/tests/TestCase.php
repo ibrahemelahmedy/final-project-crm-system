@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\User;
 use App\Observers\TicketClassificationObserver;
 use App\Observers\TicketResolutionObserver;
+use App\Services\Channels\ChannelOutbox;
 use App\Services\Integrations\IntegrationEvents;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -25,6 +26,9 @@ abstract class TestCase extends BaseTestCase
 
         // Story 25 (WIS-24). Same rationale — the inline-delivery cap is a process static.
         IntegrationEvents::resetInlineCounter();
+
+        // Story 26 (WIS-22). Same rationale — the inline-delivery cap is a process static.
+        ChannelOutbox::resetInlineCounter();
     }
 
     /**

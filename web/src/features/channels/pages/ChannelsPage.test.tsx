@@ -21,14 +21,35 @@ vi.mock('../../auth/AuthContext', () => ({
 
 const get = api.get as ReturnType<typeof vi.fn>;
 
+// Story 26 (WIS-22): a mixed-status fixture — every channel used to be
+// hard-wired to `not_connected`; now the status is sourced from a
+// channel_connections row and can genuinely differ per channel.
 function payload(overrides: Partial<ChannelOverview> = {}): ChannelOverview {
   return {
     data: [
-      { value: 'email', label_key: 'channels.email.label', status: 'not_connected', ticket_count: 144 },
-      { value: 'whatsapp', label_key: 'channels.whatsapp.label', status: 'not_connected', ticket_count: 56 },
-      { value: 'chat', label_key: 'channels.chat.label', status: 'not_connected', ticket_count: 88 },
-      { value: 'sms', label_key: 'channels.sms.label', status: 'not_connected', ticket_count: 22 },
-      { value: 'web_form', label_key: 'channels.web_form.label', status: 'not_connected', ticket_count: 30 },
+      {
+        value: 'email',
+        label_key: 'channels.email.label',
+        status: 'connected',
+        ticket_count: 144,
+        connection: { provider: 'email_webhook', last_inbound_at: null, inbound_24h: 3, last_error_key: null, connectable: true },
+      },
+      {
+        value: 'whatsapp',
+        label_key: 'channels.whatsapp.label',
+        status: 'error',
+        ticket_count: 56,
+        connection: {
+          provider: 'whatsapp_cloud',
+          last_inbound_at: null,
+          inbound_24h: 0,
+          last_error_key: 'channels.error.no_credential',
+          connectable: true,
+        },
+      },
+      { value: 'chat', label_key: 'channels.chat.label', status: 'not_connected', ticket_count: 88, connection: null },
+      { value: 'sms', label_key: 'channels.sms.label', status: 'not_connected', ticket_count: 22, connection: null },
+      { value: 'web_form', label_key: 'channels.web_form.label', status: 'not_connected', ticket_count: 30, connection: null },
     ],
     meta: {
       period: '30d',
@@ -70,7 +91,11 @@ describe('ChannelsPage', () => {
       expect(screen.getByText(name)).toBeInTheDocument();
     }
     expect(screen.getByText('144')).toBeInTheDocument();
-    expect(screen.getAllByText('Not connected')).toHaveLength(5);
+    // Mixed-status fixture (Story 26, WIS-22): status is now sourced from a
+    // channel_connections row, not a hard-wired literal.
+    expect(screen.getByText('Connected')).toBeInTheDocument();
+    expect(screen.getByText('Error')).toBeInTheDocument();
+    expect(screen.getAllByText('Not connected')).toHaveLength(3);
     expect(get).toHaveBeenCalledWith('/channels/overview', expect.objectContaining({ params: { period: '30d' } }));
   });
 
@@ -106,7 +131,7 @@ describe('ChannelsPage', () => {
       data: payload({
         data: [
           ...payload().data,
-          { value: 'carrier_pigeon', label_key: 'channels.carrier_pigeon.label', status: 'not_connected', ticket_count: 3 },
+          { value: 'carrier_pigeon', label_key: 'channels.carrier_pigeon.label', status: 'not_connected', ticket_count: 3, connection: null },
         ],
       }),
     });

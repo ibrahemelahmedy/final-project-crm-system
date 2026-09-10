@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\BrandingController;
+use App\Http\Controllers\Admin\ChannelConnectionController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\IntegrationController;
 use App\Http\Controllers\Admin\IntegrationSyncController;
@@ -39,6 +40,8 @@ use App\Http\Controllers\TicketMessageController;
 use App\Http\Controllers\TicketQuickReplyController;
 use App\Http\Controllers\TicketTaskController;
 use App\Http\Controllers\UserPreferencesController;
+use App\Http\Controllers\Webhooks\ChannelWebhookController;
+use App\Http\Controllers\Widget\ChatWidgetController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -249,6 +252,23 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::patch('/branding', [BrandingController::class, 'update']);
         Route::post('/branding/logo', [BrandingController::class, 'uploadLogo']);
         Route::delete('/branding/logo', [BrandingController::class, 'destroyLogo']);
+
+        // ---- Channel connections (Story 26, WIS-22) --------------------------
+        //
+        // `{channel}` is the ONLY route parameter in this block. It is the FIFTH
+        // placeholder AdminAuthorizationTest::adminRoutes() must substitute — Task 62
+        // adds it to that list at AdminAuthorizationTest.php:49-53. Without that edit a
+        // literal "{channel}" reaches the router, 404s before the administrator gate can
+        // 403, and three tests in that file fail for the wrong reason.
+        //
+        // {channel} is INTENTIONALLY unconstrained, for the same reason {type} is at
+        // :210-216: a ->whereIn() constraint makes the literal URI 404 first. The
+        // controller resolves App\Enums\Channel and aborts 404 on a value outside
+        // Channel::connectable().
+        Route::get('/channels', [ChannelConnectionController::class, 'index']);
+        Route::put('/channels/{channel}', [ChannelConnectionController::class, 'save']);
+        Route::post('/channels/{channel}/test', [ChannelConnectionController::class, 'test']);
+        Route::delete('/channels/{channel}', [ChannelConnectionController::class, 'destroy']);
     });
 
     // ---- Knowledge Base (Story 09) ------------------------------------
@@ -360,4 +380,34 @@ Route::prefix('portal')->middleware(['portal', 'throttle:portal'])->group(functi
 Route::middleware(['signed', 'throttle:csat'])->group(function () {
     Route::get('/csat/{uuid}', [CsatSurveyController::class, 'show'])->name('csat.show');
     Route::post('/csat/{uuid}', [CsatSurveyController::class, 'store'])->name('csat.store');
+});
+
+// ---- Channel inbound webhooks (Story 26 / WIS-22) ---------------------
+//
+// A FIFTH public group. The signature IS the authentication — no bearer
+// token, no session, no signed URL. Deliberately NOT under api/portal/:
+// ApiContractTest.php's portal-route gate requires a portal limiter or the
+// `portal` guard, and a webhook has neither and never will. The limiter is
+// deliberately generous (Decision 4): a 429 during a provider's burst
+// redelivery turns one slow request into an escalating retry storm, and
+// some providers disable a webhook after sustained failures.
+Route::prefix('webhooks/channels')->middleware('throttle:channel-webhook')->group(function () {
+    Route::get('/{provider}', [ChannelWebhookController::class, 'verify'])->name('channels.webhook.verify');
+    Route::post('/{provider}', [ChannelWebhookController::class, 'receive'])->name('channels.webhook.receive');
+});
+
+// ---- Chat widget (Story 26 / WIS-22, Decision 10 & 11) -----------------
+//
+// A SIXTH audience-shaped split: a public bootstrap (no session yet) and a
+// session-gated body, mirroring how the portal splits above. `chat-widget`
+// resolves a chat_sessions bearer token — never auth:sanctum, never portal.
+Route::prefix('widget')->group(function () {
+    Route::post('/chat/sessions', [ChatWidgetController::class, 'start'])
+        ->middleware('throttle:widget-start')->name('widget.chat.start');
+});
+
+Route::prefix('widget')->middleware(['chat-widget', 'throttle:widget'])->group(function () {
+    Route::get('/chat/messages', [ChatWidgetController::class, 'messages'])->name('widget.chat.messages');
+    Route::post('/chat/messages', [ChatWidgetController::class, 'send'])->name('widget.chat.send');
+    Route::post('/chat/identify', [ChatWidgetController::class, 'identify'])->name('widget.chat.identify');
 });

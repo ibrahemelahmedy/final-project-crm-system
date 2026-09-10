@@ -4,6 +4,7 @@ use App\Enums\IntegrationType;
 use App\Enums\UserRole;
 use App\Models\AuditLog;
 use App\Models\Branch;
+use App\Models\ChannelConnection;
 use App\Models\Customer;
 use App\Models\Department;
 use App\Models\Integration;
@@ -430,4 +431,65 @@ it('locks the response shape of the branches, departments, and branding endpoint
         ->assertJsonStructure(['data' => ['primary_color', 'logo_url', 'updated_at']]);
 
     $response->assertJsonMissingPath('data.logo_path');
+});
+
+it('locks the response shape of GET /api/channels/overview, connection null when no row exists (Story 26)', function () {
+    $agent = User::factory()->create(['role' => UserRole::Agent, 'is_active' => true]);
+    $auth = ['Authorization' => 'Bearer '.$agent->createToken('spa')->plainTextToken];
+
+    $response = $this->withHeaders($auth)->getJson('/api/channels/overview')
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [['value', 'label_key', 'status', 'ticket_count', 'connection']],
+            'meta' => ['period', 'from', 'to', 'total_tickets', 'has_tickets'],
+        ]);
+
+    expect($response->json('data.0.connection'))->toBeNull();
+});
+
+it('locks the response shape of POST /api/widget/chat/sessions (Story 26)', function () {
+    config(['channels.enabled' => true]);
+    ChannelConnection::factory()->chat()->create(['config' => ['site_key' => 'a-site-key', 'allowed_origins' => ['https://example.com']]]);
+
+    $response = $this->withHeaders(['Origin' => 'https://example.com'])
+        ->postJson('/api/widget/chat/sessions', ['site_key' => 'a-site-key'])
+        ->assertOk();
+
+    expect(array_keys($response->json()))->toEqualCanonicalizing(['token', 'expires_at', 'poll_seconds', 'state']);
+});
+
+it('locks the response shape of GET /api/admin/channels and never leaks the secret or verify_token (Story 26)', function () {
+    $admin = User::factory()->create(['role' => UserRole::Administrator, 'is_active' => true]);
+    $auth = ['Authorization' => 'Bearer '.$admin->createToken('spa')->plainTextToken];
+
+    ChannelConnection::factory()->whatsapp()->create();
+
+    $response = $this->withHeaders($auth)->getJson('/api/admin/channels')
+        ->assertOk()
+        ->assertJsonStructure([
+            'data' => [['channel', 'label_key', 'provider', 'status', 'secret_last_four', 'config', 'last_inbound_at', 'last_outbound_at', 'last_error_key', 'last_error_at']],
+        ]);
+
+    $response->assertJsonMissingPath('data.0.secret');
+    $response->assertJsonMissingPath('data.0.verify_token');
+});
+
+it('gates every webhook route with the channel-webhook limiter, never auth:sanctum or portal (Story 26)', function () {
+    $checked = 0;
+
+    foreach (Route::getRoutes() as $route) {
+        if (! str_starts_with($route->uri(), 'api/webhooks/')) {
+            continue;
+        }
+
+        $middleware = $route->gatherMiddleware();
+
+        expect($middleware)->toContain('throttle:channel-webhook');
+        expect($middleware)->not->toContain('auth:sanctum');
+        expect($middleware)->not->toContain('portal');
+
+        $checked++;
+    }
+
+    expect($checked)->toBeGreaterThan(0);
 });

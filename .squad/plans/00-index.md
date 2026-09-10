@@ -37,6 +37,7 @@ file, not this column, when the two disagree.
 | 23 | transactional-email | [transactional-email/00-overview.md](transactional-email/00-overview.md) | Real Transactional Email — Brevo SMTP for Portal Codes and CSAT | WIS-27 | full |
 | 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | **implemented** |
 | 25 | integration-data-sync | [integration-data-sync/00-overview.md](integration-data-sync/00-overview.md) | Integration Data Sync — Inbound Customer Pull & Outbound Event Push (Category 11 completion) | WIS-24 | full |
+| 26 | live-channel-ingestion | [live-channel-ingestion/00-overview.md](live-channel-ingestion/00-overview.md) | Live Channel Ingestion — Inbound Webhooks, Thread Matching & Outbound Channel Replies (Category 3 completion) | WIS-22 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -115,6 +116,30 @@ already cite it.
                               persistent outbox with backoff and dead-letter. Four migrations, five
                               new admin endpoints (all with `{type}` as their only parameter), four
                               new frontend panels. A leaf — nothing depends on it.
+
+        26 live-channel-ingestion ── depends on 14 (the read-only Channels screen it completes, and
+                              whose "not connected" claim it must rewrite in TWO existing test
+                              assertions, not just in a comment), 04 and 05 (tickets, ticket_messages
+                              and TicketMessageController:59 — the ONE agent-reply write site in
+                              api/app), 03 (Customer::phoneMatchCandidates, how a WhatsApp/SMS sender
+                              is resolved), 25 (OutboundUrlGuard — bound, never copied — plus
+                              OutboundResponse and the whole outbox shape; WIS-24's overview names
+                              this story as the inbound-webhook receiver it deferred), 18 (the
+                              encrypted-secret posture and the error-is-an-i18n-key rule), 23 (the
+                              only real mail transport, which the email reply rides — so Done
+                              Criterion 1 inherits WIS-27's still-pending Brevo credentials), 24 (the
+                              afterCommit + terminating + capped-counter pattern and the phpunit
+                              feature-flag precedent — but NOT its portal_chat_* tables, which are a
+                              different audience), 17 (PortalAuth, the template for the widget
+                              session middleware) and 06 (routes/console.php and the no-queue-worker
+                              constraint). Finishes Category 3: signature-verified provider webhooks,
+                              three-mechanism thread matching with identity beating headers, an
+                              embeddable chat widget that needs no external account and no CORS/CSP
+                              relaxation, and outbound replies through a persistent outbox. Four
+                              migrations, four new admin endpoints (all with `{channel}` as their
+                              only parameter — the FIFTH placeholder AdminAuthorizationTest must
+                              substitute), two new public route groups, one new frontend feature.
+                              A leaf, and the last story in `.squad/pipeline.md`.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

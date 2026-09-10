@@ -2,6 +2,10 @@
 
 use App\Enums\CsatSurveyState;
 use App\Enums\TicketStatus;
+use App\Models\ChannelConnection;
+use App\Models\ChannelInboundMessage;
+use App\Models\ChannelOutboundMessage;
+use App\Models\ChatSession;
 use App\Models\CsatSurvey;
 use App\Models\Integration;
 use App\Models\IntegrationOutboxMessage;
@@ -193,4 +197,14 @@ it('performs zero AI classifications during seeding', function () {
     // ai_classified_at — none does.
     expect(Ticket::whereNotNull('ai_classified_at')->count())->toBe(0)
         ->and(Ticket::where('needs_triage', true)->count())->toBe(0);
+});
+
+// Story 26 (WIS-22), Edge Case 23. migrate:fresh --seed must leave every new
+// channel table at zero rows — a seeded connection would show a fabricated
+// CONNECTED card on a fresh install (ChannelConnectionFactory's docblock).
+it('leaves every channel table at zero rows after seeding', function () {
+    expect(ChannelConnection::count())->toBe(0);
+    expect(ChannelInboundMessage::count())->toBe(0);
+    expect(ChannelOutboundMessage::count())->toBe(0);
+    expect(ChatSession::count())->toBe(0);
 });

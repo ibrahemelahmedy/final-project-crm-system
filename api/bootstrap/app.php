@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ActiveUserOnly;
+use App\Http\Middleware\ChatWidgetAuth;
 use App\Http\Middleware\EnsureAdministrator;
 use App\Http\Middleware\PortalAuth;
 use App\Http\Middleware\SecurityHeaders;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
@@ -76,10 +78,36 @@ return Application::configure(basePath: dirname(__DIR__))
                 Limit::perDay((int) config('ai.chat.rate_per_day'))
                     ->by('portal-chat:'.($request->bearerToken() ?? $request->ip())),
             ]);
+
+            // Story 26 (WIS-22), Decision 4. DELIBERATELY generous and keyed on
+            // provider|ip: a 429 during a provider's burst redelivery turns one slow
+            // request into an escalating retry storm, and some providers disable a webhook
+            // after sustained failures. Unsigned requests are rejected before any query
+            // runs, so this limiter only has to bound an attacker with no valid signature.
+            RateLimiter::for('channel-webhook', fn (Request $request) => Limit::perMinute(120)
+                ->by('channel-webhook:'.$request->route('provider').'|'.$request->ip()));
+
+            // The public widget bootstrap — the only unauthenticated widget route.
+            RateLimiter::for('widget-start', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+
+            // The session-gated widget, keyed on the bearer like `portal` (:56-57).
+            RateLimiter::for('widget', fn (Request $request) => Limit::perMinute(30)
+                ->by('widget:'.($request->bearerToken() ?? $request->ip())));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+
+        // Story 26 (WIS-22). SaveChannelConnectionRequest's three-state
+        // secret/verify_token contract (absent = keep, "" = clear, non-empty
+        // = replace) needs the literal empty string to survive to the
+        // controller — Laravel's default ConvertEmptyStringsToNull middleware
+        // silently turns "" into null before validation runs, which makes
+        // "clear" indistinguishable from "absent" everywhere else in the
+        // request too. Skipped ONLY on these two admin channel routes.
+        $middleware->convertEmptyStringsToNull(except: [
+            fn ($request) => $request->is('api/admin/channels/*'),
+        ]);
 
         // Story 15 (WIS-11): resolve server-side messages in the locale the SPA
         // requests via Accept-Language. Global, following SecurityHeaders.
@@ -94,6 +122,9 @@ return Application::configure(basePath: dirname(__DIR__))
             // Story 17 (WIS-16): resolves a portal_sessions bearer token.
             // Never auth:sanctum — see PortalAuth's docblock.
             'portal' => PortalAuth::class,
+            // Story 26 (WIS-22): resolves a chat_sessions bearer token — a
+            // FOURTH audience, neither auth:sanctum nor portal.
+            'chat-widget' => ChatWidgetAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -104,7 +135,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Story 13: a tampered or missing signature on a public CSAT link must
         // render the SAME calm invalid state as an expired or unknown one —
         // never a 403 stack trace — so the link space stays non-enumerable.
-        $exceptions->render(function (\Illuminate\Routing\Exceptions\InvalidSignatureException $e, Request $request) {
+        $exceptions->render(function (InvalidSignatureException $e, Request $request) {
             if ($request->is('api/csat/*')) {
                 return response()->json([
                     'state' => 'expired',

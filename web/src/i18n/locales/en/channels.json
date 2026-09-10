@@ -6,29 +6,73 @@
     "last90": "Last 90 days"
   },
   "status": {
-    "notConnected": "Not connected"
+    "notConnected": "Not connected",
+    "connected": "Connected",
+    "error": "Error"
   },
   "presentation": {
-    "email": { "label": "Email", "helpLine": "Tickets arrive via email once an inbox is configured." },
-    "whatsapp": { "label": "WhatsApp", "helpLine": "Requires a WhatsApp Business API account." },
+    "email": { "label": "Email", "helpLine": "Tickets arrive automatically once an inbox is connected below." },
+    "whatsapp": { "label": "WhatsApp", "helpLine": "Owner setup: requires a WhatsApp Business API account, connected below." },
     "chat": { "label": "Live chat", "helpLine": "Embed a chat widget on your site or app." },
-    "sms": { "label": "SMS", "helpLine": "Requires an SMS provider (e.g. Twilio) to be configured." },
+    "sms": { "label": "SMS", "helpLine": "Owner setup: requires an SMS provider (e.g. Twilio), connected below." },
     "web_form": { "label": "Web forms", "helpLine": "Embed a contact form to collect tickets from your website." },
     "genericHelpLine": "Connect this channel to start collecting tickets from it."
   },
   "card": {
     "tickets": "tickets",
     "empty": "No tickets this period",
-    "unavailable": "Count unavailable"
+    "unavailable": "Count unavailable",
+    "lastInbound": "Last message {{when}}",
+    "inbound24h": "{{count}} in 24h"
   },
   "page": {
     "title": "Channels",
-    "subtitleAdmin": "Ticket origin by channel — no integrations connected",
+    "subtitleAdmin": "Ticket origin by channel — connect, test and disconnect below",
     "subtitle": "Ticket origin by channel",
-    "noticeStrong": "Channel integrations are not available in this release.",
-    "noticeRest": "The counts below are drawn from existing ticket data.",
     "loadError": "Ticket counts couldn't load. Channel information is still shown.",
     "retry": "Retry",
     "loadingLabel": "Loading channels"
+  },
+  "connect": {
+    "panelTitle": "Channel connections",
+    "connect": "Connect",
+    "configure": "Configure",
+    "reconnect": "Reconnect",
+    "title": "Connect {{channel}}",
+    "provider": "Provider",
+    "secret": "Secret",
+    "verifyToken": "Verify token",
+    "phoneNumberId": "Phone number ID",
+    "fromNumber": "From number",
+    "accountSid": "Account SID",
+    "inboundAddress": "Inbound email address",
+    "allowedOrigins": "Allowed origins (one per line)",
+    "siteKey": "Site key",
+    "webhookUrl": "Webhook URL",
+    "save": "Save",
+    "test": "Test",
+    "disconnect": "Disconnect",
+    "testing": "Testing…",
+    "testOk": "Connection test passed.",
+    "testFailed": "Connection test failed.",
+    "confirmDisconnect": "Disconnect {{channel}}? Inbound messages will stop until it is reconnected.",
+    "reveal": "Reveal",
+    "hide": "Hide",
+    "savedHint": "•••• {{last4}} on file. Leave blank to keep it."
+  },
+  "error": {
+    "not_connected": "This channel is not connected.",
+    "not_configured": "The stored credential could not be read. Reconnect the channel.",
+    "chat_limit": "This conversation has reached its message limit.",
+    "connection_gone": "The channel connection no longer exists.",
+    "connection_not_connected": "The channel is not connected.",
+    "max_attempts": "Delivery failed after the maximum number of attempts.",
+    "no_provider": "No sender is configured for this channel.",
+    "no_credential": "No credential is stored for this channel.",
+    "outside_window": "The customer's 24-hour messaging window has closed.",
+    "scheme": "Only HTTPS addresses are allowed.",
+    "blocked_host": "That address resolves to a private or reserved network and can't be used.",
+    "unreachable": "That address could not be resolved. Check it and try again.",
+    "server_error": "The provider returned an error. Try again shortly."
   }
 }

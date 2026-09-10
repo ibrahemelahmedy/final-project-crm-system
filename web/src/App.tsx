@@ -43,6 +43,7 @@ import {
   PortalArticlePage,
   PortalChatPage,
 } from './features/portal';
+import { WidgetChatPage } from './features/chat-widget';
 
 export default function App() {
   return (
@@ -61,6 +62,12 @@ export default function App() {
                   never redirected to /dashboard. Authenticates into nothing;
                   access is the signed link in the query string. */}
               <Route path="/feedback/:uuid" element={<CsatResponsePage />} />
+
+              {/* Story 26 (WIS-22), Decision 10. The chat-widget iframe document. Deliberately
+                  outside RequireAuth AND outside the portal layout — a fourth audience, an
+                  anonymous visitor on a third-party page. Framable because web/vercel.json sets
+                  no headers; same-origin to /api because it proxies. */}
+              <Route path="/widget/chat" element={<WidgetChatPage />} />
 
               {/* Story 17 (WIS-16). The Customer Portal — a THIRD audience, outside
                   RequireAuth and AppLayout per the intake ("external to the internal

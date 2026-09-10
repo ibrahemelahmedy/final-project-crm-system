@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\Channel;
 use App\Http\Requests\ChannelOverviewRequest;
 use App\Http\Resources\ChannelOverviewResource;
+use App\Models\ChannelConnection;
+use App\Models\ChannelInboundMessage;
 use App\Models\Ticket;
 
 /**
@@ -44,12 +46,38 @@ class ChannelOverviewController extends Controller
         // per-card figures are allowed not to sum to the total.
         $total = (clone $base)->count();
 
-        $channels = collect(Channel::cases())->map(fn (Channel $c) => [
-            'value' => $c->value,
-            'label_key' => "channels.{$c->value}.label",
-            'status' => 'not_connected',
-            'ticket_count' => (int) ($counts[$c->value] ?? 0),
-        ]);
+        // Story 26 (WIS-22). At most four rows — never more than
+        // Channel::connectable() has cases.
+        $connections = ChannelConnection::query()->get()->keyBy(fn (ChannelConnection $c) => $c->channel->value);
+
+        // The 24h inbound count is deliberately NOT visibleTo-scoped: it
+        // counts arrivals on a wire, not tickets an agent may read, so
+        // scoping it would make two agents disagree about whether a channel
+        // is receiving traffic. ticket_count above stays scoped exactly as
+        // it was.
+        $inbound24h = ChannelInboundMessage::query()
+            ->since(now()->subDay())
+            ->groupBy('channel_connection_id')
+            ->selectRaw('channel_connection_id, count(*) as aggregate')
+            ->pluck('aggregate', 'channel_connection_id');
+
+        $channels = collect(Channel::cases())->map(function (Channel $c) use ($counts, $connections, $inbound24h) {
+            $connection = $connections->get($c->value);
+
+            return [
+                'value' => $c->value,
+                'label_key' => "channels.{$c->value}.label",
+                'status' => $connection?->status?->value ?? 'not_connected',
+                'ticket_count' => (int) ($counts[$c->value] ?? 0),
+                'connection' => $connection === null ? null : [
+                    'provider' => $connection->provider->value,
+                    'last_inbound_at' => $connection->last_inbound_at,
+                    'inbound_24h' => (int) ($inbound24h[$connection->id] ?? 0),
+                    'last_error_key' => $connection->last_error_key,
+                    'connectable' => in_array($c, Channel::connectable(), true),
+                ],
+            ];
+        });
 
         return new ChannelOverviewResource([
             'channels' => $channels,

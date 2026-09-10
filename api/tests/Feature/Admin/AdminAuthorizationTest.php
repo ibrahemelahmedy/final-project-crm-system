@@ -47,8 +47,8 @@ function adminRoutes(int $targetId, int $branchId, int $departmentId): array
             }
 
             $uri = str_replace(
-                ['{user}', '{type}', '{branch}', '{department}'],
-                [(string) $targetId, 'erp', (string) $branchId, (string) $departmentId],
+                ['{user}', '{type}', '{branch}', '{department}', '{channel}'],
+                [(string) $targetId, 'erp', (string) $branchId, (string) $departmentId, 'whatsapp'],
                 $route->uri()
             );
             $out[] = [$method, '/'.$uri];
@@ -89,7 +89,12 @@ it('registers at least the eleven contracted admin endpoints', function () {
         ->toContain('GET /api/admin/branding')
         ->toContain('PATCH /api/admin/branding')
         ->toContain('POST /api/admin/branding/logo')
-        ->toContain('DELETE /api/admin/branding/logo');
+        ->toContain('DELETE /api/admin/branding/logo')
+        // Story 26 (WIS-22).
+        ->toContain('GET /api/admin/channels')
+        ->toContain('PUT /api/admin/channels/whatsapp')
+        ->toContain('POST /api/admin/channels/whatsapp/test')
+        ->toContain('DELETE /api/admin/channels/whatsapp');
 });
 
 it('denies an Agent on EVERY /api/admin/* route', function () {

@@ -66,8 +66,8 @@ describe('Channels — Arabic chrome sweep', () => {
     await i18n.changeLanguage('ar');
     const payload: ChannelOverview = {
       data: [
-        { value: 'email', label_key: 'channels.email.label', status: 'not_connected', ticket_count: 144 },
-        { value: 'whatsapp', label_key: 'channels.whatsapp.label', status: 'not_connected', ticket_count: 0 },
+        { value: 'email', label_key: 'channels.email.label', status: 'not_connected', ticket_count: 144, connection: null },
+        { value: 'whatsapp', label_key: 'channels.whatsapp.label', status: 'not_connected', ticket_count: 0, connection: null },
       ],
       meta: { period: '30d', from: '2026-07-30', to: '2026-08-28', total_tickets: 144, has_tickets: true },
     };

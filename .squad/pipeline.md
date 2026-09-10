@@ -56,8 +56,8 @@ stay unchecked until the owner verifies.
 - [x] plan-review (Opus 5)
 
 ### WIS-22 — live channel ingestion
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ## Run log
@@ -619,3 +619,225 @@ stay unchecked until the owner verifies.
   pint — recorded rather than reverted; the substantive §K additions (the `sync` structure keys and
   `assertJsonMissingPath('data.0.sync.secret')`) are exactly as specified. Nothing else in the diff
   falls outside the plan. Next: WIS-22 story + plan (Opus 5).
+- 2026-09-09 — WIS-22 story + plan DONE (Opus 5). Created:
+  `.squad/stories/live-channel-ingestion/WIS-22/intake.md`,
+  `.squad/plans/live-channel-ingestion/26-story-live-channel-ingestion.md` (full depth: 13
+  Decisions, 77 tasks — 62 backend / 15 frontend — 34 edge cases, a 17-section Test Plan A–Q with
+  96 numbered tests, Migration/Rollback, a named **Owner Setup** section, 16 Verification Steps,
+  6 + 13 Done Criteria), `.squad/plans/live-channel-ingestion/00-overview.md`; row 26 + a
+  dependency-spine entry added to `.squad/plans/00-index.md`. **Jira fetch succeeded** — no prior
+  partial run existed (`find .squad -path '*WIS-22*'` was empty before this run), and
+  `npx squad new-story live-channel-ingestion --id WIS-22` printed `✓ Fetched WIS-22`, so the
+  title, description and all six Done Criteria are verbatim from the tracker (the token in
+  `.squad/secrets.yaml` is healthy; `GET /rest/api/3/myself` returned 200).
+  **Decisions, in brief:** (1) channel connections live in a **new `channel_connections` table
+  keyed on `App\Enums\Channel`**, NOT `integrations` — the Jira line *"builds on the … integrations
+  table"* is argued with in writing, because `integrations.type` is unique per type,
+  `endpoint_url` is **NOT NULL** (`create_integrations_table.php:25`), `IntegrationType`'s own
+  docblock says it is *"deliberately NOT App\Enums\Channel"* and **has no `chat` case** — the one
+  channel this story can fully deliver — and WIS-24 hung nine ERP-record-shaped sync columns off
+  the same table. The absent row IS `not_connected` (WIS-19 Decision 3 reused), so disconnecting is
+  a DELETE. `integrations` is untouched, and Verification Step 11 greps to prove it. (2) Webhooks
+  are a **fifth public route group** at `api/webhooks/channels/{provider}` — `{provider}`, not
+  `{channel}`, because the signature belongs to the provider; two verbs on one URI (GET is Meta's
+  handshake); deliberately **outside `api/portal/`**, whose gate at `ApiContractTest.php:344-366`
+  a webhook can never satisfy. (3) Verification is a per-provider `InboundWebhookAdapter` hashing
+  **`$request->getContent()`** — the raw bytes — compared with **`hash_equals`**; the three schemes
+  (`X-Hub-Signature-256`, Twilio's URL+sorted-params sha1, and our own `X-Wisal-Signature` shape
+  from `OutboundHttpClient.php:91`) are pure functions of (raw body, headers, secret) and therefore
+  **fully unit-testable with a hand-computed digest and zero credentials**. Twilio is the one
+  adapter that legitimately reads parsed form fields, and the docblock says so, so nobody "fixes"
+  it to `getContent()`. (4) **A verified webhook always answers 2xx**; only an unverified request
+  (or an oversized body, rejected 413 **before** the HMAC is computed) answers 4xx — providers
+  retry non-2xx aggressively and some disable a webhook after sustained failures, which is also why
+  `throttle:channel-webhook` is deliberately 120/min rather than the 20-60/min the human-facing
+  limiters use. (5) Idempotency is a unique `(channel_connection_id, provider_message_id)` on
+  `channel_inbound_messages`, and **that one table is also the email threading map** —
+  `external_thread_ref` makes Decision 6's `In-Reply-To` branch one indexed lookup. The second
+  arrival is a **zero-write no-op** checked **before any write**, so `tickets.updated_at` AND
+  `channel_connections.last_inbound_at` are provably unchanged (§D test 20 asserts exactly that).
+  (6) Thread matching is **three genuinely different mechanisms** behind one `ThreadMatcher` —
+  email headers, then a bounded `[#id]` subject token, then phone → most-recent non-closed ticket
+  on that channel inside `thread_window_hours` (72) — with **identity beating headers as the last
+  step so it cannot be skipped**: a candidate is discarded unless `customer_id` matches the
+  resolved sender, and an unrecognised sender returns `null` unconditionally. §E tests 29-31 are
+  the security tests. (7) Ingestion creates tickets through `IngestedTicketFactory` mirroring
+  `PortalRequestController.php:105-146`, **not** `StoreTicketRequest` (which makes `category`,
+  `priority` and `channel` all required and calls `$this->user()->can(...)` — there is no user on a
+  webhook). (8) Outbound replies use WIS-24's outbox shape, enqueued **explicitly at
+  `TicketMessageController.php:59`** rather than from a `TicketMessage` observer. (9) Email sends
+  ride WIS-27's mailer and record the `Message-ID` they emit into
+  `channel_outbound_messages.provider_message_id`, which is what makes the *next* inbound's
+  `In-Reply-To` resolvable; WhatsApp/SMS ride **one** new guarded client and `OutboundResponse` is
+  reused verbatim. (10) **The chat widget is a loader script injecting an iframe at an
+  unauthenticated SPA route** — the decision that makes Done Criterion 3 achievable with no
+  external account AND no security relaxation. (11) Widget identity is `chat_sessions` + a
+  `chat-widget` middleware modelled on `PortalAuth.php:20-51` — a **fourth** audience, with
+  `customer_id` and `ticket_id` nullable until the visitor identifies. **Polling, not WebSockets**,
+  following `api/routes/api.php:285-289`'s stated decision. (12) `/channels/overview` gains a
+  nested `connection` object rather than overloading `status`, so the two safe sibling test files
+  stay untouched. (13) `CHANNELS_ENABLED=false` in `api/phpunit.xml` joining `AI_CLASSIFY_ENABLED`
+  and `INTEGRATION_SYNC_ENABLED`, plus three artisan discharge commands.
+  **Key findings for the execute agent, every one verified against live code this run:**
+  (a) **Story 14 wrote "not connected" into the suite as an assertion, not a comment, and one of
+  the two tests fails the moment ANY route is added.**
+  `api/tests/Feature/Channels/ChannelOverviewAuthTest.php:14-25` asserts
+  `$channel['status'] === 'not_connected'` for all five channels; `:27-37` filters the live route
+  list on `str_contains($r->uri(), 'channels')`, asserts **`toHaveCount(1)`** and asserts no write
+  verbs — so `api/admin/channels/{channel}` and `api/webhooks/channels/{provider}` both break it.
+  Task 60 rewrites both preserving their intent (the second becomes a per-route **gate** assertion,
+  which is strictly stronger than a count). The two sibling files
+  (`ChannelOverviewTest.php`, `ChannelOverviewEmptyTest.php`) assert only `ticket_count` and
+  `meta.*` and are **safe — do not edit them**. On the frontend the same claim is duplicated three
+  times: `channel.ts:11`, `:55-66` (with the comment *"deliberately NO `connected` entry … so a
+  future bug cannot render a fabricated healthy state"*) and
+  `ChannelsPage.test.tsx:73`; `ChannelsPage.roles.test.tsx:22` pins
+  `/Channel integrations are not available in this release/i` in three tests.
+  (b) **`SecurityHeaders` is global and hostile to embedding, but `web/vercel.json` is the escape
+  hatch already in the repo — and that single file is why Decision 10 works.**
+  `bootstrap/app.php:82` appends `SecurityHeaders` **globally** (so `routes/web.php` too) and
+  `SecurityHeaders.php:15-18` sets `X-Frame-Options: DENY` + `frame-ancestors 'none'`, with
+  `ApiContractTest.php:43-50` asserting the exact CSP string; `config/cors.php:11-30` allows only
+  `FRONTEND_URL` with `supports_credentials => false`. So a widget XHR-ing from a customer's site
+  is refused and an iframe at any Laravel route is refused. But `web/vercel.json` sets **no headers
+  at all** and rewrites `"/api/(.*)"` to the API host — so a document served from the **web**
+  deployable is framable *and* same-origin to the API. Result: **zero** CORS change, **zero** CSP
+  exception, **zero** per-route header override. Any design that XHRs cross-origin from the host
+  page has to widen `allowed_origins` for the whole `api/*` surface and is rejected in the plan.
+  (c) **`web/vite.config.ts:5-12` has NO `server.proxy`** — verified. `/api` 404s in local dev, so
+  without Task 73 the widget cannot be demonstrated at all, and the failure looks like a bug in the
+  widget rather than a missing proxy. Also: `web/src/lib/api.ts:30-35` builds the shared axios
+  instance from an **absolute** `VITE_API_URL` and its own comment warns that any call outside it
+  bypasses the `Accept-Language` interceptor — hence Task 69's documented second instance with
+  `baseURL: '/api'`, and test 95 which *enforces* the relative base rather than trusting it.
+  (d) **`AdminAuthorizationTest::adminRoutes()` substitutes exactly FOUR placeholders**
+  (`:49-53`: `{user}`, `{type}`, `{branch}`, `{department}`). WIS-24 dodged this by forcing
+  `{type}` everywhere; this story needs `{channel}` (the right key is `Channel`, not
+  `IntegrationType`), so Task 62 adds it as the **fifth** — a `{channel}` route added without that
+  edit yields a literal `"{channel}"`, 404 before the `administrator` gate can 403, and **three
+  tests in that file fail with a misleading message**. No `beforeEach` change is needed:
+  `'whatsapp'` resolves without a database row.
+  (e) **`TicketMessageController.php:59` is the ONLY place in `api/app` that writes an
+  agent-authored message from a request** — `grep -rn "AUTHOR_AGENT" api/app api/database` returns
+  eleven hits and the rest are `TicketMessageFactory.php:35` and
+  `TicketScenarioSeeder.php:281,452`. Since the seeder writes several hundred messages through the
+  model (`TicketScenarioSeeder.php:444-460`), an observer would need a `runningInConsole` guard, a
+  visibility guard and an author guard just to stay quiet — so the enqueue is **explicit at that
+  one call site**, the same reasoning that forced WIS-24's explicit `CsatSurveyController` enqueue.
+  (f) **WIS-23's `portal_chat_*` tables must NOT be reused.** `api/routes/api.php:337-344` +
+  `ApiContractTest.php:382-405`: that chatbot is an AI conversation for an already-identified
+  customer keyed on `portal_session_id` that creates a ticket only on escalation. This story's
+  widget is an anonymous visitor whose whole purpose is to open a ticket. Reusing the tables breaks
+  the key or forces nullable-everything; reusing the routes breaks the portal gate.
+  (g) **Ingested tickets inherit three observers for free, and that is also the likeliest
+  test-authoring mistake.** `AppServiceProvider.php:123-133` registers
+  `TicketResolutionObserver`, `TicketClassificationObserver` (WIS-23) and `IntegrationEventObserver`
+  (WIS-24) on `Ticket` in that order, so an ingested ticket is AI-classified and emits an ERP event
+  with **zero new code** — and an ingestion test that binds an assist fake finds its queued response
+  **consumed by the classification observer**, which is WIS-23's Edge Case 21 restated.
+  `AI_CLASSIFY_ENABLED=false` is already the suite default (`api/phpunit.xml:32`).
+  (h) **The Postgres unique-violation trap WIS-24 was bitten by applies again.** On Postgres a
+  unique violation **aborts the whole transaction** (`IntegrationEvents.php:92-104` and the WIS-24
+  execute run-log), so the ledger insert that may collide needs its own nested `DB::transaction()`
+  (a SAVEPOINT) or the very next statement throws *"current transaction is aborted"*. Tests run on
+  Postgres (`api/phpunit.xml:71-76`), so it surfaces in the suite.
+  (i) **Do not lose WIS-24's Edge-Case-2 carve-out.** `OutboxDispatcher.php:59-66`:
+  `integrations.error.unreachable` is the ONE guard verdict that is retryable (a `gethostbyname()`
+  blip is transient); `scheme` and `blocked_host` dead-letter on attempt 1. Its absence was a real
+  defect found at WIS-24's plan-review, so §H tests 54 **and** 55 are specified as a pair — one
+  without the other lets a fix over- or under-correct.
+  (j) **`Customer::phoneMatchCandidates()` (`Customer.php:104`) already exists** and is the tested
+  answer to "which customer is `+201234567890`?" — WhatsApp/SMS ingestion resolves senders with it
+  rather than writing a second normaliser, and the inbound write goes **through the model** so
+  `setPhoneAttribute` still derives `phone_normalized` (`:61-79`).
+  (k) **`Http::` tripwire.** `grep -rn "Http::" api/app` returns **exactly three** files today; the
+  plan makes **four** the contract and a fifth a defect (Verification Step 9), extending the
+  tripwire WIS-24 established.
+  (l) **`IntegrationFactory`'s DNS lesson recurs.** WIS-24's execute run found `api.example.com` is
+  NXDOMAIN and only bare `example.com` resolves; the real `DnsOutboundUrlGuard` calls
+  `gethostbyname()`. New factory states use `https://example.com/...`, and §I (which keeps the real
+  guard) is the only section that binds no guard fake.
+  (m) **Five README claims are already stale-in-waiting**, at verified lines: `:220` (Category 3
+  row), `:231` (Category 11 row's *"inbound email, WhatsApp and SMS send-and-receive are still not
+  wired"*), `:246` (the assumptions row *"Whether 'multi-channel' means live inboxes | No."*),
+  `:455` (the endpoint table, where `/channels/overview` sits under **Reports**) and `:817-818`
+  (*"Channels are read-only"*). WIS-24's plan-review found the analogous `integrations.json:4`
+  string still promising the opposite of the shipped feature — Task 77 exists so it does not repeat.
+  (n) **A new frontend feature folder is NOT i18n-enforced automatically.**
+  `web/scripts/i18n-allowlist.json:3-22` lists 19 roots and `:23` records that WIS-17 **closed**
+  the list; Task 74 reopens it deliberately for `src/features/chat-widget`. `web/public/widget.js`
+  is plain JS, not `.tsx`, so `check-no-literals.mjs` does not apply — the plan says so in a header
+  comment so nobody moves it into `src/`.
+  (o) **Vercel serves `web/public/*` before the `/(.*)` → `/index.html` rewrite**, which is why
+  `web/public/widget-demo.html` — the file that actually discharges Done Criterion 3 — resolves in
+  production and under `vite preview`, not only in dev.
+  **Posture — and this is where WIS-22 differs from WIS-24.** WIS-24's six criteria were all
+  `Http::fake()`-verifiable. WIS-22's are **not**: criteria **3, 4, 5 and 6 are code-verifiable and
+  must be green**, while criteria **1 and 2 stay legitimately unticked** — criterion 1 needs an
+  inbound-parse relay + MX record + signing secret **and** WIS-27's still-pending Brevo SMTP
+  credentials (two external dependencies, not one), and criterion 2 needs a Meta WhatsApp Business
+  account, a phone number id, a **permanent** system-user token (not the 24-hour temporary one), the
+  App Secret and a webhook with the `messages` field **separately subscribed**. The chat channel is
+  the one with no third party in it, and the plan is arranged so that fact carries Done Criterion 3
+  end to end. The plan carries a named **Owner Setup** section (19 numbered items, each naming which
+  Done Criterion it unblocks) plus three artisan discharge commands modelled on `ai:smoke` /
+  `mail:test`: `channels:ingest-fixture` (replays a stored payload through the **real** verification
+  path, signing it with the stored secret, so the owner sees ingestion work before any account
+  exists), `channels:test-send` (the discharge for criteria 1 and 2) and `channels:flush-outbound`
+  (the scheduled drain). This matches `.squad/pipeline.md:13-17` exactly.
+  Size: ~40 new backend files, **4 migrations** (all `create`, **zero** `Schema::table` on another
+  story's table, so no half-applied state can change existing behaviour), 4 new admin endpoints,
+  2 new public route groups, 3 artisan commands, ~14 new/edited frontend files plus a new
+  `chat-widget` feature and two files under `web/public/`, 17 test sections / 96 numbered tests.
+  `.squad` files left uncommitted for the execute agent, matching WIS-25/26/27/23/24.
+  Next: WIS-22 execute (Sonnet 5), attaching only `26-story-live-channel-ingestion.md`.
+- 2026-09-10 — WIS-22 execute DONE (Sonnet 5) — **multi-agent resumed run**, committed as
+  `feat(channels): live channel ingestion — webhooks, signatures, chat widget (WIS-22)`. The
+  original single execute agent hit a session rate limit mid-task after implementing the
+  Services/Channels layer; the orchestrating session resumed it, which internally fanned the
+  remaining work across two parallel sub-agents (backend: signature verification, outbox wiring,
+  console commands, webhook/widget controllers, ~10 new test files; frontend: the channels
+  connect UI and a new `chat-widget` feature, built in parallel by two separate sub-agents that
+  both touched `ChannelsPage.roles.test.tsx`), then a verify/fix pass reconciled and confirmed
+  both sides. By the time the verify pass inspected the tree, the two frontend workstreams had
+  already converged correctly on Decision 12's behaviour (Administrator sees the connect panel,
+  Agent/Team Lead see none of it) — no manual merge was needed. Two real bugs were still found
+  and fixed by the verify pass: (1) `web/scripts/i18n-allowlist.json` was missing the new
+  `src/features/chat-widget` root (Task 74), so its strings weren't i18n-enforced; (2)
+  `web/src/features/channels/channels.css` had a doc-comment containing a literal `*/`
+  (`--status-active-*/--status-inactive-*`), which prematurely closed the CSS block comment and
+  broke `npm run build`'s lightningcss minifier — reworded to remove the accidental token. A
+  third fix (`widgetClient.test.ts` non-null assertion for `interceptors.request.handlers[0]`)
+  cleared a `tsc -b --noEmit` TS18048. The orchestrating session additionally found and fixed a
+  gap neither sub-agent had covered: **README.md's Task 77 was never done** — the five stale
+  channel claims (`:220` Category 3 row, `:228` Category 11 row, `:246` the multi-channel
+  assumption, `:455` endpoint table, `:817-818` "Channels are read-only") were rewritten in place
+  to describe the shipped ingestion/outbox/widget code plus the owner-credential gap, and the two
+  deliberate deferrals (no attachments over chat channels, no WhatsApp message templates) were
+  stated explicitly per Task 77, along with the new webhook/widget/admin-channel routes added to
+  the endpoint tables. Independently re-verified by the orchestrating session before commit: API
+  `php artisan test` **803 pass / 3624 assertions** (0 fail); web `npm run build` exit 0
+  (`tsc -b && vite build`, the only stderr output is a non-fatal chunk-size-warning reporter
+  quirk, not a build failure). The two backend/frontend sub-agents independently reported, and
+  were not re-disputed: `--filter=Channel` 117/117 pass; `pint --test` clean on every touched
+  path (24 pre-existing dirty files untouched by this story); migration round-trip
+  (`migrate`→`rollback --step=4`→`migrate`) clean; `config:cache`/`clear` clean;
+  `migrate:fresh --seed` writes zero rows to all four new tables and zero outbound Http calls;
+  `grep -rn "Http::" api/app` → exactly 4 files; `route:list` shows `webhooks/{provider}` with no
+  auth (`throttle:channel-webhook` only), `admin/channels/{channel}` behind
+  `auth:sanctum`+`EnsureAdministrator`, and `widget/chat/*` behind `ChatWidgetAuth`/
+  `throttle:widget`; `config/cors.php`, `SecurityHeaders.php`, `web/vercel.json`, `Integration.php`,
+  `IntegrationResource.php` and every `integrations` migration are byte-unchanged; no new
+  composer or npm dependency (`composer.json/lock`, `package.json/lock` unchanged); no secret in
+  any response/log/fixture; `web/src/i18n` en/ar key sets match exactly for both `channels` and
+  `chat-widget` namespaces; `npx vitest run` **623 pass / 101 files**, `npx tsc -b --noEmit`
+  clean, `npm run lint` clean (5 pre-existing warnings only, no new ones). **17/19 Done Criteria
+  ticked** in `26-story-live-channel-ingestion.md` — the two "real inbound email"/"real WhatsApp
+  message" criteria stay unticked by design, exactly as scoped: they need the owner to register a
+  provider account (a Brevo inbound-parse relay + MX + signing secret for email; a Meta WhatsApp
+  Business Account, phone number id, permanent system-user token, App Secret and a `messages`-
+  subscribed webhook for WhatsApp), which cannot be faked honestly. The plan's Owner Setup section
+  (19 numbered items) and its three discharge commands (`channels:ingest-fixture`,
+  `channels:test-send`, `channels:flush-outbound`) are the path to closing those two once the
+  owner supplies the accounts. This is the **last story in the pipeline's Order table**. Next:
+  WIS-22 plan-review (Opus 5) — final phase of the pipeline.

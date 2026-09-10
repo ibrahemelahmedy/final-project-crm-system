@@ -45,3 +45,12 @@ Schedule::command('sync:pull-customers')
     ->hourly()
     ->withoutOverlapping(30)
     ->runInBackground();
+
+// WIS-22: the channel delivery drain. Same constraints as sync:flush-outbox — no
+// queue worker exists to hand work to, so the inline attempt ChannelOutbox
+// registers is best-effort and capped, and THIS is the delivery guarantee. Five
+// minutes matches the shortest configured backoff (60s).
+Schedule::command('channels:flush-outbound')
+    ->everyFiveMinutes()
+    ->withoutOverlapping(10)
+    ->runInBackground();

@@ -217,7 +217,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 |---|---|---|---|---|
 | 1 | Customer Management | ✅ Done | `web/src/features/customers`, `api/app/Http/Controllers` + `CustomerPolicy` | WIS-4 |
 | 2 | Ticket Management | ✅ Done | `web/src/features/tickets`, `api/app/Models/Ticket.php` | WIS-2 |
-| 3 | Communication Channels | ⚠️ Partial | Every message carries a channel (`api/app/Enums/Channel.php`); `web/src/features/channels` is a read-only overview that states plainly that live ingestion is not in this release | WIS-15 |
+| 3 | Communication Channels | ⚠️ Partial by design | Every message carries a channel (`api/app/Enums/Channel.php`). Live ingestion is wired end to end — signed webhooks for email/WhatsApp/SMS, a per-provider outbox for replies, thread matching, and an embeddable chat widget with no third party (`api/app/Services/Channels`, `api/app/Http/Controllers/Webhooks`, `web/src/features/chat-widget`) — proven against fakes with 96 tests. `/channels` shows Connected/last-sync/error per channel and admins can connect a channel from the UI. Real inbound email and WhatsApp still need the owner to supply a provider account (see Owner Setup in the story plan); the chat widget needs none | WIS-15, WIS-22 |
 | 4 | Agent Dashboard | ✅ Done | `web/src/features/agent-dashboard`, `api/app/Services/DashboardMetrics.php` | WIS-9 |
 | 5 | SLA & Automation | ✅ Done | `api/app/Services/SlaClock.php`, `api/app/Console/Commands/EvaluateSlaCommand.php`, `TicketAssigner.php` | WIS-6 |
 | 6 | Knowledge Base | ✅ Done | `web/src/features/knowledge-base`, `api/app/Services/Kb`, versioned articles | WIS-5 |
@@ -225,7 +225,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 8 | Customer Portal | ✅ Done | `web/src/features/portal`, OTP access codes (`PortalAccess.php`), separate auth from staff | WIS-16 |
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
-| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — connect, configure, test and monitor, plus a data sync engine: a scheduled inbound pull maps and upserts ERP customer records, and outbound ticket/CSAT events are delivered through a persistent outbox with retry and dead-lettering (`api/app/Services/Integrations`, `sync:pull-customers`, `sync:flush-outbox`). Outbound transactional email is live (Brevo SMTP, WIS-27); inbound email, WhatsApp and SMS send-and-receive are still not wired — that is per-provider engineering | WIS-19, WIS-24, WIS-27 |
+| 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — connect, configure, test and monitor, plus a data sync engine: a scheduled inbound pull maps and upserts ERP customer records, and outbound ticket/CSAT events are delivered through a persistent outbox with retry and dead-lettering (`api/app/Services/Integrations`, `sync:pull-customers`, `sync:flush-outbox`). Outbound transactional email is live (Brevo SMTP, WIS-27). Inbound/outbound email, WhatsApp and SMS *code* is wired and tested (WIS-22, see row 3 above); going live for those channels needs the owner to paste a real provider account's credentials, same shape as this row's own ERP gap | WIS-19, WIS-24, WIS-27 |
 | 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20 |
 
 Twenty stories were specified, planned and implemented (WIS-1 … WIS-20). Their specifications
@@ -243,7 +243,7 @@ than guess at it.
 | How many roles, and what each may do | Three: Agent, Team Lead, Administrator. Two roles cannot express "sees the team but not the system"; four invents a distinction the client never described. Fixed in [ADR-004](docs/decisions/ADR-004-authentication.md) and used unchanged by every screen. |
 | Whether customers log in the way staff do | No. External customers are a different audience with a different threat model, so the portal uses a one-time code and a separate session table, never a staff token — [ADR-005](docs/decisions/ADR-005-customer-portal-access.md). |
 | What happens to an SLA target when an admin edits the rule | Existing tickets keep the target they were stamped with; the edit applies going forward. The alternative — recomputing history — would silently rewrite whether past tickets were breached. |
-| Whether "multi-channel" means live inboxes | No. Every message is tagged with its channel and the data model supports ingestion, but wiring real providers is per-provider engineering and was scoped out openly rather than faked. |
+| Whether "multi-channel" means live inboxes | Partially. Every message is tagged with its channel; ingestion, thread matching and reply delivery are fully built and tested against provider fakes (WIS-22), and the chat widget is live with no third party at all. Real inbound email and WhatsApp additionally need the owner to supply a provider account — that credential can't be faked, so those two stay open pending owner setup rather than being declared done. |
 | Working hours for SLA arithmetic | Elapsed wall-clock minutes, not a business-hours calendar — that needs holiday and timezone policy the client never supplied, and inventing one produces confidently wrong numbers. Time spent *pending on the customer* is excluded instead, via `sla_paused_at` / `sla_paused_minutes` ([SlaClock.php](api/app/Services/SlaClock.php)), which is the part an agent would actually dispute. |
 | Which language is the default | Arabic and English are equal; the UI follows the user's stored preference, and the API localises server-sent labels from `Accept-Language`. Neither is hard-coded as primary. |
 | Whether tickets can exist without a customer | No — enforced in the schema, not in a validator. A support ticket with no requester is not a support ticket. |
@@ -453,6 +453,8 @@ guard rather than by controller so the protection on any endpoint is readable at
 | Productivity | `/quick-replies` (+ `/archive`), `/tickets/{ticket}/tasks`, `/tasks`, `/tasks/{task}/complete` |
 | Dashboards | `/agent/summary` · `/queue` · `/sla-risk`, `/team/summary` · `/workload` · `/escalations`, `/admin/summary` |
 | Reports | `/reports/summary`, `/channels/overview` |
+| Channel webhooks (public, signed) | `POST /webhooks/{provider}` (email, WhatsApp, SMS — `throttle:channel-webhook`, no auth, signature-verified per provider) |
+| Chat widget (public) | `POST /widget/chat/start` (`throttle:widget-start`); `GET`/`POST /widget/chat/messages` (bearer session token, `ChatWidgetAuth`, `throttle:widget`) |
 | Knowledge base | `/kb/articles` (+ publish / unpublish / archive / bulk), `/kb/categories`, `/kb/search`, `/kb/preview` |
 | Notifications | `/notifications`, `/unread-count`, `/read-all`, `/{notification}/read` |
 | Branding | `/organization/branding` |
@@ -467,6 +469,7 @@ guard rather than by controller so the protection on any endpoint is readable at
 | Settings | `GET`/`PATCH /settings` |
 | Integrations | `GET /integrations`, `PUT`/`DELETE /integrations/{type}`, `POST /integrations/{type}/test` |
 | Integration data sync | `PUT /integrations/{type}/sync-config`, `GET /integrations/{type}/sync-runs`, `POST /integrations/{type}/sync`, `GET /integrations/{type}/outbox`, `POST /integrations/{type}/outbox/retry` |
+| Channel connections | `GET /channels/connections`, `PUT /channels/connections/{channel}`, `POST /channels/connections/{channel}/test`, `DELETE /channels/connections/{channel}` |
 | Organisation | `/branches`, `/departments`, `/branding` (+ logo upload / delete) |
 
 Response shaping is done by API Resources
@@ -814,8 +817,17 @@ worse than the gap.
   filtering articles. A `kb_articles.locale` migration and semantic retrieval are deliberate
   deferrals. The provider behind every AI surface is selectable (`AI_PROVIDER`), so the feature runs
   on a free tier — see [1. Run it in 60 seconds](#1-run-it-in-60-seconds).
-- **Channels are read-only.** Every message is tagged with its channel and the overview screen
-  reports honestly that live ingestion is not in this release.
+- **Channel ingestion is code-complete, not account-complete.** Every message is tagged with its
+  channel; webhook signature verification, thread matching, idempotent ingestion and outbox-based
+  replies are implemented and tested against provider fakes for email, WhatsApp and SMS, and the
+  chat widget is live end to end with no third party at all. Real inbound email and WhatsApp still
+  need the owner to register a provider account and paste its credentials — deliberately deferred,
+  since neither can be faked honestly, not overlooked (WIS-22).
+- **No attachments over chat channels.** Inbound webhooks accept text only; a customer-attached
+  file is acknowledged but not stored — a deliberate scope cut, not a bug.
+- **No WhatsApp message templates.** Outbound WhatsApp replies use the session-message API, which
+  only works inside Meta's 24-hour customer-service window; template messages for re-engagement
+  outside that window are out of scope.
 - **Test execution is environment-sensitive.** Windows Application Control has blocked PHP
   database drivers on this machine more than once; `api/phpunit.xml` currently targets a local
   PostgreSQL database. Running the API suite with `--parallel` needs a database user with

@@ -4,13 +4,14 @@ import { useChannelPeriod } from '../hooks/useChannelPeriod';
 import { useChannelOverview } from '../hooks/useChannelOverview';
 import { PeriodSelector } from '../components/PeriodSelector';
 import { ChannelCard, type CountState } from '../components/ChannelCard';
+import { ChannelConnectPanel } from '../components/ChannelConnectPanel';
 import { ChannelIcon } from '../components/ChannelIcon';
 import { KNOWN_CHANNEL_VALUES, type ChannelOverviewItem } from '../model/channel';
 
 /**
- * Channels overview (`/channels`, Story 14 / WIS-15). Read-only for every
- * role. It replaces the Story 02 `PagePlaceholder`; the nav manifest entry is
- * unchanged.
+ * Channels overview (`/channels`, Story 14 / WIS-15; live-connect surface
+ * added Story 26 / WIS-22). Read-only for every role except the
+ * Administrator-only `ChannelConnectPanel`.
  *
  * The channel LIST is static — it comes from `App\Enums\Channel` via the API,
  * or from the known-channel copy map while the request is pending/failed — so
@@ -18,9 +19,9 @@ import { KNOWN_CHANNEL_VALUES, type ChannelOverviewItem } from '../model/channel
  * reads `Count unavailable`, and `Retry` refetches. There is no error
  * boundary around the page.
  *
- * An Administrator additionally sees a plain sentence that channel
- * integrations are not available in this release. It is static text, never a
- * button, link, or disclosure — Agents see no configuration affordance at all.
+ * An Administrator additionally sees `ChannelConnectPanel` — connect,
+ * configure, test and disconnect each channel. Agents and Team Leads see
+ * exactly no configuration affordance.
  */
 export function ChannelsPage() {
   const { t } = useT('channels');
@@ -37,6 +38,7 @@ export function ChannelsPage() {
         label_key: `channels.${value}.label`,
         status: 'not_connected',
         ticket_count: 0,
+        connection: null,
       }));
 
   const countFor = (item: ChannelOverviewItem): CountState => {
@@ -56,14 +58,7 @@ export function ChannelsPage() {
 
       <PeriodSelector />
 
-      {isAdmin && (
-        <div className="ch-notice" role="note">
-          <ChannelIcon name="info" size={16} />
-          <p className="ch-notice-text">
-            <strong>{t('page.noticeStrong')}</strong> {t('page.noticeRest')}
-          </p>
-        </div>
-      )}
+      {isAdmin && <ChannelConnectPanel />}
 
       {query.isError && (
         <div className="ch-error" role="alert">

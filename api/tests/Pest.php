@@ -1,9 +1,16 @@
 <?php
 
+use App\Enums\Channel;
+use App\Enums\ChannelProvider;
 use App\Exceptions\AssistUnavailableException;
+use App\Models\ChannelConnection;
+use App\Models\ChannelOutboundMessage;
 use App\Services\Ai\AssistGenerator;
 use App\Services\Ai\AssistResult;
+use App\Services\Channels\ChannelSender;
+use App\Services\Channels\ChannelSenders;
 use App\Services\IntegrationConnectionTester;
+use App\Services\Integrations\OutboundResponse;
 use App\Services\Integrations\OutboundUrlGuard;
 use App\Services\Integrations\OutboundUrlVerdict;
 use Illuminate\Support\Facades\Mail;
@@ -144,6 +151,74 @@ function bindThrowingMailer(): void
 
     config(['mail.default' => 'throwing']);
     app('mail.manager')->forgetMailers();
+}
+
+/**
+ * Story 26 (WIS-22). One fake ChannelSender for every provider, recording each
+ * (connection, message) pair in ->sent and returning a queued OutboundResponse
+ * (falling back to success). Drive different behaviour across calls on this ONE
+ * instance via ->respondWith(), never by rebinding — see bindAssistGenerator's
+ * docblock above.
+ */
+function bindChannelSender(): object
+{
+    $fake = new class implements ChannelSender
+    {
+        /** @var array<int, array{0: ChannelConnection, 1: ChannelOutboundMessage}> */
+        public array $sent = [];
+
+        /** @var array<int, OutboundResponse> */
+        private array $queue = [];
+
+        public function respondWith(OutboundResponse $response): void
+        {
+            $this->queue[] = $response;
+        }
+
+        public function send(ChannelConnection $connection, ChannelOutboundMessage $message): OutboundResponse
+        {
+            $this->sent[] = [$connection, $message];
+
+            return array_shift($this->queue) ?? OutboundResponse::success(200, '');
+        }
+    };
+
+    app()->bind(ChannelSenders::class, fn () => new class($fake) extends ChannelSenders
+    {
+        public function __construct(private readonly ChannelSender $fake) {}
+
+        public function for(ChannelProvider $provider): ChannelSender
+        {
+            return $this->fake;
+        }
+    });
+
+    return $fake;
+}
+
+/**
+ * Story 26 (WIS-22). Creates a connected ChannelConnection with a known
+ * plaintext secret and returns [$connection, $secret], so a test can compute a
+ * real HMAC and drive the REAL verification path. Signature tests use this;
+ * they never stub verify().
+ *
+ * @return array{0: ChannelConnection, 1: string}
+ */
+function connectChannel(Channel $channel, ChannelProvider $provider, array $config = []): array
+{
+    $secret = 'test-secret-'.bin2hex(random_bytes(8));
+
+    $connection = ChannelConnection::factory()->create([
+        'channel' => $channel->value,
+        'provider' => $provider->value,
+        'secret' => $secret,
+        'secret_last_four' => substr($secret, -4),
+        'verify_token' => 'test-verify-token',
+        'config' => $config,
+        'status' => 'connected',
+    ]);
+
+    return [$connection, $secret];
 }
 
 /** The always-throws fake, for exercising the `failed` shape from the first call. */

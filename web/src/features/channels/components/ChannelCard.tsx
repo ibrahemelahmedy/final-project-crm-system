@@ -1,6 +1,7 @@
-import { presentationFor, statusLabel, type ChannelOverviewItem } from '../model/channel';
+import '../channels.css';
+import { presentationFor, statusLabel, statusDotClass, unscopeErrorKey, type ChannelOverviewItem } from '../model/channel';
 import { ChannelIcon } from './ChannelIcon';
-import { useT, formatNumber } from '../../../i18n';
+import { useT, formatNumber, formatRelative } from '../../../i18n';
 
 /** How the count slot should read for this card. `empty` and `unavailable`
  *  both avoid rendering a literal `0` that looks like a measurement. */
@@ -18,6 +19,7 @@ export function ChannelCard({
 }) {
   const { t } = useT('channels');
   const presentation = presentationFor(item.value, t);
+  const connection = item.connection;
 
   return (
     <div className="ch-card">
@@ -28,12 +30,28 @@ export function ChannelCard({
       <div className="ch-card-main">
         <div className="ch-card-heading">
           <span className="ch-card-name">{presentation.label}</span>
-          <span className="ch-badge">
-            <ChannelIcon name="info" size={11} />
+          {/* A distinct dot class per state — colour is never the only
+              signal (docs/design/brief.md). */}
+          <span className={`ch-badge ch-badge-${statusDotClass(item.status)}`}>
+            <span className="ch-badge-dot" aria-hidden="true" />
             {statusLabel(item.status, t)}
           </span>
         </div>
         <p className="ch-card-help">{presentation.helpLine}</p>
+
+        {connection && connection.last_inbound_at && (
+          <p className="ch-card-audit">
+            {t('card.lastInbound', { when: formatRelative(connection.last_inbound_at) })}
+            {' · '}
+            {t('card.inbound24h', { count: connection.inbound_24h })}
+          </p>
+        )}
+
+        {item.status === 'error' && connection?.last_error_key && (
+          <p className="ch-card-audit ch-card-audit-error" role="alert">
+            {t(unscopeErrorKey(connection.last_error_key))}
+          </p>
+        )}
       </div>
 
       <div className="ch-card-count">

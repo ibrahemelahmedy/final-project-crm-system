@@ -23,4 +23,30 @@ enum Channel: string
             self::cases()
         );
     }
+
+    /**
+     * Story 26 (WIS-22). Channels a provider can be connected to.
+     * `web_form` never can — it is the portal form, not a provider.
+     * Derived by exclusion, so a sixth enum case is not silently connectable.
+     *
+     * @return array<int, self>
+     */
+    public static function connectable(): array
+    {
+        return array_values(array_filter(self::cases(), fn (self $c) => $c !== self::WebForm));
+    }
+
+    /**
+     * Story 26 (WIS-22). Channels an agent reply can be delivered OUT over.
+     * `chat` is polled (no outbound send); `web_form` has no return path.
+     *
+     * @return array<int, self>
+     */
+    public static function deliverable(): array
+    {
+        return array_values(array_filter(
+            self::cases(),
+            fn (self $c) => $c !== self::WebForm && $c !== self::Chat
+        ));
+    }
 }

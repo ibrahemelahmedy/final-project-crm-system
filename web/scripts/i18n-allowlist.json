@@ -19,9 +19,10 @@
     "src/features/csat",
     "src/features/reports",
     "src/features/channels",
-    "src/features/notifications"
+    "src/features/notifications",
+    "src/features/chat-widget"
   ],
-  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) closed this list — every feature folder's literals have been migrated into its i18n namespace, matching the pattern established in auth and sla-rules.",
+  "_rootsNote": "Directories the check ENFORCES today. Story 16 (WIS-17) closed this list — every feature folder's literals have been migrated into its i18n namespace, matching the pattern established in auth and sla-rules. Story 26 (WIS-22) reopens it deliberately to add src/features/chat-widget.",
   "literals": [
     { "value": "⌘K", "reason": "Keyboard shortcut badge — must not mirror or translate (brief.md, Story 02)." },
     { "value": "Wisal", "reason": "Product name — rendered from the `brand` key where localized; the bare token is exempt." },

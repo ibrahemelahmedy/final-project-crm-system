@@ -18,6 +18,7 @@ import enChannels from './locales/en/channels.json';
 import enPortal from './locales/en/portal.json';
 import enIntegrations from './locales/en/integrations.json';
 import enOrganization from './locales/en/organization.json';
+import enChatWidget from './locales/en/chat-widget.json';
 
 import arCommon from './locales/ar/common.json';
 import arAuth from './locales/ar/auth.json';
@@ -36,6 +37,7 @@ import arChannels from './locales/ar/channels.json';
 import arPortal from './locales/ar/portal.json';
 import arIntegrations from './locales/ar/integrations.json';
 import arOrganization from './locales/ar/organization.json';
+import arChatWidget from './locales/ar/chat-widget.json';
 
 export type Locale = 'en' | 'ar';
 
@@ -57,6 +59,7 @@ export const NAMESPACES = [
   'portal',
   'integrations',
   'organization',
+  'chat-widget',
 ] as const;
 
 export const resources = {
@@ -78,6 +81,7 @@ export const resources = {
     portal: enPortal,
     integrations: enIntegrations,
     organization: enOrganization,
+    'chat-widget': enChatWidget,
   },
   ar: {
     common: arCommon,
@@ -97,6 +101,7 @@ export const resources = {
     portal: arPortal,
     integrations: arIntegrations,
     organization: arOrganization,
+    'chat-widget': arChatWidget,
   },
 } as const;
 

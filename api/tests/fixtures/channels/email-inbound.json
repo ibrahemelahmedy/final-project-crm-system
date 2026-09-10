@@ -1,0 +1,10 @@
+{
+  "message_id": "<CAF8x7q9k2z@mail.example.com>",
+  "from": {"email": "customer@example.com", "name": "Taylor Morgan"},
+  "subject": "Question about my invoice",
+  "text": "Hi team,\n\nI was charged twice for last month's invoice. Could you take a look?\n\nThanks,\nTaylor",
+  "html": "<p>Hi team,</p><p>I was charged twice for last month's invoice. Could you take a look?</p><p>Thanks,<br>Taylor</p>",
+  "in_reply_to": null,
+  "references": [],
+  "attachments": []
+}
