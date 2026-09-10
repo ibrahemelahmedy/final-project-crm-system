@@ -38,6 +38,7 @@ file, not this column, when the two disagree.
 | 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | **implemented** |
 | 25 | integration-data-sync | [integration-data-sync/00-overview.md](integration-data-sync/00-overview.md) | Integration Data Sync — Inbound Customer Pull & Outbound Event Push (Category 11 completion) | WIS-24 | full |
 | 26 | live-channel-ingestion | [live-channel-ingestion/00-overview.md](live-channel-ingestion/00-overview.md) | Live Channel Ingestion — Inbound Webhooks, Thread Matching & Outbound Channel Replies (Category 3 completion) | WIS-22 | full |
+| 27 | ai-surface-styling | [ai-surface-styling/00-overview.md](ai-surface-styling/00-overview.md) | Style the WIS-23 AI Surfaces — Classification Card & Chat Citations | WIS-28 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -140,6 +141,14 @@ already cite it.
                               only parameter — the FIFTH placeholder AdminAuthorizationTest must
                               substitute), two new public route groups, one new frontend feature.
                               A leaf, and the last story in `.squad/pipeline.md`.
+
+        27 ai-surface-styling ── depends on 24 (the two components and all seven unstyled class
+                              names), 19 (the --ai-* token family, the .assist-* rules and the
+                              Latin-AI-badge decision), 17 (portal.css and its logical-properties
+                              contract) and 04 (.classification-chip and the --prio-high-* pair).
+                              A finishing story, not a feature: two CSS blocks, two markup diffs,
+                              one new test file. No token, no i18n key, no api/ path. A leaf, and
+                              the first story of Round 2.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

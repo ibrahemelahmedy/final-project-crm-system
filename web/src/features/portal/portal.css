@@ -447,3 +447,63 @@
 .portal-prose a {
   color: var(--btn-bg, #4f46e5);
 }
+
+/* --- Chatbot KB citations (Story 27 / WIS-28) ------------------------------
+   Rendered by ChatCitations.tsx INSIDE .portal-message-agent (:298-301), so
+   every contrast pair here is computed against that bubble, not against the
+   page: the chips lift one step onto --bg-card, giving 6.29:1 light and
+   5.63:1 dark for the --portal-link ink they carry.
+
+   Unlike the rest of this file these rules carry NO var(--token, #fallback)
+   fallback. WIS-28's Done Criterion 2 requires that a hex/rgb grep over the
+   new rules return nothing, and a fallback is a hex. It is safe: main.tsx:3
+   imports index.css globally, so every :root token is present on the document
+   that renders the portal. Do not "restore" the fallbacks.
+
+   Logical properties only, per this file's line 1 — RTL mirrors for free. */
+
+.portal-chat-citations {
+  margin-block-start: 8px;
+  padding-block-start: 8px;
+  border-block-start: 1px solid var(--border-card);
+}
+
+.portal-chat-citations-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-block-end: 6px;
+}
+
+.portal-chat-citations-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.portal-chat-citation-link {
+  display: inline-block;
+  max-inline-size: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  /* A long article title must wrap inside the bubble, not widen it. */
+  overflow-wrap: anywhere;
+}
+
+.portal-chat-citation-link:hover {
+  border-color: var(--btn-bg);
+  text-decoration: underline;
+}
+
+.portal-chat-citation-link:focus-visible {
+  outline: 2px solid var(--btn-bg);
+  outline-offset: 2px;
+}

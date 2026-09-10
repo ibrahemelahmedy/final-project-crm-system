@@ -2656,6 +2656,85 @@ body {
 .assist-skeleton-row { display: flex; align-items: center; justify-content: space-between; }
 .assist-skeleton-actions { display: flex; gap: 10px; }
 
+/* ---- AI classification suggestion (Story 27 / WIS-28) ---------------------
+   ClassificationCard.tsx renders inside .meta-panel — a 300px column with
+   20px padding (:2417-2426), i.e. a 260px content box — so the card must
+   wrap, never overflow. It lives here rather than in a feature stylesheet
+   because the tickets feature has none: .classification-chip (:2508) and the
+   whole .assist-* family above are in this file too.
+
+   This block declares NO custom property. Every colour is an --ai-* or
+   --prio-* token already defined in all four theme blocks (:43, :195, :321,
+   :442), which is what makes dark theme automatic rather than a second
+   palette. All sizing is logical, so RTL mirrors with no direction-specific
+   rule — the same contract the .assist-* comment above states.
+
+   Two contrast facts, computed from the WCAG relative-luminance formula and
+   NOT to be "simplified" later:
+   - --text-muted on --ai-card-bg is 4.34:1 and FAILS AA. The confidence line
+     stays --ai-body-fg (9.99:1) and is de-emphasised by size alone.
+   - Apply must not reuse .assist-use-btn's solid --ai-chip-bg fill: white on
+     the dark --ai-chip-bg is 4.24:1. The raised --bg-card treatment below is
+     5.70:1 light / 8.49:1 dark.
+   ------------------------------------------------------------------------ */
+
+.classification-ai {
+  margin-block-start: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--ai-card-bg);
+  border: 1px solid var(--ai-card-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.classification-ai-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.classification-ai-note {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ai-body-fg);
+  /* A long localised category label must wrap inside 260px, not overflow. */
+  overflow-wrap: anywhere;
+}
+.classification-ai-note--meta { font-size: 11px; }
+
+.classification-ai-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.classification-ai-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-action-fg);
+  cursor: pointer;
+}
+.classification-ai-btn--apply {
+  background: var(--bg-card);
+  border: 1px solid var(--ai-card-border);
+  font-weight: 700;
+}
+.classification-ai-btn:hover:not(:disabled) { text-decoration: underline; }
+.classification-ai-btn:disabled { opacity: 0.55; cursor: not-allowed; text-decoration: none; }
+.classification-ai-btn:focus-visible { outline: 2px solid var(--nav-active-fg); outline-offset: 2px; }
+
+.classification-chip-triage { background: var(--prio-high-bg); color: var(--prio-high-fg); }
+
 .tq-subject-link { color: inherit; text-decoration: none; }
 .tq-subject-link:hover, .tq-subject-link:focus-visible { text-decoration: underline; }
 

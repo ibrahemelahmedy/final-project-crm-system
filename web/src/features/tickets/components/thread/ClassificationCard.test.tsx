@@ -107,4 +107,55 @@ describe('ClassificationCard', () => {
       expect(updateTicket).toHaveBeenCalledWith(4821, { category: 'billing', priority: 'urgent' })
     );
   });
+
+  it('wraps the suggestion in the AI card with the Latin AI pill and an actions row', () => {
+    const { container } = renderWithProviders(
+      <ClassificationCard
+        ticket={makeTicket({ category: 'technical', priority: 'high', ai_classification: classification() })}
+      />
+    );
+
+    const card = screen.getByRole('status');
+    expect(card).toHaveClass('classification-ai');
+
+    const pill = container.querySelector('.assist-chip');
+    expect(pill).toHaveTextContent('AI');
+    expect(pill).toHaveAttribute('dir', 'ltr');
+
+    expect(container.querySelector('.classification-ai-actions')).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'Apply' })).toHaveClass('classification-ai-btn--apply');
+    expect(screen.getByRole('button', { name: 'Dismiss' })).toHaveClass('classification-ai-btn');
+    expect(container.querySelector('.classification-ai-note--meta')).toHaveTextContent('92% confident');
+  });
+
+  it('puts the needs-triage pill and the AI pill on one head row', () => {
+    const { container } = renderWithProviders(
+      <ClassificationCard
+        ticket={makeTicket({
+          ai_classification: classification({
+            suggested_category: null,
+            suggested_category_label: null,
+            suggested_priority: null,
+            suggested_priority_label: null,
+            confidence: 0.2,
+            needs_triage: true,
+          }),
+        })}
+      />
+    );
+
+    const head = container.querySelector('.classification-ai-head');
+    expect(head).not.toBeNull();
+    expect(head!.querySelector('.assist-chip')).toHaveTextContent('AI');
+    expect(head!.querySelector('.classification-chip-triage')).toHaveTextContent('Needs triage');
+  });
+
+  it('renders no AI card at all when there is nothing to suggest', () => {
+    const { container } = renderWithProviders(
+      <ClassificationCard ticket={makeTicket({ ai_classification: null })} />
+    );
+
+    expect(container.querySelector('.classification-ai')).toBeNull();
+    expect(container.querySelector('.assist-chip')).toBeNull();
+  });
 });

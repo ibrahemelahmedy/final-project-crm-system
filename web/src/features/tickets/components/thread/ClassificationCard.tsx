@@ -14,6 +14,8 @@ import {
  * triage" pill when the assistant wasn't confident, nothing when the
  * suggestion already matches. Applying is the existing
  * PATCH /api/tickets/{id} (Decision 4).
+ *
+ * Story 27 (WIS-28) styles this card; the render conditions above are frozen.
  */
 export function ClassificationCard({ ticket }: { ticket: Ticket }) {
   const { t } = useT('conversation');
@@ -36,23 +38,29 @@ export function ClassificationCard({ ticket }: { ticket: Ticket }) {
 
       {ai && ai.needs_triage && !hasSuggestion && (
         <div className="classification-ai" role="status">
-          <span className="classification-chip classification-chip-triage">
-            {t('classification.needsTriage')}
-          </span>
+          <div className="classification-ai-head">
+            <span className="assist-chip" dir="ltr">AI</span>
+            <span className="classification-chip classification-chip-triage">
+              {t('classification.needsTriage')}
+            </span>
+          </div>
           <p className="classification-ai-note">{t('classification.notConfident')}</p>
-          <button
-            type="button"
-            className="classification-ai-btn"
-            onClick={() => dismiss.mutate()}
-            disabled={dismiss.isPending}
-          >
-            {t('classification.dismiss')}
-          </button>
+          <div className="classification-ai-actions">
+            <button
+              type="button"
+              className="classification-ai-btn"
+              onClick={() => dismiss.mutate()}
+              disabled={dismiss.isPending}
+            >
+              {t('classification.dismiss')}
+            </button>
+          </div>
         </div>
       )}
 
       {differs && ai && (
         <div className="classification-ai" role="status">
+          <span className="assist-chip" dir="ltr">AI</span>
           <p className="classification-ai-note">
             {t('classification.suggested', {
               category: ai.suggested_category_label,
@@ -60,31 +68,33 @@ export function ClassificationCard({ ticket }: { ticket: Ticket }) {
             })}
           </p>
           {ai.confidence !== null && (
-            <p className="classification-ai-note">
+            <p className="classification-ai-note classification-ai-note--meta">
               {t('classification.confidence', { percent: Math.round(ai.confidence * 100) })}
             </p>
           )}
-          <button
-            type="button"
-            className="classification-ai-btn"
-            onClick={() =>
-              apply.mutate({
-                category: ai.suggested_category!,
-                priority: ai.suggested_priority!,
-              })
-            }
-            disabled={apply.isPending}
-          >
-            {apply.isPending ? t('classification.applying') : t('classification.apply')}
-          </button>
-          <button
-            type="button"
-            className="classification-ai-btn"
-            onClick={() => dismiss.mutate()}
-            disabled={dismiss.isPending}
-          >
-            {t('classification.dismiss')}
-          </button>
+          <div className="classification-ai-actions">
+            <button
+              type="button"
+              className="classification-ai-btn classification-ai-btn--apply"
+              onClick={() =>
+                apply.mutate({
+                  category: ai.suggested_category!,
+                  priority: ai.suggested_priority!,
+                })
+              }
+              disabled={apply.isPending}
+            >
+              {apply.isPending ? t('classification.applying') : t('classification.apply')}
+            </button>
+            <button
+              type="button"
+              className="classification-ai-btn"
+              onClick={() => dismiss.mutate()}
+              disabled={dismiss.isPending}
+            >
+              {t('classification.dismiss')}
+            </button>
+          </div>
         </div>
       )}
     </section>

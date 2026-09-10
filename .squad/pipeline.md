@@ -950,8 +950,8 @@ before the next. Resume from the first unchecked box.
 | 2 | **WIS-29** close untranslated English in the Arabic UI | owner reports substantial English text in the AR UI; phase 1 must inventory the leaks first |
 
 ### WIS-28 — style the WIS-23 AI surfaces
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### WIS-29 — close untranslated English in the Arabic UI
@@ -962,3 +962,82 @@ before the next. Resume from the first unchecked box.
 ### Round 2 run log
 
 - 2026-09-10 — Round 2 opened. WIS-28 + WIS-29 created in Jira. Starting WIS-28 story + plan.
+- 2026-09-10 — WIS-28 story + plan DONE (Opus 5). Created:
+  `.squad/stories/ai-surface-styling/WIS-28/intake.md`,
+  `.squad/plans/ai-surface-styling/27-story-ai-surface-styling.md` (full depth),
+  `.squad/plans/ai-surface-styling/00-overview.md`; row 27 + a dependency-spine entry added to
+  `.squad/plans/00-index.md`. **Decisions, in brief:** (1) `classification-ai*` goes in
+  `web/src/index.css` (inserted between `.assist-skeleton-actions` `:2657` and `.tq-subject-link`
+  `:2659`) and `portal-chat-citations*` at the end of `web/src/features/portal/portal.css` —
+  **nothing moves**, because the Jira Context's premise is wrong: `grep -rn
+  "classification-ai\|portal-chat-citation" web/src/index.css` returns **zero** hits and all ten
+  current references are in the two `.tsx` files. `find web/src -name "*.css"` returns exactly four
+  files and the **tickets feature has no stylesheet**, so `index.css` (where `.classification-chip`
+  `:2508` and the whole `.assist-*` family `:2550-2657` already live) is the convention, not the
+  deviation. (2) **Zero new custom properties**, therefore zero edits to the four theme blocks
+  (`:43`, `:195`, `:321`, `:442`) — every colour is an existing `--ai-*` / `--prio-*` / base token,
+  which discharges the dark-theme half of Done Criterion 3 by *not writing* a declaration.
+  (3) The `AI` pill is `.assist-chip` **reused verbatim** with `dir="ltr"`, honouring WIS-18
+  Decision 6; `"AI"` is already in `web/scripts/i18n-allowlist.json` `literals`, so `i18n:check`
+  passes with no allowlist edit. (4) **Apply must NOT copy `.assist-use-btn`** — its solid
+  `--ai-chip-bg` fill is `#FFFFFF` on `#8B5CF6` = **4.24:1** in dark, below AA for a 12px/700 label;
+  Apply is instead `--ai-action-fg` on `--bg-card` (**5.70:1** light / **8.49:1** dark) and Dismiss
+  is the same ink on the card (**5.19:1** / **7.25:1**). (5) The identical 4.24:1 shortfall in
+  `.assist-chip` itself is **recorded, not fixed** — raising it is a WIS-18-owned token change that
+  repaints every existing AI surface, so a `wisal-ui-review` finding about it is explicitly
+  non-blocking for WIS-28. (6) **`--text-muted` is forbidden inside the classification card**: it
+  computes to **4.34:1** on `--ai-card-bg` and fails AA, so the confidence line stays `--ai-body-fg`
+  (9.99:1) and drops to 11px — `opacity` is banned for the same reason. (7) The new portal rules
+  carry **no `var(--x, #hex)` fallbacks**, deliberately breaking that file's local habit, because a
+  fallback is a hex and Done Criterion 2 forbids one; `web/src/main.tsx:3` loads `index.css`
+  globally so the tokens are always present. (8) Citations render as wrapping chips on `--bg-card`
+  (6.29:1 light / 5.63:1 dark) rather than default bullets. (9) Logical properties only — **not one
+  `[dir="rtl"]` selector in the story**; the sole RTL-motivated markup change is `dir="auto"` on the
+  citation link, because `kb_articles` has no `locale` column (WIS-23's own finding) so an English
+  title can land in an Arabic UI.
+  **Key findings for the execute agent:** (a) there are **seven** unstyled class names, not the six
+  the issue counts — `.classification-chip-triage` (`ClassificationCard.tsx:39`) is the seventh; the
+  base `.classification-chip` **is** styled but the modifier is not. (b) `ChatCitations.tsx:13`'s
+  `citations.length === 0` early return **is** this surface's Empty state and is frozen; neither
+  surface warrants a skeleton, because both payloads arrive with their parent. (c) **jsdom loads no
+  stylesheet** — no test may assert `getComputedStyle`; tests assert class names, `href`s and aria,
+  and the CSS is gated by four greps plus `npm run build`, the only step that actually parses the
+  blocks. (d) `ClassificationCard.test.tsx` exists (5 tests, added by WIS-23's plan-review as Test
+  Plan L67) and is **extended, never rewritten**; `ChatCitations.test.tsx` does **not** exist and is
+  created, using the existing `renderPortal` harness (`web/src/features/portal/testUtils.tsx:15-40`),
+  not a hand-rolled `MemoryRouter`. (e) The card renders in a **260px content box**
+  (`.meta-panel` 300px − 20px padding, `index.css:2417-2426`), so `overflow-wrap: anywhere` on the
+  note and `flex-wrap` on the actions row are load-bearing, not cosmetic. (f) `git diff --name-only`
+  must show **exactly six** paths plus `.squad/` — zero `api/`, zero catalogue `.json`, zero
+  `package.json`. Size: **2 CSS blocks (~110 lines total), 2 markup-only `.tsx` diffs, 1 extended
+  test file (+3 tests), 1 new test file (+2 tests)** — the smallest story in either round.
+  `.squad` files left uncommitted for the execute agent, matching Round 1. Next: WIS-28 execute
+  (Sonnet 5), attaching only `27-story-ai-surface-styling.md`.
+- 2026-09-10 — WIS-28 execute DONE (Sonnet 5), commit `d521be5`. Implemented straight from the plan:
+  `.classification-ai*` block added to `web/src/index.css` between `.assist-skeleton-actions` and
+  `.tq-subject-link`; `.portal-chat-citations*` block appended to the end of
+  `web/src/features/portal/portal.css`. `ClassificationCard.tsx` markup-only: Latin `AI`
+  `.assist-chip` pill (`dir="ltr"`), `.classification-ai-head` wrapper in the triage branch,
+  `.classification-ai-actions` row in both branches, `.classification-ai-btn--apply` on Apply,
+  `.classification-ai-note--meta` on the confidence line — every render condition, hook and `t()`
+  key frozen. `ChatCitations.tsx` markup-only: `.portal-chat-citations-list` on the `<ul>`,
+  `portal-chat-citation-link` class + `dir="auto"` on the `<Link>`. Tests: +3 in
+  `ClassificationCard.test.tsx` (5 existing untouched), new `ChatCitations.test.tsx` (+2, via
+  `renderPortal`). Results: `npm run test` **628 pass / 102 files** (baseline 623/101); `npm run
+  lint` clean (5 pre-existing warnings, none in touched files); `npm run build` exit 0 (parses both
+  CSS blocks). RTL/dark greps: hex/rgb over the new CSS → nothing; physical property/value over the
+  diff → nothing; new `--token:` declaration → nothing (one comment-line false positive only); every
+  `var()` in the diff (`--ai-action-fg`, `--ai-body-fg`, `--ai-card-bg`, `--ai-card-border`,
+  `--bg-card`, `--border-card`, `--btn-bg`, `--nav-active-fg`, `--prio-high-bg`, `--prio-high-fg`,
+  `--text-muted`) resolves to a token declared 4× in `index.css`. `:focus-visible` outline present
+  in both new blocks. Contrast (computed, from the plan): Apply `--ai-action-fg` on `--bg-card`
+  5.70:1 light / 8.49:1 dark; Dismiss same ink on `--ai-card-bg` 5.19:1 / 7.25:1; triage pill
+  `--prio-high-*` 4.84:1 light; confidence line `--ai-body-fg` 9.99:1 (kept off `--text-muted`
+  which is 4.34:1 fail, de-emphasised by 11px size only); citation link `--btn-bg` on `--bg-card`
+  6.29:1 / 5.63:1. `git diff --name-only` → the 6 plan paths + `.squad/pipeline.md` +
+  `.squad/plans/00-index.md` (phase-1); zero `api/`, zero catalogue `.json`, zero `package.json`.
+  `wisal-ui-review`: no blocking findings on the rules this story adds; deferrals recorded per
+  Decision 5 — `.assist-chip` dark 4.24:1, `ChatBubble` inline styles, `.portal-message-customer`
+  `#fff` (all pre-existing, not fixed). Off-scale values in the new CSS (`border-radius: 8px`,
+  `font-size: 11px`, non-4px paddings) are literal from plan Decision 6 / Task 1+3 — flagged for
+  plan-review. Done Criteria 1-6 all complete. Next: WIS-28 plan-review (Opus 5).
