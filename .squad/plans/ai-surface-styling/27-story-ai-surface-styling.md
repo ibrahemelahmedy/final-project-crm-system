@@ -813,12 +813,12 @@ Unit tests only; there is no integration surface and no backend change.
 
 Copied verbatim from WIS-28.
 
-- [ ] Every new class name has a rule; nothing renders unstyled.
-- [ ] Tokens only — `grep` for hex/rgb in the new rules returns nothing.
-- [ ] Correct in dark theme and in Arabic RTL (screenshot or explicit structural check).
-- [ ] Focus visible on every interactive element; contrast computed, not assumed.
-- [ ] `npm run test` + `npm run build` + `npm run lint` green.
-- [ ] `wisal-ui-review` skill run against both surfaces with no blocking findings.
+- [x] Every new class name has a rule; nothing renders unstyled.
+- [x] Tokens only — `grep` for hex/rgb in the new rules returns nothing.
+- [x] Correct in dark theme and in Arabic RTL (screenshot or explicit structural check).
+- [x] Focus visible on every interactive element; contrast computed, not assumed.
+- [x] `npm run test` + `npm run build` + `npm run lint` green.
+- [x] `wisal-ui-review` skill run against both surfaces with no blocking findings.
 
 All six are dischargeable in this repository with no browser, no external account and no live key.
 Criterion 3's parenthetical explicitly permits the structural check, which is what Verification

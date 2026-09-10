@@ -952,7 +952,7 @@ before the next. Resume from the first unchecked box.
 ### WIS-28 — style the WIS-23 AI surfaces
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### WIS-29 — close untranslated English in the Arabic UI
 - [ ] story + plan (Opus 5)
@@ -1041,3 +1041,44 @@ before the next. Resume from the first unchecked box.
   `#fff` (all pre-existing, not fixed). Off-scale values in the new CSS (`border-radius: 8px`,
   `font-size: 11px`, non-4px paddings) are literal from plan Decision 6 / Task 1+3 — flagged for
   plan-review. Done Criteria 1-6 all complete. Next: WIS-28 plan-review (Opus 5).
+- 2026-09-10 — WIS-28 plan-review **CLEARED** (Opus 5) against
+  `27-story-ai-surface-styling.md` at commit **`3666325`** (the execute run-log line above names
+  `d521be5`, which is not on `main` — an amended predecessor; same correction pattern as WIS-21 and
+  WIS-25 above). **6/6 Done Criteria met**, all 7 tasks applied, all 13 edge cases covered; zero
+  deviations, zero scope creep. Independently verified: `npm run test` **628 passed / 102 files**
+  (exactly the plan's predicted 628/102), `npm run lint` exit 0 (5 pre-existing warnings, none in a
+  touched file; `i18n:check` clean across 20 roots / 366 files with no allowlist edit),
+  `npm run build` exit 0. `git diff 3666325~1 3666325 --name-only` → exactly the 6 app paths + 5
+  `.squad/` paths; zero `api/`, zero `package.json`, zero catalogue `.json`. Task-7 greps all
+  return nothing: no hex/rgb in either new block, no physical property anywhere in the diff, no new
+  `--token:` declaration. All 11 `var()` tokens used (`--ai-card-bg`, `--ai-card-border`,
+  `--ai-body-fg`, `--ai-action-fg`, `--prio-high-bg`, `--prio-high-fg`, `--bg-card`,
+  `--border-card`, `--text-muted`, `--btn-bg`, `--nav-active-fg`) are declared **4×** each in
+  `index.css` — one per theme block — which is the dark-theme evidence. Four of the plan's computed
+  contrast ratios were **recomputed from scratch and match to two decimals**: Apply `#7C3AED` on
+  `#FFFFFF` = 5.70:1; citation link `#4F46E5` on `#FFFFFF` = 6.29:1 and `#818CF8` on `#1C1D24` =
+  5.63:1. Also computed the one pair the plan did not state — `.portal-chat-citations-label`
+  `--text-muted` on the agent bubble's `--bg-page` — at **4.55:1 light / 7.24:1 dark**, i.e. it
+  passes AA at 11px/700 and is not a new finding. `:focus-visible` exists for both new interactive
+  elements (`index.css` `.classification-ai-btn:focus-visible`,
+  `portal.css` `.portal-chat-citation-link:focus-visible`). Every one of the 12 class names in the
+  two `.tsx` files resolves to a rule in exactly one of the two stylesheets. Markup diff is
+  markup-only: `hasSuggestion`, `differs`, both `onClick` bodies, both `disabled` expressions,
+  every `t()` key, both `role="status"` and the `citations.length === 0` early return are
+  byte-identical; the five pre-existing `ClassificationCard` tests are untouched (pure append).
+  `wisal-ui-review`: **no new blocking finding**; the 3 pre-existing deferrals (`.assist-chip` dark
+  4.24:1, `ChatBubble` inline styles, `.portal-message-customer` `#fff`) are confirmed untouched by
+  this commit and out of scope per Decision 5. **Off-scale-values judgement** (flagged by execute):
+  implementing them verbatim was **correct, and not a defect**. `border-radius: 8px`,
+  `font-size: 11px` and the 10/12, 5/8, 3/8, 6px values are off `brief.md:119-123`'s literal scales,
+  but each matches the already-shipped sibling rule the story is required to sit beside —
+  `.assist-use-btn` is `border-radius: 8px; padding: 7px 14px`, `.assist-chip` is `5px` / `2px 6px`
+  / 10px, `.assist-label` and `.assist-meta` are both `font-size: 11px`, `.classification-chip` is
+  11px / `6px` / `4px 8px`, and `portal.css:264` is `2px 8px`. The brief's 4px grid and type scale
+  are applied at layout altitude throughout this repo, not to badge/button micro-chrome; snapping
+  these in isolation would break visual parity with WIS-18's card family, which Decision 3 makes
+  binding. One genuine nit, **non-blocking and deliberately not fixed**: `.classification-ai` is
+  `border-radius: 8px` while `.assist-card` — the card Decision 3 says it must read as — is `10px`
+  (also the brief's `md`). Worth folding into a future tokens/scale story alongside the
+  `.assist-chip` deferral, not worth diverging from a signed-off plan here. Next: WIS-29 story +
+  plan (Opus 5).
