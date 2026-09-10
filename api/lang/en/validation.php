@@ -160,9 +160,63 @@ return [
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
 
+    /*
+    | Story 28 (WIS-29). Form Request messages() overrides moved here so they
+    | resolve through the catalogue. `validation.custom` keys are GLOBAL across
+    | every Form Request, so a message that must not leak onto a same-named
+    | field of another form is keyed under a form-specific prefix and its
+    | Form Request keeps a one-line messages() that points here explicitly.
+    | English values are byte-identical to the strings that were deleted,
+    | except `mimes` (now the framework's :values placeholder) and the two
+    | `max` messages (now a :mb replacement), per plan Task 9.
+    */
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'per_page' => [
+            'max' => 'The audit log returns at most :max entries per page.',
+        ],
+        'branch' => [
+            'name_required' => 'Enter a branch name.',
+            'name_unique' => 'A branch with that name already exists.',
+        ],
+        'timezone' => [
+            'timezone' => 'Choose a valid timezone.',
+        ],
+        'primary_color' => [
+            'regex' => 'Enter a valid 6-digit hex color, e.g. #4F46E5.',
+        ],
+        'branch_id' => [
+            'required' => 'Choose a branch.',
+            'exists' => 'Choose a valid branch.',
+        ],
+        'department' => [
+            'name_required' => 'Enter a department name.',
+        ],
+        'file' => [
+            'max' => 'That file is too large. The limit is :mb MB.',
+            'mimes' => 'That file type is not accepted. Allowed types: :types.',
+            'required' => 'Choose a file to attach.',
+        ],
+        'logo' => [
+            'max' => 'That file is too large. The limit is :mb MB.',
+            'mimes' => 'That file type is not accepted. Allowed types: :types.',
+            'image' => 'Choose an image file.',
+            'required' => 'Choose a logo to upload.',
+        ],
+        'email' => [
+            'unique' => 'A customer with this email already exists.',
+            'duplicate_customer' => 'A customer with this email already exists.',
+        ],
+        'user_email' => [
+            'unique' => 'A user with this email address already exists.',
+        ],
+        'role' => [
+            'required' => 'Select a role. Every user has exactly one.',
+        ],
+        'ticket_message' => [
+            'body_required' => 'Write a reply before sending.',
+        ],
+        'status' => [
+            'invalid_transition' => 'Cannot move a :from ticket to :to.',
         ],
     ],
 
@@ -182,5 +236,36 @@ return [
         'priority' => 'priority',
         'customer_id' => 'customer',
         'assignee_id' => 'assignee',
+
+        // Story 28 (WIS-29). The 19 in-scope form fields that had no entry, so
+        // Laravel was humanising the raw snake_case identifier into an Arabic
+        // sentence. Deliberately omitted: the ~30 query-string / internal
+        // params never surfaced in a form error (page, per_page, sort, dir,
+        // filter, q, from, to, period, ids, action, actor_id, event, config,
+        // settings, conflict_rules, inbound_field_map, outbound_events,
+        // verify_token, provider, mentions, is_active, visibility, assigned_to,
+        // due_at, at_risk_threshold_pct, auto_close_after_days,
+        // escalate_after_minutes, escalate_to_role, escalation_enabled,
+        // first_response_minutes, notify_on_breach, resolution_minutes,
+        // inbound_enabled, outbound_enabled) — intake §4.
+        'phone' => 'phone number',
+        'company' => 'company',
+        'tier' => 'tier',
+        'description' => 'description',
+        'category' => 'category',
+        'channel' => 'channel',
+        'branch_id' => 'branch',
+        'region' => 'region',
+        'endpoint_url' => 'endpoint URL',
+        'inbound_url' => 'inbound URL',
+        'outbound_url' => 'outbound URL',
+        'primary_color' => 'primary color',
+        'logo' => 'logo',
+        'file' => 'file',
+        'code' => 'code',
+        'identifier' => 'identifier',
+        'secret' => 'secret',
+        'excerpt' => 'excerpt',
+        'kb_category_id' => 'category',
     ],
 ];

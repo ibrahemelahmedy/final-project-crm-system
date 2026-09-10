@@ -34,13 +34,6 @@ class UpdateCustomerRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'email.unique' => 'A customer with this email already exists.',
-        ];
-    }
-
     protected function prepareForValidation(): void
     {
         if ($this->has('email') && $this->input('email') !== null) {

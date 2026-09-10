@@ -26,16 +26,21 @@ class UploadBrandingLogoRequest extends FormRequest
         ];
     }
 
+    /**
+     * `logo.image` / `logo.required` resolve through the global
+     * `validation.custom.logo.*` keys. `logo.max` and `logo.mimes` keep a
+     * one-liner: the MB figure and the uppercase type list are computed from
+     * config at message time (Story 28 / WIS-29).
+     */
     public function messages(): array
     {
-        $mb = round(config('branding.max_kb') / 1024, 1);
-
         return [
-            'logo.max' => "That file is too large. The limit is {$mb} MB.",
-            'logo.mimes' => 'That file type is not accepted. Allowed types: '
-                .strtoupper(implode(', ', config('branding.allowed_extensions'))).'.',
-            'logo.image' => 'Choose an image file.',
-            'logo.required' => 'Choose a logo to upload.',
+            'logo.max' => __('validation.custom.logo.max', [
+                'mb' => round(config('branding.max_kb') / 1024, 1),
+            ]),
+            'logo.mimes' => __('validation.custom.logo.mimes', [
+                'types' => strtoupper(implode(', ', config('branding.allowed_extensions'))),
+            ]),
         ];
     }
 }

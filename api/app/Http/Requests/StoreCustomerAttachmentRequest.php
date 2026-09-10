@@ -22,15 +22,21 @@ class StoreCustomerAttachmentRequest extends FormRequest
         ];
     }
 
+    /**
+     * `file.required` resolves through the global `validation.custom.file.*`
+     * key. `file.max` and `file.mimes` keep a one-liner: the MB figure and the
+     * uppercase type list are computed from config at message time (Story 28 /
+     * WIS-29).
+     */
     public function messages(): array
     {
-        $mb = round(config('attachments.max_kb') / 1024, 1);
-
         return [
-            'file.max' => "That file is too large. The limit is {$mb} MB.",
-            'file.mimes' => 'That file type is not accepted. Allowed types: '
-                .strtoupper(implode(', ', config('attachments.allowed_extensions'))).'.',
-            'file.required' => 'Choose a file to attach.',
+            'file.max' => __('validation.custom.file.max', [
+                'mb' => round(config('attachments.max_kb') / 1024, 1),
+            ]),
+            'file.mimes' => __('validation.custom.file.mimes', [
+                'types' => strtoupper(implode(', ', config('attachments.allowed_extensions'))),
+            ]),
         ];
     }
 }

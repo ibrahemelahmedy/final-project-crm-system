@@ -24,12 +24,15 @@ class SaveDepartmentRequest extends FormRequest
         ];
     }
 
+    /**
+     * `branch_id.*` resolve through the global `validation.custom.branch_id.*`
+     * keys; `name` is a shared attribute so it points at a form-specific key
+     * (Story 28 / WIS-29).
+     */
     public function messages(): array
     {
         return [
-            'branch_id.required' => 'Choose a branch.',
-            'branch_id.exists' => 'Choose a valid branch.',
-            'name.required' => 'Enter a department name.',
+            'name.required' => __('validation.custom.department.name_required'),
         ];
     }
 

@@ -23,11 +23,4 @@ class SaveBrandingRequest extends FormRequest
             'primary_color' => ['present', 'nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'primary_color.regex' => 'Enter a valid 6-digit hex color, e.g. #4F46E5.',
-        ];
-    }
 }

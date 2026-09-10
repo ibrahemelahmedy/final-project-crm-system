@@ -25,9 +25,10 @@ class StoreTicketMessageRequest extends FormRequest
         ];
     }
 
+    /** `body` is shared across several forms, so this points at a form-specific key. */
     public function messages(): array
     {
-        return ['body.required' => 'Write a reply before sending.'];
+        return ['body.required' => __('validation.custom.ticket_message.body_required')];
     }
 
     protected function prepareForValidation(): void

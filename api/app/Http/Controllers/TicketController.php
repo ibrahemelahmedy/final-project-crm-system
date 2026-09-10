@@ -146,7 +146,10 @@ class TicketController extends Controller
             $next = TicketStatus::from($data['status']);
             if (! $ticket->status->canTransitionTo($next)) {
                 throw ValidationException::withMessages([
-                    'status' => "Cannot move a {$ticket->status->label()} ticket to {$next->label()}.",
+                    'status' => __('validation.custom.status.invalid_transition', [
+                        'from' => $ticket->status->label(),
+                        'to' => $next->label(),
+                    ]),
                 ]);
             }
             $wasFinished = in_array($ticket->status, [TicketStatus::Resolved, TicketStatus::Closed], true);

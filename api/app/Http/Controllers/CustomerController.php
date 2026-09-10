@@ -181,9 +181,11 @@ class CustomerController extends Controller
             throw $e;
         }
 
+        $message = __('validation.custom.email.duplicate_customer');
+
         return response()->json([
-            'message' => 'A customer with this email already exists.',
-            'errors' => ['email' => ['A customer with this email already exists.']],
+            'message' => $message,
+            'errors' => ['email' => [$message]],
             'duplicate_customer_id' => $existing->id,
             'duplicate_customer_name' => $existing->name,
         ], 422);

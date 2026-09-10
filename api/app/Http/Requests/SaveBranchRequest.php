@@ -25,12 +25,17 @@ class SaveBranchRequest extends FormRequest
         ];
     }
 
+    /**
+     * `name` and `timezone` are attributes other Form Requests also use, so
+     * these point at form-specific catalogue keys rather than relying on the
+     * global `validation.custom.<attr>.<rule>` fallback (Story 28 / WIS-29).
+     */
     public function messages(): array
     {
         return [
-            'name.required' => 'Enter a branch name.',
-            'name.unique' => 'A branch with that name already exists.',
-            'timezone.timezone' => 'Choose a valid timezone.',
+            'name.required' => __('validation.custom.branch.name_required'),
+            'name.unique' => __('validation.custom.branch.name_unique'),
+            'timezone.timezone' => __('validation.custom.timezone.timezone'),
         ];
     }
 }

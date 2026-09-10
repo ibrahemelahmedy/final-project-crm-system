@@ -31,11 +31,15 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
+    /**
+     * `role.required` resolves through the global `validation.custom.role.required`
+     * key; `email` is shared with the customer forms, so it points at a
+     * user-specific key (Story 28 / WIS-29).
+     */
     public function messages(): array
     {
         return [
-            'role.required' => 'Select a role. Every user has exactly one.',
-            'email.unique' => 'A user with this email address already exists.',
+            'email.unique' => __('validation.custom.user_email.unique'),
         ];
     }
 }

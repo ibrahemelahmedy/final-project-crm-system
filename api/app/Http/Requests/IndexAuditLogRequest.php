@@ -33,11 +33,4 @@ class IndexAuditLogRequest extends FormRequest
             'per_page' => ['nullable', 'integer', 'min:5', 'max:'.self::MAX_PER_PAGE],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'per_page.max' => 'The audit log returns at most '.self::MAX_PER_PAGE.' entries per page.',
-        ];
-    }
 }
