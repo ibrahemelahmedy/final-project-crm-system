@@ -10,11 +10,7 @@ enum CustomerTier: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Standard => 'Standard',
-            self::Premium => 'Premium',
-            self::Enterprise => 'Enterprise',
-        };
+        return __('enums.customer_tier.'.$this->value);
     }
 
     /** @return list<string> */

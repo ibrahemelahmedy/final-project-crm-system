@@ -17,11 +17,7 @@ enum ArticleStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Draft => 'Draft',
-            self::Published => 'Published',
-            self::Archived => 'Archived',
-        };
+        return __('enums.article_status.'.$this->value);
     }
 
     /** @return array<int, string> */

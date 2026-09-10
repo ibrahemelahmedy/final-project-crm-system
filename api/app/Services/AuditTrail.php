@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * The single write path for the audit trail (Story 08).
@@ -115,34 +116,15 @@ class AuditTrail
         ];
     }
 
+    /**
+     * Resolved through the translator so the audit viewer's ACTION column
+     * arrives in the caller's language. `AuditLog` accepts arbitrary event
+     * strings, so an unknown event still returns its raw slug — never the
+     * dotted catalogue key.
+     */
     public static function label(string $event): string
     {
-        return match ($event) {
-            self::USER_CREATED => 'User created',
-            self::USER_UPDATED => 'User updated',
-            self::USER_ROLE_CHANGED => 'Role changed',
-            self::USER_DEACTIVATED => 'User deactivated',
-            self::USER_ACTIVATED => 'User activated',
-            self::SETTING_CHANGED => 'Setting changed',
-            self::SLA_RULE_CHANGED => 'SLA rule changed',
-            self::KB_ARTICLE_PUBLISHED => 'Article published',
-            self::KB_ARTICLE_UNPUBLISHED => 'Article unpublished',
-            self::KB_ARTICLE_ARCHIVED => 'Article archived',
-            self::INTEGRATION_CONNECTED => 'Integration connected',
-            self::INTEGRATION_UPDATED => 'Integration updated',
-            self::INTEGRATION_DISCONNECTED => 'Integration disconnected',
-            self::INTEGRATION_TEST_FAILED => 'Integration test failed',
-            self::INTEGRATION_SYNC_CONFIG_CHANGED => 'Integration sync configured',
-            self::CHANNEL_CONNECTION_CHANGED => 'Channel connection changed',
-            self::BRANCH_CHANGED => 'Branch changed',
-            self::DEPARTMENT_CHANGED => 'Department changed',
-            self::BRANDING_CHANGED => 'Branding changed',
-            self::LOGIN_SUCCESS => 'Signed in',
-            self::LOGIN_FAILED => 'Failed sign-in',
-            self::LOGIN_INACTIVE => 'Blocked sign-in (deactivated)',
-            self::LOGOUT => 'Signed out',
-            default => $event,
-        };
+        return Lang::has('audit.'.$event) ? __('audit.'.$event) : $event;
     }
 
     /**

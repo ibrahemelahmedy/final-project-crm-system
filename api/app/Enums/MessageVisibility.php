@@ -9,9 +9,6 @@ enum MessageVisibility: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Public => 'Reply to customer',
-            self::Internal => 'Internal note',
-        };
+        return __('enums.message_visibility.'.$this->value);
     }
 }

@@ -61,13 +61,7 @@ class Ticket extends Model
 
     public static function categoryLabel(string $category): string
     {
-        return match ($category) {
-            'billing' => 'Billing',
-            'technical' => 'Technical',
-            'account' => 'Account',
-            'feature_request' => 'Feature request',
-            default => 'General',
-        };
+        return __('enums.category.'.(in_array($category, self::CATEGORIES, true) ? $category : 'general'));
     }
 
     public function assignee(): BelongsTo

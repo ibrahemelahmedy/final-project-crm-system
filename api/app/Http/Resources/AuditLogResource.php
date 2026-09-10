@@ -27,7 +27,7 @@ class AuditLogResource extends JsonResource
                 'id' => $this->user_id,
                 // A deleted actor keeps its email; the viewer shows that
                 // rather than an empty cell.
-                'name' => $this->whenLoaded('user', fn () => $this->user?->name) ?: ($this->email ?: 'Unknown'),
+                'name' => $this->whenLoaded('user', fn () => $this->user?->name) ?: ($this->email ?: __('audit.unknown_actor')),
                 'email' => $this->email,
             ],
             'target' => [

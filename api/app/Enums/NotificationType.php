@@ -21,13 +21,7 @@ enum NotificationType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::SlaAtRisk => 'SLA at risk',
-            self::SlaBreached => 'SLA breached',
-            self::Mention => 'Mention',
-            self::TaskDue => 'Task due',
-            self::CustomerReplied => 'Customer replied',
-        };
+        return __('enums.notification_type.'.$this->value);
     }
 
     /** The panel/page icon + tone key — WisalNotifications-*.dc.html rows. */

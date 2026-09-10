@@ -9,9 +9,6 @@ enum QuickReplyStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Active => 'Active',
-            self::Archived => 'Archived',
-        };
+        return __('enums.quick_reply_status.'.$this->value);
     }
 }

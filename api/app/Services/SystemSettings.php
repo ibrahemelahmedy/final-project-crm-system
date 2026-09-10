@@ -31,39 +31,39 @@ class SystemSettings
     {
         return [
             'password_min_length' => [
-                'label' => 'Minimum password length',
+                'label' => __('settings.password_min_length.label'),
                 'type' => 'integer',
                 'rules' => ['integer', 'min:8', 'max:128'],
                 'default' => 8,
-                'help' => 'Characters required in an internal user password. Cannot be lower than 8.',
+                'help' => __('settings.password_min_length.help'),
             ],
             'password_expiry_days' => [
-                'label' => 'Password expiry (days)',
+                'label' => __('settings.password_expiry_days.label'),
                 'type' => 'integer',
                 'rules' => ['integer', 'min:0', 'max:3650'],
                 'default' => 0,
-                'help' => 'Days before a password must be changed. 0 disables expiry.',
+                'help' => __('settings.password_expiry_days.help'),
             ],
             'session_timeout_minutes' => [
-                'label' => 'Session timeout (minutes)',
+                'label' => __('settings.session_timeout_minutes.label'),
                 'type' => 'integer',
                 'rules' => ['integer', 'min:5', 'max:10080'],
                 'default' => 480,
-                'help' => 'Idle minutes before a signed-in user is asked to sign in again.',
+                'help' => __('settings.session_timeout_minutes.help'),
             ],
             'max_login_attempts' => [
-                'label' => 'Maximum failed sign-in attempts',
+                'label' => __('settings.max_login_attempts.label'),
                 'type' => 'integer',
                 'rules' => ['integer', 'min:1', 'max:20'],
                 'default' => 5,
-                'help' => 'Failed attempts per minute before an account is throttled.',
+                'help' => __('settings.max_login_attempts.help'),
             ],
             'audit_log_retention_days' => [
-                'label' => 'Audit log retention (days)',
+                'label' => __('settings.audit_log_retention_days.label'),
                 'type' => 'integer',
                 'rules' => ['integer', 'min:30', 'max:3650'],
                 'default' => 365,
-                'help' => 'How long audit entries are kept. Never lower than 30 days.',
+                'help' => __('settings.audit_log_retention_days.help'),
             ],
         ];
     }

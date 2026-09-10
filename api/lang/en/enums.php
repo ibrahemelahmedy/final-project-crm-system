@@ -12,6 +12,11 @@
  *
  * The English values are byte-identical to the strings these enums previously
  * hard-coded, so no existing consumer or test changes.
+ *
+ * `category` is a `Ticket::CATEGORIES` string, not a backed enum. It lives here
+ * because it is rendered exactly the same way — `category_label` travels with
+ * `category` on every ticket resource — and `Ticket::categoryLabel()` resolves
+ * it through this array.
  */
 return [
     'priority' => [
@@ -40,5 +45,49 @@ return [
         'agent' => 'Agent',
         'team_lead' => 'Team Lead',
         'administrator' => 'Administrator',
+    ],
+
+    'customer_tier' => [
+        'standard' => 'Standard',
+        'premium' => 'Premium',
+        'enterprise' => 'Enterprise',
+    ],
+
+    'article_status' => [
+        'draft' => 'Draft',
+        'published' => 'Published',
+        'archived' => 'Archived',
+    ],
+
+    'notification_type' => [
+        'sla_at_risk' => 'SLA at risk',
+        'sla_breached' => 'SLA breached',
+        'mention' => 'Mention',
+        'task_due' => 'Task due',
+        'customer_replied' => 'Customer replied',
+    ],
+
+    'quick_reply_status' => [
+        'active' => 'Active',
+        'archived' => 'Archived',
+    ],
+
+    'task_status' => [
+        'open' => 'Open',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ],
+
+    'message_visibility' => [
+        'public' => 'Reply to customer',
+        'internal' => 'Internal note',
+    ],
+
+    'category' => [
+        'general' => 'General',
+        'billing' => 'Billing',
+        'technical' => 'Technical',
+        'account' => 'Account',
+        'feature_request' => 'Feature request',
     ],
 ];

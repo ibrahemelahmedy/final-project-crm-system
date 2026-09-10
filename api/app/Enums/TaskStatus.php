@@ -10,10 +10,6 @@ enum TaskStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Open => 'Open',
-            self::Completed => 'Completed',
-            self::Cancelled => 'Cancelled',
-        };
+        return __('enums.task_status.'.$this->value);
     }
 }

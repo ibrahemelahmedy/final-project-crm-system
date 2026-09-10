@@ -38,7 +38,8 @@ file, not this column, when the two disagree.
 | 24 | ai-customer-intelligence | [ai-customer-intelligence/00-overview.md](ai-customer-intelligence/00-overview.md) | AI Auto-Classification & Customer Chatbot (Category 7 completion) | WIS-23 | **implemented** |
 | 25 | integration-data-sync | [integration-data-sync/00-overview.md](integration-data-sync/00-overview.md) | Integration Data Sync — Inbound Customer Pull & Outbound Event Push (Category 11 completion) | WIS-24 | full |
 | 26 | live-channel-ingestion | [live-channel-ingestion/00-overview.md](live-channel-ingestion/00-overview.md) | Live Channel Ingestion — Inbound Webhooks, Thread Matching & Outbound Channel Replies (Category 3 completion) | WIS-22 | full |
-| 27 | ai-surface-styling | [ai-surface-styling/00-overview.md](ai-surface-styling/00-overview.md) | Style the WIS-23 AI Surfaces — Classification Card & Chat Citations | WIS-28 | full |
+| 27 | ai-surface-styling | [ai-surface-styling/00-overview.md](ai-surface-styling/00-overview.md) | Style the WIS-23 AI Surfaces — Classification Card & Chat Citations | WIS-28 | **implemented** |
+| 28 | i18n-english-leaks | [i18n-english-leaks/00-overview.md](i18n-english-leaks/00-overview.md) | Closing the Remaining English Leaks in the Arabic UI | WIS-29 | full |
 
 ## Two plan depths — read this before implementing
 
@@ -149,6 +150,20 @@ already cite it.
                               A finishing story, not a feature: two CSS blocks, two markup diffs,
                               one new test file. No token, no i18n key, no api/ path. A leaf, and
                               the first story of Round 2.
+
+        28 i18n-english-leaks ── depends on 15 (lang/{en,ar}/enums.php, SetLocale, the
+                              label-travels-with-its-value contract, and BOTH existing parity
+                              tests), 16 (check-no-literals, the allowlist, and the seven
+                              __i18nArabicSweep tests whose chrome-only scoping is exactly why the
+                              leaks survived), 08·09·10·11·04 (the six screens the leaks show on)
+                              and 23 (config/mail.php + both customer mailables). A CORRECTION
+                              story: the ar catalogues were already at perfect parity and the
+                              literal gate already green — the missing strings were hard-coded in
+                              PHP match() arms that never called __(). Fixes 6 enums, 3 non-enum
+                              label maps, 24 controller/FormRequest messages, 19 validation
+                              attributes and one frontend event map; adds the reflection guard the
+                              codebase lacked. No migration, no endpoint, no component, no CSS.
+                              A leaf, and the last story of Round 2.
 
         20 organization-settings ── depends on 01·02·03·08·15·18, coordinates with 16
                               (closes Category 12's remaining three bullets; reuses 08's admin

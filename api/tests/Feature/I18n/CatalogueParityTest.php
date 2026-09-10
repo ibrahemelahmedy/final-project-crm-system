@@ -28,11 +28,13 @@ it('has no Arabic value byte-identical to its English counterpart', function () 
     $en = flattenLang('en');
     $ar = flattenLang('ar');
 
-    // The placeholder `custom.*` scaffold is exempt — it ships identical in
-    // Laravel's own published files and is never rendered.
+    // Only Laravel's published placeholder key is exempt. Story 28 (WIS-29)
+    // narrowed this from a blanket `custom.*` skip: `validation.custom` now
+    // holds 20+ real user-facing strings that must be genuinely translated,
+    // not copy-pasted from English. The flattened key carries the file prefix.
     $identical = [];
     foreach ($en as $key => $value) {
-        if (str_starts_with($key, 'custom.')) {
+        if ($key === 'validation.custom.attribute-name.rule-name') {
             continue;
         }
         if (isset($ar[$key]) && is_string($value) && $ar[$key] === $value) {
