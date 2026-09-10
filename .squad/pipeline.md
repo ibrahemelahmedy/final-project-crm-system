@@ -58,7 +58,7 @@ stay unchecked until the owner verifies.
 ### WIS-22 — live channel ingestion
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ## Run log
 
@@ -841,3 +841,97 @@ stay unchecked until the owner verifies.
   `channels:test-send`, `channels:flush-outbound`) are the path to closing those two once the
   owner supplies the accounts. This is the **last story in the pipeline's Order table**. Next:
   WIS-22 plan-review (Opus 5) — final phase of the pipeline.
+- 2026-09-10 — WIS-22 plan-review DONE (Opus 5). **CLEARED.** Reviewed commit `a2b0a12` (128 files,
+  ~11.6k insertions) against `26-story-live-channel-ingestion.md`. **17/19 Done Criteria applied**;
+  all 77 tasks, all 34 edge cases and all 96 Test-Plan items mapped to real code with `file:line`
+  evidence. Independently re-verified, not taken from the execute report: `php artisan test`
+  **803 pass / 3624 assertions / 0 failures**; `npm run test` **623 pass / 101 files**;
+  `npm run build` exit 0; `npm run lint` clean (the 5 pre-existing warnings only);
+  `i18n:check` clean across **20 roots** (the new `src/features/chat-widget` root is enforced);
+  `migrate` → `migrate:rollback --step=4` → `migrate` clean, exactly the four tables in dependency
+  order; `config:cache`/`config:clear` clean; `schedule:list` shows `channels:flush-outbound`
+  every five minutes beside `sync:flush-outbox`; `pint --test` dirty on 25 files, **zero overlap**
+  with any path this story touched.
+  Security review of the sensitive surfaces, each confirmed at the code and by a test, not by
+  reading a docblock: `route:list` proves `api/webhooks/channels/{provider}` carries
+  `throttle:channel-webhook` and **nothing else** — no `auth:sanctum`, no `portal`; the four
+  `api/admin/channels*` routes carry `auth:sanctum` + `ActiveUserOnly` + `EnsureAdministrator`;
+  the widget is one public bootstrap (`throttle:widget-start`) plus three routes behind
+  `ChatWidgetAuth` + `throttle:widget`, and `ChatWidgetAuth` never calls `Auth::login()`, with
+  `ChatWidgetTest.php:150` proving a widget token is refused by `/api/portal/me` and `/api/user`
+  and a portal token refused by the widget. Signature verification is real in all three adapters
+  (`hash_hmac` over `$request->getContent()`, compared with `hash_equals`) and
+  `SignatureVerificationTest.php:50` proves the raw-body rule by rejecting a valid digest computed
+  over a re-encoded body. SSRF: `grep -rln "Http::" api/app` returns **exactly four** files, the
+  fourth being `Services/Channels/ChannelHttpClient.php`, which calls `guard->validate()` at
+  `:30` and `:71` — at send time, on every call, proven per-call by `ChannelWebhookSsrfTest.php:56`.
+  The WIS-24 DNS carve-out survived (`ChannelOutboxDispatcher.php:68-69`) with its pair of tests.
+  Secret sweep clean: no `getMessage()` in `Services/Channels` or `Controllers/Webhooks`, no
+  `secret`/`verify_token` in any Resource beyond `secret_last_four`, no credential in the three
+  fixtures. `config/cors.php`, `SecurityHeaders.php`, `web/vercel.json`, `Integration.php`,
+  `IntegrationResource.php` and every `integrations` migration byte-unchanged; no new composer or
+  npm dependency.
+  **Discharge path proven live, not just wired:** created a throwaway connected `whatsapp` row and
+  ran `php artisan channels:ingest-fixture whatsapp_cloud` twice — `outcome: created, ticket_id: 65`
+  then `outcome: duplicate, ticket_id: 65`, through the real HMAC verification and the real
+  idempotency ledger, with no provider account in existence. Rows removed afterwards; the dev
+  database is back to zero on all four tables. `channels:test-send` and `channels:ingest-fixture`
+  both warn and exit 0 on a not-connected channel, matching `MailTestCommand`'s posture.
+  **One real defect found and fixed** (documentation, Task 77): three rows of README's endpoint
+  tables named URIs that do not route — `POST /webhooks/{provider}` (actual:
+  `/webhooks/channels/{provider}`), `POST /widget/chat/start` (actual: `/widget/chat/sessions`)
+  and `GET /channels/connections` (actual: `GET /admin/channels`). An owner pasting the webhook URL
+  from README into the Meta or Twilio dashboard would have registered a 404. Also added the
+  **"Connect a channel"** run-it subsection Task 77 required and the executor omitted — the three
+  discharge commands and the per-provider webhook URL to register, in the shape WIS-26/27 used for
+  `ai:smoke` / `mail:test`. Documentation-only; the suite was already green at this code state and
+  no code path changed. `:220`'s Category 3 row was left at `⚠️ Partial by design` rather than the
+  `✅ Done` the plan asked for — accepted as a deviation in the honest direction, since two criteria
+  genuinely await provider accounts, and the row's prose states exactly that.
+  The two unticked criteria are **pending, not failed**, mirroring WIS-26's and WIS-27's accepted
+  precedent. This was the last story in the Order table.
+
+## Pipeline complete
+
+All six stories are built, reviewed and cleared. Final commits:
+
+| Story | Feature | Execute commit | Plan-review |
+|---|---|---|---|
+| WIS-25 | realistic seed data | `87ef4ef` | CLEARED — 10/10 |
+| WIS-26 | free AI provider seam | `3110c28` (+ `f1b12eb`) | CLEARED — 8/8 (live Groq key since wired) |
+| WIS-27 | Brevo transactional email | `48564ad` | CLEARED — 14/14 code-verifiable |
+| WIS-23 | AI auto-classify + portal chatbot | `6a008f9` | CLEARED — 6/6 |
+| WIS-24 | integration data sync | `39e37c4` (+ `5aacfa6`) | CLEARED — 11/11 |
+| WIS-22 | live channel ingestion | `a2b0a12` | CLEARED — 17/19, 2 owner-gated |
+
+**Suite at pipeline end:** backend 803 pass / 3624 assertions; frontend 623 pass / 101 files;
+build, lint and `i18n:check` clean. No new composer or npm dependency across all six stories.
+
+### What remains owner-gated
+
+Nothing here is a defect and nothing here is code work. Each needs an external account only the
+owner can create, and each has a discharge command already wired and fake-tested.
+
+1. **WIS-27 — the two email-delivery criteria.** Needs Brevo SMTP credentials (a verified sender
+   plus an SMTP key, not the account password) in `api/.env`. Discharge: `php artisan mail:test
+   you@example.com`. Everything else about the mailer is live and proven under `Mail::fake()`.
+2. **WIS-22 Done Criterion 1 — a real inbound email creates a ticket and the reply is delivered.**
+   Two dependencies, not one: an inbound-parse relay with an MX record pointed at it plus a shared
+   signing secret, **and** WIS-27's Brevo credentials above for the reply half. Owner Setup items
+   9-13 in the story plan. Webhook URL: `https://<api-host>/api/webhooks/channels/email_webhook`.
+3. **WIS-22 Done Criterion 2 — a WhatsApp message creates a ticket and an agent reply reaches the
+   phone.** Needs a Meta app with WhatsApp added and a WhatsApp Business Account attached, the
+   **phone number id**, a **permanent system-user token** (not the 24-hour temporary one the
+   dashboard offers first — the usual reason this stops working overnight), the **App Secret** for
+   `X-Hub-Signature-256`, an owner-chosen **verify token**, and the callback registered at
+   `https://<api-host>/api/webhooks/channels/whatsapp_cloud` with the **`messages` field
+   separately subscribed** — registering the URL alone is silent and delivers nothing. Owner Setup
+   items 1-8. Discharge: send a real message, then `php artisan channels:test-send whatsapp <id>`.
+
+**WIS-26's live key is already wired** (Groq free tier, `AI_PROVIDER=groq`), so its two
+formerly-pending criteria are ticked and no AI work is outstanding.
+
+**Required for delivery on every channel, and easy to miss:** a running scheduler —
+`php artisan schedule:work`, or the cron entry. `channels:flush-outbound` and `sync:flush-outbox`
+are scheduled commands; the inline send attempt is best-effort and capped, and the drain is the
+actual delivery guarantee. Without a scheduler the features appear broken rather than pending.

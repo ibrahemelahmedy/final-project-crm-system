@@ -153,6 +153,43 @@ cd api && php artisan config:clear && php artisan mail:test you@example.com
 `mail:test` prints the resolved mailer, from-address and locale before sending and reports an SMTP
 failure as one line. `--kind=portal|csat|plain` and `--locale=en|ar` pick what is sent.
 
+### Connect a channel
+
+The chat widget needs **no account at all**: run both dev servers and open
+`http://localhost:5173/widget-demo.html`, or embed the one-line snippet
+`<script src="/widget.js" data-site-key="…" data-origin="https://your-app"></script>` on any static
+page. Set the allowed origins under **Channels → Connect** first.
+
+Email, WhatsApp and SMS need a provider account. Connect each one under **Channels → Connect**
+(paste the credentials, press **Test**), then register the webhook URL the panel shows in the
+provider's own dashboard:
+
+| Channel | Webhook URL to register |
+|---|---|
+| Email (inbound-parse relay) | `https://<api-host>/api/webhooks/channels/email_webhook` |
+| WhatsApp (Meta Cloud API) | `https://<api-host>/api/webhooks/channels/whatsapp_cloud` — also subscribe the `messages` field, or the URL is registered and delivers nothing |
+| SMS (Twilio) | `https://<api-host>/api/webhooks/channels/twilio_sms` — `POST`, with the **exact** public URL: Twilio signs the URL, so a rewriting proxy or a differing trailing slash breaks verification |
+
+Three commands prove each half, before and after credentials exist:
+
+```bash
+cd api
+php artisan channels:ingest-fixture whatsapp_cloud   # replays a stored payload through the REAL
+                                                     # signature check and ingestion; prints the
+                                                     # outcome (created / duplicate) and ticket id
+php artisan channels:test-send whatsapp <ticket-id>  # enqueues one reply and attempts it inline
+php artisan channels:flush-outbound                  # the drain; also runs every 5 minutes
+```
+
+`channels:ingest-fixture` run twice prints `created` then `duplicate` against the same ticket —
+that is the idempotency guarantee, visible without any provider account. Both discharge commands
+warn and exit 0 when the channel is not connected, the same way `mail:test` does with
+`MAIL_MAILER=log`. **Delivery needs a running scheduler** (`php artisan schedule:work` or the cron
+entry): the inline send attempt is best-effort and capped, and `channels:flush-outbound` is the
+actual guarantee. Full per-provider setup is in
+[.squad/plans/live-channel-ingestion/26-story-live-channel-ingestion.md](.squad/plans/live-channel-ingestion/26-story-live-channel-ingestion.md)
+under **Owner Setup**.
+
 The SLA engine is a scheduled command, not a queued job — nothing drains the `jobs` table in
 this repository. Run it directly, or run the scheduler:
 
@@ -452,9 +489,10 @@ guard rather than by controller so the protection on any endpoint is readable at
 | Customers | `apiResource customers`, `/customers/facets`, `/customers/bulk`, `/{customer}/tickets`, `/notes`, `/attachments` |
 | Productivity | `/quick-replies` (+ `/archive`), `/tickets/{ticket}/tasks`, `/tasks`, `/tasks/{task}/complete` |
 | Dashboards | `/agent/summary` · `/queue` · `/sla-risk`, `/team/summary` · `/workload` · `/escalations`, `/admin/summary` |
-| Reports | `/reports/summary`, `/channels/overview` |
-| Channel webhooks (public, signed) | `POST /webhooks/{provider}` (email, WhatsApp, SMS — `throttle:channel-webhook`, no auth, signature-verified per provider) |
-| Chat widget (public) | `POST /widget/chat/start` (`throttle:widget-start`); `GET`/`POST /widget/chat/messages` (bearer session token, `ChatWidgetAuth`, `throttle:widget`) |
+| Reports | `/reports/summary` |
+| Channels | `GET /channels/overview` (status, 24h inbound count and error state per channel) |
+| Channel webhooks (public, signed) | `GET`/`POST /webhooks/channels/{provider}` — `email_webhook`, `whatsapp_cloud`, `twilio_sms`. `throttle:channel-webhook` only: **no** `auth:sanctum`, **no** `portal`; the per-provider signature over the raw body *is* the authentication. `GET` is Meta's subscription handshake and is `405` for every other provider |
+| Chat widget (public) | `POST /widget/chat/sessions` (`throttle:widget-start`); then `GET`/`POST /widget/chat/messages` and `POST /widget/chat/identify` (bearer session token, `ChatWidgetAuth`, `throttle:widget`) |
 | Knowledge base | `/kb/articles` (+ publish / unpublish / archive / bulk), `/kb/categories`, `/kb/search`, `/kb/preview` |
 | Notifications | `/notifications`, `/unread-count`, `/read-all`, `/{notification}/read` |
 | Branding | `/organization/branding` |
@@ -469,7 +507,7 @@ guard rather than by controller so the protection on any endpoint is readable at
 | Settings | `GET`/`PATCH /settings` |
 | Integrations | `GET /integrations`, `PUT`/`DELETE /integrations/{type}`, `POST /integrations/{type}/test` |
 | Integration data sync | `PUT /integrations/{type}/sync-config`, `GET /integrations/{type}/sync-runs`, `POST /integrations/{type}/sync`, `GET /integrations/{type}/outbox`, `POST /integrations/{type}/outbox/retry` |
-| Channel connections | `GET /channels/connections`, `PUT /channels/connections/{channel}`, `POST /channels/connections/{channel}/test`, `DELETE /channels/connections/{channel}` |
+| Channel connections | `GET /channels`, `PUT /channels/{channel}`, `POST /channels/{channel}/test`, `DELETE /channels/{channel}` — `{channel}` is one of `email`, `whatsapp`, `chat`, `sms`; `web_form` is never connectable and is `404` |
 | Organisation | `/branches`, `/departments`, `/branding` (+ logo upload / delete) |
 
 Response shaping is done by API Resources
