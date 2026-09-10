@@ -409,27 +409,54 @@ should print nothing.
 
 ## Done Criteria (verbatim from WIS-29)
 
-- [ ] Phase 1 delivers a complete, categorised inventory of every leak with file:line.
+- [x] Phase 1 delivers a complete, categorised inventory of every leak with file:line.
       → **`.squad/stories/i18n-english-leaks/WIS-29/intake.md` §0-§9.** Already delivered.
-- [ ] Every frontend leak: key added to both `en` and `ar` namespaces, literal replaced with `t()`.
+- [x] Every frontend leak: key added to both `en` and `ar` namespaces, literal replaced with `t()`.
       → Tasks 15, 16, 17.
-- [ ] Every backend leak: `api/lang/ar/*.php` key added, parity with `api/lang/en/*.php` restored.
+- [x] Every backend leak: `api/lang/ar/*.php` key added, parity with `api/lang/en/*.php` restored.
       → Tasks 1-13b. Note the framing correction: parity was never broken; the keys did not exist in
       **either** locale.
-- [ ] Enum labels: every enum resolves through `__()` in both locales; a test asserts parity.
+- [x] Enum labels: every enum resolves through `__()` in both locales; a test asserts parity.
       → Tasks 3, 22.
-- [ ] Server-stored English shown to end users is either localised at render or flagged as an
+- [x] Server-stored English shown to end users is either localised at render or flagged as an
       accepted deferral with a reason.
       → Localised: Tasks 5, 6, 8. Deferred with reasons: intake §7 (seeded content, no `locale`
       column) and intake §4 (the 30 query-param `attributes`).
-- [ ] `check-no-literals.mjs` still green; a new test asserts `lang/en` vs `lang/ar` key-set parity.
+- [x] `check-no-literals.mjs` still green; a new test asserts `lang/en` vs `lang/ar` key-set parity.
       → `npm run lint`. The parity test **already exists**
       (`api/tests/Feature/I18n/CatalogueParityTest.php:18-25`); Task 14 makes it actually cover this
       story's strings, and Tasks 22-24 add the guard that was genuinely missing.
-- [ ] `npm run test`, `npm run build`, `php artisan test` all green.
+- [x] `npm run test`, `npm run build`, `php artisan test` all green.
       → Test plan table.
-- [ ] README / STATUS i18n notes corrected to match reality.
+- [x] README / STATUS i18n notes corrected to match reality.
       → Task 25.
+
+---
+
+## Plan-review verdict (2026-09-10, Opus 5)
+
+**CLEARED — 8/8 Done Criteria, all 25 tasks applied, all 10 edge cases covered.**
+Gates: `php artisan test` 808/808 (3846 assertions) · `npm run test` 631/631 (103 files) ·
+`npm run lint` + `check-no-literals.mjs` (366 files / 20 roots) · `npm run build` exit 0 ·
+`tests/Feature/I18n` 17/17. Diff shape clean — zero forbidden paths, no scope creep.
+
+Guards proven to fail, then reverted: reintroducing a hard-coded `match()` in
+`MessageVisibility::label()` fails `EnumLabelLocaleTest.php:110`; copying an English string into
+`ar` `validation.custom.branch.name_required` fails `CatalogueParityTest.php:45`.
+
+Five executor deviations judged sound: the Task 14 key literal must carry the `validation.`
+file prefix (`CatalogueParityTest.php:12` flattens with it); `validation.custom` keys are global
+so `name`/`email`/`body` are form-prefixed with a one-line `messages()` (no English is reachable
+on any path); `mimes` keeps an uppercase `:types` one-liner because the byte-identity contract
+(`CustomerAttachmentTest.php:59` pins `PDF`) outranks the plan's soft "prefer `:values`";
+`CustomerLocale::forTicket()` is nullable because both mailables reach the ticket through a
+`BelongsTo`; English values are byte-identical throughout and no existing assertion changed.
+
+**Plan defect recorded (not the executor's):** Task 9 keys `per_page.max` globally, so the four
+other index requests (`IndexCustomerRequest.php:29`, `IndexKbArticleRequest.php:30`,
+`IndexNotificationRequest.php:26`, `IndexUserRequest.php:30`) now render the audit-log wording.
+Localised in both locales, and `per_page` is one of the 30 query params intake §4 records as never
+surfacing in a form error — cosmetic, tracked separately.
 
 ---
 

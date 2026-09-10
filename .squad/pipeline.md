@@ -957,7 +957,7 @@ before the next. Resume from the first unchecked box.
 ### WIS-29 — close untranslated English in the Arabic UI
 - [x] story + plan (Opus 5)
 - [x] execute (Sonnet 5)
-- [ ] plan-review (Opus 5)
+- [x] plan-review (Opus 5)
 
 ### Round 2 run log
 
@@ -1187,3 +1187,58 @@ before the next. Resume from the first unchecked box.
   (4) TicketController.php was already pint-dirty at HEAD (pre-existing, same fixer list with/without
   the change); left untouched per "no repo-wide pint". All other touched files pint-clean.
   Next: WIS-29 plan-review (Opus 5).
+- 2026-09-10 — **WIS-29 plan-review CLEARED (Opus 5). 8/8 Done Criteria**, all 25 tasks applied,
+  all 10 edge cases covered, zero ❌/⚠️/🔀. Ticked the 8 boxes in
+  `.squad/plans/i18n-english-leaks/28-story-i18n-english-leaks.md` and appended a verdict section
+  there. **Gates re-run independently:** `php artisan test` **808/808** (3846 assertions) ·
+  `tests/Feature/I18n` 17/17 · `npm run test` **631/631** (103 files) · `npm run lint` +
+  `check-no-literals.mjs` (**366 files / 20 roots**, no allowlist edit) · `npm run build` exit 0.
+  **Diff shape clean:** 52 files, exactly the plan's "Expected diff" + `.squad` bookkeeping; zero
+  `features/{integrations,channels,chat-widget,portal}`, zero migrations, zero seeders, zero
+  allowlist, `ClassificationPrompt.php` untouched, no English category map in TypeScript
+  (`display.ts` values are i18n keys per its `:15-21` convention).
+  **Both guards proven to fail, then reverted:** reintroducing a hard-coded `match()` in
+  `MessageVisibility::label()` fails `EnumLabelLocaleTest.php:110` with the enum + case named;
+  copying the English string into `ar` `validation.custom.branch.name_required` fails
+  `CatalogueParityTest.php:45` naming that exact key — which settles deviation (1): the 22
+  `validation.custom.*` strings are genuinely covered by the no-identical-stub assertion.
+  **`ar` render check** (tinker, `App::setLocale('ar')`): customer tier `مؤسسي`, KB status `منشورة`,
+  notification `اتفاقية الخدمة معرّضة للخطر`, category chip + queue filter
+  (`TicketController.php:289`) all Arabic with the unknown slug still falling to `عام`, Audit ACTION
+  `إنشاء مستخدم` with an unknown event returned verbatim (`foo.bar`), settings labels + help Arabic,
+  validation `أدخل اسم الفرع.` / `لا يمكن نقل تذكرة من حالة محلولة إلى مفتوحة.`, `*_changed`
+  sentences via the `tickets` translator, CSAT locale `ar` for an Arabic ticket vs `en` for a
+  non-Arabic one vs `en` for a null relation.
+  **All five execute deviations judged SOUND:** (1) the Task 14 literal must carry the `validation.`
+  file prefix — the plan's own form would have been the dead one; (2) form-prefixed
+  `validation.custom` keys leave **no English reachable on any path** (`email.unique` global =
+  customer wording, both user forms override to `user_email.unique`; every other global key has
+  exactly one owning form — grep-verified); (3) the uppercase `:types` one-liner is required
+  because the plan's byte-identity contract (`CustomerAttachmentTest.php:59` pins `PDF`) outranks
+  its soft ":values" preference, and `file/logo.max` via `:mb` is exactly plan edge case 5;
+  (4) `forTicket(?Ticket)` is correct — both relations are `BelongsTo`, so non-null would be a type
+  lie; (5) byte-identity holds across `enums.php` / `audit.php` / `settings.php` /
+  `validation.custom` against the pre-commit `match()` arms, and no existing assertion changed.
+  **One PLAN defect recorded (not the executor's):** Task 9 keys `per_page.max` globally, so
+  `IndexCustomerRequest.php:29`, `IndexKbArticleRequest.php:30`, `IndexNotificationRequest.php:26`
+  and `IndexUserRequest.php:30` now render the audit-log wording. Localised in both locales — not an
+  English leak — and `per_page` is one of the 30 query params intake §4 records as never surfacing
+  in a form error. Cosmetic; tracked separately, non-blocking.
+
+## Round 2 complete
+
+Both Round 2 stories are through all three phases and CLEARED by `/plan-review`. **Nothing in
+Round 2 is owner-gated** — no credential, no provider account, no external approval is needed for
+any part of either story; both are fully shipped on `main`.
+
+| Story | Final commits | Verdict |
+|---|---|---|
+| **WIS-28** style the WIS-23 AI surfaces | `d6428f1` (plan-review CLEARED, 6/6 Done Criteria) and the execute commits it records | ✅ CLEARED |
+| **WIS-29** close untranslated English in the Arabic UI | `b0907b8` (enum + server label maps), `6ffa971` (Form Request `messages()` → `validation.custom`), `c318d8d` (activity feed, mail locale, docs), `7d867e7` (run-log) | ✅ CLEARED |
+
+Repository state at Round 2 close: backend **808/808** (3846 assertions), frontend **631/631**
+(103 files), `npm run lint` + `check-no-literals.mjs` green over 366 files / 20 roots, `npm run
+build` exit 0. The i18n retrofit is complete and now guarded by three tests in
+`api/tests/Feature/I18n/` plus `ActivityList.test.tsx`; the only English left in an Arabic UI is
+seeded demo **content** (no `locale` column on `kb_articles`, `quick_replies`, `branches`,
+`departments`), recorded as an accepted deferral in `README.md`, `STATUS.md` and intake §7.
