@@ -955,8 +955,8 @@ before the next. Resume from the first unchecked box.
 - [x] plan-review (Opus 5)
 
 ### WIS-29 — close untranslated English in the Arabic UI
-- [ ] story + plan (Opus 5)
-- [ ] execute (Sonnet 5)
+- [x] story + plan (Opus 5)
+- [x] execute (Sonnet 5)
 - [ ] plan-review (Opus 5)
 
 ### Round 2 run log
@@ -1082,3 +1082,108 @@ before the next. Resume from the first unchecked box.
   (also the brief's `md`). Worth folding into a future tokens/scale story alongside the
   `.assist-chip` deferral, not worth diverging from a signed-off plan here. Next: WIS-29 story +
   plan (Opus 5).
+- 2026-09-10 — WIS-29 story + plan DONE (Opus 5). Created:
+  `.squad/stories/i18n-english-leaks/WIS-29/intake.md` (carries the full phase-1 inventory),
+  `.squad/plans/i18n-english-leaks/28-story-i18n-english-leaks.md` (full depth, 25 tasks),
+  `.squad/plans/i18n-english-leaks/00-overview.md`; row 28 + a dependency-spine entry added to
+  `.squad/plans/00-index.md`.
+  **Leak count by category (28 sites, ≈111 strings in scope):** A — enum `label()` bypassing
+  `__()`: **6 enums / 18 strings** (`CustomerTier`, `ArticleStatus`, `NotificationType`,
+  `QuickReplyStatus`, `TaskStatus`, `MessageVisibility`; `TaskStatus` is a dead payload and
+  `MessageVisibility` is dead code, the other four render on every customer row / KB row /
+  notification row / quick-reply row). B — non-enum backend label maps: **4 sites / 39 strings**
+  (`Ticket::categoryLabel()` 5 — the highest-traffic leak, on every ticket detail page AND the queue
+  category filter; `AuditTrail::label()` 23 — the whole Audit Log ACTION column;
+  `SystemSettings::definitions()` 10 — the whole System Settings form body; `AuditLogResource:30`
+  `'Unknown'`). C — hard-coded English messages on the wire: **13 sites / 24 strings** (22
+  `messages()` entries across 11 Form Requests, `TicketController:149`, `CustomerController:185`).
+  D — `validation.attributes` covers 15 of 70 validated fields: **19 in scope, 30 query-params
+  deferred**. E — frontend rendering a raw server value: **3 sites** (`ActivityList.tsx` maps 8 of
+  13 event slugs and interpolates the RAW enum value into the three `*_changed` sentences;
+  `QuickReplyPicker:149` and `SystemSettingsPage:78` knowingly unchanged). F —
+  `MAIL_CUSTOMER_LOCALE=en`: **1**. G — seeded demo CONTENT in English: **accepted deferral**.
+  H — RTL: **0 findings**.
+  **Ruled out with evidence, do not re-sweep:** frontend catalogue parity is PERFECT (0 missing of
+  ~1,400 keys either direction; the 140 asymmetries are ar-only CLDR plurals and the 10 Latin `ar`
+  values are 8 interpolation templates + 2 correct `toggleTo: "English"`); backend lang parity is
+  PERFECT (0 missing of 208, 0 English values) and `CatalogueParityTest.php` **already asserts
+  exactly what Done Criterion 6 asks for**; `check-no-literals` green over 366 files / 20 roots AND
+  over the 3 uncovered paths, with no allowlist entry hiding prose; all 119 dynamic `t()` keys the
+  SPA can build from a backend enum resolve in both locales (verified by booting real i18next and
+  calling `exists(k,{lng,fallbackLng:[]})`), so WIS-22/24's `error_key`/`label_key` architecture is
+  sound; AI summary/reply/chatbot all localise (`AssistTranscript:74-86`, `ChatPrompt:40`); the
+  classification `reason` IS forced English (`ClassificationPrompt:26`) but is **never serialised
+  and never rendered** — leave that prompt alone.
+  **Decisions, in brief:** (1) A and B are one fix and it is an `__()` REFACTOR, not an `ar` key
+  add — there is no `en` key either. (2) The guard is a **reflection test** over `app/Enums/*`
+  asserting `label()` differs between locales, not a third parity test — the two parity tests
+  already exist and are structurally blind to this bug class. (3) `ActivityList`'s `EVENT_KEYS`
+  grows 8→13 with a test pinning the vocabulary to the four backend write sites, and `{{value}}`
+  is translated before interpolation via the existing `*_FALLBACK_LABELS` maps. (4) `categoryLabel`
+  is fixed **server-side only** — WIS-11 forbids duplicating the map in TS; the one new frontend
+  block (`tickets:category.*`) exists solely for the `category_changed` activity line. (5) The 22
+  `messages()` overrides are **deleted** into `validation.custom`, and **`CatalogueParityTest:35`'s
+  blanket `custom.` skip MUST be narrowed to the literal placeholder key** or all 22 new strings are
+  silently exempt from the test guarding them — the single easiest thing to get wrong in this story.
+  (6) `MAIL_CUSTOMER_LOCALE` is **fixed, not deferred**: a new `App\Services\CustomerLocale::
+  forTicket()` renders `ar` when the ticket's subject/description contains Arabic, falling back to
+  the config value — no `customers.locale` column, no migration; the column stays a follow-up.
+  (7) **No partition of the fix list** — every in-scope item is a mechanical string move; the only
+  partitions are seeded content (§7) and 30 non-form validation attributes (§4), both recorded with
+  reasons. (8) `MessageVisibility::label()` is localised rather than deleted.
+  **Key findings for the execute agent:** (a) the framing in the Jira issue is wrong in a way that
+  matters — parity was never broken, so "add the missing `ar` key" is not the fix anywhere;
+  (b) the WIS-17 `__i18nArabicSweep` tests hand-feed `tier_label: 'Enterprise'` into their fixtures
+  and assert only *chrome* strings, which is exactly why every §1 leak survived — extend that
+  scoping, do not trust it; (c) `web/src/i18n/instance.ts:168-176` degrades a missing key to
+  `humanizeKey()`, i.e. plausible English, which is why nothing ever failed loudly —
+  `getMissingKeyCount()` is exported and is the cheapest manual verification; (d) English values
+  moved into `lang/en/*.php` must be **byte-identical** so no existing assertion changes;
+  (e) `AuditTrail::label()`'s `default => $event` and `Ticket::categoryLabel()`'s
+  `default => 'General'` are both load-bearing and must survive the refactor; (f) `php` here is
+  Herd's (`C:\Users\ibrah\.config\herd\bin\php.bat`, 8.4.24) and `phpunit.xml` targets local pgsql —
+  `pdo_sqlite` is unavailable. Size: 24 backend files + 3 backend tests + 6 frontend files + 2 docs;
+  no migration, no endpoint, no component, no CSS. `.squad` files left uncommitted for the execute
+  agent, matching Round 1. Next: WIS-29 execute (Sonnet 5), attaching only
+  `28-story-i18n-english-leaks.md`.
+- 2026-09-10 — WIS-29 execute DONE (Sonnet 5), commits `b0907b8` (enums + server label maps +
+  guards + phase-1 .squad), `6ffa971` (Form Request messages() -> validation.custom + attributes),
+  `<c3>` (frontend ActivityList + MAIL_CUSTOMER_LOCALE + docs). Confirmed baseline first:
+  **backend 803 pass / 3624 assertions, frontend 628 pass / 102 files** (matches the task's
+  stated Round-2 baseline, not the stale memory 419). After: **backend 808 pass / 3846 assertions**
+  (+5: 1 reflection guard in EnumLabelLocaleTest, 4 in the new ServerLabelLocaleTest),
+  **frontend 631 pass / 103 files** (+3 in the new ActivityList.test.tsx). `npm run lint` clean
+  (5 pre-existing warnings only), `npm run build` exit 0, `check-no-literals.mjs` green over 366
+  files / 20 roots, both existing `CatalogueParityTest` assertions green + the new guards.
+  **Task 14 proof:** temporarily copied one `ar` `validation.custom` value to match `en` ->
+  `CatalogueParityTest` failed naming `validation.custom.file.required` as a copy-paste stub;
+  reverted -> green. So the 22 new custom strings ARE covered by the no-identical-stub assertion.
+  **`ar` spot-check (all render Arabic):** tier chip مؤسسي, article منشورة, notification
+  اتفاقية الخدمة معرّضة للخطر, task مفتوحة, quick-reply نشط, message visibility رد على العميل,
+  ticket category chip + queue filter الفوترة (unknown -> عام), Audit Log ACTION تسجيل الدخول
+  (unknown event -> raw slug `foo.bar`), System Settings label الحد الأدنى لطول كلمة المرور + help,
+  invalid-transition validation error لا يمكن نقل تذكرة من حالة مفتوحة إلى مغلقة,
+  `status_changed` activity row renders محلولة not `resolved`, `CustomerLocale::forTicket()`
+  returns `ar` for an Arabic ticket / `en` otherwise (CSAT + channel-reply mail, MailTemplateRenderTest
+  ar path green).
+  **Deviations from the plan's literal text, all flagged for plan-review:**
+  (1) **Task 14 key literal** — the plan says `if ($key === 'custom.attribute-name.rule-name')` but
+  `CatalogueParityTest::flattenLang` keys every line with its file prefix (`Arr::dot(['validation'
+  => ...])`), so the flattened key is `validation.custom.attribute-name.rule-name`; used that.
+  The blanket `custom.` skip was in fact already dead code for the same reason. Intent (narrow to
+  the placeholder only, expose the 22 real strings) is preserved and proven.
+  (2) **`validation.custom` key collisions** — the plan's "22 entries keyed `<field>.<rule>`,
+  delete messages() from all 11 files" produces regressions: `name.required` (branch + dept +
+  customer + user forms), `email.unique` (customer vs user) and `body.required` (5 forms) are the
+  SAME global custom key with different required wording. Keyed the context-specific ones under
+  form prefixes (`branch.name_required`, `department.name_required`, `user_email.unique`,
+  `ticket_message.body_required`) with a one-line `messages()` in the affected requests; the
+  rest delete messages() as planned. `file.mimes` / `logo.mimes` keep a one-liner (uppercase
+  `:types` list) because `CustomerAttachmentTest:59` pins "PDF" — the plan's ":values placeholder"
+  would break that byte-identity.
+  (3) **`CustomerLocale::forTicket(?Ticket $ticket)`** — nullable, not the plan's `Ticket $ticket`:
+  both mailables reach the ticket through a nullable-typed relation (`$survey->ticket`,
+  `$outboundMessage->ticket`), not a constructor Ticket.
+  (4) TicketController.php was already pint-dirty at HEAD (pre-existing, same fixer list with/without
+  the change); left untouched per "no repo-wide pint". All other touched files pint-clean.
+  Next: WIS-29 plan-review (Opus 5).

@@ -34,12 +34,14 @@ Open, both outside the code: rotate the **Jira API token** and the **Supabase
 password** — they sit in plaintext in `docs/requirements/required-for-System-ERP/data.txt`,
 which is excluded from git but still live.
 
-Remaining known gap: the **i18n retrofit** (WIS-17). Every catalogue exists in both
-languages and every server-sent `*_label` is localised, but the no-hard-coded-strings
-check is enforced on ten roots only — nine feature folders (`customers`,
-`knowledge-base`, `notifications`, `reports`, `users-roles-admin`, `agent-dashboard`,
-`agent-productivity`, `channels`, `csat`) still hold English literals.
-`web/scripts/i18n-allowlist.json` is the live list.
+i18n is complete (WIS-17 retrofit 2026-09-06, WIS-29 leak-close 2026-09-10): the `en`
+and `ar` catalogues are at full parity in both directions, the no-hard-coded-strings
+check covers all 20 frontend roots, and every server-sent label — enum `*_label`,
+audit event, system-setting label, validation message — resolves through `__()` in
+both locales, guarded by `api/tests/Feature/I18n/`. The remaining English is **seeded
+demo content** (branch/department/quick-reply names, most KB article titles) — data,
+not chrome — because `kb_articles`, `quick_replies`, `branches` and `departments` have
+no `locale` column; gaining one is a separate story.
 
 ## What this project is
 

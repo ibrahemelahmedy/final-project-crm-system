@@ -22,6 +22,13 @@
     "resolved": "Resolved",
     "closed": "Closed"
   },
+  "category": {
+    "general": "General",
+    "billing": "Billing",
+    "technical": "Technical",
+    "account": "Account",
+    "feature_request": "Feature request"
+  },
   "channel": {
     "email": "Email",
     "whatsapp": "WhatsApp",

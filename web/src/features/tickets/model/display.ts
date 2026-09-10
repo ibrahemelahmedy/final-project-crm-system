@@ -33,6 +33,14 @@ export const STATUS_FALLBACK_LABELS: Record<TicketStatus, string> = {
   closed: 'status.closed',
 };
 
+export const CATEGORY_FALLBACK_LABELS: Record<string, string> = {
+  general: 'category.general',
+  billing: 'category.billing',
+  technical: 'category.technical',
+  account: 'category.account',
+  feature_request: 'category.feature_request',
+};
+
 export const CHANNEL_FALLBACK_LABELS: Record<TicketChannel, string> = {
   email: 'channel.email',
   whatsapp: 'channel.whatsapp',

@@ -16,6 +16,11 @@
     "unassigned": "{{who}} ألغى إسناد التذكرة",
     "reopened": "{{who}} أعاد فتح التذكرة",
     "replied": "{{who}} ردّ",
+    "autoAssigned": "{{who}} أسند التذكرة تلقائياً",
+    "escalated": "{{who}} صعّد التذكرة",
+    "autoClosed": "{{who}} أغلق التذكرة تلقائياً",
+    "internalNoteAdded": "{{who}} أضاف ملاحظة داخلية",
+    "mentioned": "{{who}} أشار إلى زميل",
     "generic": "{{who}} — {{event}}",
     "deletedUser": "مستخدم محذوف"
   },

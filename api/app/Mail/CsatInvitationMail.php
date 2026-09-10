@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Mail\Concerns\BrandsMail;
 use App\Models\CsatSurvey;
+use App\Services\CustomerLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -14,9 +15,11 @@ use Illuminate\Support\Str;
  * when their ticket is resolved. New in this story — nothing mailed a customer
  * about a resolution before.
  *
- * Renders in config('mail.customer_locale'), NOT the ambient request locale:
- * this mail is sent from a ticket resolve, where App::getLocale() is the
- * resolving AGENT's choice, not the customer's. The locale is set on the
+ * Renders in the customer's locale, NOT the ambient request locale: this mail
+ * is sent from a ticket resolve, where App::getLocale() is the resolving
+ * AGENT's choice, not the customer's. Story 28 (WIS-29) Decision 6:
+ * CustomerLocale::forTicket() returns `ar` when the ticket's own text is
+ * Arabic, otherwise config('mail.customer_locale'). The locale is set on the
  * constructor (not in build()) so Mailable::render()'s withLocale() wrapper
  * picks it up.
  *
@@ -32,7 +35,7 @@ final class CsatInvitationMail extends Mailable
         public readonly CsatSurvey $survey,
         public readonly string $url,
     ) {
-        $this->locale((string) config('mail.customer_locale'));
+        $this->locale(CustomerLocale::forTicket($survey->ticket));
     }
 
     public function build(): self

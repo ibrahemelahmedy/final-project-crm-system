@@ -16,6 +16,11 @@
     "unassigned": "{{who}} unassigned the ticket",
     "reopened": "{{who}} reopened the ticket",
     "replied": "{{who}} replied",
+    "autoAssigned": "{{who}} auto-assigned the ticket",
+    "escalated": "{{who}} escalated the ticket",
+    "autoClosed": "{{who}} auto-closed the ticket",
+    "internalNoteAdded": "{{who}} added an internal note",
+    "mentioned": "{{who}} mentioned a teammate",
     "generic": "{{who}} — {{event}}",
     "deletedUser": "Deleted user"
   },

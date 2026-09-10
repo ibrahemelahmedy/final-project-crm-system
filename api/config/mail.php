@@ -127,7 +127,10 @@ return [
     | inside the customer's own portal request, where App::getLocale() is
     | their own choice.
     |
-    | The real fix is a `customers.locale` column. That is a later story.
+    | Story 28 (WIS-29) Decision 6: this is now a FALLBACK only. A ticket whose
+    | subject or description contains Arabic renders its customer email in
+    | Arabic — see App\Services\CustomerLocale::forTicket(). The
+    | `customers.locale` column remains the right long-term fix and a later story.
     |
     */
 

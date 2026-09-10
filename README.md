@@ -263,7 +263,7 @@ twelve categories. Nothing below is aspirational; a "partial" row says what is m
 | 9 | Reports & Management | ✅ Done | `web/src/features/reports`, `api/app/Services/ReportAggregator.php` | WIS-7 |
 | 10 | Security & Administration | ✅ Done | Roles, policies, append-only audit log, `web/src/features/users-roles-admin` | WIS-8 |
 | 11 | Integrations | ⚠️ Partial by design | `web/src/features/integrations` — connect, configure, test and monitor, plus a data sync engine: a scheduled inbound pull maps and upserts ERP customer records, and outbound ticket/CSAT events are delivered through a persistent outbox with retry and dead-lettering (`api/app/Services/Integrations`, `sync:pull-customers`, `sync:flush-outbox`). Outbound transactional email is live (Brevo SMTP, WIS-27). Inbound/outbound email, WhatsApp and SMS *code* is wired and tested (WIS-22, see row 3 above); going live for those channels needs the owner to paste a real provider account's credentials, same shape as this row's own ERP gap | WIS-19, WIS-24, WIS-27 |
-| 12 | Platform | ⚠️ Partial | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction is incomplete — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20 |
+| 12 | Platform | ✅ Done | Arabic/English + RTL shipped; branches, departments and custom branding shipped (`web/src/features/organization`). String extraction complete — catalogues at full parity, literal gate on all 20 roots, every server-sent label resolves through `__()` (WIS-29). Remaining English is seeded demo content — see [Known gaps](#12-known-gaps) | WIS-11, WIS-17, WIS-20, WIS-29 |
 
 Twenty stories were specified, planned and implemented (WIS-1 … WIS-20). Their specifications
 are in [.squad/stories/](.squad/stories) and their implementation plans in
@@ -698,7 +698,7 @@ code was written:
 | A report over a range with no data returns a well-formed empty result, not a crash | `ReportEmptyDataTest.php` |
 | A duplicate customer is detected rather than silently created twice | `CustomerDuplicateTest.php` |
 | Portal code exhaustion returns 410, and is not confused with a 429 | `api/tests/Feature/Portal/` |
-| Arabic locale resolution on server-sent labels | `api/tests/Feature/I18n/` |
+| Arabic locale resolution on server-sent labels (enum, audit, settings, validation) | `api/tests/Feature/I18n/CatalogueParityTest.php`, `EnumLabelLocaleTest.php`, `ServerLabelLocaleTest.php` |
 
 On the frontend, tests sit next to the component they cover (`AppLayout.test.tsx`,
 `navItems.test.ts`, `BrandingProvider.test.tsx`, …), which is why the count is high relative to
@@ -831,13 +831,14 @@ together.
 Stated plainly, because a reviewer will find them anyway and because pretending otherwise is
 worse than the gap.
 
-- **The i18n retrofit is incomplete.** Both locale catalogues exist and every server-sent label
-  is localised, but the lint rule that forbids hard-coded strings is only enforced on ten roots.
-  Nine feature folders — `customers`, `knowledge-base`, `notifications`, `reports`,
-  `users-roles-admin`, `agent-dashboard`, `agent-productivity`, `channels`, `csat` — still hold
-  English literals and will render English inside the Arabic UI. Tracked as WIS-17, current
-  state in [web/scripts/i18n-allowlist.json](web/scripts/i18n-allowlist.json) and
-  [docs/debugging/009-i18n-retrofit-gap.md](docs/debugging/009-i18n-retrofit-gap.md).
+- **i18n chrome is complete; seeded demo content is still English.** Both locale catalogues are
+  at full parity in both directions, the hard-coded-string lint covers all 20 frontend roots, and
+  every server-sent label — enum `*_label`, audit event, system-setting label, validation
+  message — resolves through `__()` in both locales (WIS-17 retrofit, WIS-29 leak-close; guarded
+  by `api/tests/Feature/I18n/`). What remains English is **data, not chrome**: seeded branches,
+  departments and quick replies, and most KB article titles. Ticket bodies and subjects are
+  genuinely bilingual (WIS-25). `kb_articles`, `quick_replies`, `branches` and `departments` have
+  no `locale` column and gaining one — with the UI to set it — is a separate story.
 - **Some plans are still at `contract` depth.** The index marks them. They are implemented, but
   the plan file was never regenerated at full depth afterwards.
 - **Integrations move real data on two paths, everything else is still a stated boundary.** A

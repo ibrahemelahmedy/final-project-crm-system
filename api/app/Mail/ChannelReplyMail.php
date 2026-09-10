@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Mail\Concerns\BrandsMail;
 use App\Models\ChannelOutboundMessage;
+use App\Services\CustomerLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  *
  * Locale is set in the CONSTRUCTOR, not build() — Mailable::render()/send()
  * already wrap build() in withLocale(), the correction WIS-27 recorded.
+ * Story 28 (WIS-29) Decision 6: CustomerLocale::forTicket() renders `ar` when
+ * the ticket's own text is Arabic, otherwise config('mail.customer_locale').
  *
  * Not `implements ShouldQueue` — there is no queue worker in this repository.
  */
@@ -31,7 +34,7 @@ final class ChannelReplyMail extends Mailable
         public readonly ChannelOutboundMessage $outboundMessage,
         public readonly string $generatedMessageId,
     ) {
-        $this->locale((string) config('mail.customer_locale'));
+        $this->locale(CustomerLocale::forTicket($outboundMessage->ticket));
     }
 
     public function build(): self
