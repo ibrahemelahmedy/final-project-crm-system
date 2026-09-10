@@ -1148,7 +1148,7 @@ before the next. Resume from the first unchecked box.
   `28-story-i18n-english-leaks.md`.
 - 2026-09-10 — WIS-29 execute DONE (Sonnet 5), commits `b0907b8` (enums + server label maps +
   guards + phase-1 .squad), `6ffa971` (Form Request messages() -> validation.custom + attributes),
-  `<c3>` (frontend ActivityList + MAIL_CUSTOMER_LOCALE + docs). Confirmed baseline first:
+  `c318d8d` (frontend ActivityList + MAIL_CUSTOMER_LOCALE + docs). Confirmed baseline first:
   **backend 803 pass / 3624 assertions, frontend 628 pass / 102 files** (matches the task's
   stated Round-2 baseline, not the stale memory 419). After: **backend 808 pass / 3846 assertions**
   (+5: 1 reflection guard in EnumLabelLocaleTest, 4 in the new ServerLabelLocaleTest),
