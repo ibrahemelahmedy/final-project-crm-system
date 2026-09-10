@@ -935,3 +935,30 @@ formerly-pending criteria are ticked and no AI work is outstanding.
 `php artisan schedule:work`, or the cron entry. `channels:flush-outbound` and `sync:flush-outbox`
 are scheduled commands; the inline send attempt is best-effort and capped, and the drain is the
 actual delivery guarantee. Without a scheduler the features appear broken rather than pending.
+
+---
+
+## Round 2 — WIS-28, WIS-29 (added 2026-09-10)
+
+Same pattern, same owner authorisation: story + plan (Opus 5) → execute (Sonnet 5)
+→ `/plan-review` (Opus 5), each a fresh agent context, one story fully through
+before the next. Resume from the first unchecked box.
+
+| # | Story | Why |
+|---|---|---|
+| 1 | **WIS-28** style the WIS-23 AI surfaces | small; classification chip + chat citations ship unstyled |
+| 2 | **WIS-29** close untranslated English in the Arabic UI | owner reports substantial English text in the AR UI; phase 1 must inventory the leaks first |
+
+### WIS-28 — style the WIS-23 AI surfaces
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### WIS-29 — close untranslated English in the Arabic UI
+- [ ] story + plan (Opus 5)
+- [ ] execute (Sonnet 5)
+- [ ] plan-review (Opus 5)
+
+### Round 2 run log
+
+- 2026-09-10 — Round 2 opened. WIS-28 + WIS-29 created in Jira. Starting WIS-28 story + plan.
