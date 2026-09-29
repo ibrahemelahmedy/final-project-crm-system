@@ -44,7 +44,17 @@ use App\Http\Controllers\Webhooks\ChannelWebhookController;
 use App\Http\Controllers\Widget\ChatWidgetController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+// Keep-alive probe: touches the database so a scheduled ping (see
+// .github/workflows/keep-db-alive.yml) counts as activity and the Supabase
+// free tier never auto-pauses the project. Returns no details on purpose.
+Route::get('/health/db', function () {
+    DB::select('select 1');
+
+    return response()->json(['status' => 'ok']);
+})->middleware('throttle:60,1');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('throttle:login')

@@ -1,0 +1,18 @@
+# Supabase free-tier projects auto-pause after ~7 days without database
+# activity, which takes the whole API down (login returns 500). This job hits
+# an endpoint that runs a real query, every 2 days, so the project stays awake.
+name: Keep database alive
+
+on:
+  schedule:
+    - cron: '0 6 */2 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the database health endpoint
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 20 \
+            https://k1-wisal.vercel.app/api/health/db
